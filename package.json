@@ -41,7 +41,7 @@
     "check:type": "turbo run typecheck",
     "clean": "node ./scripts/clean.mjs",
     "commit": "czg",
-    "dev": "turbo-run dev",
+    "dev": "pnpm -F @vben/web-naive run dev",
     "dev:antd": "pnpm -F @vben/web-antd run dev",
     "dev:docs": "pnpm -F @vben/docs run dev",
     "dev:ele": "pnpm -F @vben/web-ele run dev",
