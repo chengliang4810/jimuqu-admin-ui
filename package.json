@@ -42,6 +42,7 @@
     "clean": "node ./scripts/clean.mjs",
     "commit": "czg",
     "dev": "pnpm -F @vben/web-naive run dev",
+    "dev:h5": "pnpm -F @vben/vant-h5 run dev",
     "dev:antd": "pnpm -F @vben/web-antd run dev",
     "dev:docs": "pnpm -F @vben/docs run dev",
     "dev:ele": "pnpm -F @vben/web-ele run dev",
