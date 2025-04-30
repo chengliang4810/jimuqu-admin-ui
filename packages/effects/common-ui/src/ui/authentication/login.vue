@@ -72,6 +72,8 @@ async function handleSubmit() {
       REMEMBER_ME_KEY,
       rememberMe.value ? values?.username : '',
     );
+    // 加上认证类型
+    (values as any).grantType = 'password';
     emit('submit', values);
   }
 }

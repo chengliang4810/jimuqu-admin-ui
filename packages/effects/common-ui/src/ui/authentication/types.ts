@@ -66,5 +66,49 @@ interface AuthenticationProps {
    */
   submitButtonText?: string;
 }
+/**
+ * 登录类型
+ * password 密码
+ * sms 短信
+ * social 第三方oauth
+ * email 邮箱
+ * xcx 小程序
+ */
+type GrantType = 'email' | 'password' | 'sms' | 'social' | 'xcx';
 
-export type { AuthenticationProps };
+interface LoginAndRegisterParams {
+  code?: string;
+  grantType: GrantType;
+  password: string;
+  tenantId: string;
+  username: string;
+  uuid?: string;
+}
+
+interface LoginCodeParams {
+  tenantId: string;
+  code: string;
+  phoneNumber: string;
+}
+
+interface LoginEmits {
+  submit: [LoginAndRegisterParams];
+}
+
+interface LoginCodeEmits {
+  submit: [LoginCodeParams];
+}
+
+interface RegisterEmits {
+  submit: [LoginAndRegisterParams];
+}
+
+export type {
+  AuthenticationProps,
+  GrantType,
+  LoginAndRegisterParams,
+  LoginCodeEmits,
+  LoginCodeParams,
+  LoginEmits,
+  RegisterEmits,
+};
