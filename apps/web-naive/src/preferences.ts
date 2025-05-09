@@ -11,5 +11,24 @@ export const overridesPreferences = defineOverridesPreferences({
     name: import.meta.env.VITE_APP_TITLE,
     // 不需要刷新token的功能
     enableRefreshToken: false,
+    // 水印
+    watermark: true,
+  },
+  breadcrumb: {
+    // 显示首页
+    showHome: true,
+  },
+  // 版权信息
+  copyright: {
+    companyName: 'jimuqu.com',
+    companySiteLink: 'https://doc.jimuqu.com',
+    date: '2025',
+  },
+  // 主题配置
+  theme: {
+    builtinType: 'violet',
+    colorPrimary: 'hsl(245 82% 67%)',
+    mode: 'auto',
+    radius: '0.75',
   },
 });
