@@ -1,4 +1,5 @@
-import type { Recordable, UserInfo } from '@vben/types';
+import type { LoginAndRegisterParams } from '@vben/common-ui';
+import type { UserInfo } from '@vben/types';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -26,7 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
    * @param params 登录表单数据
    */
   async function authLogin(
-    params: Recordable<any>,
+    params: LoginAndRegisterParams,
     onSuccess?: () => Promise<void> | void,
   ) {
     // 异步处理用户登录操作并获取 accessToken
@@ -99,8 +100,28 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function fetchUserInfo() {
-    let userInfo: null | UserInfo = null;
-    userInfo = await getUserInfoApi();
+    const backUserInfo = await getUserInfoApi();
+    /**
+     * 登录超时的情况
+     */
+    if (!backUserInfo) {
+      throw new Error('获取用户信息失败.');
+    }
+    const { permissions = [], roles = [], user } = backUserInfo;
+
+    /**
+     * 从后台user -> vben user转换
+     */
+    const userInfo: UserInfo = {
+      avatar: user.avatar ?? '',
+      permissions,
+      realName: user.nickName,
+      roles,
+      userId: user.userId,
+      username: user.userName,
+      email: user.email,
+    };
+
     userStore.setUserInfo(userInfo);
     return userInfo;
   }
