@@ -1,4 +1,4 @@
 export * from './auth';
-export * from './gen-code';
+export * from './gen';
 export * from './menu';
 export * from './user';

@@ -21,6 +21,15 @@ const routes: RouteRecordRaw[] = [
         path: '/tool/gen-code',
         component: () => import('#/views/tool/gen-code/index.vue'),
       },
+      {
+        meta: {
+          icon: 'ic:twotone-layers',
+          title: '代码模板',
+        },
+        name: 'GenCodeTemplate',
+        path: '/tool/gen-code-template',
+        component: () => import('#/views/tool/gen-template/index.vue'),
+      },
     ],
   },
 ];

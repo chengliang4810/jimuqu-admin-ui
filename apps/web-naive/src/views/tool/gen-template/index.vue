@@ -6,7 +6,7 @@ import { Page } from '@vben/common-ui';
 
 // import { message } from 'naive-ui';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getGenCodeList } from '#/api';
+import { getGenTemplateList } from '#/api';
 
 // import { getExampleTableApi } from '../mock-api';
 
@@ -24,36 +24,12 @@ const formOptions: VbenFormProps = {
   collapsed: false,
   schema: [
     {
-      component: 'Select',
-      componentProps: {
-        allowClear: true,
-        options: [
-          {
-            label: '默认数据源',
-            value: 'master',
-          },
-        ],
-        placeholder: '请选择',
-      },
-      defaultValue: 'master',
-      fieldName: 'dataName',
-      label: '数据源',
-    },
-    {
       component: 'Input',
       componentProps: {
-        placeholder: '请输入表名',
+        placeholder: '请输入模板名称',
       },
-      fieldName: 'tableName',
-      label: '表名',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入表描述',
-      },
-      fieldName: 'tableComment',
-      label: '表描述',
+      fieldName: 'name',
+      label: '模板名称',
     },
   ],
   // 控制表单是否显示折叠按钮
@@ -74,10 +50,9 @@ const gridOptions: VxeGridProps<RowType> = {
   columns: [
     { align: 'left', title: '', type: 'checkbox', width: 30 },
     { title: '序号', type: 'seq', width: 50 },
-    { field: 'dataName', title: '数据源' },
-    { field: 'tableName', title: '表名' },
-    { field: 'tableComment', title: '描述' },
-    { field: 'className', title: '实体名' },
+    { field: 'name', title: '模板名称' },
+    { field: 'path', title: '生成路径' },
+    { field: 'remark', title: '备注' },
     { field: 'updateTime', formatter: 'formatDateTime', title: '最后更新时间' },
   ],
   keepSource: true,
@@ -86,7 +61,7 @@ const gridOptions: VxeGridProps<RowType> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
-        return await getGenCodeList({
+        return await getGenTemplateList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
