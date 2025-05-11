@@ -12,7 +12,7 @@ export const overridesPreferences = defineOverridesPreferences({
     // 不需要刷新token的功能
     enableRefreshToken: false,
     // 水印
-    watermark: true,
+    watermark: false,
   },
   breadcrumb: {
     // 显示首页
