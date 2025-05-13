@@ -1,14 +1,9 @@
 <script lang="ts" setup>
-import type { VbenFormProps } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
-
 import { Page } from '@vben/common-ui';
 
-import { NButton, NFlex } from 'naive-ui';
+import { getGenTemplateList } from '#/api';
 
 // import { message } from 'naive-ui';
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { getGenTemplateList } from '#/api';
 
 // import { getExampleTableApi } from '../mock-api';
 
@@ -104,17 +99,17 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
   <Page auto-content-height>
     <Grid>
       <template #toolbar-tools>
-        <NFlex class="mx-3" size="small">
-          <NButton class="mr-2"> 导出 </NButton>
-          <NButton class="mr-2" type="error"> 删除 </NButton>
-          <NButton class="mr-2" type="primary"> 新增 </NButton>
-        </NFlex>
+        <n-flex class="mx-3" size="small">
+          <n-button class="mr-2"> 导出 </n-button>
+          <n-button class="mr-2" type="error"> 删除 </n-button>
+          <n-button class="mr-2" type="primary"> 新增 </n-button>
+        </n-flex>
       </template>
       <template #action>
-        <NFlex class="mx-3" justify="space-around" size="small">
-          <NButton type="info" size="small" ghost>编辑</NButton>
-          <NButton type="error" size="small" ghost>删除</NButton>
-        </NFlex>
+        <n-flex class="mx-3" justify="space-around" size="small">
+          <n-button type="info" size="small" ghost>编辑</n-button>
+          <n-button type="error" size="small" ghost>删除</n-button>
+        </n-flex>
       </template>
     </Grid>
   </Page>

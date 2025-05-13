@@ -45,5 +45,9 @@
     "pinia": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
+  },
+  "devDependencies": {
+    "unplugin-auto-import": "^19.2.0",
+    "unplugin-vue-components": "^28.5.0"
   }
 }
