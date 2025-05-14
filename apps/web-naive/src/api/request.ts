@@ -107,6 +107,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 
 export const requestClient = createRequestClient(apiURL, {
   responseReturn: 'data',
+  paramsSerializer: 'comma',
 });
 
 export const baseRequestClient = new RequestClient({ baseURL: apiURL });

@@ -49,7 +49,9 @@ const themeOverrides = computed((): GlobalThemeOverrides => {
   >
     <NNotificationProvider>
       <NMessageProvider>
-        <RouterView />
+        <n-dialog-provider>
+          <RouterView />
+        </n-dialog-provider>
       </NMessageProvider>
     </NNotificationProvider>
   </NConfigProvider>

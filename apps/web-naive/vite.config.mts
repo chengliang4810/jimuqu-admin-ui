@@ -22,8 +22,6 @@ export default defineConfig(async () => {
               ],
               '#/adapter/vxe-table': ['useVbenVxeGrid', 'VxeTableColumn'],
               '#/adapter/form': ['useVbenForm'],
-              '@vben-core/popup-ui': ['useVbenModal'],
-              // '@vben/common-ui': ['Page'],
             },
             {
               from: '#/adapter/vxe-table',

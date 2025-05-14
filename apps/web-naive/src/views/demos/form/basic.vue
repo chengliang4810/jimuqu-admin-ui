@@ -75,13 +75,11 @@ const [Form, formApi] = useVbenForm({
       component: 'RadioGroup',
       fieldName: 'radio',
       label: 'Radio',
+      defaultValue: 1,
       componentProps: {
         options: [
-          { value: 'A', label: 'A' },
-          { value: 'B', label: 'B' },
-          { value: 'C', label: 'C' },
-          { value: 'D', label: 'D' },
-          { value: 'E', label: 'E' },
+          { value: 1, label: '启用' },
+          { value: 0, label: '禁用' },
         ],
       },
       rules: 'selectRequired',
