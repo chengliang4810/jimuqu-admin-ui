@@ -1,14 +1,9 @@
 <script lang="ts" setup>
-import type { VbenFormProps } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import { Page, useVbenModal } from '@vben/common-ui';
 
-import { Page } from '@vben/common-ui';
-
-// import { message } from 'naive-ui';
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getGenCodeList } from '#/api';
 
-// import { getExampleTableApi } from '../mock-api';
+import importTableModal from './import-table-modal.vue';
 
 interface RowType {
   category: string;
@@ -97,15 +92,39 @@ const gridOptions: VxeGridProps<RowType> = {
   toolbarConfig: {
     // 是否显示搜索表单控制按钮
     // @ts-ignore 正式环境时有完整的类型声明
-    // search: true,
+    custom: true,
+    // import: true,
+    refresh: true,
+    zoom: true,
   },
 };
 
 const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
+
+// 导入表格
+const [ImportTableModal, importTableModalApi] = useVbenModal({
+  connectedComponent: importTableModal,
+});
+
+function handleImport() {
+  importTableModalApi.open();
+}
 </script>
 
 <template>
   <Page auto-content-height>
-    <Grid />
+    <Grid>
+      <template #toolbar-tools>
+        <n-flex class="mx-3" size="small">
+          <n-button class="mr-2" type="primary" @click="handleImport">
+            导入
+          </n-button>
+          <n-button class="mr-2"> 生成 </n-button>
+          <n-button class="mr-2" type="error"> 删除 </n-button>
+        </n-flex>
+      </template>
+    </Grid>
+
+    <ImportTableModal />
   </Page>
 </template>
