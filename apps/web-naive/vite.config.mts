@@ -25,7 +25,7 @@ export default defineConfig(async () => {
             },
             {
               from: '#/adapter/vxe-table',
-              imports: ['VxeGridProps'],
+              imports: ['VxeGridProps', 'ProxyAjaxQueryParams'],
               type: true,
             },
             {

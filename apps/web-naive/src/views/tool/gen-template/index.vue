@@ -6,8 +6,7 @@ import { requestClient as request } from '#/api/request';
 const message = useMessage();
 const dialog = useDialog();
 
-// import { getExampleTableApi } from '../mock-api';
-
+// 数据类型字段
 interface RowType {
   category: string;
   color: string;
@@ -17,6 +16,7 @@ interface RowType {
   releaseDate: string;
 }
 
+// 查询表单配置
 const formOptions: VbenFormProps = {
   // 默认展开
   collapsed: false,
@@ -41,6 +41,7 @@ const formOptions: VbenFormProps = {
   submitOnEnter: true,
 };
 
+// 表格配置
 const gridOptions: VxeGridProps<RowType> = {
   checkboxConfig: {
     highlight: true,
@@ -68,10 +69,11 @@ const gridOptions: VxeGridProps<RowType> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
-        return await request.get<null>('/tool/gen-template/list', {
+        const { currentPage, pageSize } = page;
+        return await request.get<RowType[]>('/tool/gen-template/list', {
           params: {
-            pageNum: page.currentPage,
-            pageSize: page.pageSize,
+            currentPage,
+            pageSize,
             ...formValues,
           },
         });
