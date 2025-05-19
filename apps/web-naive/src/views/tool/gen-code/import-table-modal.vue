@@ -87,7 +87,7 @@ const gridOptions: VxeGridProps<RowType> = {
     { field: 'createTime', formatter: 'formatDateTime', title: '创建时间' },
     { field: 'updateTime', formatter: 'formatDateTime', title: '更新时间' },
   ],
-  minHeight: 500,
+  minHeight: 400,
   keepSource: true,
   size: 'small',
   pagerConfig: {},

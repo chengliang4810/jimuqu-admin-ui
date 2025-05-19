@@ -1,10 +1,6 @@
 {
   "folders": [
     {
-      "name": "@vben/vant-h5",
-      "path": "apps/vant-h5",
-    },
-    {
       "name": "@vben/web-naive",
       "path": "apps/web-naive",
     },
