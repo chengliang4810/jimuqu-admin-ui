@@ -12,9 +12,6 @@ setupVbenVxeTable({
       grid: {
         align: 'center',
         border: false,
-        columnConfig: {
-          resizable: true,
-        },
         minHeight: 180,
         formConfig: {
           // 全局禁用vxe-table的表单配置，使用formOptions
@@ -30,9 +27,49 @@ setupVbenVxeTable({
           showActiveMsg: true,
           showResponseMsg: false,
         },
-        round: true,
+        // 溢出展示形式
         showOverflow: true,
-        size: 'small',
+        pagerConfig: {
+          // 默认条数
+          pageSize: 15,
+          // 分页可选条数
+          pageSizes: [15, 30, 50, 100, 200, 500],
+        },
+        rowConfig: {
+          // 默认id 字段
+          keyField: 'id',
+          // 鼠标移入行显示 hover 样式
+          isHover: true,
+          // 点击行高亮
+          isCurrent: false,
+        },
+        columnConfig: {
+          // 可拖拽列宽
+          resizable: true,
+        },
+        // 右上角工具栏
+        toolbarConfig: {
+          // 自定义列
+          custom: {
+            icon: 'vxe-icon-setting',
+          },
+          // 最大化
+          zoom: true,
+          // 刷新
+          refresh: {
+            // 默认为reload 修改为在当前页刷新
+            code: 'query',
+          },
+        },
+        // 圆角按钮
+        round: true,
+        // 表格尺寸
+        size: 'medium',
+        customConfig: {
+          // 表格右上角自定义列配置 是否保存到localStorage
+          // 必须存在id参数才能使用
+          storage: false,
+        },
       },
     });
 

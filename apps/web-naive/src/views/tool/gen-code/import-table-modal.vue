@@ -13,7 +13,6 @@ interface RowType {
 }
 
 const [Modal, modalApi] = useVbenModal({
-  appendToMain: false,
   onCancel() {
     modalApi.close();
   },
@@ -82,12 +81,13 @@ const gridOptions: VxeGridProps<RowType> = {
   },
   columns: [
     { align: 'left', title: '', type: 'checkbox', width: 30 },
+    { title: '序号', type: 'seq', width: 50 },
     { field: 'tableName', title: '表名' },
     { field: 'tableComment', title: '描述' },
     { field: 'createTime', formatter: 'formatDateTime', title: '创建时间' },
     { field: 'updateTime', formatter: 'formatDateTime', title: '更新时间' },
   ],
-  minHeight: 400,
+  minHeight: 500,
   keepSource: true,
   size: 'small',
   pagerConfig: {},
