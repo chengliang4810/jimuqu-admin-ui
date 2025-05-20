@@ -99,7 +99,7 @@ const gridOptions: VxeGridProps<RowType> = {
   },
 };
 
-const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
+const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
 // 导入表格
 const [ImportTableModal, importTableModalApi] = useVbenModal({
@@ -125,6 +125,6 @@ function handleImport() {
       </template>
     </Grid>
 
-    <ImportTableModal />
+    <ImportTableModal @reload="gridApi.reload()" />
   </Page>
 </template>

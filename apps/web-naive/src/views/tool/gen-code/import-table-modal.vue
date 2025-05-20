@@ -3,6 +3,8 @@ import { useVbenModal } from '@vben/common-ui';
 
 import { requestClient as request } from '#/api/request';
 
+const emit = defineEmits<{ reload: [] }>();
+
 interface RowType {
   category: string;
   color: string;
@@ -16,9 +18,7 @@ const [Modal, modalApi] = useVbenModal({
   onCancel() {
     modalApi.close();
   },
-  onConfirm: async () => {
-    modalApi.close();
-  },
+  onConfirm: handleSubmit,
   onOpenChange(isOpen: boolean) {
     if (!isOpen) {
       tableApi.grid.clearCheckboxRow();
@@ -26,6 +26,31 @@ const [Modal, modalApi] = useVbenModal({
     }
   },
 });
+
+/**
+ * 导入表
+ */
+async function handleSubmit() {
+  try {
+    const records = tableApi.grid.getCheckboxRecords();
+    const tables = records.map((item) => item.tableName);
+    if (tables.length === 0) {
+      modalApi.close();
+      return;
+    }
+    modalApi.lock(true);
+    const { dataName } = await tableApi.formApi.getValues();
+    await request.post(
+      `/tool/gen-code/import-table?tables=${tables}&dataName=${dataName}`,
+    );
+    emit('reload');
+    modalApi.close();
+  } catch (error) {
+    console.warn(error);
+  } finally {
+    modalApi.unlock();
+  }
+}
 
 const formOptions: VbenFormProps = {
   // 默认展开
@@ -95,7 +120,7 @@ const gridOptions: VxeGridProps<RowType> = {
     ajax: {
       query: async ({ page }, formValues) => {
         const { currentPage, pageSize } = page;
-        return request.get<RowType[]>('/tool/gen-code/db/list', {
+        return request.get<RowType[]>('/tool/gen-code/db-list', {
           params: {
             currentPage,
             pageSize,
