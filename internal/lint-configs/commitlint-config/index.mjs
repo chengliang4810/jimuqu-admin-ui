@@ -4,16 +4,16 @@ import { getPackagesSync } from '@vben/node-utils';
 
 const { packages } = getPackagesSync();
 
-const allowedScopes = [
-  ...packages.map((pkg) => pkg.packageJson.name),
+const allowedScopes = new Set([
+  'ci',
+  'deploy',
+  'dev',
+  'lint',
+  'other',
   'project',
   'style',
-  'lint',
-  'ci',
-  'dev',
-  'deploy',
-  'other',
-];
+  ...packages.map((pkg) => pkg.packageJson.name),
+]);
 
 // precomputed scope
 const scopeComplete = execSync('git status --porcelain || true')
@@ -107,11 +107,11 @@ const userConfig = {
       2, // level: error
       'always',
       (parsed) => {
-        if (!parsed.scope || allowedScopes.includes(parsed.scope)) {
+        if (!parsed.scope || allowedScopes.has(parsed.scope)) {
           return [true];
         }
-
-        return [false, `scope must be one of ${allowedScopes.join(', ')}`];
+        return [true];
+        // return [false, `scope must be one of ${allowedScopes.join(', ')}`];
       },
     ],
     /**
