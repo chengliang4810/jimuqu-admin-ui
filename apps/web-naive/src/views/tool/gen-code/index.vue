@@ -2,8 +2,12 @@
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { getGenCodeList } from '#/api';
+import { requestClient as request } from '#/api/request';
 
 import importTableModal from './import-table-modal.vue';
+
+const message = useMessage();
+const dialog = useDialog();
 
 interface RowType {
   category: string;
@@ -67,13 +71,20 @@ const gridOptions: VxeGridProps<RowType> = {
     highlight: true,
   },
   columns: [
-    { align: 'left', title: '', type: 'checkbox', width: 30 },
+    { align: 'left', title: '', type: 'checkbox', width: 40 },
     { title: '序号', type: 'seq', width: 50 },
     { field: 'dataName', title: '数据源' },
     { field: 'tableName', title: '表名' },
     { field: 'tableComment', title: '描述' },
     { field: 'className', title: '实体名' },
     { field: 'updateTime', formatter: 'formatDateTime', title: '最后更新时间' },
+    {
+      field: 'action',
+      fixed: 'right',
+      slots: { default: 'action' },
+      title: '操作',
+      width: 150,
+    },
   ],
   keepSource: true,
   pagerConfig: {},
@@ -109,6 +120,40 @@ const [ImportTableModal, importTableModalApi] = useVbenModal({
 function handleImport() {
   importTableModalApi.open();
 }
+
+/**
+ * 删除选中的数据
+ */
+async function handleDeleteCheck() {
+  const records = gridApi.grid.getCheckboxRecords();
+  if (records.length <= 0) {
+    message.warning('请选择要删除的数据');
+    return;
+  }
+
+  // 确认删除
+  dialog.warning({
+    title: '删除提醒',
+    content: `你确定要删除${records.length}条数据吗？`,
+    positiveText: '确定',
+    negativeText: '取消',
+    draggable: true,
+    onPositiveClick: async () => {
+      const ids = records.map((item) => item.id);
+      await handleDelete(ids);
+    },
+  });
+}
+
+/**
+ * 删除模板
+ * @param id 主键，主键数组
+ */
+async function handleDelete(id: string | string[]) {
+  const data = await request.post(`/tool/gen-code/delete/${id}`);
+  message.success(`成功删除${data}条数据`);
+  gridApi.reload();
+}
 </script>
 
 <template>
@@ -120,7 +165,21 @@ function handleImport() {
             导入
           </n-button>
           <n-button class="mr-2"> 生成 </n-button>
-          <n-button class="mr-2" type="error"> 删除 </n-button>
+          <n-button class="mr-2" type="error" @click="handleDeleteCheck">
+            删除
+          </n-button>
+        </n-flex>
+      </template>
+
+      <template #action="{ row }">
+        <n-flex class="mx-3" justify="space-around" size="small">
+          <n-button type="info" size="small" ghost> 编辑 </n-button>
+          <n-popconfirm @positive-click="handleDelete(row.id)">
+            <template #trigger>
+              <n-button type="error" size="small" ghost>删除</n-button>
+            </template>
+            确认删除吗？
+          </n-popconfirm>
         </n-flex>
       </template>
     </Grid>
