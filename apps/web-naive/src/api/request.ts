@@ -1,7 +1,7 @@
 /**
  * 该文件可自行根据业务逻辑进行调整
  */
-import type { RequestClientOptions } from '@vben/request';
+import type { RequestClientOptions, RequestResponse } from '@vben/request';
 
 import { useAppConfig } from '@vben/hooks';
 import { preferences } from '@vben/preferences';
@@ -12,6 +12,7 @@ import {
   RequestClient,
 } from '@vben/request';
 import { useAccessStore } from '@vben/stores';
+import { downloadFileFromBlob } from '@vben/utils';
 
 import { message } from '#/adapter/naive';
 import { useAuthStore } from '#/store';
@@ -111,3 +112,17 @@ export const requestClient = createRequestClient(apiURL, {
 });
 
 export const baseRequestClient = new RequestClient({ baseURL: apiURL });
+
+export const downloadFile = async (url: string, fileName?: string) => {
+  const response = await requestClient.download<RequestResponse<Blob>>(url, {
+    responseReturn: 'raw',
+  });
+  await downloadFileFromBlob({
+    source: response.data,
+    fileName:
+      fileName ||
+      decodeURIComponent(
+        response.headers['content-disposition'].split('filename=')[1],
+      ).replaceAll('"', ''),
+  });
+};

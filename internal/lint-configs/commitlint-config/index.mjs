@@ -100,6 +100,10 @@ const userConfig = {
      */
     'footer-leading-blank': [1, 'always'],
     /**
+     * body的每行长度不超过100个字符
+     */
+    'body-max-line-length': [1, 'always', 200],
+    /**
      * type[scope]: [function] description
      *      ^^^^^
      */

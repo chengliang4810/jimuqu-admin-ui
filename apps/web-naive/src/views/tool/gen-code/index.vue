@@ -2,7 +2,7 @@
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { getGenCodeList } from '#/api';
-import { requestClient as request } from '#/api/request';
+import { downloadFile, requestClient as request } from '#/api/request';
 
 import importTableModal from './import-table-modal.vue';
 
@@ -83,7 +83,7 @@ const gridOptions: VxeGridProps<RowType> = {
       fixed: 'right',
       slots: { default: 'action' },
       title: '操作',
-      width: 150,
+      width: 200,
     },
   ],
   keepSource: true,
@@ -154,6 +154,15 @@ async function handleDelete(id: string | string[]) {
   message.success(`成功删除${data}条数据`);
   gridApi.reload();
 }
+
+/**
+ * 生成代码
+ * @param id 主键，主键数组
+ */
+async function handleBatchGenCode(id: string | string[]) {
+  await downloadFile(`/tool/gen-code/batch/${id}`);
+  message.success(`生成成功`);
+}
 </script>
 
 <template>
@@ -161,10 +170,8 @@ async function handleDelete(id: string | string[]) {
     <Grid>
       <template #toolbar-tools>
         <n-flex class="mx-3" size="small">
-          <n-button class="mr-2" type="primary" @click="handleImport">
-            导入
-          </n-button>
-          <n-button class="mr-2"> 生成 </n-button>
+          <n-button class="mr-2" @click="handleImport"> 导入 </n-button>
+          <n-button class="mr-2" type="primary"> 生成 </n-button>
           <n-button class="mr-2" type="error" @click="handleDeleteCheck">
             删除
           </n-button>
@@ -173,6 +180,14 @@ async function handleDelete(id: string | string[]) {
 
       <template #action="{ row }">
         <n-flex class="mx-3" justify="space-around" size="small">
+          <n-button
+            type="primary"
+            size="small"
+            @click="handleBatchGenCode(row.id)"
+            ghost
+          >
+            生成
+          </n-button>
           <n-button type="info" size="small" ghost> 编辑 </n-button>
           <n-popconfirm @positive-click="handleDelete(row.id)">
             <template #trigger>
