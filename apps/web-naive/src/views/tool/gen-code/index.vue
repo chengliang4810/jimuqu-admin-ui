@@ -5,6 +5,7 @@ import { getGenCodeList } from '#/api';
 import { downloadFile, requestClient as request } from '#/api/request';
 
 import importTableModal from './import-table-modal.vue';
+import previewCodeModal from './preview-code-modal.vue';
 
 const message = useMessage();
 const dialog = useDialog();
@@ -83,7 +84,7 @@ const gridOptions: VxeGridProps<RowType> = {
       fixed: 'right',
       slots: { default: 'action' },
       title: '操作',
-      width: 200,
+      width: 260,
     },
   ],
   keepSource: true,
@@ -178,6 +179,15 @@ async function handleBatchGenCodeCheck() {
   await handleBatchGenCode(ids);
   message.success(`生成成功`);
 }
+
+const [PreviewModal, previewModalApi] = useVbenModal({
+  connectedComponent: previewCodeModal,
+});
+
+async function handlePreview(id: string) {
+  previewModalApi.setData({ tableId: id });
+  previewModalApi.open();
+}
 </script>
 
 <template>
@@ -209,6 +219,14 @@ async function handleBatchGenCodeCheck() {
           >
             生成
           </n-button>
+          <n-button
+            type="info"
+            size="small"
+            @click="handlePreview(row.id)"
+            ghost
+          >
+            预览
+          </n-button>
           <n-button type="info" size="small" ghost> 编辑 </n-button>
           <n-popconfirm @positive-click="handleDelete(row.id)">
             <template #trigger>
@@ -220,6 +238,9 @@ async function handleBatchGenCodeCheck() {
       </template>
     </Grid>
 
+    <!-- 导入数据库表 -->
     <ImportTableModal @reload="gridApi.reload()" />
+    <!-- 代码预览 -->
+    <PreviewModal />
   </Page>
 </template>
