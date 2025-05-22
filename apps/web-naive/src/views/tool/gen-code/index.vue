@@ -163,6 +163,21 @@ async function handleBatchGenCode(id: string | string[]) {
   await downloadFile(`/tool/gen-code/batch/${id}`);
   message.success(`生成成功`);
 }
+
+/**
+ * 生成选中的数据
+ */
+async function handleBatchGenCodeCheck() {
+  const records = gridApi.grid.getCheckboxRecords();
+  if (records.length <= 0) {
+    message.warning('请选择要生成的表');
+    return;
+  }
+
+  const ids = records.map((item) => item.id);
+  await handleBatchGenCode(ids);
+  message.success(`生成成功`);
+}
 </script>
 
 <template>
@@ -171,7 +186,13 @@ async function handleBatchGenCode(id: string | string[]) {
       <template #toolbar-tools>
         <n-flex class="mx-3" size="small">
           <n-button class="mr-2" @click="handleImport"> 导入 </n-button>
-          <n-button class="mr-2" type="primary"> 生成 </n-button>
+          <n-button
+            class="mr-2"
+            type="primary"
+            @click="handleBatchGenCodeCheck"
+          >
+            生成
+          </n-button>
           <n-button class="mr-2" type="error" @click="handleDeleteCheck">
             删除
           </n-button>
