@@ -1,7 +1,11 @@
 <script lang="ts" setup>
+import type { FormType } from './form-modal.vue';
+
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { requestClient as request } from '#/api/request';
+import { requestClient } from '#/api/request';
+
+import formModal from './form-modal.vue';
 
 const message = useMessage();
 const dialog = useDialog();
@@ -35,9 +39,9 @@ const formOptions: VbenFormProps = {
   submitButtonOptions: {
     content: '查询',
   },
-  // 是否在字段值改变时提交表单
+  // 是否在字段值改变时提交表单进行搜索
   submitOnChange: false,
-  // 按下回车时是否提交表单
+  // 按下回车时是否提交表单进行搜索
   submitOnEnter: true,
 };
 
@@ -48,7 +52,7 @@ const gridOptions: VxeGridProps<RowType> = {
     range: true,
   },
   columns: [
-    { align: 'left', title: '', type: 'checkbox', width: 30 },
+    { align: 'left', title: '', type: 'checkbox', width: 40 },
     { title: '序号', type: 'seq', width: 50 },
     { field: 'id', title: '主键', visible: false },
     { field: 'name', title: '模板名称' },
@@ -70,7 +74,7 @@ const gridOptions: VxeGridProps<RowType> = {
     ajax: {
       query: async ({ page }, formValues) => {
         const { currentPage, pageSize } = page;
-        return await request.get<RowType[]>('/tool/gen-template/list', {
+        return await requestClient.get<RowType[]>('/tool/gen-template/list', {
           params: {
             currentPage,
             pageSize,
@@ -101,142 +105,17 @@ const gridOptions: VxeGridProps<RowType> = {
 
 const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
-// 表单Model类型
-type ModelType = 'add' | 'delete' | 'update';
-const currentType: Ref<ModelType> = ref('add');
-
-const currentModel = computed(() => {
-  return modelData[currentType.value];
-});
-// 表单Model参数
-const modelData: Record<ModelType, any> = {
-  add: {
-    title: '新增模板',
-    url: '/tool/gen-template/add',
-  },
-  update: {
-    title: '编辑模板',
-    url: '/tool/gen-template/update',
-  },
-  delete: {
-    title: '删除模板',
-    url: '/tool/gen-template/delete',
-  },
-};
-
-const [TemplateForm, templateFormApi] = useVbenForm({
-  handleSubmit: onSubmit,
-  schema: [
-    {
-      label: '主键',
-      fieldName: 'id',
-      component: 'Input',
-      dependencies: {
-        // 使用css方式隐藏 但仍然可赋值
-        show: () => false,
-        // 注意这个一定要为['']  否则不能被正常隐藏
-        triggerFields: [''],
-      },
-    },
-    {
-      label: '模板名称',
-      fieldName: 'name',
-      component: 'Input',
-      rules: 'required',
-      componentProps: {
-        placeholder: '请输入模板名称',
-      },
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
-      fieldName: 'path',
-      label: '文件路径',
-      rules: 'required',
-    },
-    {
-      component: 'RadioGroup',
-      fieldName: 'enable',
-      label: '状态',
-      defaultValue: 1,
-      componentProps: {
-        options: [
-          { value: 1, label: '启用' },
-          { value: 0, label: '禁用' },
-        ],
-      },
-      rules: 'selectRequired',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        type: 'textarea',
-        placeholder: '请输入',
-        autosize: { minRows: 20 },
-      },
-      fieldName: 'content',
-      label: '模板内容',
-      rules: 'required',
-    },
-    {
-      component: 'Input',
-      fieldName: 'remark',
-      label: '备注',
-      componentProps: {
-        placeholder: '请输入备注',
-        clearable: true,
-      },
-    },
-  ],
-  showDefaultActions: false,
+// 模板表单弹窗
+const [TemplateFromModal, formModelApi] = useVbenModal({
+  connectedComponent: formModal,
 });
 
-const [TemplateFormModel, templateFormModelApi] = useVbenModal({
-  title: '编辑数据',
-  appendToMain: true,
-  fullscreen: true,
-  onCancel() {
-    templateFormModelApi.close();
-  },
-  onConfirm: async () => {
-    await templateFormApi.validateAndSubmitForm();
-    // templateFormModelApi.close();
-  },
-  onOpenChange(isOpen: boolean) {
-    if (isOpen) {
-      const { values } = templateFormModelApi.getData<Record<string, any>>();
-      if (values) {
-        templateFormApi.setValues(values);
-      }
-    }
-  },
-});
-
-async function onSubmit(values: Record<string, any>) {
-  const loading = message.loading(`正在${currentModel.value.title}中...`);
-  templateFormModelApi.lock();
-  await request
-    .post(currentModel.value.url, { ...values, category: 'default' })
-    .finally(() => {
-      templateFormModelApi.unlock();
-    });
-  loading.destroy();
-  message.success(`${currentModel.value.title}成功`);
-  // 刷新列表
-  await gridApi.reload();
-  templateFormModelApi.close();
-}
-
-// 新增&修改模板表单弹窗
-function openModal(modelType: ModelType, formData?: any) {
-  currentType.value = modelType;
-  templateFormModelApi
+function openModal(formType: FormType, row?: RowType) {
+  formModelApi
     .setData({
-      values: formData || {},
+      formType,
+      row: row || {},
     })
-    .setState({ title: currentModel.value.title })
     .open();
 }
 
@@ -246,13 +125,13 @@ function openModal(modelType: ModelType, formData?: any) {
 async function handleDeleteCheck() {
   const records = gridApi.grid.getCheckboxRecords();
   if (records.length <= 0) {
-    message.warning('请选择要删除的数据');
+    message.warning('请选择要删除的模板数据');
     return;
   }
 
   // 确认删除
   dialog.warning({
-    title: '删除提醒',
+    title: '删除模板提醒',
     content: `你确定要删除${records.length}条数据吗？`,
     positiveText: '确定',
     negativeText: '取消',
@@ -269,8 +148,15 @@ async function handleDeleteCheck() {
  * @param id 主键，主键数组
  */
 async function handleDelete(id: string | string[]) {
-  const data = await request.post(`${modelData.delete.url}/${id}`);
+  const data = await requestClient.post(`/tool/gen-template/delete/${id}`);
   message.success(`成功删除${data}条数据`);
+  refreshTable();
+}
+
+/**
+ * 刷新表格数据
+ */
+async function refreshTable() {
   gridApi.reload();
 }
 </script>
@@ -303,15 +189,11 @@ async function handleDelete(id: string | string[]) {
             <template #trigger>
               <n-button type="error" size="small" ghost>删除</n-button>
             </template>
-            确认删除吗？
+            确认删除该模板吗？
           </n-popconfirm>
         </n-flex>
       </template>
     </Grid>
-
-    <!-- 新增&修改模板表单 -->
-    <TemplateFormModel>
-      <TemplateForm />
-    </TemplateFormModel>
+    <TemplateFromModal @reload="refreshTable" />
   </Page>
 </template>
