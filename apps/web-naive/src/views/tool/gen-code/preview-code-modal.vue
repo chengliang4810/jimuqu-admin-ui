@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { TreeOption } from 'naive-ui';
 
-import { useVbenModal } from '@vben/common-ui';
+import type { LanguageSupport } from '@vben/common-ui';
+
+import { CodeMirror, useVbenModal } from '@vben/common-ui';
 
 import { useClipboard } from '@vueuse/core';
 
@@ -67,6 +69,22 @@ function convertToTree(paths: string[]): TreeOption[] {
   return tree;
 }
 
+/**
+ * 代码预览语言类型
+ */
+const language = ref<LanguageSupport>('html');
+function changeLanguageType(filename: string) {
+  const typeList: { language: LanguageSupport; type: string }[] = [
+    { language: 'ts', type: '.ts' },
+    { language: 'java', type: '.java' },
+    { language: 'xml', type: '.xml' },
+    { language: 'sql', type: 'sql' },
+    { language: 'vue', type: '.vue' },
+  ];
+  const type = typeList.find((item) => filename.includes(item.type));
+  language.value = type ? type.language : 'html';
+}
+
 function handleClose() {
   currentCodeData.value = undefined;
   modalTitle.value = '代码预览';
@@ -78,6 +96,7 @@ const nodeProps = ({ option }: { option: TreeOption }) => {
       if (option.children) {
         return;
       }
+      changeLanguageType(option.label);
       modalTitle.value = `代码预览: ${option.label}` as string;
       currentCodeData.value = codeMap.value[option.key as string];
     },
@@ -111,17 +130,23 @@ async function handleCopy() {
           👆 根据文件名后缀分组展示
         </n-alert>
       </n-layout-sider>
-      <n-layout content-style="padding: 24px;" :native-scrollbar="false">
-        <n-code
-          show-line-numbers
-          :code="currentCodeData"
-          language="javascript"
+      <n-layout :native-scrollbar="false" content-style="display: flex">
+        <CodeMirror
+          v-model="currentCodeData"
+          :language="language"
+          class="h-[calc(100vh-80px)] w-full overflow-y-scroll text-[16px]"
+          readonly
         />
-
-        <div class="fixed right-20 top-20">
-          <n-button type="tertiary" @click="handleCopy"> 复制代码 </n-button>
+        <div class="absolute right-6 top-4">
+          <n-button type="primary" @click="handleCopy"> 复制代码 </n-button>
         </div>
       </n-layout>
     </n-layout>
   </Modal>
 </template>
+<style lang="scss" scoped>
+/** codeMirror 占满容器高度 即calc计算的高度 */
+:deep(.cm-editor) {
+  height: 100%;
+}
+</style>
