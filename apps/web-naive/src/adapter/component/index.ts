@@ -20,6 +20,7 @@ import { ApiComponent, globalShareState, IconPicker } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { message } from '#/adapter/naive';
+import { DictTag } from '#/components/dict';
 
 const NButton = defineAsyncComponent(() =>
   import('naive-ui/es/button').then((res) => res.NButton),
@@ -184,6 +185,9 @@ async function initComponentAdapter() {
     // 自定义主要按钮
     PrimaryButton: (props, { attrs, slots }) => {
       return h(NButton, { ...props, attrs, type: 'primary' }, slots);
+    },
+    Dict: (props, { attrs, slots }) => {
+      return h(DictTag, { ...props, attrs }, slots);
     },
     Divider: NDivider,
     IconPicker: withDefaultPlaceholder(IconPicker, 'select', {

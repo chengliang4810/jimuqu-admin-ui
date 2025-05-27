@@ -7,6 +7,7 @@ import { NSpin, NTag } from 'naive-ui';
 import { tagTypes } from './data';
 
 interface Props {
+  // eslint-disable-next-line vue/no-required-prop-with-default
   dicts: Dict.DataVo[]; // dict数组
   value: number | string; // value
 }
@@ -17,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const color = computed<string>(() => {
   const current = props.dicts.find((item) => item.dictValue == props.value);
-  const listClass = current?.listClass ?? '';
+  const listClass = current?.listClass ?? 'default';
   // 是否为默认的颜色
   const isDefault = Reflect.has(tagTypes, listClass);
   // 判断是默认还是自定义颜色
@@ -53,7 +54,7 @@ const loading = computed(() => {
       round
       size="small"
       :class="cssClass"
-      :color="color"
+      :type="color"
     >
       {{ label }}
     </component>
