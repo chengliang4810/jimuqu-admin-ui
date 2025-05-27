@@ -4,6 +4,7 @@ import type { FormType } from './form-modal.vue';
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { requestClient } from '#/api/request';
+import { getDictOptions } from '#/utils/dict';
 
 import formModal from './form-modal.vue';
 
@@ -52,6 +53,14 @@ const formOptions: VbenFormProps = {
       },
       fieldName: 'clientSecret',
       label: '客户端秘钥',
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        options: getDictOptions('sys_normal_disable'),
+      },
+      fieldName: 'status',
+      label: '状态',
     },
   ],
   // 控制表单是否显示折叠按钮
