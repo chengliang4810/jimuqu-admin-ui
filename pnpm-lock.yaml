@@ -1360,6 +1360,9 @@ importers:
       vue-codemirror6:
         specifier: 1.3.4
         version: 1.3.4(vue@3.5.13(typescript@5.8.3))
+      vue-json-pretty:
+        specifier: ^2.4.0
+        version: 2.4.0(vue@3.5.13(typescript@5.8.3))
       vue-json-viewer:
         specifier: 'catalog:'
         version: 3.0.4(vue@3.5.13(typescript@5.8.3))
@@ -1539,6 +1542,115 @@ importers:
       '@vben-core/icons':
         specifier: workspace:*
         version: link:../@core/base/icons
+      '@vben-core/shadcn-ui':
+        specifier: workspace:^
+        version: link:../@core/ui-kit/shadcn-ui
+    devDependencies:
+      '@iconify/icons-akar-icons':
+        specifier: ^1.2.19
+        version: 1.2.19
+      '@iconify/icons-ant-design':
+        specifier: ^1.2.7
+        version: 1.2.7
+      '@iconify/icons-arcticons':
+        specifier: ^1.2.77
+        version: 1.2.77
+      '@iconify/icons-bi':
+        specifier: ^1.2.19
+        version: 1.2.19
+      '@iconify/icons-bx':
+        specifier: ^1.2.6
+        version: 1.2.6
+      '@iconify/icons-carbon':
+        specifier: ^1.2.20
+        version: 1.2.20
+      '@iconify/icons-devicon':
+        specifier: ^1.2.17
+        version: 1.2.17
+      '@iconify/icons-emojione':
+        specifier: ^1.2.6
+        version: 1.2.6
+      '@iconify/icons-eos-icons':
+        specifier: ^1.2.6
+        version: 1.2.6
+      '@iconify/icons-fa-brands':
+        specifier: ^1.2.4
+        version: 1.2.4
+      '@iconify/icons-fe':
+        specifier: ^1.2.5
+        version: 1.2.5
+      '@iconify/icons-flat-color-icons':
+        specifier: ^1.2.5
+        version: 1.2.5
+      '@iconify/icons-fluent':
+        specifier: ^1.2.38
+        version: 1.2.38
+      '@iconify/icons-fluent-mdl2':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@iconify/icons-ic':
+        specifier: ^1.2.13
+        version: 1.2.13
+      '@iconify/icons-icon-park-outline':
+        specifier: ^1.2.11
+        version: 1.2.11
+      '@iconify/icons-icon-park-twotone':
+        specifier: ^1.2.8
+        version: 1.2.8
+      '@iconify/icons-la':
+        specifier: ^1.2.3
+        version: 1.2.3
+      '@iconify/icons-logos':
+        specifier: ^1.2.36
+        version: 1.2.36
+      '@iconify/icons-lucide':
+        specifier: ^1.2.135
+        version: 1.2.135
+      '@iconify/icons-majesticons':
+        specifier: ^1.2.6
+        version: 1.2.6
+      '@iconify/icons-material-symbols':
+        specifier: ^1.2.58
+        version: 1.2.58
+      '@iconify/icons-mdi':
+        specifier: ^1.2.48
+        version: 1.2.48
+      '@iconify/icons-mingcute':
+        specifier: ^1.2.9
+        version: 1.2.9
+      '@iconify/icons-noto':
+        specifier: ^1.2.10
+        version: 1.2.10
+      '@iconify/icons-ph':
+        specifier: ^1.2.5
+        version: 1.2.5
+      '@iconify/icons-ri':
+        specifier: ^1.2.10
+        version: 1.2.10
+      '@iconify/icons-simple-icons':
+        specifier: ^1.2.74
+        version: 1.2.74
+      '@iconify/icons-skill-icons':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@iconify/icons-solar':
+        specifier: ^1.2.3
+        version: 1.2.3
+      '@iconify/icons-streamline':
+        specifier: ^1.2.3
+        version: 1.2.3
+      '@iconify/icons-tabler':
+        specifier: ^1.2.95
+        version: 1.2.95
+      '@iconify/icons-uiw':
+        specifier: ^1.2.6
+        version: 1.2.6
+      '@iconify/icons-vscode-icons':
+        specifier: ^1.2.29
+        version: 1.2.29
+      '@iconify/icons-wpf':
+        specifier: ^1.2.3
+        version: 1.2.3
 
   packages/locales:
     dependencies:
@@ -3284,6 +3396,111 @@ packages:
   '@humanwhocodes/retry@0.4.2':
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
+
+  '@iconify/icons-akar-icons@1.2.19':
+    resolution: {integrity: sha512-q5gOZ+qFh1winAZ6M2Bcz06y5+/sKCbwzMbYVus62JmxURxIE1MKxJyklpTnQc+ZRZ0k12/+2ysPtSEpH6777w==}
+
+  '@iconify/icons-ant-design@1.2.7':
+    resolution: {integrity: sha512-X5OaFEhBroyUZru7aYi30q1EkLcAtqQqTdsq4g8oJUJOuVL8CxS43naaJVlFFgHj+F9QnuCT65yTpTIW3mdQEg==}
+
+  '@iconify/icons-arcticons@1.2.77':
+    resolution: {integrity: sha512-N7RoFR/YmOgKj96kkU+DFxghkrxvaJo5huKW/CsBk1Di94CLRQSwVy8AXa6hKh04q3ThfpO89zgeeWhp1VlC9g==}
+
+  '@iconify/icons-bi@1.2.19':
+    resolution: {integrity: sha512-P3enKEBR83a4fcK6vOsSueYpldYS3OdtSSto58bYU0sWThlxl+YXcmXY6Pu0ORKuMHK/hQagpwXPb+hT4vaO2g==}
+
+  '@iconify/icons-bx@1.2.6':
+    resolution: {integrity: sha512-2gm96RIQ+ieWTV/GgbkQMet9N9rsYbA+6WAmTO7+7FxlR5STpy+biNQZtwvok9OgTWiyTH6niS64o0npzQxMtQ==}
+
+  '@iconify/icons-carbon@1.2.20':
+    resolution: {integrity: sha512-GaBRDebrshFfiRu11ktyBvm/Ez72UXvZUsHG3WPqddokTp3auOT4cLch+2JSEzeVXSGbopzU2Fhpv8vE2I0XCw==}
+
+  '@iconify/icons-devicon@1.2.17':
+    resolution: {integrity: sha512-F1f8y8PEBGgDKyisCDuJ++8yeNkvQ5mUKxH0Ts1GJDY5Htv39wQXEgXvwIEltkBH/tb0G0oqGNwAz0WrKG3o/A==}
+
+  '@iconify/icons-emojione@1.2.6':
+    resolution: {integrity: sha512-dGohnEQzSeMtYjDD8/4kKMPaM+xHnt+QQ3O26qnIR5kjqWstoU8NMyBiJFzz7Q0Zsx1AbtNyPUXXtSH81ufoBA==}
+
+  '@iconify/icons-eos-icons@1.2.6':
+    resolution: {integrity: sha512-8Nk3/q2SN1qwi36w0S/CeAD55yoLfVix+85iwwVgyqz2VkILBAYUjVusfQXKIHW9KD8Vtymwz/512TXQ1GfM8Q==}
+
+  '@iconify/icons-fa-brands@1.2.4':
+    resolution: {integrity: sha512-MnUUfPhKJ6ECvVNxipBCmyuvJPDgRJcJ1f9nfgv0obikp6D9d6dGtMrR+bw4Gku6Gr/WCnS1e/Qd5gdmXlE84w==}
+
+  '@iconify/icons-fe@1.2.5':
+    resolution: {integrity: sha512-rSi8V/PEKk5vNbPC1/2QVLCKZn6lB6/HE2mMdWc+DF/x/99d3J8Y7aMMaisMqrolXlCaEy11ezhH7VF9lFqnqQ==}
+
+  '@iconify/icons-flat-color-icons@1.2.5':
+    resolution: {integrity: sha512-tlvRMTNVE006O1FFEb59TbseADRSeiDIg7tvZdPpCo7aRIzGyaeoI3A4SUl7ufdmKR8W36Sm4J3v0LccLVOfGA==}
+
+  '@iconify/icons-fluent-mdl2@1.2.1':
+    resolution: {integrity: sha512-yD1NiFhpOBTQUfT8t2pXSC7NmTTZEuzefYUMgVDcPnZt7P2E+Mty41TWDJ7jYQ1N3STTdzQgbooDjsIYR4Nmkw==}
+
+  '@iconify/icons-fluent@1.2.38':
+    resolution: {integrity: sha512-nwCCUD3GLl/0xUDFnNIFYDhOr00mUTBToDBZaspFeXAaCnfHklMRtf0uHevBjKgGVqwlaV5c8zer7aNjwyRBGQ==}
+
+  '@iconify/icons-ic@1.2.13':
+    resolution: {integrity: sha512-TphrhwOvgd7CTmUhz6jgXF+SPnMtvTm03bZsAYbny2kwq4zlkhr9e16YEyPGMvKhjtTqNooA3iZ9Wa+pZ8moXQ==}
+
+  '@iconify/icons-icon-park-outline@1.2.11':
+    resolution: {integrity: sha512-LB59OvoR33oEHho3RY+O1n52k1qI+ZSrPyh3kJ9+GXX7uZKhT/0qNMjo0tY3Xjl1K60haX7BCShprZsQDZAjbA==}
+
+  '@iconify/icons-icon-park-twotone@1.2.8':
+    resolution: {integrity: sha512-osbRpulFdwsc/38ZtA+iywwjhj7y2aRNeO6uPnOCOihP4EqbZWCRdvCTzP1yfkyr6QvKDFXWKdv8ZrFiEehdWA==}
+
+  '@iconify/icons-la@1.2.3':
+    resolution: {integrity: sha512-CD/7X9NXRPV0Ow7OKlBWBLvfQQPoBmJx/v4UWWX0LVMbwu1Mfftfg2hb4EeIjxbWaE5dBMkWGoc88YhV3K1vrA==}
+
+  '@iconify/icons-logos@1.2.36':
+    resolution: {integrity: sha512-RVdZE9figuWmd8HeVmM8oQvOdv/4YzXV6lZ+G9QJgzCB/VBLV0inPltZxOt939oj4GbKbr7PF6J4bADMua/GPw==}
+
+  '@iconify/icons-lucide@1.2.135':
+    resolution: {integrity: sha512-odjb/fGnKGIw3aNwZV8n4lTmpPN9LR2nHa3hjmZGrHNK3y1gHhiaU4H1XlCrSeQxkEN6TOB+l/falLwRo1rGRw==}
+
+  '@iconify/icons-majesticons@1.2.6':
+    resolution: {integrity: sha512-glJKKRuHbruf0nKs3hK+UPhhaFMal1YxCJTiDXUu4xxM+rYFHyJLOvON8kxvGfX4fR1rpCFWDcr933NpdbdXaQ==}
+
+  '@iconify/icons-material-symbols@1.2.58':
+    resolution: {integrity: sha512-EFBflkqoJmk8FJqA5U8xgJub3a3IaIX4hZVEY4nTnCr8XM4Qopu8H5DRRI9qStF8K3t7XQIJz3AeWmSZrF3+7w==}
+
+  '@iconify/icons-mdi@1.2.48':
+    resolution: {integrity: sha512-1Tiq+iX1d2MzrdDiw45Tc9HuhNgg8H4vvaKNV+kF+jmr/kPG+YyeLMyXUKp4bwv+gheIAgNpZPjuqAPRkmMieA==}
+
+  '@iconify/icons-mingcute@1.2.9':
+    resolution: {integrity: sha512-+iP9NhTM7WFtPDVb1jTgXJYApwDx7dNjOjmAJ4QG5mw3o1fu8/lQCdQ/3DgrVPt+GM2C/KQ+uPFyRh976VnZLQ==}
+
+  '@iconify/icons-noto@1.2.10':
+    resolution: {integrity: sha512-tTaBjHwW8MadgqcunNztkWLbACDkuebeJTSfEMNxJihJtXCLe2wz0x4ILvF2bnftU8K21sfi4sBOJXgf1Ia+Mw==}
+
+  '@iconify/icons-ph@1.2.5':
+    resolution: {integrity: sha512-ewrnpL0u3MAP0wLDnXb/39W9W71ObyY8DNig6rYj7NEwcndWWlrGHt1RxEGYE3eqILl/IUcNIQQF1CXZAhwr/w==}
+
+  '@iconify/icons-ri@1.2.10':
+    resolution: {integrity: sha512-w/Xu177artcK7P1LPUMq85WcRbqFE8sKYQEuNfEkuex/47DOaCgW6oBFdjlFBAmBczKlsJPdcy2pAGBGZvXdYw==}
+
+  '@iconify/icons-simple-icons@1.2.74':
+    resolution: {integrity: sha512-bsmbvwO8hauz49z740CYg70IDevOgshUoq4q1IKt6NnElnn+N2F6AseO3Uti82yUU4OHyQqkWjjUwoPTazlNnA==}
+
+  '@iconify/icons-skill-icons@1.2.1':
+    resolution: {integrity: sha512-863jRF5JMV2vZmOnNpf+oTbjGAZ0BSsUTu2r9Fkk1rWG53iRCWGteuAKIaMbK8EsRiCSzbQUTb55T0HzzXn9oQ==}
+
+  '@iconify/icons-solar@1.2.3':
+    resolution: {integrity: sha512-dots93IzoaOrJ8aUD2YGZ4+Jy+yf5D87CmzSeBkEi/m+WX1klvHqWuw5kyZvVroLOlaIaJXb5nZVaDnhc8XJyQ==}
+
+  '@iconify/icons-streamline@1.2.3':
+    resolution: {integrity: sha512-rtbtFIXjDsuBu4xSasz3db+GCgy+HUJrEW+N+u5M4DATQ8lc5NajWKxUFTXnrS5lyZOczZmfH1cinKUKqWd83g==}
+
+  '@iconify/icons-tabler@1.2.95':
+    resolution: {integrity: sha512-m4O1iTXJZasEZJudWHDAhrGnVEsTHmX8G3pk4Ag8IjPwLh77y5a0ek+zU+8xEd0+9APUV7SubK+GVd/WepMbbA==}
+
+  '@iconify/icons-uiw@1.2.6':
+    resolution: {integrity: sha512-y6LCoHQ3o1/C5cYipQ5/kt6I4h15JOS5YzBvv2INpj4kSEdUuZ4u9SF4gsLxKqLMxDlTE+mF9skF+Qaypputpw==}
+
+  '@iconify/icons-vscode-icons@1.2.29':
+    resolution: {integrity: sha512-EwmcXfDO6iAbM8+0KlMV/akAxzN5GBS61cjuEy/blqUZ9+RU7jOyfHRV1AXXPisGMsB1fbOLoUoTTrhu1fXLnw==}
+
+  '@iconify/icons-wpf@1.2.3':
+    resolution: {integrity: sha512-6GaVJCmqqDrg01LbyOywgCWcOAUWFhHh9vNqdJsd7S30afd47yzSqgJ06mdlJ0mFQGBE6R/QoBU+ydDKst9dsQ==}
 
   '@iconify/json@2.2.334':
     resolution: {integrity: sha512-VcnEHMZs1VT8QvU5dzT1Eau35nGSZdIcJlBRHkxe/HLS1kKkyuFFrsA5aIaHeM7vvU6Y8rPS4DDD2xDmnNgP3g==}
@@ -10312,6 +10529,12 @@ packages:
     peerDependencies:
       vue: ^3.5.13
 
+  vue-json-pretty@2.4.0:
+    resolution: {integrity: sha512-e9bP41DYYIc2tWaB6KuwqFJq5odZ8/GkE6vHQuGcbPn37kGk4a3n1RNw3ZYeDrl66NWXgTlOfS+M6NKkowmkWw==}
+    engines: {node: '>= 10.0.0', npm: '>= 5.0.0'}
+    peerDependencies:
+      vue: ^3.5.13
+
   vue-json-viewer@3.0.4:
     resolution: {integrity: sha512-pnC080rTub6YjccthVSNQod2z9Sl5IUUq46srXtn6rxwhW8QM4rlYn+CTSLFKXWfw+N3xv77Cioxw7B4XUKIbQ==}
     peerDependencies:
@@ -12491,6 +12714,146 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.2': {}
+
+  '@iconify/icons-akar-icons@1.2.19':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-ant-design@1.2.7':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-arcticons@1.2.77':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-bi@1.2.19':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-bx@1.2.6':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-carbon@1.2.20':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-devicon@1.2.17':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-emojione@1.2.6':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-eos-icons@1.2.6':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-fa-brands@1.2.4':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-fe@1.2.5':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-flat-color-icons@1.2.5':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-fluent-mdl2@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-fluent@1.2.38':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-ic@1.2.13':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-icon-park-outline@1.2.11':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-icon-park-twotone@1.2.8':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-la@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-logos@1.2.36':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-lucide@1.2.135':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-majesticons@1.2.6':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-material-symbols@1.2.58':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-mdi@1.2.48':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-mingcute@1.2.9':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-noto@1.2.10':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-ph@1.2.5':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-ri@1.2.10':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-simple-icons@1.2.74':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-skill-icons@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-solar@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-streamline@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-tabler@1.2.95':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-uiw@1.2.6':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-vscode-icons@1.2.29':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-wpf@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify/json@2.2.334':
     dependencies:
@@ -20302,6 +20665,10 @@ snapshots:
       '@intlify/core-base': 11.1.3
       '@intlify/shared': 11.1.3
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.13(typescript@5.8.3)
+
+  vue-json-pretty@2.4.0(vue@3.5.13(typescript@5.8.3)):
+    dependencies:
       vue: 3.5.13(typescript@5.8.3)
 
   vue-json-viewer@3.0.4(vue@3.5.13(typescript@5.8.3)):

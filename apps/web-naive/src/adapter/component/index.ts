@@ -112,6 +112,7 @@ export type ComponentType =
   | 'Checkbox'
   | 'CheckboxGroup'
   | 'DatePicker'
+  | 'Dict'
   | 'Divider'
   | 'IconPicker'
   | 'Input'

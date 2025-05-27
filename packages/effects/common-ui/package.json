@@ -52,6 +52,7 @@
     "tippy.js": "catalog:",
     "vue": "catalog:",
     "vue-codemirror6": "1.3.4",
+    "vue-json-pretty": "^2.4.0",
     "vue-json-viewer": "catalog:",
     "vue-router": "catalog:",
     "vue-tippy": "catalog:"

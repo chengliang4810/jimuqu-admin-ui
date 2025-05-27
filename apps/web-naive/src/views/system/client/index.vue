@@ -5,6 +5,7 @@ import { Page, useVbenModal } from '@vben/common-ui';
 
 import { requestClient } from '#/api/request';
 import { getDictOptions } from '#/utils/dict';
+import { renderDict, renderDictTags } from '#/utils/render';
 
 import formModal from './form-modal.vue';
 
@@ -37,6 +38,8 @@ interface ClientVo {
 const formOptions: VbenFormProps = {
   // 默认展开
   collapsed: false,
+  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+
   schema: [
     {
       component: 'Input',
@@ -79,6 +82,7 @@ const gridOptions: VxeGridProps<ClientVo> = {
   checkboxConfig: {
     highlight: true,
     range: true,
+    checkMethod: ({ row }) => (row as ClientVo)?.id !== '1',
   },
   columns: [
     { align: 'left', title: '', type: 'checkbox', width: 40 },
@@ -86,11 +90,45 @@ const gridOptions: VxeGridProps<ClientVo> = {
     { field: 'clientId', title: '客户端id' },
     { field: 'clientKey', title: '客户端key' },
     { field: 'clientSecret', title: '客户端秘钥' },
-    { field: 'grantType', title: '授权类型' },
-    { field: 'deviceType', title: '设备类型' },
+    {
+      field: 'grantType',
+      title: '授权类型',
+      slots: {
+        default: ({ row }) => {
+          if (!row.grantType) {
+            return '无';
+          }
+          const grantTypeList = row.grantType.split(',');
+
+          return renderDictTags(
+            grantTypeList,
+            getDictOptions('sys_grant_type'),
+            true,
+            4,
+          );
+        },
+      },
+    },
+    {
+      field: 'deviceType',
+      title: '设备类型',
+      slots: {
+        default: ({ row }) => {
+          return renderDict(row.deviceType, 'sys_device_type');
+        },
+      },
+    },
     { field: 'activeTimeout', title: 'token活跃超时时间' },
     { field: 'timeout', title: 'token固定超时时间' },
-    { field: 'status', title: '状态' },
+    {
+      field: 'status',
+      title: '状态',
+      slots: {
+        default: ({ row }) => {
+          return renderDict(row.status, 'sys_normal_disable');
+        },
+      },
+    },
     {
       field: 'action',
       fixed: 'right',
@@ -100,7 +138,6 @@ const gridOptions: VxeGridProps<ClientVo> = {
     },
   ],
   keepSource: true,
-  pagerConfig: {},
   height: 'auto',
   proxyConfig: {
     ajax: {
@@ -116,23 +153,10 @@ const gridOptions: VxeGridProps<ClientVo> = {
       },
     },
   },
-  toolbarConfig: {
-    // 是否显示搜索表单控制按钮
-    // @ts-ignore 正式环境时有完整的类型声明
-    custom: true,
-    // import: true,
-    refresh: true,
-    zoom: true,
-  },
-  headerCellConfig: {
-    height: 44,
-  },
-  cellConfig: {
-    height: 48,
-  },
   rowConfig: {
     keyField: 'id',
   },
+  showOverflow: false,
 };
 
 const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });

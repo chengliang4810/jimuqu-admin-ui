@@ -31,7 +31,7 @@ interface DictData {
  * select和radio通用
  * 本质上是对DictData的拓展
  */
-export interface DictOption extends DictData {
+export interface DictOption extends Dict.DataVo {
   disabled?: boolean;
   label: string;
   value: number | string;
