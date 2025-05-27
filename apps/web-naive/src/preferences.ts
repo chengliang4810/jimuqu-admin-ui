@@ -11,6 +11,8 @@ export const overridesPreferences = defineOverridesPreferences({
     name: import.meta.env.VITE_APP_TITLE,
     // 不需要刷新token的功能
     enableRefreshToken: false,
+    // 后端权限
+    accessMode: 'backend',
     // 水印
     watermark: false,
   },
