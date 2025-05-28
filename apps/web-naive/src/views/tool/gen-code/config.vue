@@ -34,7 +34,7 @@ onMounted(async () => {
 });
 
 const basicConfigRef = useTemplateRef('basicConfigRef');
-
+const columnConfigRef = useTemplateRef('columnConfigRef');
 const router = useRouter();
 /**
  * 保存配置
@@ -48,13 +48,21 @@ async function saveConfig() {
       return;
     }
 
+    // 校验tab2
+    const columnValidate = await columnConfigRef.value?.validateForm();
+    if (!columnValidate) {
+      currentTab.value = 'column';
+      return;
+    }
+
     // 合并数据
     const requestData = cloneDeep(unref(genInfoData!).info);
     // 获取表单数据
     const formValues = await basicConfigRef.value?.getFormValues();
     // 合并
     Object.assign(requestData, formValues);
-
+    // 从表格获取最新的
+    requestData.columns = columnConfigRef.value?.getFormValues() ?? [];
     // 保存
     await requestClient.post(`/tool/gen-code/update`, requestData);
 
@@ -78,7 +86,7 @@ async function saveConfig() {
           <ConfigBasic ref="basicConfigRef" />
         </n-tab-pane>
         <n-tab-pane name="column" display-directive="show" tab="字段配置">
-          <ConfigColumn />
+          <ConfigColumn ref="columnConfigRef" />
         </n-tab-pane>
         <template #suffix>
           <n-button type="primary" @click="saveConfig"> 保存配置 </n-button>

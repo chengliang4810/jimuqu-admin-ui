@@ -35,34 +35,6 @@ const [BasicForm, formApi] = useVbenForm({
       label: '生成信息',
     },
     {
-      component: 'Select',
-      componentProps: {
-        allowClear: false,
-      },
-      dependencies: {
-        show: (values) => values.tplCategory === 'tree',
-        triggerFields: ['tplCategory'],
-      },
-      fieldName: 'treeParentCode',
-      help: '树节点显示的父编码字段名， 如: parent_Id (相当于parentId)',
-      label: '树父编码字段',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'Select',
-      componentProps: {
-        allowClear: false,
-      },
-      dependencies: {
-        show: (values) => values.tplCategory === 'tree',
-        triggerFields: ['tplCategory'],
-      },
-      fieldName: 'treeName',
-      help: '树节点的显示名称字段名， 如: dept_name (相当于label)',
-      label: '树名称字段',
-      rules: 'selectRequired',
-    },
-    {
       component: 'Input',
       fieldName: 'packageName',
       help: '生成在哪个java包下, 例如 com.ruoyi.system',
@@ -125,7 +97,7 @@ const [BasicForm, formApi] = useVbenForm({
     //     ],
     //     optionType: 'button',
     //   },
-    //   help: '自定义功能, 需要后端支持\n复杂(布局, 联动等)表单建议用antd原生表单',
+    //   help: '自定义功能, 需要后端支持\n复杂(布局, 联动等)表单建议用原生表单',
     //   defaultValue: 'useForm',
     //   fieldName: 'formComponent',
     //   label: '生成表单类型',

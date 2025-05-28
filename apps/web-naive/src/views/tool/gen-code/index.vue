@@ -88,7 +88,6 @@ const gridOptions: VxeGridProps<RowType> = {
     },
   ],
   keepSource: true,
-  pagerConfig: {},
   height: 'auto',
   proxyConfig: {
     ajax: {
@@ -100,14 +99,6 @@ const gridOptions: VxeGridProps<RowType> = {
         });
       },
     },
-  },
-  toolbarConfig: {
-    // 是否显示搜索表单控制按钮
-    // @ts-ignore 正式环境时有完整的类型声明
-    custom: true,
-    // import: true,
-    refresh: true,
-    zoom: true,
   },
 };
 
@@ -216,13 +207,8 @@ function handleConfig(record: any) {
 
       <template #action="{ row }">
         <n-flex class="mx-3" justify="space-around" size="small">
-          <n-button
-            type="primary"
-            size="small"
-            @click="handleBatchGenCode(row.id)"
-            ghost
-          >
-            生成
+          <n-button type="info" size="small" @click="handleConfig(row)" ghost>
+            配置
           </n-button>
           <n-button
             type="info"
@@ -232,8 +218,13 @@ function handleConfig(record: any) {
           >
             预览
           </n-button>
-          <n-button type="info" size="small" @click="handleConfig(row)" ghost>
-            配置
+          <n-button
+            type="primary"
+            size="small"
+            @click="handleBatchGenCode(row.id)"
+            ghost
+          >
+            生成
           </n-button>
           <n-popconfirm @positive-click="handleDelete(row.id)">
             <template #trigger>
