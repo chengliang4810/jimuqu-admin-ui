@@ -207,7 +207,12 @@ function handleConfig(record: any) {
 
       <template #action="{ row }">
         <n-flex class="mx-3" justify="space-around" size="small">
-          <n-button type="info" size="small" @click="handleConfig(row)" ghost>
+          <n-button
+            type="success"
+            size="small"
+            @click="handleConfig(row)"
+            ghost
+          >
             配置
           </n-button>
           <n-button
