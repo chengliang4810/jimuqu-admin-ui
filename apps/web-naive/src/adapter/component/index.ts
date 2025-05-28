@@ -196,6 +196,7 @@ async function initComponentAdapter() {
     }),
     Input: withDefaultPlaceholder(NInput, 'input'),
     InputNumber: withDefaultPlaceholder(NInputNumber, 'input'),
+    Textarea: withDefaultPlaceholder(NInput, 'input', { type: 'textarea' }),
     RadioGroup: (props, { attrs, slots }) => {
       let defaultSlot;
       if (Reflect.has(slots, 'default')) {

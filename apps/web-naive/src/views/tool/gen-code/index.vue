@@ -188,6 +188,11 @@ async function handlePreview(id: string) {
   previewModalApi.setData({ tableId: id });
   previewModalApi.open();
 }
+
+const router = useRouter();
+function handleConfig(record: any) {
+  router.push(`/tool/gen/config/${record.id}`);
+}
 </script>
 
 <template>
@@ -227,7 +232,9 @@ async function handlePreview(id: string) {
           >
             预览
           </n-button>
-          <n-button type="info" size="small" ghost> 编辑 </n-button>
+          <n-button type="info" size="small" @click="handleConfig(row)" ghost>
+            配置
+          </n-button>
           <n-popconfirm @positive-click="handleDelete(row.id)">
             <template #trigger>
               <n-button type="error" size="small" ghost>删除</n-button>
