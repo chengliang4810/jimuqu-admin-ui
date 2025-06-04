@@ -70,6 +70,9 @@ const NTreeSelect = defineAsyncComponent(() =>
 const NUpload = defineAsyncComponent(() =>
   import('naive-ui/es/upload').then((res) => res.NUpload),
 );
+const NCascader = defineAsyncComponent(() =>
+  import('naive-ui/es/cascader').then((res) => res.NCascader),
+);
 
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
@@ -224,6 +227,7 @@ async function initComponentAdapter() {
     Switch: NSwitch,
     TimePicker: NTimePicker,
     TreeSelect: withDefaultPlaceholder(NTreeSelect, 'select'),
+    Cascader: withDefaultPlaceholder(NCascader, 'select'),
     Upload: NUpload,
   };
 
