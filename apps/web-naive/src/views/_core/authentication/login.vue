@@ -15,35 +15,35 @@ const authStore = useAuthStore();
 
 const MOCK_USER_OPTIONS: BasicOption[] = [
   {
-    label: 'Super',
+    label: '积木有限责任公司',
     value: 'vben',
   },
   {
-    label: 'Admin',
+    label: '积木物联子公司',
     value: 'admin',
   },
   {
-    label: 'User',
+    label: '积木AI子公司',
     value: 'jack',
   },
 ];
 
 const formSchema = computed((): VbenFormSchema[] => {
   return [
-    // {
-    //   component: 'VbenSelect',
-    //   componentProps: {
-    //     options: MOCK_USER_OPTIONS,
-    //     placeholder: $t('authentication.selectAccount'),
-    //   },
-    //   fieldName: 'selectAccount',
-    //   label: $t('authentication.selectAccount'),
-    //   rules: z
-    //     .string()
-    //     .min(1, { message: $t('authentication.selectAccount') })
-    //     .optional()
-    //     .default('vben'),
-    // },
+    {
+      component: 'VbenSelect',
+      componentProps: {
+        options: MOCK_USER_OPTIONS,
+        placeholder: $t('authentication.selectAccount'),
+      },
+      fieldName: 'selectAccount',
+      label: $t('authentication.selectAccount'),
+      rules: z
+        .string()
+        .min(1, { message: $t('authentication.selectAccount') })
+        .optional()
+        .default('vben'),
+    },
     {
       component: 'VbenInput',
       componentProps: {
