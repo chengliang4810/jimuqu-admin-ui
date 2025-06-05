@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useVbenModal } from '@vben/common-ui';
-import { cloneDeep, getPopupContainer } from '@vben/utils';
+import { cloneDeep } from '@vben/utils';
 
 import { requestClient } from '#/api/request';
 
@@ -15,12 +15,12 @@ const currentType: Ref<FormType> = ref('add');
 // 表单不同类型参数
 const formTypeData: Record<FormType, Record<string, any>> = {
   add: {
-    title: '新增用户信息',
-    url: '/system/user/add',
+    title: '新增角色信息',
+    url: '/system/role/add',
   },
   update: {
-    title: '编辑用户信息',
-    url: '/system/user/update',
+    title: '编辑角色信息',
+    url: '/system/role/update',
   },
 };
 
@@ -30,11 +30,11 @@ const currentFormTypeData = computed(() => {
 });
 
 // 表单字段配置
-const [UserForm, formApi] = useVbenForm({
+const [RoleForm, formApi] = useVbenForm({
   schema: [
     {
-      label: '用户ID',
-      fieldName: 'id',
+      label: '角色ID',
+      fieldName: 'roleId',
       component: 'Input',
       dependencies: {
         // 使用css方式隐藏 但仍然可赋值
@@ -44,83 +44,64 @@ const [UserForm, formApi] = useVbenForm({
       },
     },
     {
-      fieldName: 'userName',
-      label: '账号',
+      fieldName: 'roleName',
+      label: '角色名称',
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: '请输入用户账号',
+        placeholder: '请输入角色名称',
       },
     },
     {
-      fieldName: 'password',
-      label: '密码',
-      component: 'Input',
-      rules: 'required',
-      defaultValue: '123456',
-      componentProps: {
-        type: 'password',
-        showPasswordOn: 'click',
-        placeholder: '请输入密码',
-      },
-    },
-    {
-      fieldName: 'nickName',
-      label: '昵称',
+      fieldName: 'roleKey',
+      label: '角色权限字符串',
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: '请输入用户昵称',
+        placeholder: '请输入角色权限字符串',
       },
     },
     {
-      fieldName: 'deptId',
-      label: '所属部门',
-      rules: 'required',
-      component: 'TreeSelect',
-      componentProps: {
-        placeholder: '请选择部门',
-        getPopupContainer,
-        keyField: 'id',
-        labelField: 'label',
-        showPath: true,
-        defaultExpandAll: true,
-        virtualScroll: false,
-      },
-    },
-    {
-      fieldName: 'roleIds',
-      label: '角色',
-      rules: 'required',
-      component: 'Select',
-      componentProps: {
-        multiple: true,
-        placeholder: '请选择角色',
-        getPopupContainer,
-        valueField: 'id',
-        labelField: 'roleName',
-      },
-    },
-    {
-      fieldName: 'phonenumber',
-      label: '手机号码',
+      fieldName: 'roleSort',
+      label: '显示顺序',
       component: 'Input',
+      rules: 'required',
       componentProps: {
-        placeholder: '请输入手机号码',
+        placeholder: '请输入显示顺序',
       },
     },
     {
-      fieldName: 'email',
-      label: '邮箱',
+      fieldName: 'dataScope',
+      label: '数据范围',
       component: 'Input',
+      rules: 'required',
       componentProps: {
-        placeholder: '请输入用户邮箱',
+        placeholder: '请输入数据范围',
+      },
+    },
+    {
+      fieldName: 'menuCheckStrictly',
+      label: '菜单树选择项是否关联显示',
+      component: 'Input',
+      rules: 'required',
+      componentProps: {
+        placeholder: '请输入菜单树选择项是否关联显示',
+      },
+    },
+    {
+      fieldName: 'deptCheckStrictly',
+      label: '部门树选择项是否关联显示',
+      component: 'Input',
+      rules: 'required',
+      componentProps: {
+        placeholder: '请输入部门树选择项是否关联显示',
       },
     },
     {
       fieldName: 'remark',
       label: '备注',
       component: 'Input',
+      rules: 'required',
       componentProps: {
         placeholder: '请输入备注',
       },
@@ -129,26 +110,13 @@ const [UserForm, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-// 用户信息表单弹窗
+// 角色信息表单弹窗
 const [FormModel, formModelApi] = useVbenModal({
   onConfirm: handleConfirm,
-  async onOpenChange(isOpen: boolean) {
+  onOpenChange(isOpen: boolean) {
     if (isOpen) {
       const { formType, row } = formModelApi.getData<Record<string, any>>();
       currentType.value = formType;
-      const isUpdate = currentType.value === 'update';
-      /** update时 禁用用户名修改 不显示密码框 */
-      formApi.updateSchema([
-        { componentProps: { disabled: isUpdate }, fieldName: 'userName' },
-        {
-          dependencies: { show: () => !isUpdate, triggerFields: ['id'] },
-          fieldName: 'password',
-        },
-      ]);
-
-      await initDeptSelect();
-      await initRoleSelect();
-
       if (row) {
         formApi.setValues(row);
       }
@@ -191,35 +159,9 @@ async function handleConfirm() {
     loading.destroy();
   }
 }
-
-async function initDeptSelect() {
-  // 需要动态更新TreeSelect组件 这里允许为空
-  const options = await requestClient.get('/system/dept/tree');
-  formApi.updateSchema([
-    {
-      componentProps: {
-        options,
-      },
-      fieldName: 'deptId',
-    },
-  ]);
-}
-
-async function initRoleSelect() {
-  // 需要动态更新TreeSelect组件 这里允许为空
-  const { roles } = await requestClient.get('/system/user/');
-  formApi.updateSchema([
-    {
-      componentProps: {
-        options: roles,
-      },
-      fieldName: 'roleIds',
-    },
-  ]);
-}
 </script>
 <template>
   <FormModel :title="currentFormTypeData.title">
-    <UserForm />
+    <RoleForm />
   </FormModel>
 </template>
