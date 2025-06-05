@@ -107,7 +107,7 @@ const gridOptions: VxeGridProps<RoleVo> = {
   },
   columns: [
     { align: 'left', title: '', type: 'checkbox', width: 40 },
-    { field: 'roleId', title: '角色ID', visible: true},
+    { field: 'roleId', title: '角色ID', visible: true },
     { field: 'roleName', title: '角色名称' },
     { field: 'roleKey', title: '角色权限字符串' },
     { field: 'roleSort', title: '显示顺序' },
