@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { useVbenModal } from '@vben/common-ui';
-import {
-  addFullName,
-  cloneDeep,
-  getPopupContainer,
-  listToTree,
-} from '@vben/utils';
+import { cloneDeep, getPopupContainer } from '@vben/utils';
 
 import { z } from '#/adapter/form';
 import { requestClient } from '#/api/request';
@@ -48,9 +43,14 @@ const [DeptForm, formApi] = useVbenForm({
       fieldName: 'id',
     },
     {
-      component: 'Cascader',
+      component: 'TreeSelect',
       componentProps: {
         getPopupContainer,
+        keyField: 'id',
+        labelField: 'label',
+        showPath: true,
+        defaultExpandAll: true,
+        virtualScroll: false,
       },
       dependencies: {
         show: (model) => model.parentId !== 0,
@@ -83,6 +83,27 @@ const [DeptForm, formApi] = useVbenForm({
         // 选中了就只能修改 不能重置为无负责人
         allowClear: false,
         getPopupContainer,
+      },
+      dependencies: {
+        // 触发字段。只有这些字段值变动时，联动才会触发
+        triggerFields: ['parentId'],
+        // 动态组件参数
+        async componentProps(values) {
+          if (!values.parentId) {
+            return {
+              disabled: true,
+              options: [],
+              placeholder: '请先选择上级部门',
+            };
+          }
+          const options = await getDeptUsersOptions(values.parentId);
+          return {
+            options,
+            disabled: options.length === 0,
+            placeholder:
+              options.length > 0 ? '请选择部门负责人' : '该部门暂无用户',
+          };
+        },
       },
       fieldName: 'leader',
       label: '负责人',
@@ -133,9 +154,9 @@ const [FormModel, formModelApi] = useVbenModal({
         formApi.setValues(row);
       }
 
-      await (currentType.value === 'update' && row.id
-        ? initDeptUsers(row.id)
-        : setLeaderOptions());
+      // await (currentType.value === 'update' && row.id
+      //   ? initDeptUsers(row.id)
+      //   : undefined);
       /** 部门选择 下拉框 */
       await initDeptSelect(row.id);
       // await markInitialized();
@@ -180,14 +201,9 @@ async function handleConfirm() {
 }
 
 async function getDeptTree(deptId?: number | string, exclude = false) {
-  let ret: any[] = [];
-  ret = await (!deptId || exclude
-    ? requestClient.get('/system/dept/list')
-    : requestClient.get(`/system/dept/list/exclude${deptId}`));
-  const treeData = listToTree(ret, { id: 'id', pid: 'parentId' });
-  // 添加部门名称 如 xx-xx-xx
-  addFullName(treeData, 'deptName', ' / ');
-  return treeData;
+  return await (!deptId || exclude
+    ? requestClient.get('/system/dept/tree')
+    : requestClient.get(`/system/dept/tree/exclude/${deptId}`));
 }
 
 async function initDeptSelect(deptId?: number | string) {
@@ -196,15 +212,7 @@ async function initDeptSelect(deptId?: number | string) {
   formApi.updateSchema([
     {
       componentProps: {
-        valueField: 'id',
-        labelField: 'deptName',
-        cascade: true,
-        showPath: true,
-        checkStrategyIsChild: true,
         options,
-        // 'default-expand-all': true,
-        // 选中后显示在输入框的值
-        // treeNodeLabelProp: 'fullName',
       },
       fieldName: 'parentId',
     },
@@ -212,38 +220,15 @@ async function initDeptSelect(deptId?: number | string) {
 }
 
 /**
- * 部门管理员下拉框 更新时才会enable
- * @param deptId
+ * 获取部门管理员下拉框
+ * @param deptId 部门id
  */
-async function initDeptUsers(_deptId: number | string) {
-  // const ret = await requestClient.get(deptId);
-  // const options = ret.map((user) => ({
-  //   label: `${user.userName} | ${user.nickName}`,
-  //   value: user.userId,
-  // }));
-  // formApi.updateSchema([
-  //   {
-  //     componentProps: {
-  //       disabled: ret.length === 0,
-  //       options,
-  //       placeholder: ret.length === 0 ? '该部门暂无用户' : '请选择部门负责人',
-  //     },
-  //     fieldName: 'leader',
-  //   },
-  // ]);
-}
-
-async function setLeaderOptions() {
-  formApi.updateSchema([
-    {
-      componentProps: {
-        disabled: true,
-        options: [],
-        placeholder: '仅在更新时可选部门负责人',
-      },
-      fieldName: 'leader',
-    },
-  ]);
+async function getDeptUsersOptions(deptId: number | string) {
+  const data = await requestClient.get(`/system/user/list/dept/${deptId}`);
+  return data?.map((user: any) => ({
+    label: `${user.nickName} | ${user.userName}`,
+    value: user.id,
+  }));
 }
 </script>
 <template>
