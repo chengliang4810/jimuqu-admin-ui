@@ -34,7 +34,7 @@ const [RoleForm, formApi] = useVbenForm({
   schema: [
     {
       label: '角色ID',
-      fieldName: 'roleId',
+      fieldName: 'id',
       component: 'Input',
       dependencies: {
         // 使用css方式隐藏 但仍然可赋值
@@ -54,11 +54,11 @@ const [RoleForm, formApi] = useVbenForm({
     },
     {
       fieldName: 'roleKey',
-      label: '角色权限字符串',
+      label: '权限字符',
       component: 'Input',
       rules: 'required',
       componentProps: {
-        placeholder: '请输入角色权限字符串',
+        placeholder: '请输入权限字符',
       },
     },
     {
@@ -70,38 +70,37 @@ const [RoleForm, formApi] = useVbenForm({
         placeholder: '请输入显示顺序',
       },
     },
-    {
-      fieldName: 'dataScope',
-      label: '数据范围',
-      component: 'Input',
-      rules: 'required',
-      componentProps: {
-        placeholder: '请输入数据范围',
-      },
-    },
-    {
-      fieldName: 'menuCheckStrictly',
-      label: '菜单树选择项是否关联显示',
-      component: 'Input',
-      rules: 'required',
-      componentProps: {
-        placeholder: '请输入菜单树选择项是否关联显示',
-      },
-    },
-    {
-      fieldName: 'deptCheckStrictly',
-      label: '部门树选择项是否关联显示',
-      component: 'Input',
-      rules: 'required',
-      componentProps: {
-        placeholder: '请输入部门树选择项是否关联显示',
-      },
-    },
+    // {
+    //   fieldName: 'dataScope',
+    //   label: '数据范围',
+    //   component: 'Input',
+    //   rules: 'required',
+    //   componentProps: {
+    //     placeholder: '请输入数据范围',
+    //   },
+    // },
+    // {
+    //   fieldName: 'menuCheckStrictly',
+    //   label: '菜单树选择项是否关联显示',
+    //   component: 'Input',
+    //   rules: 'required',
+    //   componentProps: {
+    //     placeholder: '请输入菜单树选择项是否关联显示',
+    //   },
+    // },
+    // {
+    //   fieldName: 'deptCheckStrictly',
+    //   label: '部门树选择项是否关联显示',
+    //   component: 'Input',
+    //   rules: 'required',
+    //   componentProps: {
+    //     placeholder: '请输入部门树选择项是否关联显示',
+    //   },
+    // },
     {
       fieldName: 'remark',
       label: '备注',
       component: 'Input',
-      rules: 'required',
       componentProps: {
         placeholder: '请输入备注',
       },

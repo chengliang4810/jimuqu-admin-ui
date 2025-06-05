@@ -1,11 +1,27 @@
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import type { FormType } from './form-modal.vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
+import { NTag } from 'naive-ui';
+
 import { requestClient } from '#/api/request';
+import { renderDict } from '#/utils/render';
 
 import formModal from './form-modal.vue';
+/**
+ * authScopeOptions user也会用到
+ * 限制 type 类型为 'default' | 'primary' | 'info' | 'success' | 'warning' | 'error'
+ */
+
+const authScopeOptions = [
+  { type: 'info', label: '全部数据权限', value: '1' },
+  { type: 'default', label: '自定数据权限', value: '2' },
+  { type: 'success', label: '本部门数据权限', value: '3' },
+  { type: 'warning', label: '本部门及以下数据权限', value: '4' },
+  { type: 'error', label: '仅本人数据权限', value: '5' },
+  { type: 'warning', label: '部门及以下或本人数据权限', value: '6' },
+];
 
 const message = useMessage();
 const dialog = useDialog();
@@ -55,38 +71,6 @@ const formOptions: VbenFormProps = {
       fieldName: 'roleKey',
       label: '角色权限字符串',
     },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入显示顺序',
-      },
-      fieldName: 'roleSort',
-      label: '显示顺序',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入数据范围',
-      },
-      fieldName: 'dataScope',
-      label: '数据范围',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入菜单树选择项是否关联显示',
-      },
-      fieldName: 'menuCheckStrictly',
-      label: '菜单树选择项是否关联显示',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入部门树选择项是否关联显示',
-      },
-      fieldName: 'deptCheckStrictly',
-      label: '部门树选择项是否关联显示',
-    },
   ],
   // 控制表单是否显示折叠按钮
   showCollapseButton: true,
@@ -107,14 +91,35 @@ const gridOptions: VxeGridProps<RoleVo> = {
   },
   columns: [
     { align: 'left', title: '', type: 'checkbox', width: 40 },
-    { field: 'roleId', title: '角色ID', visible: true },
+    { field: 'id', title: '角色ID', visible: false },
     { field: 'roleName', title: '角色名称' },
     { field: 'roleKey', title: '角色权限字符串' },
     { field: 'roleSort', title: '显示顺序' },
-    { field: 'dataScope', title: '数据范围' },
-    { field: 'menuCheckStrictly', title: '菜单树选择项是否关联显示' },
-    { field: 'deptCheckStrictly', title: '部门树选择项是否关联显示' },
-    { field: 'status', title: '角色状态' },
+
+    {
+      field: 'dataScope',
+      title: '数据权限',
+      slots: {
+        default: ({ row }) => {
+          const found = authScopeOptions.find(
+            (item) => item.value === row.dataScope,
+          );
+          if (found) {
+            return <NTag type={'default'}>{found.label}</NTag>;
+          }
+          return <NTag type={'error'}>{row.dataScope}</NTag>;
+        },
+      },
+    },
+    {
+      field: 'status',
+      title: '角色状态',
+      slots: {
+        default: ({ row }) => {
+          return renderDict(row.status, 'sys_normal_disable');
+        },
+      },
+    },
     { field: 'createTime', formatter: 'formatDateTime', title: '创建时间' },
     { field: 'remark', title: '备注' },
     {
@@ -142,20 +147,7 @@ const gridOptions: VxeGridProps<RoleVo> = {
       },
     },
   },
-  toolbarConfig: {
-    // 是否显示搜索表单控制按钮
-    // @ts-ignore 正式环境时有完整的类型声明
-    custom: true,
-    // import: true,
-    refresh: true,
-    zoom: true,
-  },
-  headerCellConfig: {
-    height: 44,
-  },
-  cellConfig: {
-    height: 48,
-  },
+
   rowConfig: {
     keyField: 'roleId',
   },
