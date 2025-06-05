@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { TreeOption } from 'naive-ui';
+
 import type { PropType } from 'vue';
 
 import { onMounted, ref } from 'vue';
@@ -22,7 +24,7 @@ const emit = defineEmits<{
 
 const selectDeptId = defineModel('selectDeptId', {
   required: true,
-  type: Array as PropType<string[]>,
+  type: [String, Number, Array] as PropType<number | string | string[]>,
 });
 
 const searchValue = defineModel('searchValue', {
@@ -41,7 +43,7 @@ async function loadTree() {
   searchValue.value = '';
   selectDeptId.value = [];
 
-  const data = await requestClient.get<DeptTreeArray>('/system/user/deptTree');
+  const data = await requestClient.get<DeptTreeArray>('/system/dept/tree');
 
   deptTreeArray.value = data;
   showTreeSkeleton.value = false;
@@ -54,10 +56,14 @@ async function handleReload() {
 
 onMounted(loadTree);
 
-function handleCheckedKeys(keys: string[]) {
-  selectDeptId.value = keys;
-  emit('select');
-}
+const nodeProps = ({ option }: { option: TreeOption }) => {
+  return {
+    onClick() {
+      selectDeptId.value = option.id as string;
+      emit('select');
+    },
+  };
+};
 </script>
 
 <template>
@@ -78,44 +84,23 @@ function handleCheckedKeys(keys: string[]) {
             size="small"
             placeholder="搜索"
           />
-          <n-button type="primary" ghost @click="handleReload">
-            <!--              <SyncOutlined class="text-primary" />-->
-            刷新
-          </n-button>
+          <n-button type="primary" ghost @click="handleReload"> 刷新 </n-button>
         </n-input-group>
       </div>
       <div class="h-full overflow-x-hidden px-[8px]">
         <n-tree
           v-bind="$attrs"
+          selectable
           v-if="deptTreeArray.length > 0"
-          v-model:selected-keys="selectDeptId"
           :class="$attrs.class"
           key-field="id"
+          :pattern="searchValue"
+          :show-irrelevant-nodes="false"
           label-field="label"
           :data="deptTreeArray"
           default-expand-all
-          @update:checked-keys="handleCheckedKeys"
-        >
-          <!--            <template #title="{ label }">-->
-          <!--              <span v-if="label.includes(searchValue)">-->
-          <!--                {{ label.substring(0, label.indexOf(searchValue)) }}-->
-          <!--                <span style="color: #f50">{{ searchValue }}</span>-->
-          <!--                {{-->
-          <!--                  label.substring(-->
-          <!--                    label.indexOf(searchValue) + searchValue.length,-->
-          <!--                  )-->
-          <!--                }}-->
-          <!--              </span>-->
-          <!--              <span v-else>{{ label }}</span>-->
-          <!--            </template>-->
-        </n-tree>
-        <!-- 仅本人数据权限 可以考虑直接不显示 -->
-        <div v-else class="mt-5">
-          <!--          <Empty-->
-          <!--            :image="Empty.PRESENTED_IMAGE_SIMPLE"-->
-          <!--            description="无部门数据"-->
-          <!--          />-->
-        </div>
+          :node-props="nodeProps"
+        />
       </div>
     </div>
   </div>

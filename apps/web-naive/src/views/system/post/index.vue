@@ -4,6 +4,7 @@ import type { FormType } from './form-modal.vue';
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { requestClient } from '#/api/request';
+import { renderDict } from '#/utils/render';
 import DeptTree from '#/views/system/dept/dept-tree.vue';
 
 import formModal from './form-modal.vue';
@@ -34,7 +35,7 @@ interface PostVo {
 }
 
 // 左边部门用
-const selectDeptId = ref<string[]>([]);
+const selectDeptId = ref<string>('');
 
 // 查询表单配置
 const formOptions: VbenFormProps = {
@@ -67,7 +68,7 @@ const formOptions: VbenFormProps = {
     },
   ],
   handleReset: async () => {
-    selectDeptId.value = [];
+    selectDeptId.value = '';
 
     const { formApi, reload } = gridApi;
     await formApi.resetForm();
@@ -97,10 +98,18 @@ const gridOptions: VxeGridProps<PostVo> = {
     { field: 'postId', title: '岗位ID', visible: false },
     { field: 'deptId', title: '部门id', visible: false },
     { field: 'postCode', title: '岗位编码' },
-    { field: 'postCategory', title: '岗位类别编码' },
+    // { field: 'postCategory', title: '岗位类别编码' },
     { field: 'postName', title: '岗位名称' },
     { field: 'postSort', title: '显示顺序' },
-    { field: 'status', title: '状态' },
+    {
+      field: 'status',
+      title: '状态',
+      slots: {
+        default: ({ row }) => {
+          return renderDict(row.status, 'sys_normal_disable');
+        },
+      },
+    },
     { field: 'createTime', formatter: 'formatDateTime', title: '创建时间' },
     { field: 'remark', title: '备注' },
     {
@@ -118,6 +127,9 @@ const gridOptions: VxeGridProps<PostVo> = {
     ajax: {
       query: async ({ page }, formValues) => {
         const { currentPage, pageSize } = page;
+        if (selectDeptId.value) {
+          formValues.belongDeptId = selectDeptId.value;
+        }
         return await requestClient.get<PostVo[]>('/system/post/list', {
           params: {
             currentPage,
@@ -127,20 +139,6 @@ const gridOptions: VxeGridProps<PostVo> = {
         });
       },
     },
-  },
-  toolbarConfig: {
-    // 是否显示搜索表单控制按钮
-    // @ts-ignore 正式环境时有完整的类型声明
-    custom: true,
-    // import: true,
-    refresh: true,
-    zoom: true,
-  },
-  headerCellConfig: {
-    height: 44,
-  },
-  cellConfig: {
-    height: 48,
   },
   rowConfig: {
     keyField: 'postId',
