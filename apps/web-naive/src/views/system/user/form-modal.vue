@@ -44,6 +44,21 @@ const [UserForm, formApi] = useVbenForm({
       },
     },
     {
+      fieldName: 'deptId',
+      label: '所属部门',
+      rules: 'required',
+      component: 'TreeSelect',
+      componentProps: {
+        placeholder: '请选择部门',
+        getPopupContainer,
+        keyField: 'id',
+        labelField: 'label',
+        showPath: true,
+        defaultExpandAll: true,
+        virtualScroll: false,
+      },
+    },
+    {
       fieldName: 'userName',
       label: '账号',
       component: 'Input',
@@ -71,21 +86,6 @@ const [UserForm, formApi] = useVbenForm({
       rules: 'required',
       componentProps: {
         placeholder: '请输入用户昵称',
-      },
-    },
-    {
-      fieldName: 'deptId',
-      label: '所属部门',
-      rules: 'required',
-      component: 'TreeSelect',
-      componentProps: {
-        placeholder: '请选择部门',
-        getPopupContainer,
-        keyField: 'id',
-        labelField: 'label',
-        showPath: true,
-        defaultExpandAll: true,
-        virtualScroll: false,
       },
     },
     {
@@ -147,11 +147,7 @@ const [FormModel, formModelApi] = useVbenModal({
       ]);
 
       await initDeptSelect();
-      await initRoleSelect();
-
-      if (row) {
-        formApi.setValues(row);
-      }
+      await initRoleSelect(row, isUpdate);
     }
   },
 });
@@ -203,11 +199,24 @@ async function initDeptSelect() {
       fieldName: 'deptId',
     },
   ]);
+  // 新增时默认选择第一个
+  formApi.setFieldValue('deptId', options?.[0].id);
 }
 
-async function initRoleSelect() {
+async function initRoleSelect(row: any, isUpdate: boolean = false) {
   // 需要动态更新TreeSelect组件 这里允许为空
-  const { roles } = await requestClient.get('/system/user/');
+  const { roles, user, postIds, roleIds } = await requestClient.get(
+    `/system/user/${isUpdate ? row.id : ''}`,
+  );
+  if (user) {
+    // 添加角色和岗位
+    formApi.setFieldValue('postIds', postIds);
+    formApi.setFieldValue('roleIds', roleIds);
+  }
+
+  // 添加基础信息
+  formApi.setValues(user || row);
+
   formApi.updateSchema([
     {
       componentProps: {
