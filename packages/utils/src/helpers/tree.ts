@@ -29,14 +29,27 @@ export function listToTree<T = any>(
   const result: T[] = [];
   const { id, pid, children } = conf;
 
+  // 初始化节点映射，但不预设children数组
   for (const node of list) {
-    node[children] = node[children] || [];
+    // 不再默认设置空children数组
     nodeMap.set(node[id], node);
   }
+
+  // 构建树结构
   for (const node of list) {
     const parent = nodeMap.get(node[pid]);
-    (parent ? parent[children] : result).push(node);
+    if (parent) {
+      // 如果父节点存在，确保其children数组已初始化
+      if (!parent[children]) {
+        parent[children] = [];
+      }
+      parent[children].push(node);
+    } else {
+      // 根节点直接添加到结果中
+      result.push(node);
+    }
   }
+
   return result;
 }
 
