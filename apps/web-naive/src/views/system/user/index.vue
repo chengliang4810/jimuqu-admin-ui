@@ -241,7 +241,12 @@ async function refreshTable() {
         </n-flex>
       </template>
       <template #action="{ row }">
-        <n-flex class="mx-3" justify="space-around" size="small">
+        <n-flex
+          v-if="row.id !== '1'"
+          class="mx-3"
+          justify="space-around"
+          size="small"
+        >
           <n-button
             type="info"
             size="small"

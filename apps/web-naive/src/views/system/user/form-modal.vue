@@ -102,6 +102,17 @@ const [UserForm, formApi] = useVbenForm({
       },
     },
     {
+      component: 'Select',
+      componentProps: {
+        getPopupContainer,
+        multiple: true,
+        placeholder: '请先选择部门',
+      },
+      fieldName: 'postIds',
+      help: '选择部门后, 将自动加载该部门下所有的岗位',
+      label: '岗位',
+    },
+    {
       fieldName: 'phonenumber',
       label: '手机号码',
       component: 'Input',
@@ -205,17 +216,22 @@ async function initDeptSelect() {
 
 async function initRoleSelect(row: any, isUpdate: boolean = false) {
   // 需要动态更新TreeSelect组件 这里允许为空
-  const { roles, user, postIds, roleIds } = await requestClient.get(
+  const { roles, user, posts, postIds, roleIds } = await requestClient.get(
     `/system/user/${isUpdate ? row.id : ''}`,
   );
+  const postOptions = (posts ?? []).map((item) => ({
+    label: item.postName,
+    value: item.postId,
+  }));
+
+  // 添加基础信息
+  formApi.setValues(user || row);
+
   if (user) {
     // 添加角色和岗位
     formApi.setFieldValue('postIds', postIds);
     formApi.setFieldValue('roleIds', roleIds);
   }
-
-  // 添加基础信息
-  formApi.setValues(user || row);
 
   formApi.updateSchema([
     {
@@ -223,6 +239,12 @@ async function initRoleSelect(row: any, isUpdate: boolean = false) {
         options: roles,
       },
       fieldName: 'roleIds',
+    },
+    {
+      componentProps: {
+        options: postOptions,
+      },
+      fieldName: 'postIds',
     },
   ]);
 }
