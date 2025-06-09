@@ -9,6 +9,8 @@ import { requestClient } from '#/api/request';
 import { renderDict } from '#/utils/render';
 
 import formModal from './form-modal.vue';
+import roleAuthModal from './role-auth-modal.vue';
+
 /**
  * authScopeOptions user也会用到
  * 限制 type 类型为 'default' | 'primary' | 'info' | 'success' | 'warning' | 'error'
@@ -127,7 +129,7 @@ const gridOptions: VxeGridProps<RoleVo> = {
       fixed: 'right',
       slots: { default: 'action' },
       title: '操作',
-      width: 150,
+      width: 350,
     },
   ],
   keepSource: true,
@@ -156,14 +158,27 @@ const gridOptions: VxeGridProps<RoleVo> = {
 const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
 // 角色信息表单弹窗
-const [TemplateFromModal, formModelApi] = useVbenModal({
+const [RoleFromModal, formModelApi] = useVbenModal({
   connectedComponent: formModal,
+});
+
+// 角色信息表单弹窗
+const [RoleAuthModal, roleAuthModelApi] = useVbenModal({
+  connectedComponent: roleAuthModal,
 });
 
 function openModal(formType: FormType, row?: RoleVo) {
   formModelApi
     .setData({
       formType,
+      row: row || {},
+    })
+    .open();
+}
+
+function openRoleAuthModal(row?: RoleVo) {
+  roleAuthModelApi
+    .setData({
       row: row || {},
     })
     .open();
@@ -235,6 +250,22 @@ async function refreshTable() {
           >
             编辑
           </n-button>
+          <n-button
+            type="info"
+            size="small"
+            @click="openRoleAuthModal(row)"
+            ghost
+          >
+            数据权限
+          </n-button>
+          <n-button
+            type="info"
+            size="small"
+            @click="openRoleAuthModal(row)"
+            ghost
+          >
+            分配用户
+          </n-button>
           <n-popconfirm @positive-click="handleDelete(row.roleId)">
             <template #trigger>
               <n-button type="error" size="small" ghost>删除</n-button>
@@ -244,6 +275,7 @@ async function refreshTable() {
         </n-flex>
       </template>
     </Grid>
-    <TemplateFromModal @reload="refreshTable" />
+    <RoleFromModal @reload="refreshTable" />
+    <RoleAuthModal @reload="refreshTable" />
   </Page>
 </template>
