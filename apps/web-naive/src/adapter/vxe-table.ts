@@ -15,6 +15,7 @@ setupVbenVxeTable({
         align: 'center',
         border: false,
         columnConfig: {
+          // 可拖拽列宽
           resizable: true,
         },
         minHeight: 180,
@@ -29,10 +30,9 @@ setupVbenVxeTable({
             total: 'total',
             list: 'items',
           },
-          showActiveMsg: true,
+          showActionMsg: true,
           showResponseMsg: false,
         },
-        round: true,
         // 溢出展示形式
         showOverflow: true,
         // 表格尺寸
@@ -52,10 +52,6 @@ setupVbenVxeTable({
           isHover: true,
           // 点击行高亮
           isCurrent: false,
-        },
-        columnConfig: {
-          // 可拖拽列宽
-          resizable: true,
         },
         // 右上角工具栏
         toolbarConfig: {
