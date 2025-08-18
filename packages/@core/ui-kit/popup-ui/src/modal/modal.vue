@@ -1,7 +1,16 @@
 <script lang="ts" setup>
 import type { ExtendedModalApi, ModalProps } from './modal';
 
-import { computed, nextTick, provide, ref, unref, useId, watch } from 'vue';
+import {
+  computed,
+  nextTick,
+  onDeactivated,
+  provide,
+  ref,
+  unref,
+  useId,
+  watch,
+} from 'vue';
 
 import {
   useIsMobile,
@@ -85,21 +94,27 @@ const {
   submitting,
   title,
   titleTooltip,
+  animationType,
   zIndex,
 } = usePriorityValues(props, state);
 
-const shouldFullscreen = computed(
-  () => (fullscreen.value && header.value) || isMobile.value,
-);
+const shouldFullscreen = computed(() => fullscreen.value || isMobile.value);
 
 const shouldDraggable = computed(
   () => draggable.value && !shouldFullscreen.value && header.value,
 );
 
+const getAppendTo = computed(() => {
+  return appendToMain.value
+    ? `#${ELEMENT_ID_MAIN_CONTENT}>div:not(.absolute)>div`
+    : undefined;
+});
+
 const { dragging, transform } = useModalDraggable(
   dialogRef,
   headerRef,
   shouldDraggable,
+  getAppendTo,
 );
 
 const firstOpened = ref(false);
@@ -134,6 +149,16 @@ watch(
 //     }
 //   },
 // );
+
+/**
+ * 在开启keepAlive情况下 直接通过浏览器按钮/手势等返回 不会关闭弹窗
+ */
+onDeactivated(() => {
+  // 如果弹窗没有被挂载到内容区域，则关闭弹窗
+  if (!appendToMain.value) {
+    props.modalApi?.close();
+  }
+});
 
 function handleFullscreen() {
   props.modalApi?.setState((prev) => {
@@ -179,11 +204,6 @@ function handleFocusOutside(e: Event) {
   e.preventDefault();
   e.stopPropagation();
 }
-const getAppendTo = computed(() => {
-  return appendToMain.value
-    ? `#${ELEMENT_ID_MAIN_CONTENT}>div:not(.absolute)>div`
-    : undefined;
-});
 
 const getForceMount = computed(() => {
   return !unref(destroyOnClose) && unref(firstOpened);
@@ -205,7 +225,8 @@ function handleClosed() {
       :append-to="getAppendTo"
       :class="
         cn(
-          'left-0 right-0 top-[10vh] mx-auto flex max-h-[80%] w-[520px] flex-col p-0 sm:rounded-[var(--radius)]',
+          'left-0 right-0 top-[10vh] mx-auto flex max-h-[80%] w-[520px] flex-col p-0',
+          shouldFullscreen ? 'sm:rounded-none' : 'sm:rounded-[var(--radius)]',
           modalClass,
           {
             'border-border border': bordered,
@@ -222,6 +243,7 @@ function handleClosed() {
       :modal="modal"
       :open="state?.isOpen"
       :show-close="closable"
+      :animation-type="animationType"
       :z-index="zIndex"
       :overlay-blur="overlayBlur"
       close-class="top-3"

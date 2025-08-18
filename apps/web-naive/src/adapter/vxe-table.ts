@@ -1,3 +1,5 @@
+import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+
 import { h } from 'vue';
 
 import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
@@ -12,6 +14,9 @@ setupVbenVxeTable({
       grid: {
         align: 'center',
         border: false,
+        columnConfig: {
+          resizable: true,
+        },
         minHeight: 180,
         formConfig: {
           // 全局禁用vxe-table的表单配置，使用formOptions
@@ -27,8 +32,13 @@ setupVbenVxeTable({
           showActiveMsg: true,
           showResponseMsg: false,
         },
+        round: true,
         // 溢出展示形式
         showOverflow: true,
+        // 表格尺寸
+        size: 'medium',
+        // 圆角按钮
+        round: true,
         pagerConfig: {
           // 默认条数
           pageSize: 15,
@@ -61,16 +71,12 @@ setupVbenVxeTable({
             code: 'query',
           },
         },
-        // 圆角按钮
-        round: true,
-        // 表格尺寸
-        size: 'medium',
         customConfig: {
           // 表格右上角自定义列配置 是否保存到localStorage
           // 必须存在id参数才能使用
           storage: false,
         },
-      },
+      } as VxeTableGridOptions,
     });
 
     // 表格配置项可以用 cellRender: { name: 'CellImage' },

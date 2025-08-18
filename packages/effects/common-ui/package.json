@@ -1,6 +1,6 @@
 {
   "name": "@vben/common-ui",
-  "version": "5.5.7",
+  "version": "5.5.9",
   "homepage": "https://github.com/vbenjs/vue-vben-admin",
   "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
   "repository": {
@@ -47,6 +47,7 @@
     "@vben/types": "workspace:*",
     "@vueuse/core": "catalog:",
     "@vueuse/integrations": "catalog:",
+    "json-bigint": "catalog:",
     "codemirror": "6.0.1",
     "qrcode": "catalog:",
     "tippy.js": "catalog:",

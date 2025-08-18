@@ -49,5 +49,6 @@ vite.config.ts.*
 *.sln
 *.sw?
 .history
+.cursor
 auto-imports.d.ts
 components.d.ts
