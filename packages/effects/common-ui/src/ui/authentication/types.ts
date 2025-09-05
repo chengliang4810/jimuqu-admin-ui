@@ -80,13 +80,11 @@ interface LoginAndRegisterParams {
   code?: string;
   grantType: GrantType;
   password: string;
-  tenantId: string;
   username: string;
   uuid?: string;
 }
 
 interface LoginCodeParams {
-  tenantId: string;
   code: string;
   phoneNumber: string;
 }

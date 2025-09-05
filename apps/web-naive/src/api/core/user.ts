@@ -25,7 +25,6 @@ export interface User {
   roles: Role[];
   sex: string;
   status: string;
-  tenantId: string;
   userId: number;
   userName: string;
   userType: string;
