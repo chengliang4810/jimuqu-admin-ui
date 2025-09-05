@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
+
 import { Page } from '@vben/common-ui';
+
 import { requestClient } from '#/api/request';
 
 defineOptions({ name: 'ServerMonitor' });
@@ -61,7 +63,7 @@ interface MonitorData {
 
 const loading = ref(false);
 const monitorData = ref<MonitorData | null>(null);
-const error = ref<string | null>(null);
+const error = ref<null | string>(null);
 const autoRefresh = ref(true);
 const refreshInterval = ref(5); // 刷新间隔（秒）
 let refreshTimer: NodeJS.Timeout | null = null;
@@ -79,13 +81,15 @@ const refreshIntervalOptions = [
 async function fetchMonitorData() {
   loading.value = true;
   error.value = null;
-  
+
   try {
-    const response = await requestClient.get<MonitorData>('/system/monitor/info');
+    const response = await requestClient.get<MonitorData>(
+      '/system/monitor/info',
+    );
     monitorData.value = response;
-  } catch (err: any) {
-    error.value = err.message || '获取监控信息失败';
-    console.error('获取系统监控信息失败:', err);
+  } catch (error_: any) {
+    error.value = error_.message || '获取监控信息失败';
+    console.error('获取系统监控信息失败:', error_);
   } finally {
     loading.value = false;
   }
@@ -97,11 +101,11 @@ function formatBytes(bytes: number): string {
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 }
 
 // 获取进度条状态类型
-function getProgressStatus(usage: number): 'success' | 'warning' | 'error' {
+function getProgressStatus(usage: number): 'error' | 'success' | 'warning' {
   if (usage < 60) return 'success';
   if (usage < 80) return 'warning';
   return 'error';
@@ -185,7 +189,7 @@ onUnmounted(() => {
                   :options="refreshIntervalOptions"
                   :disabled="!autoRefresh"
                   @update:value="onRefreshIntervalChange"
-                  style="width: 80px;"
+                  style="width: 80px"
                   size="small"
                 />
               </div>
@@ -198,7 +202,14 @@ onUnmounted(() => {
                   size="medium"
                 >
                   <template #icon>
-                    <n-icon><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></n-icon>
+                    <n-icon>
+                      <svg viewBox="0 0 24 24">
+                        <path
+                          fill="currentColor"
+                          d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                        />
+                      </svg>
+                    </n-icon>
                   </template>
                   刷新数据
                 </n-button>
@@ -219,7 +230,9 @@ onUnmounted(() => {
       <n-alert v-else-if="error" type="error" class="error-alert">
         <template #header>获取监控信息失败</template>
         {{ error }}
-        <n-button size="small" style="margin-top: 8px;" @click="handleRefresh">重试</n-button>
+        <n-button size="small" style="margin-top: 8px" @click="handleRefresh">
+          重试
+        </n-button>
       </n-alert>
 
       <!-- 监控数据展示 -->
@@ -240,7 +253,9 @@ onUnmounted(() => {
                 </div>
                 <div class="info-item">
                   <n-text>CPU 使用率</n-text>
-                  <n-text strong>{{ monitorData.cpu.cpuUsed.toFixed(1) }}%</n-text>
+                  <n-text strong>
+                    {{ monitorData.cpu.cpuUsed.toFixed(1) }}%
+                  </n-text>
                 </div>
                 <!-- CPU 使用率图表 -->
                 <div class="chart-container centered-chart">
@@ -251,10 +266,12 @@ onUnmounted(() => {
                       :status="getProgressStatus(monitorData.cpu.cpuUsed)"
                       :stroke-width="8"
                       :show-indicator="false"
-                      style="width: 120px; height: 120px;"
+                      style="width: 120px; height: 120px"
                     />
                     <div class="chart-center-text">
-                      <div class="chart-percentage">{{ monitorData.cpu.cpuUsed.toFixed(1) }}%</div>
+                      <div class="chart-percentage">
+                        {{ monitorData.cpu.cpuUsed.toFixed(1) }}%
+                      </div>
                       <div class="chart-label">CPU</div>
                     </div>
                   </div>
@@ -274,11 +291,15 @@ onUnmounted(() => {
               <n-space vertical size="large">
                 <div class="info-item">
                   <n-text>内存总量</n-text>
-                  <n-text strong>{{ formatBytes(monitorData.memory.total) }}</n-text>
+                  <n-text strong>
+                    {{ formatBytes(monitorData.memory.total) }}
+                  </n-text>
                 </div>
                 <div class="info-item">
                   <n-text>剩余内存</n-text>
-                  <n-text strong>{{ formatBytes(monitorData.memory.free) }}</n-text>
+                  <n-text strong>
+                    {{ formatBytes(monitorData.memory.free) }}
+                  </n-text>
                 </div>
                 <!-- 内存使用率图表 -->
                 <div class="chart-container centered-chart">
@@ -289,10 +310,12 @@ onUnmounted(() => {
                       :status="getProgressStatus(monitorData.memory.usage)"
                       :stroke-width="8"
                       :show-indicator="false"
-                      style="width: 120px; height: 120px;"
+                      style="width: 120px; height: 120px"
                     />
                     <div class="chart-center-text">
-                      <div class="chart-percentage">{{ monitorData.memory.usage.toFixed(1) }}%</div>
+                      <div class="chart-percentage">
+                        {{ monitorData.memory.usage.toFixed(1) }}%
+                      </div>
                       <div class="chart-label">内存</div>
                     </div>
                   </div>
@@ -334,7 +357,10 @@ onUnmounted(() => {
                     :status="getProgressStatus(monitorData.jvm.usage)"
                     :show-indicator="false"
                   />
-                  <n-text depth="3">{{ formatBytes(monitorData.jvm.used) }} / {{ formatBytes(monitorData.jvm.total) }}</n-text>
+                  <n-text depth="3">
+                    {{ formatBytes(monitorData.jvm.used) }} /
+                    {{ formatBytes(monitorData.jvm.total) }}
+                  </n-text>
                 </div>
               </n-space>
             </n-card>
@@ -366,7 +392,9 @@ onUnmounted(() => {
                 </div>
                 <div class="info-item">
                   <n-text>项目路径</n-text>
-                  <n-text strong class="path-text">{{ monitorData.system.userDir }}</n-text>
+                  <n-text strong class="path-text">
+                    {{ monitorData.system.userDir }}
+                  </n-text>
                 </div>
               </n-space>
             </n-card>
@@ -382,7 +410,9 @@ onUnmounted(() => {
                   <n-space align="center" justify="space-between">
                     <div>
                       <n-text strong>{{ disk.name }}</n-text>
-                      <n-text depth="3" class="disk-path">{{ disk.path }}</n-text>
+                      <n-text depth="3" class="disk-path">
+                        {{ disk.path }}
+                      </n-text>
                     </div>
                     <n-tag :type="getProgressStatus(disk.usage)">
                       {{ disk.usage.toFixed(1) }}%
@@ -427,6 +457,34 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+@media (max-width: 768px) {
+  .server-monitor {
+    padding: 12px;
+  }
+
+  .monitor-title {
+    font-size: 20px;
+  }
+
+  .header-card {
+    margin-bottom: 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .control-section {
+    justify-content: center;
+  }
+
+  .control-item {
+    align-items: center;
+  }
+}
+
 .server-monitor {
   padding: 20px;
 }
@@ -437,9 +495,9 @@ onUnmounted(() => {
 
 .header-content {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .title-section {
@@ -447,8 +505,8 @@ onUnmounted(() => {
 }
 
 .control-section {
-  flex-shrink: 0;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
 }
@@ -456,8 +514,8 @@ onUnmounted(() => {
 .control-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 6px;
+  align-items: center;
   min-width: fit-content;
 }
 
@@ -481,8 +539,8 @@ onUnmounted(() => {
 
 .loading-container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 400px;
 }
 
@@ -500,7 +558,7 @@ onUnmounted(() => {
 }
 
 .monitor-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
 .disk-card {
@@ -509,8 +567,8 @@ onUnmounted(() => {
 
 .info-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 8px 0;
 }
 
@@ -527,59 +585,59 @@ onUnmounted(() => {
 .chart-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 16px;
+  align-items: center;
 }
 
 /* 居中的图表容器 */
 .centered-chart {
-  flex: 1;
   display: flex;
-  justify-content: center;
+  flex: 1;
   align-items: center;
+  justify-content: center;
   min-height: 140px;
 }
 
 .chart-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
 }
 
 .progress-chart {
   position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .chart-center-text {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   text-align: center;
   pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
 .chart-percentage {
+  margin-bottom: 2px;
   font-size: 18px;
   font-weight: bold;
   line-height: 1;
-  margin-bottom: 2px;
 }
 
 .chart-label {
   font-size: 12px;
-  opacity: 0.7;
   line-height: 1;
+  opacity: 0.7;
 }
 
 .path-text {
-  word-break: break-all;
   font-family: monospace;
   font-size: 12px;
+  word-break: break-all;
 }
 
 .disk-item {
@@ -588,35 +646,7 @@ onUnmounted(() => {
 
 .disk-path {
   display: block;
-  font-size: 12px;
   margin-top: 2px;
-}
-
-@media (max-width: 768px) {
-  .server-monitor {
-    padding: 12px;
-  }
-  
-  .monitor-title {
-    font-size: 20px;
-  }
-  
-  .header-card {
-    margin-bottom: 16px;
-  }
-  
-  .header-content {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
-  
-  .control-section {
-    justify-content: center;
-  }
-  
-  .control-item {
-    align-items: center;
-  }
+  font-size: 12px;
 }
 </style>
