@@ -87,5 +87,3 @@ export async function getAccessCodesApi() {
   return [];
   // return requestClient.get<string[]>('/auth/codes');
 }
-
-
