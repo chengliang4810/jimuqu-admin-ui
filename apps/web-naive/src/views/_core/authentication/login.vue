@@ -20,7 +20,7 @@ const formSchema = computed((): VbenFormSchema[] => {
         placeholder: $t('authentication.usernameTip'),
       },
       fieldName: 'username',
-      default: 'admin',
+      defaultValue: 'admin',
       label: $t('authentication.username'),
       rules: z.string().min(1, { message: $t('authentication.usernameTip') }),
     },
