@@ -18,7 +18,7 @@ const localRoutes: RouteRecordStringComponent[] = [
     name: 'Profile',
     path: '/profile',
   },
-  ];
+];
 
 /**
  * 这里放本地路由
