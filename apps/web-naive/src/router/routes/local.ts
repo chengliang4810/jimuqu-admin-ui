@@ -18,6 +18,18 @@ const localRoutes: RouteRecordStringComponent[] = [
     name: 'Profile',
     path: '/profile',
   },
+  {
+    component: '/tool/gen-code/config',
+    meta: {
+      activePath: '/tool/gen',
+      icon: 'tabler:code',
+      title: '生成配置',
+      hideInMenu: true,
+      requireHomeRedirect: true,
+    },
+    name: 'GenCodeConfig',
+    path: '/tool/gen/config/:tableId',
+  },
 ];
 
 /**
