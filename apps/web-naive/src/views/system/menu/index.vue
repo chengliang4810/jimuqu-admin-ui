@@ -188,7 +188,7 @@ const gridOptions: VxeGridProps<MenuVo> = {
       slots: { default: 'action' },
       title: '操作',
       resizable: false,
-      width: 200,
+      width: 260,
     },
   ],
   keepSource: true,
@@ -279,10 +279,11 @@ async function refreshTable() {
         </n-flex>
       </template>
       <template #action="{ row }">
-        <n-flex class="mx-3" justify="space-around" size="small">
+        <n-flex class="mx-1" justify="center" size="small">
           <n-button
             type="info"
             size="small"
+            style="margin: 0 2px"
             @click="openModal('update', row)"
             ghost
           >
@@ -291,6 +292,7 @@ async function refreshTable() {
           <n-button
             type="primary"
             size="small"
+            style="margin: 0 2px"
             @click="openModal('add', row)"
             ghost
           >
@@ -298,7 +300,7 @@ async function refreshTable() {
           </n-button>
           <n-popconfirm @positive-click="handleDelete(row)">
             <template #trigger>
-              <n-button type="error" size="small" ghost>删除</n-button>
+              <n-button type="error" size="small" style="margin: 0 2px" ghost>删除</n-button>
             </template>
             确认删除该菜单及下级权限吗？
           </n-popconfirm>
