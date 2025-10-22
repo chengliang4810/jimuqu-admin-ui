@@ -300,7 +300,9 @@ async function refreshTable() {
           </n-button>
           <n-popconfirm @positive-click="handleDelete(row)">
             <template #trigger>
-              <n-button type="error" size="small" style="margin: 0 2px" ghost>删除</n-button>
+              <n-button type="error" size="small" style="margin: 0 2px" ghost>
+                删除
+              </n-button>
             </template>
             确认删除该菜单及下级权限吗？
           </n-popconfirm>
