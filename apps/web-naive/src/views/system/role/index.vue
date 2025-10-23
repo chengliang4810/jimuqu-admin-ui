@@ -10,6 +10,7 @@ import { renderDict } from '#/utils/render';
 
 import formModal from './form-modal.vue';
 import roleAuthModal from './role-auth-modal.vue';
+import roleMenuPermissionModal from './role-menu-permission-modal.vue';
 
 /**
  * authScopeOptions user也会用到
@@ -167,6 +168,11 @@ const [RoleAuthModal, roleAuthModelApi] = useVbenModal({
   connectedComponent: roleAuthModal,
 });
 
+// 角色菜单权限管理弹窗
+const [RoleMenuPermissionModal, roleMenuPermissionModelApi] = useVbenModal({
+  connectedComponent: roleMenuPermissionModal,
+});
+
 function openModal(formType: FormType, row?: RoleVo) {
   formModelApi
     .setData({
@@ -178,6 +184,14 @@ function openModal(formType: FormType, row?: RoleVo) {
 
 function openRoleAuthModal(row?: RoleVo) {
   roleAuthModelApi
+    .setData({
+      row: row || {},
+    })
+    .open();
+}
+
+function openRoleMenuPermissionModal(row?: RoleVo) {
+  roleMenuPermissionModelApi
     .setData({
       row: row || {},
     })
@@ -247,6 +261,7 @@ async function refreshTable() {
             size="small"
             @click="openModal('update', row)"
             ghost
+            :disabled="row.id === '1'"
           >
             编辑
           </n-button>
@@ -255,20 +270,32 @@ async function refreshTable() {
             size="small"
             @click="openRoleAuthModal(row)"
             ghost
+            :disabled="row.id === '1'"
           >
             数据权限
           </n-button>
           <n-button
-            type="info"
+            type="warning"
             size="small"
-            @click="openRoleAuthModal(row)"
+            @click="openRoleMenuPermissionModal(row)"
             ghost
+            :disabled="row.id === '1'"
           >
-            分配用户
+            菜单权限
           </n-button>
-          <n-popconfirm @positive-click="handleDelete(row.roleId)">
+          <n-popconfirm
+            @positive-click="handleDelete(row.id)"
+            :disabled="row.id === '1'"
+          >
             <template #trigger>
-              <n-button type="error" size="small" ghost>删除</n-button>
+              <n-button
+                type="error"
+                size="small"
+                ghost
+                :disabled="row.id === '1'"
+              >
+                删除
+              </n-button>
             </template>
             确认删除该角色信息吗？
           </n-popconfirm>
@@ -277,5 +304,6 @@ async function refreshTable() {
     </Grid>
     <RoleFromModal @reload="refreshTable" />
     <RoleAuthModal @reload="refreshTable" />
+    <RoleMenuPermissionModal @reload="refreshTable" />
   </Page>
 </template>
