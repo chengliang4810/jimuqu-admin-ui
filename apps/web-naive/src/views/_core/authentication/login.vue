@@ -12,8 +12,11 @@ defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
 
+// 判断是否为开发环境
+const isDevelopment = import.meta.env.DEV;
+
 const formSchema = computed((): VbenFormSchema[] => {
-  return [
+  const baseSchema = [
     {
       component: 'VbenInput',
       componentProps: {
@@ -36,14 +39,20 @@ const formSchema = computed((): VbenFormSchema[] => {
         .min(1, { message: $t('authentication.passwordTip') })
         .default('admin123'),
     },
-    {
+  ];
+
+  // 只在生产环境添加滑动验证码
+  if (!isDevelopment) {
+    baseSchema.push({
       component: markRaw(SliderCaptcha),
       fieldName: 'captcha',
       rules: z.boolean().refine((value) => value, {
         message: $t('authentication.verifyRequiredTip'),
       }),
-    },
-  ];
+    });
+  }
+
+  return baseSchema;
 });
 </script>
 
