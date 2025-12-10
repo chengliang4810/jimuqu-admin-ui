@@ -475,10 +475,10 @@ catalogs:
       specifier: 2.2.10
       version: 2.2.10
     vxe-pc-ui:
-      specifier: ^4.7.12
-      version: 4.7.16
+      specifier: 4.10.36
+      version: 4.10.36
     vxe-table:
-      specifier: ^4.14.4
+      specifier: ^4.16.11
       version: 4.17.6
     watermark-js-plus:
       specifier: ^1.6.2
@@ -1519,7 +1519,7 @@ importers:
         version: 3.5.17(typescript@5.8.3)
       vxe-pc-ui:
         specifier: 'catalog:'
-        version: 4.7.16(vue@3.5.17(typescript@5.8.3))
+        version: 4.10.36(vue@3.5.17(typescript@5.8.3))
       vxe-table:
         specifier: 'catalog:'
         version: 4.17.6(vue@3.5.17(typescript@5.8.3))
@@ -5155,13 +5155,8 @@ packages:
     peerDependencies:
       vue: ^3.5.17
 
-  '@vxe-ui/core@4.2.12':
-    resolution: {integrity: sha512-g6gNDykKrKLzxsDDFDYTD/6tWrV9AfSaU7WIlKCO67BSXgKDMaEVTsH7ZZ7fI5qkOO9DH1vo07kbacyBNx7gSQ==}
-    peerDependencies:
-      vue: ^3.5.17
-
-  '@vxe-ui/core@4.2.5':
-    resolution: {integrity: sha512-K/0ae1VoCaVHZTnV3rUFsQdkwCU6dKjbFVtf0bvVRCYG5v+KrKbvFBSkqdnGT7sDoeotPVjL/WjBbl64RpHs3w==}
+  '@vxe-ui/core@4.2.16':
+    resolution: {integrity: sha512-clfS0UcW15I+vWDVv7+D7ifYb1UgG1As3lUPPyROSN01bDiAzbDEoyOg4bLlvjhySN+m4qbSb+SEV6gosbo9yA==}
     peerDependencies:
       vue: ^3.5.17
 
@@ -10941,11 +10936,8 @@ packages:
     peerDependencies:
       vue: ^3.5.17
 
-  vxe-pc-ui@4.10.13:
-    resolution: {integrity: sha512-5ZSwHhGy42iQiKN6Sj9UZIAw0+0yVHsKTqsaBnsbyt7wtsSrsnoEbzw/rd1ZH4Jezgnw7nqPGFlYP5uT22Tl+w==}
-
-  vxe-pc-ui@4.7.16:
-    resolution: {integrity: sha512-t+E+x25FvRIax9HQJygO2wQA+2lxmNCkW4RY3m01c+bem4rs1FqM7UmxtUMBMM8OVH15mD42qwU4BtX7Ylf+EA==}
+  vxe-pc-ui@4.10.36:
+    resolution: {integrity: sha512-NNql+nUmD2QHk4/ppCAMn5kWSiyzA8Ql49h4daTwuJOBJe0EyXYX7ccV0GJm+yvioK2Pa+3IAZx9aaNOeJVe6A==}
 
   vxe-table@4.17.6:
     resolution: {integrity: sha512-sNzKfaGRSXQHAoHNEfOP2GvxEfKVXsB1H2ZUNro5lTk+wgY0faSC/aDqLlrdczOm7mh2a69gwAseNS0Rzxhptw==}
@@ -11129,11 +11121,8 @@ packages:
   xe-utils@3.7.4:
     resolution: {integrity: sha512-9yuCHLOU+og4OEkPWWtzrYk1Zt1hgN66U/NCJ0+vYJSx1MplBtoQRz8aEA+2RmCr3leLru98vQxNpw/vJsu/sg==}
 
-  xe-utils@3.7.8:
-    resolution: {integrity: sha512-V/k6B/ASYir6yLYhp62DnM17po9u1N9mou/rn4if5WoFCsAO49JpCiVpkDpwCv4zxGfWmhWgzmz4FytWF+pDVw==}
-
-  xe-utils@3.7.9:
-    resolution: {integrity: sha512-LWH6M7g+TKX8P2fqGxDPgJQygiULhbMtpmfxTMxJTUjuUv9y2+I45UCcVLh5AnmJSxDV1xTxsq7G5P9Eid06JQ==}
+  xe-utils@3.8.0:
+    resolution: {integrity: sha512-eziNd3IyxzUBAZByQhNuxcd9UUKN2yqR0w2zjPMtXWzzM3GFg6ztjRH76aSfxIZCco1o53TX3uJ7EY3jNpVo/A==}
 
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
@@ -15177,17 +15166,11 @@ snapshots:
     dependencies:
       vue: 3.5.17(typescript@5.8.3)
 
-  '@vxe-ui/core@4.2.12(vue@3.5.17(typescript@5.8.3))':
+  '@vxe-ui/core@4.2.16(vue@3.5.17(typescript@5.8.3))':
     dependencies:
       dom-zindex: 1.0.6
       vue: 3.5.17(typescript@5.8.3)
-      xe-utils: 3.7.9
-
-  '@vxe-ui/core@4.2.5(vue@3.5.17(typescript@5.8.3))':
-    dependencies:
-      dom-zindex: 1.0.6
-      vue: 3.5.17(typescript@5.8.3)
-      xe-utils: 3.7.8
+      xe-utils: 3.8.0
 
   '@whatwg-node/disposablestack@0.0.6':
     dependencies:
@@ -21503,21 +21486,15 @@ snapshots:
       vooks: 0.2.12(vue@3.5.17(typescript@5.8.3))
       vue: 3.5.17(typescript@5.8.3)
 
-  vxe-pc-ui@4.10.13(vue@3.5.17(typescript@5.8.3)):
+  vxe-pc-ui@4.10.36(vue@3.5.17(typescript@5.8.3)):
     dependencies:
-      '@vxe-ui/core': 4.2.12(vue@3.5.17(typescript@5.8.3))
-    transitivePeerDependencies:
-      - vue
-
-  vxe-pc-ui@4.7.16(vue@3.5.17(typescript@5.8.3)):
-    dependencies:
-      '@vxe-ui/core': 4.2.5(vue@3.5.17(typescript@5.8.3))
+      '@vxe-ui/core': 4.2.16(vue@3.5.17(typescript@5.8.3))
     transitivePeerDependencies:
       - vue
 
   vxe-table@4.17.6(vue@3.5.17(typescript@5.8.3)):
     dependencies:
-      vxe-pc-ui: 4.10.13(vue@3.5.17(typescript@5.8.3))
+      vxe-pc-ui: 4.10.36(vue@3.5.17(typescript@5.8.3))
     transitivePeerDependencies:
       - vue
 
@@ -21795,9 +21772,7 @@ snapshots:
 
   xe-utils@3.7.4: {}
 
-  xe-utils@3.7.8: {}
-
-  xe-utils@3.7.9: {}
+  xe-utils@3.8.0: {}
 
   xml-name-validator@4.0.0: {}
 

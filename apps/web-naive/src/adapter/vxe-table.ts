@@ -13,7 +13,8 @@ setupVbenVxeTable({
     vxeUI.setConfig({
       grid: {
         align: 'center',
-        border: false,
+        // https://vxetable.cn/#/component/table/base/border
+        border: 'inner',
         columnConfig: {
           // 可拖拽列宽
           resizable: true,
