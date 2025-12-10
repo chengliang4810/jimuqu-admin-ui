@@ -16,6 +16,12 @@ const SvgTopiamIcon = createIconifyIcon('svg:topiam');
 const SvgWechatIcon = createIconifyIcon('svg:wechat');
 const SvgQQIcon = createIconifyIcon('svg:qq');
 const SvgSnailJobIcon = createIconifyIcon('svg:snail-job');
+const SvgGithubIcon = createIconifyIcon('svg:github');
+const SvgGoogleIcon = createIconifyIcon('svg:google');
+const SvgQQChatIcon = createIconifyIcon('svg:qqchat');
+const SvgWeChatIcon = createIconifyIcon('svg:wechat');
+const SvgDingDingIcon = createIconifyIcon('svg:dingding');
+const SvgTDesignIcon = createIconifyIcon('svg:tdesign-logo');
 
 export {
   SvgAntdvLogoIcon,
@@ -26,12 +32,18 @@ export {
   SvgBellIcon,
   SvgCakeIcon,
   SvgCardIcon,
+  SvgDingDingIcon,
   SvgDownloadIcon,
   SvgMaxKeyIcon,
   SvgQQIcon,
   SvgSnailJobIcon,
   SvgTopiamIcon,
   SvgWechatIcon,
+  SvgGithubIcon,
+  SvgGoogleIcon,
+  SvgQQChatIcon,
+  SvgTDesignIcon,
+  SvgWeChatIcon,
 };
 
 export { default as SvgMessageUrl } from './icons/message.svg';
