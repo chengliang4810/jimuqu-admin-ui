@@ -25,7 +25,7 @@ export function useAppConfig(
     VITE_GLOB_WEBSOCKET_ENABLE,
   } = config;
 
-  return {
+  const applicationConfig: ApplicationConfig = {
     // 后端地址
     apiURL: VITE_GLOB_API_URL,
     // 客户端key
@@ -39,5 +39,8 @@ export function useAppConfig(
     sseEnable: VITE_GLOB_SSE_ENABLE === 'true',
     // 是否开启websocket
     websocketEnable: VITE_GLOB_WEBSOCKET_ENABLE === 'true',
+    auth: {},
   };
+
+  return applicationConfig;
 }

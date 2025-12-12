@@ -24,6 +24,13 @@ export interface VbenAdminProAppConfigRaw {
   VITE_GLOB_WEBSOCKET_ENABLE: string;
 }
 
+interface AuthConfig {
+  dingding?: {
+    clientId: string;
+    corpId: string;
+  };
+}
+
 export interface ApplicationConfig {
   // 后端接口地址
   apiURL: string;
@@ -39,6 +46,7 @@ export interface ApplicationConfig {
   sseEnable: boolean;
   // 是否开启
   websocketEnable: boolean;
+  auth: AuthConfig;
 }
 
 declare global {
