@@ -75,7 +75,8 @@ export function useWebSocketMessage() {
       },
     },
     heartbeat: {
-      message: JSON.stringify({ type: 'ping' }),
+      // 默认 message = 'ping'
+      // message: JSON.stringify({ type: 'ping' }),
       // 发送心跳的间隔
       interval: 10_000,
       // 接收到心跳response的超时时间
