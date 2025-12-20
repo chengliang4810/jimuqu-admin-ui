@@ -48,7 +48,7 @@ export const useNotifyStore = defineStore(
       const { data } = sseReturnData;
 
       watch(data, (message) => {
-        if (!message) return;
+        if (!message || message === 'pong') return;
         // eslint-disable-next-line no-console
         console.log(`接收到消息: ${message}`);
 
