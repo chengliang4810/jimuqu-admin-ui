@@ -1,7 +1,7 @@
 import type { RequestClient } from '../request-client';
 import type { RequestClientConfig } from '../types';
 
-type DownloadRequestConfig = {
+export type DownloadRequestConfig = {
   /**
    * 定义期望获得的数据类型。
    * raw: 原始的AxiosResponse，包括headers、status等。

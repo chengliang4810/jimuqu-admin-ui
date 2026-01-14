@@ -1,7 +1,11 @@
 /**
  * 该文件可自行根据业务逻辑进行调整
  */
-import type { RequestClientOptions, RequestResponse } from '@vben/request';
+import type {
+  DownloadRequestConfig,
+  RequestClientOptions,
+  RequestResponse,
+} from '@vben/request';
 
 import { useAppConfig } from '@vben/hooks';
 import { preferences } from '@vben/preferences';
@@ -113,9 +117,14 @@ export const requestClient = createRequestClient(apiURL, {
 
 export const baseRequestClient = new RequestClient({ baseURL: apiURL });
 
-export const downloadFile = async (url: string, fileName?: string) => {
+export const downloadFile = async (
+  url: string,
+  fileName?: string,
+  config?: DownloadRequestConfig,
+) => {
   const response = await requestClient.download<RequestResponse<Blob>>(url, {
     responseReturn: 'raw',
+    ...config,
   });
   await downloadFileFromBlob({
     source: response.data,

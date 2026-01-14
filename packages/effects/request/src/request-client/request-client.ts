@@ -162,3 +162,5 @@ class RequestClient {
 }
 
 export { RequestClient };
+
+export { type DownloadRequestConfig } from './modules/downloader';

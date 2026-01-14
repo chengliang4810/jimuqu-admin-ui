@@ -3,7 +3,7 @@ import type { FormType } from './form-modal.vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { requestClient } from '#/api/request';
+import { downloadFile, requestClient } from '#/api/request';
 import { renderDict } from '#/utils/render';
 import DeptTree from '#/views/system/dept/dept-tree.vue';
 
@@ -218,6 +218,34 @@ async function handleDelete(id: string | string[]) {
 async function refreshTable() {
   gridApi.reload();
 }
+
+/**
+ * 导出用户数据
+ */
+async function handleExport() {
+  try {
+    // 获取最后提交的查询条件（点击查询按钮后的值）
+    const formValues = gridApi.formApi.getLatestSubmissionValues();
+
+    const params: Record<string, any> = {
+      ...formValues,
+    };
+    if (selectDeptId.value) {
+      params.deptId = selectDeptId.value;
+    }
+
+    // 调用导出接口
+    await downloadFile('/system/user/export', `用户数据_${Date.now()}.xlsx`, {
+      method: 'POST',
+      data: params,
+    });
+
+    message.success('导出成功');
+  } catch (error) {
+    message.error('导出失败');
+    console.error('导出失败:', error);
+  }
+}
 </script>
 
 <template>
@@ -237,6 +265,9 @@ async function refreshTable() {
           </n-button>
           <n-button class="mr-2" type="primary" @click="openModal('add')">
             新增
+          </n-button>
+          <n-button class="mr-2" type="success" @click="handleExport">
+            导出
           </n-button>
         </n-flex>
       </template>
