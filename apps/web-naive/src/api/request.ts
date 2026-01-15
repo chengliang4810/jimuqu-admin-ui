@@ -12,7 +12,6 @@ import { preferences } from '@vben/preferences';
 import {
   authenticateResponseInterceptor,
   defaultResponseInterceptor,
-  errorMessageResponseInterceptor,
   RequestClient,
 } from '@vben/request';
 import { useAccessStore, useErrorStore } from '@vben/stores';
@@ -25,6 +24,14 @@ import { useAuthStore } from '#/store';
 import { refreshTokenApi } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
+
+// 500错误已处理的特殊标记
+const HANDLED_500_RESPONSE = Object.freeze({
+  __isHandled500Error: true,
+  config: { responseReturn: 'raw' },
+  data: null,
+  status: 500,
+} as RequestResponse<null>);
 
 function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   const client = new RequestClient({
@@ -106,8 +113,16 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
         // 避免在500页面时重复跳转导致死循环
         const currentPath = router.currentRoute.value.path;
         if (currentPath !== '/500') {
-          // 记录原始页面路径，用于重试时跳转
           const errorStore = useErrorStore();
+
+          // 防抖：检查是否应该处理此500错误
+          // 只有第一个500错误会触发跳转，其他的500错误会被静默处理
+          if (!errorStore.tryHandle500Error()) {
+            // 已有其他请求在处理500错误，返回特殊响应对象
+            return Promise.resolve(HANDLED_500_RESPONSE);
+          }
+
+          // 记录原始页面路径，用于重试时跳转
           const fullPath = router.currentRoute.value.fullPath;
           errorStore.setFailedRequestPath(fullPath);
 
@@ -118,8 +133,9 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
           });
         }
 
-        // 返回 resolved Promise，避免组件中的 Promise rejection 警告
-        return Promise.resolve(null);
+        // 返回特殊响应对象，避免组件中的 Promise rejection 警告
+        // 同时让后续拦截器能正常处理
+        return Promise.resolve(HANDLED_500_RESPONSE);
       }
 
       // 非500错误，继续传递给下一个拦截器
@@ -128,16 +144,29 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   });
 
   // 通用的错误处理,如果没有进入上面的错误处理逻辑，就会进入这里
-  client.addResponseInterceptor(
-    errorMessageResponseInterceptor((msg: string, error) => {
+  client.addResponseInterceptor({
+    fulfilled: (response: any) => {
+      // 检查是否是已处理的500错误响应
+      if (response && response.__isHandled500Error) {
+        return null; // 返回null给调用者
+      }
+      return response;
+    },
+    rejected: (error: any) => {
+      // 跳过500错误，已在上面专门处理
+      if (error?.response?.status === 500) {
+        return Promise.reject(error);
+      }
+
       // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
       // 当前mock接口返回的错误字段是 error 或者 message
       const responseData = error?.response?.data ?? {};
       const errorMessage = responseData?.error ?? responseData?.msg ?? '';
       // 如果没有错误信息，则会根据状态码进行提示
-      message.error(errorMessage || msg);
-    }),
-  );
+      message.error(errorMessage || error.message || '请求失败');
+      return Promise.reject(error);
+    },
+  });
 
   // 刷新拦截器队列，按优先级注册到 axios
   client.flushInterceptors();

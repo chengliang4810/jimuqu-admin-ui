@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Fallback } from '@vben/common-ui';
@@ -16,14 +17,23 @@ const errorStore = useErrorStore();
 function retry() {
   const originalPath = errorStore.failedRequestPath;
   errorStore.clearFailedRequestPath();
+  // 重置500错误处理状态，允许后续的500错误再次触发
+  errorStore.reset500ErrorState();
   router.push(originalPath);
 }
 
 // 返回首页
 function goHome() {
   errorStore.clearFailedRequestPath();
+  // 重置500错误处理状态
+  errorStore.reset500ErrorState();
   router.push('/');
 }
+
+// 组件卸载时重置状态，确保下次进入500页面时能正常处理
+onBeforeUnmount(() => {
+  errorStore.reset500ErrorState();
+});
 </script>
 
 <template>
