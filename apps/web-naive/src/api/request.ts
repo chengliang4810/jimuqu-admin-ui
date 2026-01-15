@@ -15,10 +15,11 @@ import {
   errorMessageResponseInterceptor,
   RequestClient,
 } from '@vben/request';
-import { useAccessStore } from '@vben/stores';
+import { useAccessStore, useErrorStore } from '@vben/stores';
 import { downloadFileFromBlob } from '@vben/utils';
 
 import { message } from '#/adapter/naive';
+import { router } from '#/router';
 import { useAuthStore } from '#/store';
 
 import { refreshTokenApi } from './core';
@@ -95,6 +96,37 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     }),
   );
 
+  // 500错误处理，priority: -10 确保在 errorMessageResponseInterceptor 之前执行
+  client.addResponseInterceptor({
+    priority: -10,
+    rejected: (error: any) => {
+      const status = error?.response?.status;
+
+      if (status === 500) {
+        // 避免在500页面时重复跳转导致死循环
+        const currentPath = router.currentRoute.value.path;
+        if (currentPath !== '/500') {
+          // 记录原始页面路径，用于重试时跳转
+          const errorStore = useErrorStore();
+          const fullPath = router.currentRoute.value.fullPath;
+          errorStore.setFailedRequestPath(fullPath);
+
+          // 跳转到500错误页面
+          router.push({
+            path: '/500',
+            query: { redirect: fullPath },
+          });
+        }
+
+        // 返回 resolved Promise，避免组件中的 Promise rejection 警告
+        return Promise.resolve(null);
+      }
+
+      // 非500错误，继续传递给下一个拦截器
+      return Promise.reject(error);
+    },
+  });
+
   // 通用的错误处理,如果没有进入上面的错误处理逻辑，就会进入这里
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
@@ -106,6 +138,9 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       message.error(errorMessage || msg);
     }),
   );
+
+  // 刷新拦截器队列，按优先级注册到 axios
+  client.flushInterceptors();
 
   return client;
 }

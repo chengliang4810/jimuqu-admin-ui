@@ -332,7 +332,7 @@ export function findParentsIds(
     }
   }
 
-  return parentIds.sort();
+  return parentIds.toSorted();
 }
 
 /**
@@ -356,7 +356,7 @@ export function findGroupParentIds(
     });
   });
 
-  return [...parentIds].sort();
+  return [...parentIds].toSorted();
 }
 
 /**
@@ -381,7 +381,7 @@ export function findAllIds(
     ids.push(item[id]);
   });
 
-  return [...ids].sort();
+  return [...ids].toSorted();
 }
 
 /**

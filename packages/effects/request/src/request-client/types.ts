@@ -56,6 +56,8 @@ interface RequestInterceptorConfig {
     | (ExtendOptions & InternalAxiosRequestConfig<any>)
     | Promise<ExtendOptions & InternalAxiosRequestConfig<any>>;
   rejected?: (error: any) => any;
+  /** 拦截器优先级，数值越小越先执行。默认为 0 */
+  priority?: number;
 }
 
 interface ResponseInterceptorConfig<T = any> {
@@ -63,6 +65,8 @@ interface ResponseInterceptorConfig<T = any> {
     response: RequestResponse<T>,
   ) => Promise<RequestResponse> | RequestResponse;
   rejected?: (error: any) => any;
+  /** 拦截器优先级，数值越小越先执行。默认为 0 */
+  priority?: number;
 }
 
 type MakeErrorMessageFn = (message: string, error: any) => void;

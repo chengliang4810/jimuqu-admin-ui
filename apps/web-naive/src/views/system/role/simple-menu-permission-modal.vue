@@ -190,7 +190,6 @@ function getAllKeys(nodes: MenuWithPermissions[]): string[] {
   return keys;
 }
 
-
 // 权限按钮变化
 function handlePermissionChange(
   node: MenuWithPermissions,

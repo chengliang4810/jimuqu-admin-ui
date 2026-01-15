@@ -51,6 +51,8 @@ class RequestClient {
   public requestSSE: SSE['requestSSE'];
   public upload: FileUploader['upload'];
 
+  private interceptorManager: InterceptorManager;
+
   /**
    * 构造函数，用于创建Axios实例
    * @param options - Axios请求配置，可选
@@ -75,11 +77,15 @@ class RequestClient {
     bindMethods(this);
 
     // 实例化拦截器管理器
-    const interceptorManager = new InterceptorManager(this.instance);
+    this.interceptorManager = new InterceptorManager(this.instance);
     this.addRequestInterceptor =
-      interceptorManager.addRequestInterceptor.bind(interceptorManager);
+      this.interceptorManager.addRequestInterceptor.bind(
+        this.interceptorManager,
+      );
     this.addResponseInterceptor =
-      interceptorManager.addResponseInterceptor.bind(interceptorManager);
+      this.interceptorManager.addResponseInterceptor.bind(
+        this.interceptorManager,
+      );
 
     // 实例化文件上传器
     const fileUploader = new FileUploader(this);
@@ -101,6 +107,14 @@ class RequestClient {
     config?: RequestClientConfig,
   ): Promise<T> {
     return this.request<T>(url, { ...config, method: 'DELETE' });
+  }
+
+  /**
+   * 刷新拦截器队列，将所有已添加的拦截器按优先级注册到 axios
+   * 应在所有拦截器添加完成后调用一次
+   */
+  public flushInterceptors() {
+    this.interceptorManager.flush();
   }
 
   /**

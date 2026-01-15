@@ -20,6 +20,19 @@ const fallbackNotFoundRoute: RouteRecordRaw = {
   path: '/:path(.*)*',
 };
 
+/** 全局500错误页面 */
+const fallbackInternalErrorRoute: RouteRecordRaw = {
+  component: () => import('#/views/_core/fallback/internal-error.vue'),
+  meta: {
+    hideInBreadcrumb: true,
+    hideInMenu: true,
+    hideInTab: true,
+    title: '500',
+  },
+  name: 'FallbackInternalError',
+  path: '/500',
+};
+
 /** 基本路由，这些路由是必须存在的 */
 const coreRoutes: RouteRecordRaw[] = [
   /**
@@ -92,6 +105,8 @@ const coreRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  // 500错误页面作为核心路由，避免触发权限检查
+  fallbackInternalErrorRoute,
 ];
 
-export { coreRoutes, fallbackNotFoundRoute };
+export { coreRoutes, fallbackInternalErrorRoute, fallbackNotFoundRoute };
