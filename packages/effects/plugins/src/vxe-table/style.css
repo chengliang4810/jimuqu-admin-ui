@@ -109,7 +109,7 @@ html[data-vxe-ui-theme='dark'] .vxe-grid {
 }
 
 /** 关闭搜索表单 */
-.vxe-grid:not(.vxe-grid--form-wrapper form) .vxe-toolbar {
+.vxe-grid:not(:has(.vxe-grid--form-wrapper form)) .vxe-toolbar {
   padding: 0.6em 0 !important;
 }
 

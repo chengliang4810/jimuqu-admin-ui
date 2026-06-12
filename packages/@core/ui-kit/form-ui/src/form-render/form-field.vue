@@ -309,9 +309,9 @@ onUnmounted(() => {
           'form-valid-error': isInValid,
           'form-is-required': shouldRequired,
           'flex-col': isVertical,
-          'flex-row items-center': !isVertical,
+          'flex-row items-start': !isVertical,
           // 'pb-4': !compact,
-          'pb-2': compact,
+          'pb-4': compact,
         },
         $attrs.class as string,
       )
@@ -323,7 +323,7 @@ onUnmounted(() => {
         cn(
           'flex leading-6',
           {
-            'mr-2 shrink-0 justify-end': !isVertical,
+            'mr-2 min-h-8 shrink-0 items-center justify-end': !isVertical,
             'mb-1 flex-row': isVertical,
             'self-start': shouldCollapsible && !isVertical,
           },
@@ -363,8 +363,10 @@ onUnmounted(() => {
           :rules="antdRules"
           :validate-trigger="validateTrigger"
           :colon="false"
-          class="m-0 w-full [&_.ant-form-item-label]:hidden"
-          :class="{ '[&_.ant-form-item-explain]:hidden': compact }"
+          class="w-full [&_.ant-form-item-label]:hidden"
+          :class="{
+            'm-0! [&_.ant-form-item-explain]:hidden': compact,
+          }"
         >
           <slot
             v-bind="{

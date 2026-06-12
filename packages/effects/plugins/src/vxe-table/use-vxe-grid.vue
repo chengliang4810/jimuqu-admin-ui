@@ -456,7 +456,7 @@ onUnmounted(() => {
           v-show="showSearchForm !== false"
           :class="
             cn(
-              'relative rounded-sm py-3',
+              'vxe-grid--form-wrapper relative rounded-sm py-3',
               isCompactForm
                 ? isSeparator
                   ? 'pb-8'
