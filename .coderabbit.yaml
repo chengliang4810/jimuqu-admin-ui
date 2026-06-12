@@ -1,0 +1,17 @@
+language: "zh-CN"
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: true
+  path_instructions:
+    - path: "apps/web-antd/**"
+      instructions: "重点关注业务回归风险、路由权限、表单校验和上传逻辑。"
+    - path: "packages/**"
+      instructions: "重点关注公共 API 兼容性、类型安全、以及潜在破坏性变更。"
+    - path: "**/*.md"
+      instructions: "文档变更只做简要建议，不阻断。"
+chat:
+  auto_reply: false

@@ -1,0 +1,80 @@
+import type { Menu, MenuOption, MenuQuery, MenuResp } from './model';
+
+import type { ID, IDS } from '#/api/common';
+
+import { alovaInstance } from '#/utils/http';
+
+enum Api {
+  menuList = '/system/menu/list',
+  menuTreeSelect = '/system/menu/treeselect',
+  roleMenuTree = '/system/menu/roleMenuTreeselect',
+  root = '/system/menu',
+}
+
+/**
+ * 菜单列表
+ * @param params 参数
+ * @returns 列表
+ */
+export function menuList(params?: MenuQuery) {
+  return alovaInstance.get<Menu[]>(Api.menuList, { params });
+}
+
+/**
+ * 菜单详情
+ * @param menuId 菜单id
+ * @returns 菜单详情
+ */
+export function menuInfo(menuId: ID) {
+  return alovaInstance.get<Menu>(`${Api.root}/${menuId}`);
+}
+
+/**
+ * 菜单新增
+ * @param data 参数
+ */
+export function menuAdd(data: Partial<Menu>) {
+  return alovaInstance.postWithMsg<void>(Api.root, data);
+}
+
+/**
+ * 菜单更新
+ * @param data 参数
+ */
+export function menuUpdate(data: Partial<Menu>) {
+  return alovaInstance.putWithMsg<void>(Api.root, data);
+}
+
+/**
+ * 菜单删除
+ * @param menuIds ids
+ */
+export function menuRemove(menuIds: IDS) {
+  return alovaInstance.deleteWithMsg<void>(`${Api.root}/${menuIds}`);
+}
+
+/**
+ * 返回对应角色的菜单
+ * @param roleId id
+ * @returns resp
+ */
+export function roleMenuTreeSelect(roleId: ID) {
+  return alovaInstance.get<MenuResp>(`${Api.roleMenuTree}/${roleId}`);
+}
+
+/**
+ * 下拉框使用  返回所有的菜单
+ * @returns []
+ */
+export function menuTreeSelect() {
+  return alovaInstance.get<MenuOption[]>(Api.menuTreeSelect);
+}
+
+/**
+ * 批量删除菜单
+ * @param menuIds 菜单ids
+ * @returns void
+ */
+export function menuCascadeRemove(menuIds: IDS) {
+  return alovaInstance.deleteWithMsg<void>(`${Api.root}/cascade/${menuIds}`);
+}

@@ -1,0 +1,48 @@
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - 'README*'
+          - '**/*.md'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/workflows/**'
+          - '.github/*.yml'
+          - '.github/*.yaml'
+
+web-antd:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'apps/web-antd/**'
+
+backend-mock:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'apps/backend-mock/**'
+
+packages:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'packages/**'
+
+internal:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'internal/**'
+
+scripts:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'scripts/**'
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'pnpm-lock.yaml'
+          - 'pnpm-workspace.yaml'
+          - 'turbo.json'
+          - 'tsconfig*.json'
+          - '.npmrc'
