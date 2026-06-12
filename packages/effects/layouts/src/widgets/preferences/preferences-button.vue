@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 
 import { Settings } from '@vben/icons';
-import { VbenIconButton } from '@vben-core/shadcn-ui';
+
+import { VbenIconButton } from '@vben-core/ui-adapter';
 
 import Preferences from './preferences.vue';
 

@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import type { SelectOption } from '@vben/types';
 
-import { CircleHelp } from '@vben/icons';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  VbenTooltip,
-} from '@vben-core/shadcn-ui';
 import { useSlots } from 'vue';
+
+import { CircleHelp } from '@vben/icons';
+
+import { VbenTooltip } from '@vben-core/ui-adapter';
+
+import { Select } from 'antdv-next';
 
 defineOptions({
   name: 'PreferenceSelectItem',
@@ -60,15 +57,11 @@ const slots = useSlots();
         </slot>
       </VbenTooltip>
     </span>
-    <Select v-model="selectValue">
-      <SelectTrigger class="h-8 w-41.25">
-        <SelectValue :placeholder="placeholder" />
-      </SelectTrigger>
-      <SelectContent>
-        <template v-for="item in items" :key="item.value">
-          <SelectItem :value="item.value"> {{ item.label }} </SelectItem>
-        </template>
-      </SelectContent>
-    </Select>
+    <Select
+      v-model:value="selectValue"
+      class="w-41.25"
+      :placeholder="placeholder"
+      :options="items"
+    />
   </div>
 </template>

@@ -2,11 +2,8 @@
   "name": "ruoyi-plus-antdv",
   "version": "2.0.1",
   "private": true,
-  "type": "module",
   "license": "MIT",
-  "imports": {
-    "#/*": "./src/*"
-  },
+  "type": "module",
   "scripts": {
     "bootstrap": "pnpm install",
     "dev": "vite --mode development",
@@ -26,6 +23,9 @@
     "test:unit": "vitest run --dom",
     "catalog": "pnpm dlx codemod pnpm/catalog",
     "generate-offline-icons": "node scripts/generate-offline-icons.js"
+  },
+  "imports": {
+    "#/*": "./src/*"
   },
   "dependencies": {
     "@alova/adapter-axios": "catalog:",

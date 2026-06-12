@@ -3,9 +3,8 @@ import type { Component } from 'vue';
 
 import type { AnyFunction } from '@vben/types';
 
-import { computed, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
-import { useHoverToggle } from '@vben/hooks';
 import { LockKeyhole, LogOut, Settings } from '@vben/icons';
 import { $t } from '@vben/locales';
 import { preferences, usePreferences } from '@vben/preferences';
@@ -13,20 +12,10 @@ import { useAccessStore } from '@vben/stores';
 import { isWindowsOs } from '@vben/utils';
 
 import { useVbenModal } from '@vben-core/popup-ui';
-import {
-  Badge,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-  VbenAvatar,
-  VbenIcon,
-} from '@vben-core/shadcn-ui';
+import { VbenAvatar, VbenIcon } from '@vben-core/ui-adapter';
 
 import { useMagicKeys, whenever } from '@vueuse/core';
+import { Badge, Dropdown } from 'antdv-next';
 
 import { LockScreenModal } from '../lock-screen';
 import { Preferences } from '../preferences';
@@ -100,27 +89,23 @@ const [LogoutModal, logoutModalApi] = useVbenModal({
   },
 });
 
-const refTrigger = useTemplateRef('refTrigger');
-const refContent = useTemplateRef('refContent');
 const refPreferences = useTemplateRef('refPreferences');
-const [openPopover, hoverWatcher] = useHoverToggle(
-  [refTrigger, refContent],
-  () => props.hoverDelay,
-);
+const openPopover = ref(false);
 
-watch(
-  () => props.trigger === 'hover' || props.trigger === 'both',
-  (val) => {
-    if (val) {
-      hoverWatcher.enable();
-    } else {
-      hoverWatcher.disable();
+// 触发方式 → antd Dropdown trigger
+const dropdownTrigger = computed<('click' | 'hover')[]>(() => {
+  switch (props.trigger) {
+    case 'both': {
+      return ['click', 'hover'];
     }
-  },
-  {
-    immediate: true,
-  },
-);
+    case 'hover': {
+      return ['hover'];
+    }
+    default: {
+      return ['click'];
+    }
+  }
+});
 
 const altView = computed(() => (isWindowsOs() ? 'Alt' : '⌥'));
 
@@ -212,17 +197,22 @@ if (enableShortcutKey.value) {
     @clear-preferences-and-logout="emit('clearPreferencesAndLogout')"
   />
 
-  <DropdownMenu v-model:open="openPopover">
-    <DropdownMenuTrigger ref="refTrigger" :disabled="props.trigger === 'hover'">
-      <div class="mr-2 ml-1 cursor-pointer rounded-full p-1.5 hover:bg-accent">
-        <div class="flex-center hover:text-accent-foreground">
-          <VbenAvatar :alt="text" :src="avatar" class="size-8" dot />
-        </div>
+  <Dropdown
+    :open="openPopover"
+    :trigger="dropdownTrigger"
+    placement="bottomRight"
+    @open-change="(v: boolean) => (openPopover = v)"
+  >
+    <div class="mr-2 ml-1 cursor-pointer rounded-full p-1.5 hover:bg-accent">
+      <div class="flex-center hover:text-accent-foreground">
+        <VbenAvatar :alt="text" :src="avatar" class="size-8" dot />
       </div>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent class="mr-2 min-w-60 p-0 pb-1">
-      <div ref="refContent">
-        <DropdownMenuLabel class="flex items-center p-3">
+    </div>
+    <template #overlay>
+      <div
+        class="bg-popover text-popover-foreground min-w-60 rounded-md p-0 pb-1 shadow-md"
+      >
+        <div class="flex items-center p-3">
           <VbenAvatar
             :alt="text"
             :src="avatar"
@@ -256,49 +246,58 @@ if (enableShortcutKey.value) {
               {{ description }}
             </div>
           </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator v-if="menus?.length" />
-        <DropdownMenuItem
+        </div>
+        <div v-if="menus?.length" class="border-border my-1 border-t"></div>
+        <div
           v-for="menu in menus"
           :key="menu.text"
-          class="mx-1 flex cursor-pointer items-center rounded-sm py-1 leading-8"
+          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
           @click="menu.handler"
         >
           <VbenIcon :icon="menu.icon" class="mr-2 size-4" />
           {{ menu.text }}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
+        </div>
+        <div class="border-border my-1 border-t"></div>
+        <div
           v-if="preferencesButtonPosition.userDropdown"
-          class="mx-1 flex cursor-pointer items-center rounded-sm py-1 leading-8"
+          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
           @click="handleOpenSettings"
         >
           <Settings class="mr-2 size-4" />
           {{ $t('preferences.title') }}
-        </DropdownMenuItem>
-        <DropdownMenuItem
+        </div>
+        <div
           v-if="preferences.widget.lockScreen"
-          class="mx-1 flex cursor-pointer items-center rounded-sm py-1 leading-8"
+          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
           @click="handleOpenLock"
         >
           <LockKeyhole class="mr-2 size-4" />
           {{ $t('ui.widgets.lockScreen.title') }}
-          <DropdownMenuShortcut v-if="enableLockScreenShortcutKey">
+          <span
+            v-if="enableLockScreenShortcutKey"
+            class="ml-auto text-xs opacity-60"
+          >
             {{ altView }} L
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator v-if="preferences.widget.lockScreen" />
-        <DropdownMenuItem
-          class="mx-1 flex cursor-pointer items-center rounded-sm py-1 leading-8"
+          </span>
+        </div>
+        <div
+          v-if="preferences.widget.lockScreen"
+          class="border-border my-1 border-t"
+        ></div>
+        <div
+          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
           @click="handleLogout"
         >
           <LogOut class="mr-2 size-4" />
           {{ $t('common.logout') }}
-          <DropdownMenuShortcut v-if="enableLogoutShortcutKey">
+          <span
+            v-if="enableLogoutShortcutKey"
+            class="ml-auto text-xs opacity-60"
+          >
             {{ altView }} Q
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
+          </span>
+        </div>
       </div>
-    </DropdownMenuContent>
-  </DropdownMenu>
+    </template>
+  </Dropdown>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { ThemeModeType } from '@vben/types';
 import type { Component } from 'vue';
+
+import type { ThemeModeType } from '@vben/types';
 
 import { watch } from 'vue';
 

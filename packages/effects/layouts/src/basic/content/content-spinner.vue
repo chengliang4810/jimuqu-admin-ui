@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { VbenLoading } from '@vben-core/shadcn-ui';
+import { VbenLoading } from '@vben-core/ui-adapter';
 
 import { useContentSpinner } from './use-content-spinner';
 

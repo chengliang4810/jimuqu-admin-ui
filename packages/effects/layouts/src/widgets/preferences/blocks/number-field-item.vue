@@ -5,14 +5,9 @@ import { useSlots } from 'vue';
 
 import { CircleHelp } from '@vben/icons';
 
-import {
-  NumberField,
-  NumberFieldContent,
-  NumberFieldDecrement,
-  NumberFieldIncrement,
-  NumberFieldInput,
-  VbenTooltip,
-} from '@vben-core/shadcn-ui';
+import { VbenTooltip } from '@vben-core/ui-adapter';
+
+import { InputNumber } from 'antdv-next';
 
 defineOptions({
   name: 'PreferenceSelectItem',
@@ -63,12 +58,6 @@ const slots = useSlots();
       </VbenTooltip>
     </span>
 
-    <NumberField v-model="inputValue" v-bind="$attrs" class="w-41.25">
-      <NumberFieldContent>
-        <NumberFieldDecrement />
-        <NumberFieldInput />
-        <NumberFieldIncrement />
-      </NumberFieldContent>
-    </NumberField>
+    <InputNumber v-model:value="inputValue" v-bind="$attrs" class="w-41.25" />
   </div>
 </template>

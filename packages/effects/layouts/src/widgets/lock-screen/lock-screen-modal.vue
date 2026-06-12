@@ -7,7 +7,7 @@ import { $t } from '@vben/locales';
 
 import { useVbenForm } from '@vben-core/form-ui';
 import { useVbenModal } from '@vben-core/popup-ui';
-import { VbenAvatar, VbenButton } from '@vben-core/shadcn-ui';
+import { VbenAvatar, VbenButton } from '@vben-core/ui-adapter';
 
 interface Props {
   avatar?: string;

@@ -12,7 +12,7 @@ import {
   VbenPopover,
   VbenScrollbar,
   VbenSegmented,
-} from '@vben-core/shadcn-ui';
+} from '@vben-core/ui-adapter';
 
 import { useToggle } from '@vueuse/core';
 

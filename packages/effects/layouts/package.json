@@ -26,9 +26,9 @@
     "@vben-core/layout-ui": "workspace:*",
     "@vben-core/menu-ui": "workspace:*",
     "@vben-core/popup-ui": "workspace:*",
-    "@vben-core/shadcn-ui": "workspace:*",
     "@vben-core/shared": "workspace:*",
     "@vben-core/tabs-ui": "workspace:*",
+    "@vben-core/ui-adapter": "workspace:*",
     "@vben/constants": "workspace:*",
     "@vben/hooks": "workspace:*",
     "@vben/icons": "workspace:*",
@@ -38,6 +38,7 @@
     "@vben/types": "workspace:*",
     "@vben/utils": "workspace:*",
     "@vueuse/core": "catalog:",
+    "antdv-next": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
   }

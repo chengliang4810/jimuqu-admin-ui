@@ -8,11 +8,10 @@ import {
   updatePreferences,
   usePreferences,
 } from '@vben/preferences';
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-  VbenTooltip,
-} from '@vben-core/shadcn-ui';
+
+import { VbenTooltip } from '@vben-core/ui-adapter';
+
+import { Segmented } from 'antdv-next';
 
 import ThemeButton from './theme-button.vue';
 
@@ -60,23 +59,21 @@ const PRESETS = [
           @update:model-value="handleChange"
         />
       </template>
-      <ToggleGroup
-        :model-value="preferences.theme.mode"
-        class="gap-2"
-        type="single"
-        variant="outline"
-        @update:model-value="
-          (val) => updatePreferences({ theme: { mode: val as ThemeModeType } })
+      <Segmented
+        :value="preferences.theme.mode"
+        :options="PRESETS.map((item) => ({ value: item.name }))"
+        @change="
+          (val: any) =>
+            updatePreferences({ theme: { mode: val as ThemeModeType } })
         "
       >
-        <ToggleGroupItem
-          v-for="item in PRESETS"
-          :key="item.name"
-          :value="item.name"
-        >
-          <component :is="item.icon" class="size-5" />
-        </ToggleGroupItem>
-      </ToggleGroup>
+        <template #label="{ value }">
+          <component
+            :is="PRESETS.find((p) => p.name === value)?.icon"
+            class="mx-auto size-5"
+          />
+        </template>
+      </Segmented>
     </VbenTooltip>
   </div>
 </template>

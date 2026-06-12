@@ -5,7 +5,9 @@ import { useSlots } from 'vue';
 
 import { CircleHelp, CircleX } from '@vben/icons';
 
-import { Input, VbenTooltip } from '@vben-core/shadcn-ui';
+import { VbenTooltip } from '@vben-core/ui-adapter';
+
+import { Input } from 'antdv-next';
 
 defineOptions({
   name: 'PreferenceSelectItem',
@@ -57,7 +59,7 @@ const slots = useSlots();
     </span>
     <div class="relative">
       <Input
-        v-model="inputValue"
+v-model:value="inputValue"
         class="h-8 w-41.25"
         :placeholder="placeholder"
       />

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SelectOption } from '@vben/types';
 
-import { ToggleGroup, ToggleGroupItem } from '@vben-core/shadcn-ui';
+import { Segmented } from 'antdv-next';
 
 defineOptions({
   name: 'PreferenceToggleItem',
@@ -26,21 +26,6 @@ const modelValue = defineModel<string>();
     <span class="text-sm">
       <slot></slot>
     </span>
-    <ToggleGroup
-      v-model="modelValue"
-      class="gap-2"
-      size="sm"
-      type="single"
-      variant="outline"
-    >
-      <template v-for="item in items" :key="item.value">
-        <ToggleGroupItem
-          :value="item.value"
-          class="h-7 rounded-sm data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-        >
-          {{ item.label }}
-        </ToggleGroupItem>
-      </template>
-    </ToggleGroup>
+    <Segmented v-model:value="modelValue" :options="items" />
   </div>
 </template>

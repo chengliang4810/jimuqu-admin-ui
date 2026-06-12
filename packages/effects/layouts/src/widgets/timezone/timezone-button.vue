@@ -6,11 +6,9 @@ import { $t } from '@vben/locales';
 import { useTimezoneStore } from '@vben/stores';
 
 import { useVbenModal } from '@vben-core/popup-ui';
-import {
-  RadioGroup,
-  RadioGroupItem,
-  VbenIconButton,
-} from '@vben-core/shadcn-ui';
+import { VbenIconButton } from '@vben-core/ui-adapter';
+
+import { Radio, RadioGroup } from 'antdv-next';
 
 const TimezoneIcon = createIconifyIcon('fluent-mdl2:world-clock');
 
@@ -63,17 +61,14 @@ const handleClick = () => {
     </VbenIconButton>
     <Modal :title="$t('ui.widgets.timezone.setTimezone')">
       <div class="timezone-container">
-        <RadioGroup v-model="timezoneRef" class="flex flex-col gap-2">
-          <div
-            class="flex cursor-pointer items-center gap-2"
+        <RadioGroup v-model:value="timezoneRef" class="flex flex-col gap-2">
+          <Radio
             v-for="item in timezoneOptionsRef"
             :key="`container${item.value}`"
+            :value="item.value"
           >
-            <RadioGroupItem :id="item.value" :value="item.value" />
-            <label :for="item.value" class="cursor-pointer">{{
-              item.label
-            }}</label>
-          </div>
+            {{ item.label }}
+          </Radio>
         </RadioGroup>
       </div>
     </Modal>

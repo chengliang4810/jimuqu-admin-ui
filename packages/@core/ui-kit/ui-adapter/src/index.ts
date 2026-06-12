@@ -11,6 +11,7 @@ export { default as VbenIconButton } from './icon-button.vue';
 export { default as VbenIcon } from './icon.vue';
 export { default as VbenLoading } from './loading.vue';
 export { default as VbenLogo } from './logo.vue';
+export { default as VbenPopover } from './popover.vue';
 export { default as VbenScrollbar } from './scrollbar.vue';
 export { default as VbenSegmented } from './segmented.vue';
 export { default as VbenSpinner } from './spinner.vue';

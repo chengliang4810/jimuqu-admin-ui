@@ -5,13 +5,15 @@ import { useSlots } from 'vue';
 
 import { CircleHelp } from '@vben/icons';
 
-import { VbenCheckButtonGroup, VbenTooltip } from '@vben-core/shadcn-ui';
+import { VbenTooltip } from '@vben-core/ui-adapter';
+
+import { Button } from 'antdv-next';
 
 defineOptions({
   name: 'PreferenceCheckboxItem',
 });
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     disabled?: boolean;
     items?: SelectOption[];
@@ -31,6 +33,29 @@ withDefaults(
 const inputValue = defineModel<string[]>();
 
 const slots = useSlots();
+
+function isActive(value: string) {
+  return inputValue.value?.includes(value);
+}
+
+function handleClick(value: string) {
+  if (props.disabled) {
+    return;
+  }
+  const current = [...(inputValue.value ?? [])];
+  if (props.multiple) {
+    const index = current.indexOf(value);
+    if (index === -1) {
+      current.push(value);
+    } else {
+      current.splice(index, 1);
+    }
+    inputValue.value = current;
+  } else {
+    inputValue.value = [value];
+  }
+  props.onBtnClick?.(value);
+}
 </script>
 
 <template>
@@ -51,13 +76,17 @@ const slots = useSlots();
         <slot name="tip"></slot>
       </VbenTooltip>
     </span>
-    <VbenCheckButtonGroup
-      v-model="inputValue"
-      class="h-8 w-41.25"
-      :options="items"
-      :disabled="disabled"
-      :multiple="multiple"
-      @btn-click="onBtnClick"
-    />
+    <div class="flex w-41.25 justify-end gap-1">
+      <Button
+        v-for="item in items"
+        :key="item.value"
+        size="small"
+        :type="isActive(item.value as string) ? 'primary' : 'default'"
+        :disabled="disabled"
+        @click="handleClick(item.value as string)"
+      >
+        {{ item.label }}
+      </Button>
+    </div>
   </div>
 </template>
