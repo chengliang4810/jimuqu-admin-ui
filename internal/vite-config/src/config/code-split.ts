@@ -250,24 +250,24 @@ const matchUtilsVendorChunk = createChunkMatcher([
   '/node_modules/zod/',
 ]);
 const matchAppAuthChunk = createChunkMatcher([
-  '/apps/web-antd/src/api/core/auth',
-  '/apps/web-antd/src/api/core/captcha',
-  '/apps/web-antd/src/views/_core/authentication/',
-  '/apps/web-antd/src/views/_core/social-callback/',
+  '/src/api/core/auth',
+  '/src/api/core/captcha',
+  '/src/views/_core/authentication/',
+  '/src/views/_core/social-callback/',
 ]);
-const matchAppLocaleChunk = createChunkMatcher(['/apps/web-antd/src/locales/']);
+const matchAppLocaleChunk = createChunkMatcher(['/src/locales/']);
 const matchAppCoreChunk = createChunkMatcher([
-  '/apps/web-antd/src/adapter/',
-  '/apps/web-antd/src/api/core/',
-  '/apps/web-antd/src/bootstrap.ts',
-  '/apps/web-antd/src/components/global/',
-  '/apps/web-antd/src/layouts/',
-  '/apps/web-antd/src/router/',
-  '/apps/web-antd/src/store/',
-  '/apps/web-antd/src/utils/',
-  '/apps/web-antd/src/views/_core/',
+  '/src/adapter/',
+  '/src/api/core/',
+  '/src/bootstrap.ts',
+  '/src/components/global/',
+  '/src/layouts/',
+  '/src/router/',
+  '/src/store/',
+  '/src/utils/',
+  '/src/views/_core/',
 ]);
-const matchAppViewsChunk = createChunkMatcher(['/apps/web-antd/src/views/']);
+const matchAppViewsChunk = createChunkMatcher(['/src/views/']);
 
 function createApplicationCodeSplitting() {
   return {

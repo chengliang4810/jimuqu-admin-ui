@@ -105,8 +105,11 @@ function createCssOptions(injectGlobalScss = true): CSSOptions {
           scss: {
             additionalData: (content: string, filepath: string) => {
               const relativePath = relative(root, filepath);
-              // apps下的包注入全局样式
-              if (relativePath.startsWith(`apps${path.sep}`)) {
+              // 应用源码(根 src 目录)注入全局样式
+              if (
+                relativePath.startsWith(`src${path.sep}`) ||
+                relativePath.startsWith(`apps${path.sep}`)
+              ) {
                 return `@use "@vben/styles/global" as *;\n${content}`;
               }
               return content;
