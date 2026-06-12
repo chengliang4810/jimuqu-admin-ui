@@ -7,9 +7,11 @@ import type { AlertProps, BeforeCloseScope, PromptProps } from './alert';
 import { h, nextTick, ref, render } from 'vue';
 
 import { useSimpleLocale } from '@vben-core/composables';
-import { Input, VbenRenderContent } from '@vben-core/shadcn-ui';
 import { isFunction, isString } from '@vben-core/shared/utils';
 
+import { Input } from 'antdv-next';
+
+import RenderContent from '../render-content';
 import Alert from './alert.vue';
 
 const alerts = ref<Array<{ container: HTMLElement; instance: Component }>>([]);
@@ -145,10 +147,11 @@ export async function vbenPrompt<T = any>(
   const modelValue = ref<T | undefined>(defaultValue);
   const inputComponentRef = ref<null | VNode>(null);
   const staticContents: Component[] = [
-    h(VbenRenderContent, { content, renderBr: true }),
+    h(RenderContent, { content, renderBr: true }),
   ];
 
-  const modelPropName = _modelPropName || 'modelValue';
+  // 默认组件为 antd Input(v-model:value),故默认 modelPropName 为 value
+  const modelPropName = _modelPropName || 'value';
   const componentProps = { ..._componentProps };
 
   // 每次渲染时都会重新计算的内容函数

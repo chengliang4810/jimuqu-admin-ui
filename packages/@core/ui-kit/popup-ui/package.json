@@ -43,10 +43,10 @@
     "@vben-core/composables": "workspace:*",
     "@vben-core/icons": "workspace:*",
     "@vben-core/preferences": "workspace:*",
-    "@vben-core/shadcn-ui": "workspace:*",
     "@vben-core/shared": "workspace:*",
     "@vben-core/typings": "workspace:*",
     "@vueuse/core": "catalog:",
+    "antdv-next": "catalog:",
     "vue": "catalog:"
   },
   "devDependencies": {

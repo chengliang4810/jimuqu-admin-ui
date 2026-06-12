@@ -15,20 +15,12 @@ import {
   X,
 } from '@vben-core/icons';
 import { usePreferences } from '@vben-core/preferences';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogTitle,
-  VbenButton,
-  VbenLoading,
-  VbenRenderContent,
-} from '@vben-core/shadcn-ui';
 import { globalShareState } from '@vben-core/shared/global-state';
 import { cn } from '@vben-core/shared/utils';
 
+import { Button, Modal, Spin } from 'antdv-next';
+
+import RenderContent from '../render-content';
 import { provideAlertContext } from './alert';
 
 const props = withDefaults(defineProps<AlertProps>(), {
@@ -44,19 +36,12 @@ const { $t } = useSimpleLocale();
 const components = globalShareState.getComponents();
 const isConfirm = ref(false);
 
+const DefaultButton = computed(() => components.DefaultButton || Button);
+const PrimaryButton = computed(() => components.PrimaryButton || Button);
+
 function onAlertClosed() {
   emits('closed', isConfirm.value);
   isConfirm.value = false;
-}
-
-function onEscapeKeyDown(e: KeyboardEvent) {
-  // 先标记是按 Esc 触发的（用于后续 isConfirm 判断等）
-  isConfirm.value = false;
-
-  // 只有当组件参数和全局配置都为false时才阻止关闭，其任意一个为true都需要让esc生效
-  if (!props.escapeKeyClose && !globalEscapeShortcutKey.value) {
-    e.preventDefault();
-  }
 }
 
 const getIconRender = computed(() => {
@@ -95,9 +80,9 @@ const getIconRender = computed(() => {
           break;
         }
       }
+    } else {
+      iconRender = props.icon as Component;
     }
-  } else {
-    iconRender = props.icon ?? null;
   }
   return iconRender;
 });
@@ -128,7 +113,7 @@ function handleCancel() {
 
 const loading = ref(false);
 async function handleOpenChange(val: boolean) {
-  await nextTick(); // 等待标记isConfirm状态
+  await nextTick();
   if (!val && props.beforeClose) {
     loading.value = true;
     try {
@@ -144,76 +129,64 @@ async function handleOpenChange(val: boolean) {
   }
 }
 </script>
+
 <template>
-  <AlertDialog :open="open" @update:open="handleOpenChange">
-    <AlertDialogContent
-      :open="open"
-      :centered="centered"
-      :overlay-blur="overlayBlur"
-      @opened="emits('opened')"
-      @closed="onAlertClosed"
-      @escape-key-down="onEscapeKeyDown($event)"
-      :class="
-        cn(
-          containerClass,
-          'inset-x-0 mx-auto flex max-h-[80%] flex-col p-0 duration-300 sm:w-130 sm:max-w-[80%] sm:rounded-(--radius)',
-          {
-            'border border-border': bordered,
-            'shadow-3xl': !bordered,
-          },
-        )
-      "
-    >
-      <div :class="cn('relative flex-1 overflow-y-auto p-3', contentClass)">
-        <AlertDialogTitle v-if="title">
-          <div class="flex items-center">
-            <component :is="getIconRender" class="mr-2" />
-            <span class="flex-auto">{{ $t(title) }}</span>
-            <AlertDialogCancel v-if="showCancel" as-child>
-              <VbenButton
-                variant="ghost"
-                size="icon"
-                class="rounded-full"
-                :disabled="loading"
-                @click="handleCancel"
-              >
-                <X class="size-4 text-muted-foreground" />
-              </VbenButton>
-            </AlertDialogCancel>
-          </div>
-        </AlertDialogTitle>
-        <AlertDialogDescription>
-          <div class="m-4 min-h-7.5">
-            <VbenRenderContent :content="content" render-br />
-          </div>
-          <VbenLoading v-if="loading && contentMasking" :spinning="loading" />
-        </AlertDialogDescription>
-        <div
-          class="flex items-center justify-end gap-x-2"
-          :class="`justify-${buttonAlign}`"
+  <Modal
+    :open="open"
+    :centered="centered"
+    :keyboard="escapeKeyClose || globalEscapeShortcutKey"
+    :mask-closable="false"
+    :closable="false"
+    :footer="null"
+    :width="520"
+    :class="containerClass"
+    wrap-class-name="vben-alert"
+    @cancel="() => handleOpenChange(false)"
+    :after-close="onAlertClosed"
+    @opened="emits('opened')"
+  >
+    <div :class="cn('relative p-3', contentClass)">
+      <div v-if="title" class="mb-2 flex items-center text-base font-semibold">
+        <component :is="getIconRender" class="mr-2" />
+        <span class="flex-auto">{{ $t(title) }}</span>
+        <Button
+          v-if="showCancel"
+          type="text"
+          size="small"
+          class="flex-center rounded-full"
+          :disabled="loading"
+          @click="doCancel"
         >
-          <VbenRenderContent :content="footer" />
-          <AlertDialogCancel v-if="showCancel" as-child>
-            <component
-              :is="components.DefaultButton || VbenButton"
-              :disabled="loading"
-              variant="ghost"
-              @click="handleCancel"
-            >
-              {{ cancelText || $t('cancel') }}
-            </component>
-          </AlertDialogCancel>
-          <AlertDialogAction as-child>
-            <component
-              :is="components.PrimaryButton || VbenButton"
-              :loading="loading"
-              @click="handleConfirm"
-            >
-              {{ confirmText || $t('confirm') }}
-            </component>
-          </AlertDialogAction>
-        </div>
+          <X class="size-4 text-muted-foreground" />
+        </Button>
       </div>
-    </AlertDialogContent>
-  </AlertDialog>
+      <div class="m-4 min-h-7.5">
+        <RenderContent :content="content" render-br />
+      </div>
+      <Spin
+        v-if="loading && contentMasking"
+        :spinning="loading"
+        class="absolute inset-0"
+      />
+      <div class="flex items-center gap-x-2" :class="`justify-${buttonAlign}`">
+        <RenderContent :content="footer" />
+        <component
+          :is="DefaultButton"
+          v-if="showCancel"
+          :disabled="loading"
+          @click="doCancel"
+        >
+          {{ cancelText || $t('cancel') }}
+        </component>
+        <component
+          :is="PrimaryButton"
+          type="primary"
+          :loading="loading"
+          @click="doConfirm"
+        >
+          {{ confirmText || $t('confirm') }}
+        </component>
+      </div>
+    </div>
+  </Modal>
 </template>
