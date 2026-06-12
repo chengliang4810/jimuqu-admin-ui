@@ -18,7 +18,7 @@ function handleItemClick(value: string) {
 <template>
   <Dropdown :trigger="['click']">
     <slot></slot>
-    <template #overlay>
+    <template #popupRender>
       <Menu :selected-keys="modelValue ? [modelValue] : []">
         <MenuItem
           v-for="menu in menus"

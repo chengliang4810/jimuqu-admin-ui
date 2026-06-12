@@ -87,6 +87,7 @@ const restClass = computed(() => widthInfo.value.rest);
 
 const DefaultButton = computed(() => components.DefaultButton || Button);
 const PrimaryButton = computed(() => components.PrimaryButton || Button);
+const modalFooter = computed(() => (showFooter.value ? undefined : null));
 
 // 在开启 keepAlive 情况下,直接通过浏览器按钮/手势等返回不会关闭弹窗
 onDeactivated(() => {
@@ -141,7 +142,7 @@ function handleClosed() {
       cn('vben-modal', wrapClass, { 'vben-modal-fullscreen': shouldFullscreen })
     "
     :class="restClass"
-    :footer="null"
+    :footer="modalFooter"
     @cancel="handleCancel"
     :after-close="handleClosed"
   >

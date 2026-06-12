@@ -41,7 +41,7 @@ function handleClick(path?: string) {
           {{ item.title }}
           <ChevronDown class="size-3" />
         </span>
-        <template #overlay>
+        <template #popupRender>
           <Menu>
             <MenuItem
               v-for="sub in item.items"

@@ -18,7 +18,7 @@ function handleClick(menu: VbenDropdownMenuItem) {
 <template>
   <Dropdown :trigger="['click']">
     <slot></slot>
-    <template #overlay>
+    <template #popupRender>
       <Menu>
         <template v-for="menu in menus" :key="menu.value">
           <MenuDivider v-if="menu.separator" />

@@ -208,7 +208,7 @@ if (enableShortcutKey.value) {
         <VbenAvatar :alt="text" :src="avatar" class="size-8" dot />
       </div>
     </div>
-    <template #overlay>
+    <template #popupRender>
       <div
         class="bg-popover text-popover-foreground min-w-60 rounded-md p-0 pb-1 shadow-md"
       >

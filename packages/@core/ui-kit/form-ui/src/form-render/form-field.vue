@@ -222,9 +222,7 @@ function setFieldValue(value: any) {
 const bindEventField = computed(() => {
   return (
     modelPropName ||
-    (isString(component)
-      ? componentBindEventMap.value?.[component]
-      : null) ||
+    (isString(component) ? componentBindEventMap.value?.[component] : null) ||
     null
   );
 });
@@ -410,7 +408,7 @@ onUnmounted(() => {
             <CircleAlert
               :class="
                 cn(
-                  'ml-1 inline-flex size-5 cursor-pointer text-foreground/80 hover:text-foreground',
+                  'text-foreground/80 hover:text-foreground ml-1 inline-flex size-5 cursor-pointer',
                 )
               "
             />

@@ -32,7 +32,7 @@ function handleClick(menu: IContextMenuItem) {
 <template>
   <Dropdown :trigger="['contextmenu']">
     <slot></slot>
-    <template #overlay>
+    <template #popupRender>
       <Menu>
         <template v-for="menu in menusView" :key="menu.key">
           <MenuDivider v-if="menu.separator" />

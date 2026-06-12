@@ -26,6 +26,7 @@ export function useLayoutContentStyle() {
     return {
       height: `${height}px`,
       left: `${left}px`,
+      pointerEvents: 'none',
       position: 'fixed',
       top: `${top}px`,
       width: `${width}px`,
