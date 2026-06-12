@@ -237,7 +237,7 @@
   "commentTranslate.multiLineMerge": true,
   "vue.server.hybridMode": true,
   "vitest.disableWorkspaceWarning": true,
-  "editor.linkedEditing": true, // 自动同步更改html标签,
+  "oxc.enable": false,
   "vscodeCustomCodeColor.highlightValue": "v-access", // v-access显示的颜色
   "vscodeCustomCodeColor.highlightValueColor": "#CCFFFF",
   "cSpell.words": [
