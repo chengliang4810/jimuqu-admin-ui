@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router';
 import { $t } from '@vben/locales';
 
 import { useVbenForm } from '@vben-core/form-ui';
-import { VbenButton, VbenCheckbox } from '@vben-core/shadcn-ui';
+import { VbenButton, VbenCheckbox } from '@vben-core/ui-adapter';
 import { cloneDeep, cn } from '@vben-core/shared/utils';
 
 import Title from './auth-title.vue';

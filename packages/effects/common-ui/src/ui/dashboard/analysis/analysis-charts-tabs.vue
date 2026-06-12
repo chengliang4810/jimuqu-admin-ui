@@ -3,7 +3,7 @@ import type { TabOption } from '@vben/types';
 
 import { computed } from 'vue';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@vben-core/shadcn-ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@vben-core/ui-adapter';
 
 interface Props {
   tabs?: TabOption[];

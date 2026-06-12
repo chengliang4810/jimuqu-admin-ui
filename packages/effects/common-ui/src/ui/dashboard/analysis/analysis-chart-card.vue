@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '@vben-core/shadcn-ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@vben-core/ui-adapter';
 
 interface Props {
   title: string;

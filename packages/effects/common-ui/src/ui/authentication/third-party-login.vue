@@ -2,7 +2,7 @@
 import { GiteeIcon, MdiGithub, MdiQqchat, MdiWechat } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import { VbenIconButton } from '@vben-core/shadcn-ui';
+import { VbenIconButton } from '@vben-core/ui-adapter';
 
 defineOptions({
   name: 'ThirdPartyLogin',

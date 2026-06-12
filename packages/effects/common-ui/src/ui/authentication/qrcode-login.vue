@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { $t } from '@vben/locales';
-import { VbenButton } from '@vben-core/shadcn-ui';
+import { VbenButton } from '@vben-core/ui-adapter';
 import { useQRCode } from '@vueuse/integrations/useQRCode';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';

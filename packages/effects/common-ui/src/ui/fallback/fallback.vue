@@ -3,7 +3,7 @@ import type { FallbackProps } from './fallback';
 
 import { ArrowLeft, RotateCw } from '@vben/icons';
 import { $t } from '@vben/locales';
-import { VbenButton } from '@vben-core/shadcn-ui';
+import { VbenButton } from '@vben-core/ui-adapter';
 import { computed, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 

@@ -7,24 +7,11 @@ import { usePagination } from '@vben/hooks';
 import { EmptyIcon, Grip, listIcons } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import {
-  Button,
-  Input,
-  Pagination,
-  PaginationEllipsis,
-  PaginationFirst,
-  PaginationLast,
-  PaginationList,
-  PaginationListItem,
-  PaginationNext,
-  PaginationPrev,
-  VbenIcon,
-  VbenIconButton,
-  VbenPopover,
-} from '@vben-core/shadcn-ui';
+import { VbenIcon, VbenIconButton, VbenPopover } from '@vben-core/ui-adapter';
 import { isFunction } from '@vben-core/shared/utils';
 
 import { objectOmit, refDebounced, watchDebounced } from '@vueuse/core';
+import { Input, Pagination } from 'antdv-next';
 
 import { fetchIconsData } from './icons';
 
@@ -192,7 +179,7 @@ defineExpose({ toggleOpenState, open, close });
         <div class="relative w-full" v-else>
           <Input
             v-bind="$attrs"
-            v-model="currentSelect"
+            v-model:value="currentSelect"
             :placeholder="$t('ui.iconPicker.placeholder')"
             class="h-8 w-full pr-8"
             role="combobox"
@@ -223,7 +210,7 @@ defineExpose({ toggleOpenState, open, close });
         v-else
         class="mx-2 h-8 w-full"
         :placeholder="$t('ui.iconPicker.search')"
-        v-model="keyword"
+        v-model:value="keyword"
       />
     </div>
 
@@ -249,44 +236,13 @@ defineExpose({ toggleOpenState, open, close });
         class="flex-center flex justify-end overflow-hidden border-t py-2 pr-3"
       >
         <Pagination
-          :items-per-page="36"
-          :sibling-count="1"
+          :current="currentPage"
+          :page-size="pageSize"
+          :show-size-changer="false"
           :total="total"
-          show-edges
           size="small"
-          @update:page="handlePageChange"
-        >
-          <PaginationList
-            v-slot="{ items }"
-            class="flex w-full items-center gap-1"
-          >
-            <PaginationFirst class="size-5" />
-            <PaginationPrev class="size-5" />
-            <template v-for="(item, index) in items">
-              <PaginationListItem
-                v-if="item.type === 'page'"
-                :key="index"
-                :value="item.value"
-                as-child
-              >
-                <Button
-                  :variant="item.value === currentPage ? 'default' : 'outline'"
-                  class="size-5 p-0 text-sm"
-                >
-                  {{ item.value }}
-                </Button>
-              </PaginationListItem>
-              <PaginationEllipsis
-                v-else
-                :key="item.type"
-                :index="index"
-                class="size-5"
-              />
-            </template>
-            <PaginationNext class="size-5" />
-            <PaginationLast class="size-5" />
-          </PaginationList>
-        </Pagination>
+          @change="handlePageChange"
+        />
       </div>
     </template>
 

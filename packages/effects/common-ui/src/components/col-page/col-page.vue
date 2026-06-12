@@ -3,12 +3,6 @@ import type { ColPageProps } from './types';
 
 import { computed, ref, useSlots } from 'vue';
 
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@vben-core/shadcn-ui';
-
 import Page from '../page/page.vue';
 
 defineOptions({
@@ -40,14 +34,34 @@ const delegatedSlots = computed(() => {
   return resultSlots;
 });
 
-const leftPanelRef = ref<InstanceType<typeof ResizablePanel>>();
+const leftCollapsed = ref(false);
+
+const leftPanelStyle = computed(() => {
+  return {
+    flexBasis: leftCollapsed.value
+      ? `${props.leftCollapsedWidth ?? 0}%`
+      : `${props.leftWidth}%`,
+    maxWidth: props.leftMaxWidth ? `${props.leftMaxWidth}%` : undefined,
+    minWidth: props.leftMinWidth ? `${props.leftMinWidth}%` : undefined,
+  };
+});
+
+const rightPanelStyle = computed(() => {
+  return {
+    flexBasis: `${props.rightWidth}%`,
+    maxWidth: props.rightMaxWidth ? `${props.rightMaxWidth}%` : undefined,
+    minWidth: props.rightMinWidth ? `${props.rightMinWidth}%` : undefined,
+  };
+});
 
 function expandLeft() {
-  leftPanelRef.value?.expand();
+  leftCollapsed.value = false;
 }
 
 function collapseLeft() {
-  leftPanelRef.value?.collapse();
+  if (props.leftCollapsible) {
+    leftCollapsed.value = true;
+  }
 }
 
 defineExpose({
@@ -66,46 +80,32 @@ defineExpose({
       <slot :name="slotName" v-bind="slotProps"></slot>
     </template>
 
-    <ResizablePanelGroup class="w-full" direction="horizontal">
-      <ResizablePanel
-        ref="leftPanelRef"
-        :collapsed-size="leftCollapsedWidth"
-        :collapsible="leftCollapsible"
-        :default-size="leftWidth"
-        :max-size="leftMaxWidth"
-        :min-size="leftMinWidth"
-      >
-        <template #default="slotProps">
-          <div class="h-full pr-2">
-            <slot
-              name="left"
-              v-bind="{
-                ...slotProps,
-                expand: expandLeft,
-                collapse: collapseLeft,
-              }"
-            ></slot>
-          </div>
-        </template>
-      </ResizablePanel>
-      <ResizableHandle
+    <div class="flex size-full w-full">
+      <div :style="leftPanelStyle" class="h-full shrink-0 overflow-hidden">
+        <div class="h-full pr-2">
+          <slot
+            name="left"
+            v-bind="{
+              expand: expandLeft,
+              collapse: collapseLeft,
+            }"
+          ></slot>
+        </div>
+      </div>
+      <div
         v-if="resizable"
+        :class="splitHandle ? 'w-2 cursor-col-resize' : 'w-px'"
         :style="{ backgroundColor: splitLine ? undefined : 'transparent' }"
-        :with-handle="splitHandle"
-      />
-      <ResizablePanel
-        :collapsed-size="rightCollapsedWidth"
-        :collapsible="rightCollapsible"
-        :default-size="rightWidth"
-        :max-size="rightMaxWidth"
-        :min-size="rightMinWidth"
+        class="bg-border h-full shrink-0"
+      ></div>
+      <div
+        :style="rightPanelStyle"
+        class="h-full min-w-0 flex-1 overflow-hidden"
       >
-        <template #default>
-          <div class="h-full pl-2">
-            <slot></slot>
-          </div>
-        </template>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+        <div class="h-full pl-2">
+          <slot></slot>
+        </div>
+      </div>
+    </div>
   </Page>
 </template>

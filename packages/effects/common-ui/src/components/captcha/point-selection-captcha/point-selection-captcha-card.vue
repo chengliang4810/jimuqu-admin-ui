@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@vben-core/shadcn-ui';
+} from '@vben-core/ui-adapter';
 import { computed } from 'vue';
 
 const props = withDefaults(defineProps<PointSelectionCaptchaCardProps>(), {

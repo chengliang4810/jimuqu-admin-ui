@@ -3,15 +3,7 @@ import type { Recordable } from '@vben/types';
 
 import type { SettingProps } from './types';
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  Switch,
-} from '@vben-core/shadcn-ui';
+import { Switch } from 'antdv-next';
 
 withDefaults(defineProps<SettingProps>(), {
   formSchema: () => [],
@@ -26,28 +18,24 @@ function handleChange(fieldName: string, value: boolean) {
 }
 </script>
 <template>
-  <Form class="space-y-8">
+  <form class="space-y-8">
     <div class="space-y-4">
       <template v-for="item in formSchema" :key="item.fieldName">
-        <FormField type="checkbox" :name="item.fieldName">
-          <FormItem
-            class="flex flex-row items-center justify-between rounded-lg border p-4"
-          >
-            <div class="space-y-0.5">
-              <FormLabel class="text-base"> {{ item.label }} </FormLabel>
-              <FormDescription>
-                {{ item.description }}
-              </FormDescription>
-            </div>
-            <FormControl>
-              <Switch
-                :model-value="item.value"
-                @update:model-value="handleChange(item.fieldName, $event)"
-              />
-            </FormControl>
-          </FormItem>
-        </FormField>
+        <div
+          class="flex flex-row items-center justify-between rounded-lg border p-4"
+        >
+          <div class="space-y-0.5">
+            <label class="text-base">{{ item.label }}</label>
+            <p class="text-muted-foreground text-sm">
+              {{ item.description }}
+            </p>
+          </div>
+          <Switch
+            :checked="item.value"
+            @change="handleChange(item.fieldName, $event)"
+          />
+        </div>
       </template>
     </div>
-  </Form>
+  </form>
 </template>

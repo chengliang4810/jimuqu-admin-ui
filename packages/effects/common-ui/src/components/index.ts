@@ -21,25 +21,15 @@ export * from '@vben-core/popup-ui';
 export {
   VbenAvatar,
   VbenButton,
-  VbenButtonGroup,
   VbenCheckbox,
-  VbenCheckButtonGroup,
-  VbenCollapsibleParams,
   VbenContextMenu,
   VbenCountToAnimator,
   VbenFullScreen,
   VbenIconButton,
-  VbenInputPassword,
   VbenLoading,
   VbenLogo,
-  VbenPinInput,
-  VbenSelect,
   VbenSpinner,
-} from '@vben-core/shadcn-ui';
+} from '@vben-core/ui-adapter';
 
-export type {
-  CollapsibleParamSchema,
-  CollapsibleParamsProps,
-  FlattenedItem,
-} from '@vben-core/shadcn-ui';
+export type { FlattenedItem } from '@vben-core/ui-adapter';
 export { globalShareState } from '@vben-core/shared/global-state';

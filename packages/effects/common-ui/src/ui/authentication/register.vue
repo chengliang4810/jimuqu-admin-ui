@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router';
 import { $t } from '@vben/locales';
 
 import { useVbenForm } from '@vben-core/form-ui';
-import { VbenButton } from '@vben-core/shadcn-ui';
+import { VbenButton } from '@vben-core/ui-adapter';
 
 import Title from './auth-title.vue';
 

@@ -6,7 +6,7 @@ import {
   VBEN_GITHUB_URL,
   VBEN_PREVIEW_URL,
 } from '@vben/constants';
-import { VbenRenderContent } from '@vben-core/shadcn-ui';
+import { VbenRenderContent } from '@vben-core/ui-adapter';
 import { h } from 'vue';
 
 import { Page } from '../../components';

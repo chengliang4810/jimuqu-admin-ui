@@ -5,7 +5,7 @@ import { SvgDingDingIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { alert, useVbenModal } from '@vben-core/popup-ui';
-import { VbenIconButton } from '@vben-core/shadcn-ui';
+import { VbenIconButton } from '@vben-core/ui-adapter';
 import { loadScript } from '@vben-core/shared/utils';
 
 interface Props {
