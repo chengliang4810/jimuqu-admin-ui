@@ -1,60 +1,53 @@
-import type {
-  AnyZodObject,
-  ZodDefault,
-  ZodEffects,
-  ZodNumber,
-  ZodString,
-  ZodTypeAny,
-} from 'zod';
+import type { FormRuleObject, FormSchemaRuleType } from '../types';
 
 import { isObject, isString } from '@vben-core/shared/utils';
 
-/**
- * Get the lowest level Zod type.
- * This will unpack optionals, refinements, etc.
- */
-export function getBaseRules<
-  ChildType extends AnyZodObject | ZodTypeAny = ZodTypeAny,
->(schema: ChildType | ZodEffects<ChildType>): ChildType | null {
-  if (!schema || isString(schema)) return null;
-  if ('innerType' in schema._def)
-    return getBaseRules(schema._def.innerType as ChildType);
-
-  if ('schema' in schema._def)
-    return getBaseRules(schema._def.schema as ChildType);
-
-  return schema as ChildType;
-}
-
-/**
- * Search for a "ZodDefault" in the Zod stack and return its value.
- */
-export function getDefaultValueInZodStack(schema: ZodTypeAny): any {
-  if (!schema || isString(schema)) {
-    return;
-  }
-  const typedSchema = schema as unknown as ZodDefault<ZodNumber | ZodString>;
-
-  if (typedSchema._def.typeName === 'ZodDefault')
-    return typedSchema._def.defaultValue();
-
-  if ('innerType' in typedSchema._def) {
-    return getDefaultValueInZodStack(
-      typedSchema._def.innerType as unknown as ZodTypeAny,
-    );
-  }
-  if ('schema' in typedSchema._def) {
-    return getDefaultValueInZodStack(
-      (typedSchema._def as any).schema as ZodTypeAny,
-    );
-  }
-
-  return undefined;
-}
+import { getNamedRule, NAMED_REQUIRED_RULES } from '../config';
 
 export function isEventObjectLike(obj: any) {
   if (!obj || !isObject(obj)) {
     return false;
   }
   return Reflect.has(obj, 'target') && Reflect.has(obj, 'stopPropagation');
+}
+
+/**
+ * 将 vben 的 rules(字符串快捷 / antd rule 对象 / rule 数组)归一为 antd 的 rule 数组。
+ * @param rules schema 上的 rules
+ * @param label 字段标签(用于内置 required 提示的国际化)
+ */
+export function normalizeRules(
+  rules: FormSchemaRuleType | undefined,
+  label: string,
+): FormRuleObject[] {
+  if (!rules) {
+    return [];
+  }
+  // 字符串快捷规则: 'required' | 'selectRequired' | 其他已注册规则名
+  if (isString(rules)) {
+    const namedRule = getNamedRule(rules, label);
+    return namedRule ? [namedRule] : [];
+  }
+  // rule 数组
+  if (Array.isArray(rules)) {
+    return rules as FormRuleObject[];
+  }
+  // 单个 rule 对象
+  return [rules as FormRuleObject];
+}
+
+/**
+ * 判断字段是否需要显示必填标记。
+ */
+export function isRequiredRule(
+  rules: FormSchemaRuleType | undefined,
+): boolean {
+  if (!rules) {
+    return false;
+  }
+  if (isString(rules)) {
+    return NAMED_REQUIRED_RULES.has(rules);
+  }
+  const list = Array.isArray(rules) ? rules : [rules];
+  return list.some((rule) => isObject(rule) && (rule as any).required === true);
 }

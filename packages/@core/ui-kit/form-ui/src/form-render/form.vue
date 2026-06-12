@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import type { GenericObject } from 'vee-validate';
-import type { ZodTypeAny } from 'zod';
-
 import type {
   FormCommonConfig,
   FormRenderProps,
@@ -11,18 +8,18 @@ import type {
 
 import { computed } from 'vue';
 
-import { Form } from '@vben-core/shadcn-ui';
 import {
   cn,
   isFunction,
-  isString,
   mergeWithArrayOverride,
 } from '@vben-core/shared/utils';
+
+import { Form } from 'antdv-next';
 
 import { provideFormRenderProps } from './context';
 import { useExpandable } from './expandable';
 import FormField from './form-field.vue';
-import { getBaseRules, getDefaultValueInZodStack } from './helper';
+import { isRequiredRule } from './helper';
 
 interface Props extends FormRenderProps {}
 
@@ -59,37 +56,30 @@ const { isCalculated, keepFormItemIndex, wrapperRef } = useExpandable(props);
 const shapes = computed(() => {
   const resultShapes: FormShape[] = [];
   props.schema?.forEach((schema) => {
-    const { fieldName } = schema;
-    const rules = schema.rules as ZodTypeAny;
-
-    let typeName = '';
-    if (rules && !isString(rules)) {
-      typeName = rules._def.typeName;
-    }
-
-    const baseRules = getBaseRules(rules) as ZodTypeAny;
-
+    const { fieldName, rules } = schema;
     resultShapes.push({
-      default: getDefaultValueInZodStack(rules),
+      default: (schema as any).defaultValue,
       fieldName,
-      required: !['ZodNullable', 'ZodOptional'].includes(typeName),
-      rules: baseRules,
+      required: isRequiredRule(rules),
+      rules,
     });
   });
   return resultShapes;
 });
 
-const formComponent = computed(() => (props.form ? 'form' : Form));
+// antd Form 的 layout：vben 的 inline 由 wrapperClass(flex-wrap) 处理，
+// 这里只区分 vertical / horizontal，避免 antd inline 样式与栅格冲突
+const antdLayout = computed(() =>
+  props.layout === 'vertical' ? 'vertical' : 'horizontal',
+);
 
-const formComponentProps = computed(() => {
-  return props.form
-    ? {
-        onSubmit: props.form.handleSubmit((val) => emits('submit', val)),
-      }
-    : {
-        onSubmit: (val: GenericObject) => emits('submit', val),
-      };
-});
+function bindFormRef(instance: any) {
+  props.form?.bindInstance?.(instance);
+}
+
+function onFinish() {
+  emits('submit', props.form?.values ?? {});
+}
 
 const formCollapsed = computed(() => {
   return props.collapsed && isCalculated.value;
@@ -170,12 +160,14 @@ const computedSchema = computed(
 </script>
 
 <template>
-  <component :is="formComponent" v-bind="formComponentProps">
+  <Form
+    :ref="bindFormRef"
+    :model="form?.values"
+    :layout="antdLayout"
+    @finish="onFinish"
+  >
     <div ref="wrapperRef" :class="wrapperClass">
       <template v-for="cSchema in computedSchema" :key="cSchema.fieldName">
-        <!-- <div v-if="$slots[cSchema.fieldName]" :class="cSchema.formItemClass">
-          <slot :definition="cSchema" :name="cSchema.fieldName"> </slot>
-        </div> -->
         <FormField
           v-bind="cSchema"
           :class="cSchema.formItemClass"
@@ -188,5 +180,5 @@ const computedSchema = computed(
       </template>
       <slot :shapes="shapes"></slot>
     </div>
-  </component>
+  </Form>
 </template>

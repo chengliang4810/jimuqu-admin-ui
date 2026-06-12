@@ -2,8 +2,10 @@
 import { computed, toRaw, unref, watch } from 'vue';
 
 import { useSimpleLocale } from '@vben-core/composables';
-import { VbenExpandableArrow } from '@vben-core/shadcn-ui';
+import { ChevronDown } from '@vben-core/icons';
 import { cn, isFunction, triggerWindowResize } from '@vben-core/shared/utils';
+
+import { Button } from 'antdv-next';
 
 import { COMPONENT_MAP } from '../config';
 import { injectFormProps } from '../use-form-context';
@@ -170,13 +172,20 @@ defineExpose({
     <!-- 展开按钮前 -->
     <slot name="expand-before"></slot>
 
-    <VbenExpandableArrow
-      class="ml-[-0.3em]"
+    <Button
       v-if="rootProps.showCollapseButton"
-      v-model:model-value="collapsed"
+      class="ml-[-0.3em]"
+      type="link"
+      size="small"
+      @click="collapsed = !collapsed"
     >
       <span>{{ collapsed ? $t('expand') : $t('collapse') }}</span>
-    </VbenExpandableArrow>
+      <ChevronDown
+        :size="14"
+        class="ml-0.5 transition-transform"
+        :class="{ 'rotate-180': !collapsed }"
+      />
+    </Button>
 
     <!-- 展开按钮后 -->
     <slot name="expand-after"></slot>

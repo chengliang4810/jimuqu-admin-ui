@@ -3,7 +3,7 @@ import type { UpdatePasswordParam } from '#/api/system/profile/model';
 
 import { omit } from 'lodash-es';
 
-import { useVbenForm, z } from '#/adapter/form';
+import { useVbenForm } from '#/adapter/form';
 import { userUpdatePassword } from '#/api/system/profile';
 import { useAuthStore } from '#/store';
 
@@ -20,23 +20,27 @@ const [BasicForm, formApi] = useVbenForm({
       component: 'InputPassword',
       fieldName: 'oldPassword',
       label: '旧密码',
-      rules: z
-        .string({ message: '请输入密码' })
-        .min(5, '密码长度不能少于5个字符')
-        .max(20, '密码长度不能超过20个字符'),
+      rules: [
+        { message: '请输入密码', required: true },
+        { message: '密码长度不能少于5个字符', min: 5 },
+        { message: '密码长度不能超过20个字符', max: 20 },
+      ],
     },
     {
       component: 'InputPassword',
       dependencies: {
         rules(values) {
-          return z
-            .string({ message: '请输入新密码' })
-            .min(5, '密码长度不能少于5个字符')
-            .max(20, '密码长度不能超过20个字符')
-            .refine(
-              (value) => value !== values.oldPassword,
-              '新旧密码不能相同',
-            );
+          return [
+            { message: '请输入新密码', required: true },
+            { message: '密码长度不能少于5个字符', min: 5 },
+            { message: '密码长度不能超过20个字符', max: 20 },
+            {
+              validator: async (_rule: any, value: any) =>
+                value === values.oldPassword
+                  ? Promise.reject(new Error('新旧密码不能相同'))
+                  : Promise.resolve(),
+            },
+          ];
         },
         triggerFields: ['newPassword', 'oldPassword'],
       },
@@ -48,14 +52,17 @@ const [BasicForm, formApi] = useVbenForm({
       component: 'InputPassword',
       dependencies: {
         rules(values) {
-          return z
-            .string({ message: '请输入确认密码' })
-            .min(5, '密码长度不能少于5个字符')
-            .max(20, '密码长度不能超过20个字符')
-            .refine(
-              (value) => value === values.newPassword,
-              '新密码和确认密码不一致',
-            );
+          return [
+            { message: '请输入确认密码', required: true },
+            { message: '密码长度不能少于5个字符', min: 5 },
+            { message: '密码长度不能超过20个字符', max: 20 },
+            {
+              validator: async (_rule: any, value: any) =>
+                value === values.newPassword
+                  ? Promise.resolve()
+                  : Promise.reject(new Error('新密码和确认密码不一致')),
+            },
+          ];
         },
         triggerFields: ['newPassword', 'confirmPassword'],
       },

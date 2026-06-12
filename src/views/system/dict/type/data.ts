@@ -1,8 +1,6 @@
 import type { FormSchemaGetter } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
-import { z } from '#/adapter/form';
-
 export const querySchema: FormSchemaGetter = () => [
   {
     component: 'Input',
@@ -65,9 +63,11 @@ export const modalSchema: FormSchemaGetter = () => [
     fieldName: 'dictType',
     help: '使用英文/下划线命名, 如:sys_normal_disable',
     label: '字典类型',
-    rules: z
-      .string()
-      .regex(/^[a-z_]+$/i, { message: '字典类型只能使用英文/下划线命名' }),
+    rules: {
+      message: '字典类型只能使用英文/下划线命名',
+      pattern: /^[a-z_]+$/i,
+      required: true,
+    },
   },
   {
     component: 'Textarea',

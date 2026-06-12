@@ -9,8 +9,6 @@ import { computed, isRef, ref, watch } from 'vue';
 
 import { get, isBoolean, isFunction } from '@vben-core/shared/utils';
 
-import { useFormValues } from 'vee-validate';
-
 import { resolveFieldNamePath } from '../field-name';
 import { injectFormProps } from '../use-form-context';
 import { injectRenderFormProps } from './context';
@@ -35,8 +33,6 @@ function resolveValueByFieldName(
 export default function useDependencies(
   getDependencies: () => FormItemDependencies | undefined,
 ) {
-  const values = useFormValues();
-
   const [extendApi] = injectFormProps();
   const formRenderProps = injectRenderFormProps();
 
@@ -46,9 +42,8 @@ export default function useDependencies(
     throw new Error('Form api is required in useDependencies');
   }
 
-  if (!values) {
-    throw new Error('useDependencies should be used within <VbenForm>');
-  }
+  // 响应式表单值(model)
+  const values = computed(() => formApi.values);
 
   // 在 dependencies 里提供访问extendApi的能力
   const getController = (): ExtendedFormApi => {

@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import type { ZodType } from 'zod';
-
-import type {
-  FormActions,
-  FormFieldProps,
-  MaybeComponentProps,
-} from '../types';
+import type { FormFieldProps, MaybeComponentProps } from '../types';
 
 import {
   computed,
@@ -18,26 +12,23 @@ import {
 
 import { ChevronsDown, CircleAlert } from '@vben-core/icons';
 import {
-  Button,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormMessage,
-  VbenCollapsible,
-  VbenRenderContent,
-  VbenTooltip,
-} from '@vben-core/shadcn-ui';
-import { cn, isFunction, isObject, isString } from '@vben-core/shared/utils';
+  cn,
+  get,
+  isFunction,
+  isObject,
+  isString,
+  set,
+} from '@vben-core/shared/utils';
 
-import { toTypedSchema } from '@vee-validate/zod';
-import { useFieldError, useFormValues } from 'vee-validate';
+import { Button, FormItem, Tooltip } from 'antdv-next';
 
+import RenderContent from '../components/render-content';
+import { toAntdNamePath } from '../create-form-actions';
 import { injectComponentRefMap } from '../use-form-context';
 import { injectRenderFormProps, useFormContext } from './context';
 import useDependencies from './dependencies';
 import FormLabel from './form-label.vue';
-import { isEventObjectLike } from './helper';
+import { isEventObjectLike, isRequiredRule, normalizeRules } from './helper';
 
 interface Props extends FormFieldProps {}
 
@@ -50,7 +41,6 @@ const {
   description,
   disabled,
   disabledOnChangeListener,
-  disabledOnInputListener,
   emptyStateValue,
   fieldName,
   formFieldProps,
@@ -63,28 +53,38 @@ const {
   rules,
   help,
   collapsible,
+  controlClass = '',
+  wrapperClass = '',
+  hideLabel,
+  hideRequiredMark,
+  suffix = undefined,
   defaultCollapsed = false,
 } = defineProps<
   Props & {
     commonComponentProps: MaybeComponentProps;
+    controlClass?: string;
+    hideLabel?: boolean;
+    hideRequiredMark?: boolean;
+    suffix?: any;
+    wrapperClass?: string;
   }
 >();
 
 const { componentBindEventMap, componentMap, isVertical } = useFormContext();
 const formRenderProps = injectRenderFormProps();
-const values = useFormValues();
-const errors = useFieldError(fieldName);
-const fieldComponentRef = useTemplateRef<HTMLInputElement>('fieldComponentRef');
-const formApi = formRenderProps.form;
+const formApi = formRenderProps.form!;
 const compact = computed(() => formRenderProps.compact);
-const isInValid = computed(() => errors.value?.length > 0);
+const model = computed(() => formApi.values);
+const values = model;
+const fieldComponentRef = useTemplateRef<HTMLInputElement>('fieldComponentRef');
 const collapseOpen = ref(!defaultCollapsed);
 
-function getFormApi(): FormActions {
-  if (!formApi) {
-    throw new Error('Form api is required in <FormField />');
-  }
+const fieldErrors = computed<string[]>(
+  () => formApi.errors.value?.[fieldName] ?? [],
+);
+const isInValid = computed(() => fieldErrors.value.length > 0);
 
+function getFormApi() {
   return formApi;
 }
 
@@ -93,7 +93,6 @@ const FieldComponent = computed(() => {
     ? componentMap.value[component]
     : component;
   if (!finalComponent) {
-    // 组件未注册
     console.warn(`Component ${component} is not registered`);
   }
   return finalComponent;
@@ -117,66 +116,48 @@ const labelStyle = computed(() => {
 });
 
 const currentRules = computed(() => {
-  return dynamicRules.value || rules;
+  return dynamicRules.value ?? rules;
 });
 
 const visible = computed(() => {
   return !hide && isIf.value && isShow.value;
 });
 
+const labelText = computed(() => (isString(label) ? label : ''));
+
 const shouldRequired = computed(() => {
   if (!visible.value) {
     return false;
   }
-
-  if (!currentRules.value) {
-    return isRequired.value;
-  }
-
   if (isRequired.value) {
     return true;
   }
-
-  if (isString(currentRules.value)) {
-    return ['required', 'selectRequired'].includes(currentRules.value);
-  }
-
-  let isOptional = currentRules?.value?.isOptional?.();
-
-  // 如果有设置默认值，则不是必填，需要特殊处理
-  const typeName = currentRules?.value?._def?.typeName;
-  if (typeName === 'ZodDefault') {
-    const innerType = currentRules?.value?._def.innerType;
-    if (innerType) {
-      isOptional = innerType.isOptional?.();
-    }
-  }
-
-  return !isOptional;
+  return isRequiredRule(currentRules.value);
 });
 
-const fieldRules = computed(() => {
+// antd FormItem 的 name 路径
+const namePath = computed(() => toAntdNamePath(fieldName));
+
+// 归一化后的 antd rules
+const antdRules = computed(() => {
   if (!visible.value) {
-    return null;
+    return undefined;
   }
+  const normalized = normalizeRules(currentRules.value, labelText.value);
+  return normalized.length > 0 ? normalized : undefined;
+});
 
-  let rules = currentRules.value;
-  if (!rules) {
-    return isRequired.value ? 'required' : null;
+// 校验触发时机
+const validateTrigger = computed(() => {
+  const opts = (formFieldProps as Record<string, any>) || {};
+  const triggers: string[] = [];
+  if (opts.validateOnChange !== false) {
+    triggers.push('change');
   }
-
-  if (isString(rules)) {
-    return rules;
+  if (opts.validateOnBlur !== false) {
+    triggers.push('blur');
   }
-
-  const isOptional = !shouldRequired.value;
-  if (!isOptional) {
-    const unwrappedRules = (rules as any)?.unwrap?.();
-    if (unwrappedRules) {
-      rules = unwrappedRules;
-    }
-  }
-  return toTypedSchema(rules as ZodType);
+  return triggers.length > 0 ? triggers : ['change'];
 });
 
 const computedProps = computed(() => {
@@ -191,7 +172,6 @@ const computedProps = computed(() => {
   };
 });
 
-// 自定义帮助信息
 const computedHelp = computed(() => {
   const helpContent = help;
   if (!helpContent) {
@@ -230,71 +210,66 @@ const renderContentKey = computed(() => {
   return Object.keys(customContentRender.value);
 });
 
-const fieldProps = computed(() => {
-  const rules = fieldRules.value;
-  return {
-    keepValue: true,
-    label: isString(label) ? label : '',
-    ...(rules ? { rules } : {}),
-    ...(formFieldProps as Record<string, any>),
-  };
+// 字段值读写
+function getFieldValue() {
+  return get(model.value, fieldName);
+}
+function setFieldValue(value: any) {
+  set(model.value, fieldName, value);
+}
+
+// 计算组件的 v-model 绑定字段名
+const bindEventField = computed(() => {
+  return (
+    modelPropName ||
+    (isString(component)
+      ? componentBindEventMap.value?.[component]
+      : null) ||
+    null
+  );
 });
 
-function fieldBindEvent(slotProps: Record<string, any>) {
-  const modelValue = slotProps.componentField.modelValue;
-  const handler = slotProps.componentField['onUpdate:modelValue'];
+function buildFieldBind() {
+  const field = bindEventField.value;
+  const rawValue = getFieldValue();
+  const value = rawValue === undefined ? emptyStateValue : rawValue;
 
-  const bindEventField =
-    modelPropName ||
-    (isString(component) ? componentBindEventMap.value?.[component] : null);
-
-  let value = modelValue;
-  // antd design 的一些组件会传递一个 event 对象
-  if (modelValue && isObject(modelValue) && bindEventField) {
-    value = isEventObjectLike(modelValue)
-      ? modelValue?.target?.[bindEventField]
-      : (modelValue?.[bindEventField] ?? modelValue);
-  }
-
-  if (bindEventField) {
+  if (field) {
     return {
-      [`onUpdate:${bindEventField}`]: handler,
-      [bindEventField]: value === undefined ? emptyStateValue : value,
-      onChange: disabledOnChangeListener
-        ? undefined
-        : (e: Record<string, any>) => {
-            const shouldUnwrap = isEventObjectLike(e);
-            const onChange = slotProps?.componentField?.onChange;
-            if (!shouldUnwrap) {
-              return onChange?.(e);
-            }
-
-            return onChange?.(e?.target?.[bindEventField] ?? e);
-          },
-      ...(disabledOnInputListener ? { onInput: undefined } : {}),
+      [field]: value,
+      [`onUpdate:${field}`]: (next: any) => {
+        let nextValue = next;
+        // 部分 antd 组件回调可能传递 event 对象
+        if (next && isObject(next) && isEventObjectLike(next)) {
+          nextValue = (next as any)?.target?.[field] ?? next;
+        }
+        setFieldValue(nextValue);
+      },
     };
   }
   return {
-    ...(disabledOnInputListener ? { onInput: undefined } : {}),
-    ...(disabledOnChangeListener ? { onChange: undefined } : {}),
+    'onUpdate:modelValue': (next: any) => setFieldValue(next),
+    modelValue: value,
   };
 }
 
-function createComponentProps(slotProps: Record<string, any>) {
-  const bindEvents = fieldBindEvent(slotProps);
-
-  const binds = {
-    ...slotProps.componentField,
+function createComponentProps() {
+  const fieldBind = buildFieldBind();
+  const binds: Record<string, any> = {
     ...computedProps.value,
-    ...bindEvents,
-    ...(Reflect.has(computedProps.value, 'onChange')
-      ? { onChange: computedProps.value.onChange }
-      : {}),
-    ...(Reflect.has(computedProps.value, 'onInput')
-      ? { onInput: computedProps.value.onInput }
-      : {}),
+    ...fieldBind,
   };
-
+  // 保留用户显式定义的 onChange/onInput
+  if (Reflect.has(computedProps.value, 'onChange')) {
+    binds.onChange = computedProps.value.onChange;
+  }
+  if (Reflect.has(computedProps.value, 'onInput')) {
+    binds.onInput = computedProps.value.onInput;
+  }
+  // 默认禁用 change/input 监听(避免与 update 双触发)
+  if (disabledOnChangeListener && !Reflect.has(binds, 'onChange')) {
+    binds.onChange = undefined;
+  }
   return binds;
 }
 
@@ -302,16 +277,13 @@ function autofocus() {
   if (
     fieldComponentRef.value &&
     isFunction(fieldComponentRef.value.focus) &&
-    // 检查当前是否有元素被聚焦
     document.activeElement !== fieldComponentRef.value
   ) {
     fieldComponentRef.value?.focus?.();
   }
 }
 
-const shouldCollapsible = computed(() => {
-  return collapsible; /* && isVertical.value; */
-});
+const shouldCollapsible = computed(() => collapsible);
 
 function toggleCollapsed() {
   collapseOpen.value = !collapseOpen.value;
@@ -329,136 +301,133 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <FormField
+  <div
     v-if="!hide && isIf"
-    v-bind="fieldProps"
-    v-slot="slotProps"
-    :name="fieldName"
+    v-show="isShow"
+    :class="
+      cn(
+        'relative flex',
+        {
+          'form-valid-error': isInValid,
+          'form-is-required': shouldRequired,
+          'flex-col': isVertical,
+          'flex-row items-center': !isVertical,
+          'pb-4': !compact,
+          'pb-2': compact,
+        },
+        $attrs.class as string,
+      )
+    "
   >
-    <FormItem
-      v-show="isShow"
-      :class="{
-        'form-valid-error': isInValid,
-        'form-is-required': shouldRequired,
-        'flex-col': isVertical,
-        'flex-row items-center': !isVertical,
-        'pb-4': !compact,
-        'pb-2': compact,
-      }"
-      class="relative flex"
-      v-bind="$attrs"
+    <FormLabel
+      v-if="!hideLabel"
+      :class="
+        cn(
+          'flex leading-6',
+          {
+            'mr-2 shrink-0 justify-end': !isVertical,
+            'mb-1 flex-row': isVertical,
+            'self-start': shouldCollapsible && !isVertical,
+          },
+          labelClass,
+        )
+      "
+      :help="computedHelp"
+      :colon="colon"
+      :label="label"
+      :required="shouldRequired && !hideRequiredMark"
+      :style="labelStyle"
     >
-      <FormLabel
-        v-if="!hideLabel"
-        :class="
-          cn(
-            'flex leading-6',
-            {
-              'mr-2 shrink-0 justify-end': !isVertical,
-              'mb-1 flex-row': isVertical,
-              'self-start': shouldCollapsible && !isVertical,
-            },
-            labelClass,
-          )
-        "
-        :help="computedHelp"
-        :colon="colon"
-        :label="label"
-        :required="shouldRequired && !hideRequiredMark"
-        :style="labelStyle"
-      >
-        <template v-if="label">
-          <VbenRenderContent :content="label" />
-        </template>
-        <template #extra>
-          <Button
-            class="ml-0.5"
-            variant="icon"
-            size="icon"
-            @click.prevent="toggleCollapsed"
-            v-if="shouldCollapsible"
+      <template v-if="label">
+        <RenderContent :content="label" />
+      </template>
+      <template #extra>
+        <Button
+          v-if="shouldCollapsible"
+          class="ml-0.5"
+          type="text"
+          size="small"
+          @click.prevent="toggleCollapsed"
+        >
+          <ChevronsDown
+            :size="16"
+            class="transition-transform"
+            :class="{ 'rotate-180': !collapseOpen }"
+          />
+        </Button>
+      </template>
+    </FormLabel>
+
+    <div class="flex-auto">
+      <div :class="cn('relative flex w-full items-center', wrapperClass)">
+        <FormItem
+          :name="namePath"
+          :rules="antdRules"
+          :validate-trigger="validateTrigger"
+          :colon="false"
+          class="m-0 w-full [&_.ant-form-item-label]:hidden"
+          :class="{ '[&_.ant-form-item-explain]:hidden': compact }"
+        >
+          <slot
+            v-bind="{
+              ...createComponentProps(),
+              disabled: shouldDisabled,
+              isInValid,
+            }"
           >
-            <ChevronsDown
-              :size="16"
-              class="transition-transform"
-              :class="{
-                'rotate-180': !collapseOpen,
-              }"
-            />
-          </Button>
-        </template>
-      </FormLabel>
-      <div class="flex-auto p-px">
-        <VbenCollapsible :show-trigger="false" v-model:open="collapseOpen">
-          <template #collapsibleContent>
-            <div :class="cn('relative flex w-full items-center', wrapperClass)">
-              <FormControl :class="cn(controlClass)">
-                <slot
-                  v-bind="{
-                    ...slotProps,
-                    ...createComponentProps(slotProps),
-                    disabled: shouldDisabled,
+            <component
+              :is="FieldComponent"
+              ref="fieldComponentRef"
+              :class="
+                cn(controlClass, {
+                  'border-destructive hover:border-destructive focus:border-destructive':
                     isInValid,
-                  }"
-                >
-                  <component
-                    :is="FieldComponent"
-                    ref="fieldComponentRef"
-                    :class="{
-                      'border-destructive hover:border-destructive/80 focus:border-destructive focus:shadow-[0_0_0_2px_rgba(255,38,5,0.06)]':
-                        isInValid,
-                    }"
-                    v-bind="createComponentProps(slotProps)"
-                    :disabled="shouldDisabled"
-                  >
-                    <template
-                      v-for="name in renderContentKey"
-                      :key="name"
-                      #[name]="renderSlotProps"
-                    >
-                      <VbenRenderContent
-                        :content="customContentRender[name]"
-                        v-bind="{ ...renderSlotProps, formContext: slotProps }"
-                      />
-                    </template>
-                    <!-- <slot></slot> -->
-                  </component>
-                  <VbenTooltip
-                    v-if="compact && isInValid"
-                    :delay-duration="300"
-                    side="left"
-                  >
-                    <template #trigger>
-                      <slot name="trigger">
-                        <CircleAlert
-                          :class="
-                            cn(
-                              'inline-flex size-5 cursor-pointer text-foreground/80 hover:text-foreground',
-                            )
-                          "
-                        />
-                      </slot>
-                    </template>
-                    <FormMessage />
-                  </VbenTooltip>
-                </slot>
-              </FormControl>
-              <!-- 自定义后缀 -->
-              <div v-if="suffix" class="ml-1">
-                <VbenRenderContent :content="suffix" />
-              </div>
-            </div>
+                })
+              "
+              v-bind="createComponentProps()"
+              :disabled="shouldDisabled"
+            >
+              <template
+                v-for="name in renderContentKey"
+                :key="name"
+                #[name]="renderSlotProps"
+              >
+                <RenderContent
+                  :content="customContentRender[name]"
+                  v-bind="renderSlotProps"
+                />
+              </template>
+            </component>
+          </slot>
+        </FormItem>
+
+        <!-- 紧凑模式错误提示 -->
+        <Tooltip v-if="compact && isInValid" placement="left">
+          <template #title>
+            {{ fieldErrors[0] }}
           </template>
-        </VbenCollapsible>
+          <slot name="trigger">
+            <CircleAlert
+              :class="
+                cn(
+                  'ml-1 inline-flex size-5 cursor-pointer text-foreground/80 hover:text-foreground',
+                )
+              "
+            />
+          </slot>
+        </Tooltip>
 
-        <FormDescription v-if="description" class="text-xs">
-          <VbenRenderContent :content="description" />
-        </FormDescription>
-
-        <Transition name="slide-up" v-if="!compact">
-          <FormMessage class="absolute bottom-[-4px]" />
-        </Transition>
+        <!-- 自定义后缀 -->
+        <div v-if="suffix" class="ml-1">
+          <RenderContent :content="suffix" />
+        </div>
       </div>
-    </FormItem>
-  </FormField>
+
+      <RenderContent
+        v-if="description"
+        class="text-muted-foreground mt-1 text-xs"
+        :content="description"
+      />
+    </div>
+  </div>
 </template>

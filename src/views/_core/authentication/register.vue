@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 
 import { computed, h, ref } from 'vue';
 
-import { AuthenticationRegister, z } from '@vben/common-ui';
+import { AuthenticationRegister } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 defineOptions({ name: 'Register' });
@@ -20,7 +20,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       },
       fieldName: 'username',
       label: $t('authentication.username'),
-      rules: z.string().min(1, { message: $t('authentication.usernameTip') }),
+      rules: { message: $t('authentication.usernameTip'), required: true },
     },
     {
       component: 'VbenInputPassword',
@@ -35,7 +35,7 @@ const formSchema = computed((): VbenFormSchema[] => {
           strengthText: () => $t('authentication.passwordStrength'),
         };
       },
-      rules: z.string().min(1, { message: $t('authentication.passwordTip') }),
+      rules: { message: $t('authentication.passwordTip'), required: true },
     },
     {
       component: 'VbenInputPassword',
@@ -45,12 +45,17 @@ const formSchema = computed((): VbenFormSchema[] => {
       dependencies: {
         rules(values) {
           const { password } = values;
-          return z
-            .string({ required_error: $t('authentication.passwordTip') })
-            .min(1, { message: $t('authentication.passwordTip') })
-            .refine((value) => value === password, {
-              message: $t('authentication.confirmPasswordTip'),
-            });
+          return [
+            { message: $t('authentication.passwordTip'), required: true },
+            {
+              validator: async (_rule: any, value: any) =>
+                value === password
+                  ? Promise.resolve()
+                  : Promise.reject(
+                      new Error($t('authentication.confirmPasswordTip')),
+                    ),
+            },
+          ];
         },
         triggerFields: ['password'],
       },
@@ -74,9 +79,12 @@ const formSchema = computed((): VbenFormSchema[] => {
             ),
           ]),
       }),
-      rules: z.boolean().refine((value) => !!value, {
-        message: $t('authentication.agreeTip'),
-      }),
+      rules: {
+        validator: async (_rule: any, value: any) =>
+          value
+            ? Promise.resolve()
+            : Promise.reject(new Error($t('authentication.agreeTip'))),
+      },
     },
   ];
 });

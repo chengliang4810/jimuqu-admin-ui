@@ -5,7 +5,7 @@ import type { CaptchaResponse } from '#/api/core/captcha';
 
 import { computed, markRaw, onMounted, ref, useTemplateRef } from 'vue';
 
-import { AuthenticationLogin, z } from '@vben/common-ui';
+import { AuthenticationLogin } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { Button, Checkbox, Input, InputPassword } from 'antdv-next';
@@ -67,7 +67,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       defaultValue: 'admin',
       fieldName: 'username',
       label: $t('authentication.username'),
-      rules: z.string().min(1, { message: $t('authentication.usernameTip') }),
+      rules: { message: $t('authentication.usernameTip'), required: true },
     },
     {
       component: markRaw(InputPassword),
@@ -79,7 +79,11 @@ const formSchema = computed((): VbenFormSchema[] => {
       defaultValue: 'admin123',
       fieldName: 'password',
       label: $t('authentication.password'),
-      rules: z.string().min(5, { message: $t('authentication.passwordTip') }),
+      rules: {
+        message: $t('authentication.passwordTip'),
+        min: 5,
+        required: true,
+      },
     },
     {
       component: markRaw(InputCaptcha),

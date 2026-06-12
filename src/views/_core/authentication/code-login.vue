@@ -3,7 +3,7 @@ import type { LoginCodeParams, VbenFormSchema } from '@vben/common-ui';
 
 import { computed, ref } from 'vue';
 
-import { AuthenticationCodeLogin, z } from '@vben/common-ui';
+import { AuthenticationCodeLogin } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { Alert } from 'antdv-next';
@@ -60,9 +60,11 @@ const formSchema = computed((): VbenFormSchema[] => {
       },
       fieldName: 'code',
       label: $t('authentication.code'),
-      rules: z.string().length(CODE_LENGTH, {
+      rules: {
+        len: CODE_LENGTH,
         message: $t('authentication.codeTip', [CODE_LENGTH]),
-      }),
+        required: true,
+      },
     },
   ];
 });

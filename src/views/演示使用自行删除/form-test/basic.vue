@@ -6,7 +6,7 @@ import { Page } from '@vben/common-ui';
 import { useDebounceFn } from '@vueuse/core';
 import { Button, Card } from 'antdv-next';
 
-import { useVbenForm, z } from '#/adapter/form';
+import { useVbenForm } from '#/adapter/form';
 import { getAllMenusApi } from '#/api';
 
 /**
@@ -274,7 +274,10 @@ const [BaseForm, baseFormApi] = useVbenForm({
       fieldName: 'checkbox',
       label: 'Checkbox',
       renderComponentContent: () => ({ default: () => ['我已阅读并同意'] }),
-      rules: z.boolean().refine((v) => v, { message: '请勾选' }),
+      rules: {
+        validator: async (_rule: any, value: any) =>
+          value ? Promise.resolve() : Promise.reject(new Error('请勾选')),
+      },
     },
     {
       component: 'CheckboxGroup',

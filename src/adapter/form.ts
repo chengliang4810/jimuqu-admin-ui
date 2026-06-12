@@ -5,7 +5,7 @@ import type {
 
 import type { ComponentPropsMap, ComponentType } from './component';
 
-import { setupVbenForm, useVbenForm as useForm, z } from '@vben/common-ui';
+import { setupVbenForm, useVbenForm as useForm } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { isArray } from 'lodash-es';
@@ -27,19 +27,19 @@ async function initSetupVbenForm() {
     },
     defineRules: {
       // 输入项目必填国际化适配
-      required: (value, _params, ctx) => {
+      required: (value, label) => {
         if (value === undefined || value === null || value.length === 0) {
-          return $t('ui.formRules.required', [ctx.label]);
+          return $t('ui.formRules.required', [label]);
         }
         return true;
       },
       // 选择项目必填国际化适配
-      selectRequired: (value, _params, ctx) => {
+      selectRequired: (value, label) => {
         if (
           [false, null, undefined].includes(value) ||
           (isArray(value) && value.length === 0)
         ) {
-          return $t('ui.formRules.selectRequired', [ctx.label]);
+          return $t('ui.formRules.selectRequired', [label]);
         }
         return true;
       },
@@ -50,7 +50,7 @@ async function initSetupVbenForm() {
 const useVbenForm = useForm<ComponentType, ComponentPropsMap>;
 export type FormSchemaGetter = () => VbenFormSchema[];
 
-export { initSetupVbenForm, useVbenForm, z };
+export { initSetupVbenForm, useVbenForm };
 
 export type VbenFormSchema = FormSchema<ComponentType, ComponentPropsMap>;
 export type VbenFormProps = FormProps<ComponentType, ComponentPropsMap>;

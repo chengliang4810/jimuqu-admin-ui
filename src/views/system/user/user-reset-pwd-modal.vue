@@ -5,7 +5,7 @@ import type { ResetPwdParam, User } from '#/api/system/user/model';
 
 import { computed, ref } from 'vue';
 
-import { useVbenModal, z } from '@vben/common-ui';
+import { useVbenModal } from '@vben/common-ui';
 
 import { Descriptions } from 'antdv-next';
 
@@ -39,10 +39,10 @@ const [BasicForm, formApi] = useVbenForm({
       },
       fieldName: 'password',
       label: '新的密码',
-      rules: z
-        .string()
-        .min(5, { message: '密码长度为5 - 20' })
-        .max(20, { message: '密码长度为5 - 20' }),
+      rules: [
+        { message: '密码长度为5 - 20', required: true },
+        { max: 20, message: '密码长度为5 - 20', min: 5 },
+      ],
     },
   ],
   showDefaultActions: false,

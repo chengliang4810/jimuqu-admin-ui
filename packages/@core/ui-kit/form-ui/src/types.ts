@@ -1,14 +1,60 @@
-import type { FieldOptions, FormContext, GenericObject } from 'vee-validate';
-import type { ZodTypeAny } from 'zod';
+import type { Rule as AntdRule } from 'antdv-next/es/form';
 
 import type { Component, HtmlHTMLAttributes, Ref } from 'vue';
 
-import type { VbenButtonProps } from '@vben-core/shadcn-ui';
 import type { ClassType, MaybeComputedRef } from '@vben-core/typings';
 
 import type { FormApi } from './form-api';
 
 export type FormLayout = 'horizontal' | 'inline' | 'vertical';
+
+/** antd 原生 rule(async-validator) */
+export type FormRuleObject = AntdRule;
+
+/** 表单数据/行为适配器接口(替换原 vee-validate 的 FormContext) */
+export interface FormActions {
+  /** 绑定 antd FormInstance(模板 ref 回调) */
+  bindInstance: (instance: any) => void;
+  /** 清除校验状态 */
+  clearValidate: (name?: string) => void;
+  /** 字段错误信息 */
+  errors: Ref<Record<string, string[]>>;
+  /** 生成原生提交处理器,校验通过后回调 */
+  handleSubmit: (
+    cb: (values: Record<string, any>) => void,
+  ) => (e?: Event) => void;
+  /** antd FormInstance 引用 */
+  instance: Ref<any>;
+  /** 字段是否校验通过 */
+  isFieldValid: (field: string) => boolean;
+  /** 挂载标记 */
+  meta: { valid: boolean };
+  /** 重置表单 */
+  resetForm: (state?: { values?: Record<string, any> }, opts?: any) => void;
+  /** 设置字段错误 */
+  setFieldError: (field: string, message?: string | string[]) => void;
+  /** 设置单个字段值 */
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  /** 批量设置字段值 */
+  setValues: (
+    fields: Record<string, any>,
+    shouldValidate?: boolean,
+  ) => void;
+  /** 提交(仅校验) */
+  submitForm: () => Promise<{ errors: Record<string, any>; valid: boolean }>;
+  /** 校验全部 */
+  validate: (opts?: any) => Promise<{
+    errors: Record<string, any>;
+    valid: boolean;
+  }>;
+  /** 校验单个字段 */
+  validateField: (
+    fieldName: string,
+    opts?: any,
+  ) => Promise<{ errors: Record<string, any>; valid: boolean }>;
+  /** 响应式表单值(model) */
+  values: Record<string, any>;
+}
 
 export type BaseFormComponentType =
   | 'DefaultButton'
@@ -35,14 +81,14 @@ export type FormItemClassType =
   | (Record<never, never> & string)
   | WrapperClassType;
 
-export type FormFieldOptions = Partial<
-  FieldOptions & {
-    validateOnBlur?: boolean;
-    validateOnChange?: boolean;
-    validateOnInput?: boolean;
-    validateOnModelUpdate?: boolean;
-  }
->;
+export interface FormFieldOptions {
+  [key: string]: any;
+  label?: string;
+  validateOnBlur?: boolean;
+  validateOnChange?: boolean;
+  validateOnInput?: boolean;
+  validateOnModelUpdate?: boolean;
+}
 
 export interface FormShape {
   /** 默认值 */
@@ -51,7 +97,7 @@ export interface FormShape {
   fieldName: string;
   /** 是否必填 */
   required?: boolean;
-  rules?: ZodTypeAny;
+  rules?: FormSchemaRuleType;
 }
 
 export type MaybeComponentPropKey =
@@ -62,8 +108,6 @@ export type MaybeComponentPropKey =
   | (Record<never, never> & string);
 
 export type MaybeComponentProps = { [K in MaybeComponentPropKey]?: any };
-
-export type FormActions = FormContext<GenericObject>;
 
 export type CustomRenderType = (() => Component | string) | string;
 
@@ -78,9 +122,10 @@ export type CustomParamsRenderType =
 export type FormSchemaRuleType =
   | 'required'
   | 'selectRequired'
+  | FormRuleObject
+  | FormRuleObject[]
   | null
-  | (Record<never, never> & string)
-  | ZodTypeAny;
+  | (Record<never, never> & string);
 
 type FormItemDependenciesCondition<T = boolean | PromiseLike<boolean>> = (
   value: Partial<Record<string, any>>,
@@ -387,7 +432,7 @@ export interface FormRenderProps<
   /**
    * 表单实例
    */
-  form?: FormContext<GenericObject>;
+  form?: FormActions;
   /**
    * 表单项布局
    */
@@ -412,7 +457,7 @@ export interface FormRenderProps<
   wrapperClass?: WrapperClassType;
 }
 
-export interface ActionButtonOptions extends VbenButtonProps {
+export interface ActionButtonOptions {
   [key: string]: any;
   content?: MaybeComputedRef<string>;
   show?: boolean;
@@ -521,16 +566,8 @@ export interface VbenFormAdapterOptions<
     emptyStateValue?: null | undefined;
     modelPropNameMap?: Partial<Record<T, string>>;
   };
-  defineRules?: {
-    required?: (
-      value: any,
-      params: any,
-      ctx: Record<string, any>,
-    ) => boolean | string;
-    selectRequired?: (
-      value: any,
-      params: any,
-      ctx: Record<string, any>,
-    ) => boolean | string;
-  };
+  defineRules?: Record<
+    string,
+    (value: any, label: string) => string | true
+  >;
 }

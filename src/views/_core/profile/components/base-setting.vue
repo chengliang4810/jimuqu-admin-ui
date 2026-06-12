@@ -10,7 +10,7 @@ import { useUserStore } from '@vben/stores';
 
 import { pick } from 'lodash-es';
 
-import { useVbenForm, z } from '#/adapter/form';
+import { useVbenForm } from '#/adapter/form';
 import { userProfileUpdate } from '#/api/system/profile';
 import { useAuthStore } from '#/store';
 import { getDictOptions } from '#/utils/dict';
@@ -51,7 +51,7 @@ const [BasicForm, formApi] = useVbenForm({
       component: 'Input',
       fieldName: 'email',
       label: '邮箱',
-      rules: z.string().email('请输入正确的邮箱'),
+      rules: { message: '请输入正确的邮箱', required: true, type: 'email' },
     },
     {
       component: 'RadioGroup',
@@ -69,7 +69,11 @@ const [BasicForm, formApi] = useVbenForm({
       component: 'Input',
       fieldName: 'phoneNumber',
       label: '电话',
-      rules: z.string().regex(/^1[3-9]\d{9}$/, '请输入正确的电话'),
+      rules: {
+        message: '请输入正确的电话',
+        pattern: /^1[3-9]\d{9}$/,
+        required: true,
+      },
     },
   ],
   submitButtonOptions: {

@@ -4,7 +4,6 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 import { renderDict } from '#/utils/render';
 
@@ -119,21 +118,13 @@ export const drawerSchema: FormSchemaGetter = () => [
     component: 'Input',
     fieldName: 'phone',
     label: '联系电话',
-    rules: z
-      .string()
-      .regex(/^1[3,4578]\d{9}$/, { message: '请输入正确的手机号' })
-      .optional()
-      .or(z.literal('')),
+    rules: { message: '请输入正确的手机号', pattern: /^1[3,4578]\d{9}$/ },
   },
   {
     component: 'Input',
     fieldName: 'email',
     label: '邮箱',
-    rules: z
-      .string()
-      .email({ message: '请输入正确的邮箱' })
-      .optional()
-      .or(z.literal('')),
+    rules: { message: '请输入正确的邮箱', type: 'email' },
   },
   {
     component: 'RadioGroup',

@@ -1,10 +1,3 @@
-import type {
-  FormState,
-  GenericObject,
-  ResetFormOpts,
-  ValidationOptions,
-} from 'vee-validate';
-
 import type { ComponentPublicInstance } from 'vue';
 
 import type { Recordable } from '@vben-core/typings';
@@ -248,20 +241,14 @@ export class FormApi {
   /**
    * 重置表单
    */
-  async resetForm(
-    state?: Partial<FormState<GenericObject>> | undefined,
-    opts?: Partial<ResetFormOpts>,
-  ) {
+  async resetForm(state?: { values?: Record<string, any> }, opts?: any) {
     const form = await this.getForm();
     return form.resetForm(state, opts);
   }
 
   async resetValidate() {
     const form = await this.getForm();
-    const fields = Object.keys(form.errors.value);
-    fields.forEach((field) => {
-      form.setFieldError(field, undefined);
-    });
+    form.clearValidate();
   }
 
   /**
@@ -415,7 +402,7 @@ export class FormApi {
     this.setState({ schema: currentSchema });
   }
 
-  async validate(opts?: Partial<ValidationOptions>) {
+  async validate(opts?: any) {
     const form = await this.getForm();
 
     const validateResult = await form.validate(opts);
@@ -442,7 +429,7 @@ export class FormApi {
     return await this.submitForm();
   }
 
-  async validateField(fieldName: string, opts?: Partial<ValidationOptions>) {
+  async validateField(fieldName: string, opts?: any) {
     const form = await this.getForm();
     const validateResult = await form.validateField(fieldName, opts);
 

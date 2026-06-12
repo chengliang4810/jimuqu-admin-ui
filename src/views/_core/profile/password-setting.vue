@@ -3,7 +3,7 @@ import type { VbenFormSchema } from '#/adapter/form';
 
 import { computed } from 'vue';
 
-import { ProfilePasswordSetting, z } from '@vben/common-ui';
+import { ProfilePasswordSetting } from '@vben/common-ui';
 
 const formSchema = computed((): VbenFormSchema[] => {
   return [
@@ -35,12 +35,15 @@ const formSchema = computed((): VbenFormSchema[] => {
       dependencies: {
         rules(values) {
           const { newPassword } = values;
-          return z
-            .string({ required_error: '请再次输入新密码' })
-            .min(1, { message: '请再次输入新密码' })
-            .refine((value) => value === newPassword, {
-              message: '两次输入的密码不一致',
-            });
+          return [
+            { message: '请再次输入新密码', required: true },
+            {
+              validator: async (_rule: any, value: any) =>
+                value === newPassword
+                  ? Promise.resolve()
+                  : Promise.reject(new Error('两次输入的密码不一致')),
+            },
+          ];
         },
         triggerFields: ['newPassword'],
       },

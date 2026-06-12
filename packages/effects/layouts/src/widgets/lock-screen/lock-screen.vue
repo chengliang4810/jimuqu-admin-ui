@@ -6,7 +6,7 @@ import { $t, useI18n } from '@vben/locales';
 import { storeToRefs, useAccessStore } from '@vben/stores';
 
 import { useScrollLock } from '@vben-core/composables';
-import { useVbenForm, z } from '@vben-core/form-ui';
+import { useVbenForm } from '@vben-core/form-ui';
 import { VbenAvatar, VbenButton } from '@vben-core/shadcn-ui';
 
 import { useDateFormat, useNow } from '@vueuse/core';
@@ -51,7 +51,7 @@ const [Form, { form, validate, getFieldComponentRef }] = useVbenForm(
         },
         fieldName: 'password',
         label: $t('authentication.password'),
-        rules: z.string().min(1, { message: $t('authentication.passwordTip') }),
+        rules: { message: $t('authentication.passwordTip'), required: true },
       },
     ]),
     showDefaultActions: false,
