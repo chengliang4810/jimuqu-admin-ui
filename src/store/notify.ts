@@ -1,4 +1,3 @@
-// oxlint-disable no-unused-expressions
 import type { NotificationItem } from '@vben/layouts';
 
 import type { NoticeList, SystemList, WorkflowList } from '#/api';

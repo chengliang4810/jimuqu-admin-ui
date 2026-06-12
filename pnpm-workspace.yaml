@@ -13,8 +13,7 @@ packages:
 publicHoistPattern:
   - lefthook
   - eslint
-  - oxfmt
-  - oxlint
+  - prettier
   - stylelint
   - '*postcss*'
   - '@commitlint/*'
@@ -123,6 +122,7 @@ catalog:
   echarts: ^6.0.0
   es-toolkit: ^1.45.1
   eslint: ^10.2.0
+  eslint-config-prettier: ^10.1.8
   eslint-plugin-better-tailwindcss: ^4.4.0
   eslint-plugin-command: ^3.5.2
   eslint-plugin-jsonc: ^3.1.2
@@ -151,9 +151,6 @@ catalog:
   nitropack: ^2.13.1
   nprogress: ^0.2.0
   ora: ^9.4.0
-  oxfmt: ^0.51.0
-  oxlint: ^1.66.0
-  oxlint-tsgolint: ^0.23.0
   pinia: ^3.0.4
   pinia-plugin-persistedstate: ^4.7.1
   pkg-types: ^2.3.1
@@ -161,6 +158,8 @@ catalog:
   postcss: ^8.5.15
   postcss-html: ^1.8.1
   postcss-scss: ^4.0.9
+  prettier: ^3.6.2
+  prettier-plugin-tailwindcss: ^0.6.14
   publint: ^0.3.21
   qrcode: ^1.5.4
   qs: ^6.15.2

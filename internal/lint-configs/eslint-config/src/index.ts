@@ -1,5 +1,7 @@
 import type { Linter } from 'eslint';
 
+import prettierConfig from 'eslint-config-prettier';
+
 import {
   ignores,
   javascript,
@@ -36,6 +38,8 @@ async function defineConfig(config: FlatConfig[] = []) {
     pnpm(),
     ...customConfig,
     ...config,
+    // 关闭与 prettier 冲突的格式化规则,必须放在最后
+    prettierConfig as FlatConfig,
   ];
 
   const resolved = await Promise.all(configs);

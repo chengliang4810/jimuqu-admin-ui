@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import { execa } from 'execa';
 
 async function formatFile(filepath: string) {
-  await execa('oxfmt', [filepath], {
+  await execa('prettier', ['--write', filepath], {
     stdio: 'inherit',
   });
 

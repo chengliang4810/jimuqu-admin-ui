@@ -2,13 +2,8 @@ import type { Linter } from 'eslint';
 
 import { interopDefault } from '../util';
 
-const rulesCoveredByOxlint = new Set([
-  '@typescript-eslint/ban-ts-comment',
-  '@typescript-eslint/no-non-null-assertion',
-  '@typescript-eslint/no-unused-expressions',
-  '@typescript-eslint/no-unused-vars',
-  '@typescript-eslint/triple-slash-reference',
-]);
+// 由 unused-imports 插件统一负责未使用变量检测,避免与 ts 规则重复报告
+const rulesHandledElsewhere = new Set(['@typescript-eslint/no-unused-vars']);
 
 export async function typescript(): Promise<Linter.Config[]> {
   const [pluginTs, parserTs] = await Promise.all([
@@ -17,7 +12,7 @@ export async function typescript(): Promise<Linter.Config[]> {
   ] as const);
   const strictRules = Object.fromEntries(
     Object.entries(pluginTs.configs.strict?.rules ?? {}).filter(
-      ([ruleName]) => !rulesCoveredByOxlint.has(ruleName),
+      ([ruleName]) => !rulesHandledElsewhere.has(ruleName),
     ),
   );
 
@@ -34,8 +29,12 @@ export async function typescript(): Promise<Linter.Config[]> {
           ecmaVersion: 'latest',
           extraFileExtensions: ['.vue'],
           jsxPragma: 'React',
-          project: './tsconfig.*.json',
+          // 扁平化为单仓后,使用 projectService 按文件就近解析各 workspace 的 tsconfig
+          projectService: {
+            allowDefaultProject: ['*.js', '*.cjs', '*.mjs', '*.config.ts'],
+          },
           sourceType: 'module',
+          tsconfigRootDir: process.cwd(),
         },
       },
       plugins: {
@@ -51,7 +50,6 @@ export async function typescript(): Promise<Linter.Config[]> {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/no-use-before-define': 'off',
-        'unused-imports/no-unused-vars': 'off',
       },
     },
   ];

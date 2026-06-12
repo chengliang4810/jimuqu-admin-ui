@@ -9,24 +9,16 @@ interface LintCommandOptions {
    * Format lint problem.
    */
   format?: boolean;
-  /**
-   * Number of threads for oxfmt and oxlint (default: 2).
-   */
-  threads?: number;
 }
 
-async function runLint({ format, threads }: LintCommandOptions) {
+async function runLint({ format }: LintCommandOptions) {
   // process.env.FORCE_COLOR = '3';
-  const threadsArg = threads ? ` --threads=${threads}` : ` --threads=2`;
 
   if (format) {
     await execaCommand(`stylelint "**/*.{vue,css,less,scss}" --cache --fix`, {
       stdio: 'inherit',
     });
-    await execaCommand(`oxfmt${threadsArg}`, {
-      stdio: 'inherit',
-    });
-    await execaCommand(`oxlint --fix${threadsArg}`, {
+    await execaCommand(`prettier . --write --cache --log-level warn`, {
       stdio: 'inherit',
     });
     await execaCommand(`eslint . --cache --fix`, {
@@ -35,8 +27,9 @@ async function runLint({ format, threads }: LintCommandOptions) {
     return;
   }
   const subprocesses = [
-    execaCommand(`oxfmt --check${threadsArg}`, { stdio: 'inherit' }),
-    execaCommand(`oxlint${threadsArg}`, { stdio: 'inherit' }),
+    execaCommand(`prettier . --check --cache --log-level warn`, {
+      stdio: 'inherit',
+    }),
     execaCommand(`eslint . --cache`, { stdio: 'inherit' }),
     execaCommand(`stylelint "**/*.{vue,css,less,scss}" --cache`, {
       stdio: 'inherit',
@@ -69,7 +62,6 @@ function defineLintCommand(cac: CAC) {
     .command('lint')
     .usage('Batch execute project lint check.')
     .option('--format', 'Format lint problem.')
-    .option('--threads <count>', 'Number of threads for oxfmt and oxlint.')
     .action(runLint);
 }
 
