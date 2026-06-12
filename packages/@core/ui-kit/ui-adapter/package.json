@@ -1,0 +1,41 @@
+{
+  "name": "@vben-core/ui-adapter",
+  "version": "5.7.0",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "src"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./src/index.ts",
+        "development": "./src/index.ts",
+        "default": "./src/index.ts"
+      }
+    }
+  },
+  "dependencies": {
+    "@vben-core/composables": "workspace:*",
+    "@vben-core/icons": "workspace:*",
+    "@vben-core/preferences": "workspace:*",
+    "@vben-core/shared": "workspace:*",
+    "@vben-core/typings": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "antdv-next": "catalog:",
+    "vue": "catalog:"
+  }
+}

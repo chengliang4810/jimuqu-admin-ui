@@ -3,7 +3,7 @@ import type { TabsEmits, TabsProps } from './types';
 
 import { useForwardPropsEmits } from '@vben-core/composables';
 import { ChevronsLeft, ChevronsRight } from '@vben-core/icons';
-import { VbenScrollbar } from '@vben-core/shadcn-ui';
+import { VbenScrollbar } from '@vben-core/ui-adapter';
 
 import { Tabs, TabsChrome } from './components';
 import { useTabsDrag } from './use-tabs-drag';

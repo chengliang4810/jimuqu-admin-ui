@@ -131,7 +131,7 @@ export async function vue(): Promise<Linter.Config[]> {
         'vue/prefer-separate-static-class': 'error',
         'vue/prefer-template': 'error',
         'vue/prop-name-casing': ['error', 'camelCase'],
-        'vue/require-default-prop': 'error',
+        'vue/require-default-prop': 'off',
         'vue/require-explicit-emits': 'error',
         'vue/require-prop-types': 'off',
         'vue/singleline-html-element-content-newline': 'off',

@@ -1,4 +1,4 @@
-import type { IContextMenuItem } from '@vben-core/shadcn-ui';
+import type { IContextMenuItem } from '@vben-core/ui-adapter';
 import type { TabDefinition, TabsStyleType } from '@vben-core/typings';
 
 export type TabsEmits = {

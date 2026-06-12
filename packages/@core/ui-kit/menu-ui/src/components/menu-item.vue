@@ -4,7 +4,7 @@ import type { MenuItemProps, MenuItemRegistered } from '../types';
 import { computed, onBeforeUnmount, onMounted, reactive, useSlots } from 'vue';
 
 import { useNamespace } from '@vben-core/composables';
-import { VbenIcon, VbenTooltip } from '@vben-core/shadcn-ui';
+import { VbenIcon, VbenTooltip } from '@vben-core/ui-adapter';
 import { isHttpUrl } from '@vben-core/shared/utils';
 
 import qs from 'qs';

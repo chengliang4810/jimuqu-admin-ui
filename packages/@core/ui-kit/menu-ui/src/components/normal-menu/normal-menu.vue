@@ -4,7 +4,7 @@ import type { MenuRecordRaw } from '@vben-core/typings';
 import type { NormalMenuProps } from './normal-menu';
 
 import { useNamespace } from '@vben-core/composables';
-import { VbenIcon } from '@vben-core/shadcn-ui';
+import { VbenIcon } from '@vben-core/ui-adapter';
 
 interface Props extends NormalMenuProps {}
 

@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import type { HoverCardContentProps } from '@vben-core/shadcn-ui';
-
 import type { MenuItemRegistered, MenuProvider, SubMenuProps } from '../types';
 
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 
 import { useNamespace } from '@vben-core/composables';
-import { VbenHoverCard } from '@vben-core/shadcn-ui';
+import { VbenHoverCard } from '@vben-core/ui-adapter';
 
 import {
   createSubMenuContext,
@@ -63,7 +61,7 @@ const isFirstLevel = computed(() => {
   return currentLevel.value === 1;
 });
 
-const contentProps = computed((): HoverCardContentProps => {
+const contentProps = computed((): Record<string, any> => {
   const isHorizontal = mode.value === 'horizontal';
   const side = isHorizontal && isFirstLevel.value ? 'bottom' : 'right';
   return {

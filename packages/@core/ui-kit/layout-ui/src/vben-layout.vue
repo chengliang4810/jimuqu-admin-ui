@@ -11,7 +11,7 @@ import {
   useLayoutHeaderStyle,
 } from '@vben-core/composables';
 import { IconifyIcon } from '@vben-core/icons';
-import { VbenIconButton } from '@vben-core/shadcn-ui';
+import { VbenIconButton } from '@vben-core/ui-adapter';
 import { ELEMENT_ID_MAIN_CONTENT } from '@vben-core/shared/constants';
 
 import { useMouse, useScroll, useThrottleFn } from '@vueuse/core';
