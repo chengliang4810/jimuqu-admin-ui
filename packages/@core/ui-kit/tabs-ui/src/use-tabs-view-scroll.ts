@@ -6,7 +6,7 @@ import { VbenScrollbar } from '@vben-core/ui-adapter';
 
 import { useDebounceFn } from '@vueuse/core';
 
-type DomElement = Element | null | undefined;
+type DomElement = HTMLElement | null | undefined;
 
 export function useTabsViewScroll(props: TabsProps) {
   let resizeObserver: null | ResizeObserver = null;
@@ -58,9 +58,16 @@ export function useTabsViewScroll(props: TabsProps) {
       return;
     }
 
-    const viewportEl = scrollbarEl?.querySelector(
-      'div[data-reka-scroll-area-viewport]',
-    );
+    const scrollbarRootEl = scrollbarEl as HTMLElement;
+    const viewportEl = scrollbarRootEl.matches('[data-vben-scrollbar-viewport]')
+      ? scrollbarRootEl
+      : (scrollbarRootEl.querySelector(
+          '[data-vben-scrollbar-viewport], div[data-reka-scroll-area-viewport]',
+        ) as HTMLElement | null);
+
+    if (!viewportEl) {
+      return;
+    }
 
     scrollViewportEl.value = viewportEl;
     calcShowScrollbarButton();
@@ -142,10 +149,11 @@ export function useTabsViewScroll(props: TabsProps) {
     scrollIsAtRight.value = right;
   }, 100);
 
-  function handleWheel({ deltaY }: WheelEvent) {
+  function handleWheel({ deltaX, deltaY }: WheelEvent) {
+    const delta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
     scrollViewportEl.value?.scrollBy({
       // behavior: 'smooth',
-      left: deltaY * 3,
+      left: delta * 3,
     });
   }
 

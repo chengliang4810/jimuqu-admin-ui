@@ -39,6 +39,29 @@ const isAtRight = ref(false);
 
 const showShadowTop = computed(() => props.shadow && props.shadowTop);
 const showShadowBottom = computed(() => props.shadow && props.shadowBottom);
+const hideNativeScrollbar = computed(() => hasHiddenClass(props.scrollBarClass));
+
+function hasHiddenClass(value: ClassType): boolean {
+  if (!value) {
+    return false;
+  }
+
+  if (typeof value === 'string') {
+    return value.split(/\s+/).includes('hidden');
+  }
+
+  if (Array.isArray(value)) {
+    return value.some((item) => hasHiddenClass(item));
+  }
+
+  if (typeof value === 'object') {
+    return Object.entries(value).some(([key, enabled]) => {
+      return !!enabled && key.split(/\s+/).includes('hidden');
+    });
+  }
+
+  return false;
+}
 
 function handleScroll(e: Event) {
   const el = e.target as HTMLElement;
@@ -59,7 +82,14 @@ function handleScroll(e: Event) {
 
 <template>
   <div
-    :class="cn('vben-scrollbar relative', props.class)"
+    data-vben-scrollbar-viewport
+    :class="
+      cn(
+        'vben-scrollbar relative',
+        { 'vben-scrollbar--hide-native': hideNativeScrollbar },
+        props.class,
+      )
+    "
     :style="{
       overflowX: horizontal ? 'auto' : 'hidden',
       overflowY: horizontal ? 'hidden' : 'auto',
@@ -89,5 +119,16 @@ function handleScroll(e: Event) {
 <style scoped>
 .vben-scrollbar {
   scrollbar-width: thin;
+}
+
+.vben-scrollbar--hide-native {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.vben-scrollbar--hide-native::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 </style>
