@@ -2,8 +2,6 @@ import type { FormSchemaGetter } from '#/adapter/form';
 
 import { getPopupContainer } from '@vben/utils';
 
-import { z } from '#/adapter/form';
-
 export const formSchema: FormSchemaGetter = () => [
   {
     component: 'Divider',
@@ -156,10 +154,10 @@ export const formSchema: FormSchemaGetter = () => [
     fieldName: 'frontendType',
     help: '对应后端 resources/vm 下的模板目录，例如 vue、react',
     label: '前端模板',
-    rules: z
-      .string()
-      .min(1, '请选择前端模板')
-      .regex(/^[\w-]+$/, '仅支持字母、数字、下划线和中划线'),
+    rules: [
+      { message: '请选择前端模板', required: true },
+      { message: '仅支持字母、数字、下划线和中划线', pattern: /^[\w-]+$/ },
+    ],
   },
   {
     component: 'RadioGroup',

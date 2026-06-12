@@ -4,7 +4,6 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { DictEnum } from '@vben/constants';
 import { getPopupContainer } from '@vben/utils';
 
-import { z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 
 export const querySchema: FormSchemaGetter = () => [
@@ -131,11 +130,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     fieldName: 'phoneNumber',
     label: '手机号码',
     defaultValue: undefined,
-    rules: z
-      .string()
-      .regex(/^1[3-9]\d{9}$/, '请输入正确的手机号码')
-      .optional()
-      .or(z.literal('')),
+    rules: { message: '请输入正确的手机号码', pattern: /^1[3-9]\d{9}$/ },
   },
   {
     component: 'Input',
@@ -148,7 +143,7 @@ export const drawerSchema: FormSchemaGetter = () => [
      * 例如，你可以使用 z.literal 来确保某个字段的值只能是特定的字符串、数字、布尔值等。
      * 即空字符串也可通过校验
      */
-    rules: z.string().email('请输入正确的邮箱').optional().or(z.literal('')),
+    rules: { message: '请输入正确的邮箱', type: 'email' },
   },
   {
     component: 'RadioGroup',

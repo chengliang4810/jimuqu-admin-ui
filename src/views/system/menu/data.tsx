@@ -6,7 +6,6 @@ import { VbenIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 import { getPopupContainer } from '@vben/utils';
 
-import { z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 import { renderDict } from '#/utils/render';
 
@@ -245,17 +244,21 @@ export const drawerSchema: FormSchemaGetter = () => [
     dependencies: {
       rules: (model) => {
         if (model.isFrame !== '0') {
-          return z
-            .string({ message: '请输入路由地址' })
-            .min(1, '请输入路由地址')
-            .refine((val) => !val.startsWith('/'), {
-              message: '路由地址不需要带/',
-            });
+          return [
+            { message: '请输入路由地址', required: true },
+            {
+              validator: async (_rule: any, value: any) =>
+                value && value.startsWith('/')
+                  ? Promise.reject(new Error('路由地址不需要带/'))
+                  : Promise.resolve(),
+            },
+          ];
         }
         // 为链接
-        return z
-          .string({ message: '请输入链接地址' })
-          .regex(/^https?:\/\//, { message: '请输入正确的链接地址' });
+        return [
+          { message: '请输入链接地址', required: true },
+          { message: '请输入正确的链接地址', pattern: /^https?:\/\// },
+        ];
       },
       // 类型不为按钮时显示
       show: (values) => values?.menuType !== 'F',
@@ -278,15 +281,18 @@ export const drawerSchema: FormSchemaGetter = () => [
       rules: (model) => {
         // 非链接时为必填项
         if (model.path && !/^https?:\/\//.test(model.path)) {
-          return z
-            .string()
-            .min(1, { message: '非链接时必填组件路径' })
-            .refine((val) => !val.startsWith('/') && !val.endsWith('/'), {
-              message: '组件路径开头/末尾不需要带/',
-            });
+          return [
+            { message: '非链接时必填组件路径', required: true },
+            {
+              validator: async (_rule: any, value: any) =>
+                value && (value.startsWith('/') || value.endsWith('/'))
+                  ? Promise.reject(new Error('组件路径开头/末尾不需要带/'))
+                  : Promise.resolve(),
+            },
+          ];
         }
         // 为链接时非必填
-        return z.string().optional();
+        return null;
       },
       // 类型为菜单时显示
       show: (values) => values.menuType === 'C',

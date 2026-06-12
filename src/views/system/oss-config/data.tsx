@@ -5,7 +5,6 @@ import { DictEnum } from '@vben/constants';
 
 import { Tag } from 'antdv-next';
 
-import { z } from '#/adapter/form';
 import { getDictOptions } from '#/utils/dict';
 
 const accessPolicyOptions = [
@@ -117,9 +116,15 @@ export const drawerSchema: FormSchemaGetter = () => [
     renderComponentContent: (formModel) => ({
       addonBefore: () => (formModel.isHttps === 'Y' ? 'https://' : 'http://'),
     }),
-    rules: z.string().refine((domain) => domain && !/^https?:\/\/.*/.test(domain), {
-      message: '请输入正确的域名, 不需要http(s)',
-    }),
+    rules: [
+      { message: '请输入正确的域名, 不需要http(s)', required: true },
+      {
+        validator: async (_rule: any, value: any) =>
+          !value || !/^https?:\/\/.*/.test(value)
+            ? Promise.resolve()
+            : Promise.reject(new Error('请输入正确的域名, 不需要http(s)')),
+      },
+    ],
   },
   {
     component: 'Input',

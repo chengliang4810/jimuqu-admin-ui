@@ -100,7 +100,9 @@ const formSchema = computed((): VbenFormSchema[] => {
       },
       fieldName: 'code',
       label: $t('authentication.code'),
-      rules: [],
+      rules: z
+        .string()
+        .min(1, { message: $t('authentication.verifyRequiredTip') }),
     },
   ];
 });

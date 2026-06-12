@@ -25,12 +25,10 @@ const formSchema = computed((): VbenFormSchema[] => {
       },
       fieldName: 'phoneNumber',
       label: $t('authentication.mobile'),
-      rules: z
-        .string()
-        .min(1, { message: $t('authentication.mobileTip') })
-        .refine((v) => /^\d{11}$/.test(v), {
-          message: $t('authentication.mobileErrortip'),
-        }),
+      rules: [
+        { message: $t('authentication.mobileTip'), required: true },
+        { message: $t('authentication.mobileErrortip'), pattern: /^\d{11}$/ },
+      ],
     },
     {
       component: 'VbenPinInput',
