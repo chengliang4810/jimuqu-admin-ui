@@ -137,12 +137,7 @@ export const drawerSchema: FormSchemaGetter = () => [
     fieldName: 'email',
     defaultValue: undefined,
     label: '邮箱',
-    /**
-     * z.literal 是 Zod 中的一种类型，用于定义一个特定的字面量值。
-     * 它可以用于确保输入的值与指定的字面量完全匹配。
-     * 例如，你可以使用 z.literal 来确保某个字段的值只能是特定的字符串、数字、布尔值等。
-     * 即空字符串也可通过校验
-     */
+    // 非 required 的 type 校验：空值会被 antd 跳过，仅在有值时校验邮箱格式
     rules: { message: '请输入正确的邮箱', type: 'email' },
   },
   {
