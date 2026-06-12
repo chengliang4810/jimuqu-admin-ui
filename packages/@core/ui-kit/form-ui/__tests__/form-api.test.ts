@@ -118,6 +118,42 @@ describe('formApi', () => {
     );
   });
 
+  it('should set values by schema fields when model has not initialized all fields', async () => {
+    formApi.setState({
+      schema: [
+        { component: 'input', fieldName: 'name' },
+        { component: 'input', fieldName: 'user.nickname' },
+        { component: 'input', fieldName: '[profile.email]' },
+      ],
+    });
+
+    const setValuesMock = vi.fn();
+    const formActions: any = {
+      meta: {},
+      setValues: setValuesMock,
+      values: { name: '' },
+    };
+
+    await formApi.mount(formActions, new Map());
+    await formApi.setValues({
+      age: 18,
+      name: 'dap',
+      'profile.email': 'dap@example.com',
+      user: {
+        nickname: 'zhang',
+      },
+    });
+
+    expect(setValuesMock).toHaveBeenCalledWith(
+      {
+        '[profile.email]': 'dap@example.com',
+        name: 'dap',
+        'user.nickname': 'zhang',
+      },
+      false,
+    );
+  });
+
   it('should reset form', async () => {
     const resetFormMock = vi.fn();
     const formActions: any = {

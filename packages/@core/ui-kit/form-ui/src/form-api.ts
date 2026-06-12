@@ -10,11 +10,8 @@ import { Store } from '@vben-core/shared/store';
 import {
   bindMethods,
   cloneDeep,
-  createMerge,
   formatDate,
   get,
-  isDate,
-  isDayjsObject,
   isFunction,
   isObject,
   mergeWithArrayOverride,
@@ -46,6 +43,10 @@ function getDefaultState(): VbenFormProps {
     submitOnEnter: false,
     wrapperClass: 'grid-cols-1',
   };
+}
+
+function hasOwnKey(target: object, key: string) {
+  return Object.prototype.hasOwnProperty.call(target, key);
 }
 
 export class FormApi {
@@ -326,25 +327,25 @@ export class FormApi {
       return;
     }
 
-    /**
-     * 合并算法有待改进，目前的算法不支持object类型的值。
-     * antd的日期时间相关组件的值类型为dayjs对象
-     * element-plus的日期时间相关组件的值类型可能为Date对象
-     * 以上两种类型需要排除深度合并
-     */
-    const fieldMergeFn = createMerge((obj, key, value) => {
-      if (key in obj) {
-        obj[key] =
-          !Array.isArray(obj[key]) &&
-          isObject(obj[key]) &&
-          !isDayjsObject(obj[key]) &&
-          !isDate(obj[key])
-            ? fieldMergeFn(value, obj[key])
-            : value;
+    const currentSchema = this.state?.schema ?? [];
+    if (currentSchema.length === 0) {
+      form.setValues(fields, shouldValidate);
+      return;
+    }
+
+    const filteredFields: Record<string, any> = {};
+    for (const schema of currentSchema) {
+      const fieldName = schema.fieldName;
+      if (!this.hasValueByFieldName(fields, fieldName)) {
+        continue;
       }
-      return true;
-    });
-    const filteredFields = fieldMergeFn(fields, form.values);
+
+      filteredFields[fieldName] = this.resolveValueByFieldName(
+        fields,
+        fieldName,
+      );
+    }
+
     form.setValues(filteredFields, shouldValidate);
   }
 
@@ -448,7 +449,7 @@ export class FormApi {
     fieldName: string,
   ) {
     const { pathSegments, rawKey } = resolveFieldNamePath(fieldName);
-    if (rawKey) {
+    if (rawKey !== undefined) {
       Reflect.deleteProperty(values, rawKey);
       return;
     }
@@ -646,11 +647,45 @@ export class FormApi {
     fieldName: string,
   ) {
     const { rawKey } = resolveFieldNamePath(fieldName);
-    if (rawKey) {
+    if (rawKey !== undefined) {
       return values[rawKey];
     }
 
+    if (hasOwnKey(values, fieldName)) {
+      return values[fieldName];
+    }
+
     return get(values, fieldName);
+  }
+
+  private hasValueByFieldName(values: Record<string, any>, fieldName: string) {
+    const { pathSegments, rawKey } = resolveFieldNamePath(fieldName);
+    if (rawKey !== undefined) {
+      return hasOwnKey(values, rawKey);
+    }
+
+    if (hasOwnKey(values, fieldName)) {
+      return true;
+    }
+
+    if (pathSegments.length === 0) {
+      return hasOwnKey(values, fieldName);
+    }
+
+    let target: unknown = values;
+    for (const segment of pathSegments) {
+      if (!target || typeof target !== 'object') {
+        return false;
+      }
+
+      if (!hasOwnKey(target, segment)) {
+        return false;
+      }
+
+      target = (target as Record<string, any>)[segment];
+    }
+
+    return true;
   }
 
   private setValueByFieldName(
@@ -659,7 +694,7 @@ export class FormApi {
     value: any,
   ) {
     const { rawKey } = resolveFieldNamePath(fieldName);
-    if (rawKey) {
+    if (rawKey !== undefined) {
       values[rawKey] = value;
       return;
     }

@@ -86,8 +86,18 @@ export function createFormActions(
     }
   }
 
-  function setFieldValue(field: string, value: any, shouldValidate?: boolean) {
+  function setModelValue(field: string, value: any) {
+    const { rawKey } = resolveFieldNamePath(field);
+    if (rawKey !== undefined) {
+      model[rawKey] = value;
+      return;
+    }
+
     set(model, field, value);
+  }
+
+  function setFieldValue(field: string, value: any, shouldValidate?: boolean) {
+    setModelValue(field, value);
     if (shouldValidate) {
       validateField(field);
     }
@@ -95,7 +105,7 @@ export function createFormActions(
 
   function setValues(fields: Record<string, any>, shouldValidate?: boolean) {
     for (const key of Object.keys(fields)) {
-      set(model, key, fields[key]);
+      setModelValue(key, fields[key]);
     }
     if (shouldValidate) {
       validate();
