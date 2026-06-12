@@ -137,7 +137,7 @@ function handleClosed() {
     :z-index="zIndex"
     :width="modalWidth"
     :get-container="getContainer"
-    :destroy-on-close="destroyOnClose"
+    :destroy-on-hidden="destroyOnClose"
     :wrap-class-name="
       cn('vben-modal', wrapClass, { 'vben-modal-fullscreen': shouldFullscreen })
     "
