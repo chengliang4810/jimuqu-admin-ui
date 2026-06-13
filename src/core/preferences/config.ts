@@ -74,14 +74,6 @@ const defaultPreferences: Preferences = {
     split: true,
     styleType: 'rounded',
   },
-  shortcutKeys: {
-    enable: true,
-    globalEscape: false,
-    globalLockScreen: true,
-    globalLogout: true,
-    globalPreferences: true,
-    globalSearch: true,
-  },
   sidebar: {
     autoActivateChild: false,
     collapsed: false,

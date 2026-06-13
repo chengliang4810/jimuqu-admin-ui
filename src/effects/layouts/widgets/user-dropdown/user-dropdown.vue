@@ -116,7 +116,7 @@ const enableLockScreenShortcutKey = computed(() => {
 });
 
 const enableShortcutKey = computed(() => {
-  return props.enableShortcutKey && preferences.shortcutKeys.enable;
+  return props.enableShortcutKey;
 });
 
 function handleOpenLock() {

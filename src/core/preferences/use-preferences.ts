@@ -26,8 +26,6 @@ function usePreferences() {
 
   const appPreferences = computed(() => preferences.app);
 
-  const shortcutKeysPreferences = computed(() => preferences.shortcutKeys);
-
   /**
    * @zh_CN 判断是否为暗黑模式
    * @param  preferences - 当前偏好设置对象，它的主题值将被用来判断是否为暗黑模式。
@@ -169,33 +167,24 @@ function usePreferences() {
   });
 
   /**
-   * @zh_CN 是否启用全局搜索快捷键
+   * @zh_CN 是否启用全局搜索快捷键（默认启用）
    */
-  const globalSearchShortcutKey = computed(() => {
-    const { enable, globalSearch } = shortcutKeysPreferences.value;
-    return enable && globalSearch;
-  });
+  const globalSearchShortcutKey = computed(() => true);
 
   /**
-   * @zh_CN 是否启用全局注销快捷键
+   * @zh_CN 是否启用全局注销快捷键（默认启用）
    */
-  const globalLogoutShortcutKey = computed(() => {
-    const { enable, globalLogout } = shortcutKeysPreferences.value;
-    return enable && globalLogout;
-  });
+  const globalLogoutShortcutKey = computed(() => true);
 
   /**
-   * @zh_CN 是否启用全局注销快捷键
+   * @zh_CN 是否启用全局关闭快捷键（默认不启用）
    */
-  const globalEscapeShortcutKey = computed(() => {
-    const { enable, globalEscape } = shortcutKeysPreferences.value;
-    return enable && globalEscape;
-  });
+  const globalEscapeShortcutKey = computed(() => false);
 
-  const globalLockScreenShortcutKey = computed(() => {
-    const { enable, globalLockScreen } = shortcutKeysPreferences.value;
-    return enable && globalLockScreen;
-  });
+  /**
+   * @zh_CN 是否启用全局锁屏快捷键（默认启用）
+   */
+  const globalLockScreenShortcutKey = computed(() => true);
 
   /**
    * @zh_CN 偏好设置按钮位置
