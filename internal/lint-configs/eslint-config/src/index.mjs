@@ -13,7 +13,6 @@ import {
   vue,
   yaml,
 } from './configs/index.mjs';
-import { customConfig } from './custom-config.mjs';
 
 async function defineConfig(config = []) {
   const configs = [
@@ -28,7 +27,6 @@ async function defineConfig(config = []) {
     unicorn(),
     yaml(),
     pnpm(),
-    ...customConfig,
     ...config,
     // 关闭与 prettier 冲突的格式化规则,必须放在最后
     prettierConfig,
