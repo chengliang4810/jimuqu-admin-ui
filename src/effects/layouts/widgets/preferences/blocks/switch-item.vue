@@ -20,7 +20,10 @@ const checked = defineModel<boolean>();
 
 const slots = useSlots();
 
-function handleClick() {
+function handleClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  // 排除 Switch 及其子元素
+  if (target.closest('.ant-switch') || target.closest('[role="switch"]')) return;
   checked.value = !checked.value;
 }
 </script>
@@ -52,6 +55,8 @@ function handleClick() {
     <span v-if="$slots.shortcut" class="mr-2 ml-auto text-xs opacity-60">
       <slot name="shortcut"></slot>
     </span>
-    <Switch v-model:checked="checked" @click.stop />
+    <span @click.stop>
+      <Switch v-model:checked="checked" />
+    </span>
   </div>
 </template>
