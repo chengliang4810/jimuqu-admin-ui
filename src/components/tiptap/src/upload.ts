@@ -5,7 +5,7 @@ import type { Ref } from 'vue';
 
 import type { TiptapImageUploadResult, TiptapUploadImage } from './type';
 
-import { uploadApi } from '#/api';
+import { uploadApi } from '@/api';
 
 interface UseTiptapUploadOptions {
   getEditor: () => Editor | null;

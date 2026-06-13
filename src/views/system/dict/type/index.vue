@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { DictType } from '#/api/system/dict/dict-type-model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { DictType } from '@/api/system/dict/dict-type-model';
 
 import { ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModal } from '@/effects/common-ui';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   dictTypeExport,
   dictTypeList,
   dictTypeRemove,
   refreshDictTypeCache,
-} from '#/api/system/dict/dict-type';
-import { useBlobExport } from '#/utils/file/export';
+} from '@/api/system/dict/dict-type';
+import { useBlobExport } from '@/utils/file/export';
 
 import { emitter } from '../mitt';
 import { columns, querySchema } from './data';

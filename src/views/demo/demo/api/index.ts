@@ -1,9 +1,9 @@
 import type { DemoForm, DemoQuery, DemoVO } from './model';
 
-import type { ID, IDS, PageResult } from '#/api/common';
+import type { ID, IDS, PageResult } from '@/api/common';
 
-import { commonExport } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { commonExport } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * 查询测试单表列表

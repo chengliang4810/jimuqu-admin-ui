@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { Dept } from '#/api/system/dept/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { Dept } from '@/api/system/dept/model';
 
 import { nextTick } from 'vue';
 
-import { Page, useVbenDrawer } from '@vben/common-ui';
-import { eachTree } from '@vben/utils';
+import { Page, useVbenDrawer } from '@/effects/common-ui';
+import { eachTree } from '@/utils';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deptList, deptRemove } from '#/api/system/dept';
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { deptList, deptRemove } from '@/api/system/dept';
 
 import { columns, querySchema } from './data';
 import deptDrawer from './dept-drawer.vue';

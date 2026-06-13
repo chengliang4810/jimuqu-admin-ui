@@ -86,7 +86,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
           clientFiles: [
             "./index.html",
             "./src/bootstrap.ts",
-            "./src/{views,layouts,router,store,api,adapter}/*",
+            "./src/{views,layouts,router,stores,api,adapter}/*",
           ],
         },
       },
@@ -110,12 +110,12 @@ function createCssOptions(injectGlobalScss = true): CSSOptions {
                 relativePath.startsWith(`src${path.sep}`) ||
                 relativePath.startsWith(`apps${path.sep}`)
               ) {
-                return `@use "@vben/styles/global" as *;\n${content}`;
+                return `@use "src/styles/global" as *;\n${content}`;
               }
               return content;
             },
-            // api: 'modern',
             importers: [new NodePackageImporter()],
+            loadPaths: ['.'],
           },
         }
       : {},

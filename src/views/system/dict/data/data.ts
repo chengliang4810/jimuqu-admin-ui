@@ -1,8 +1,8 @@
-import type { FormSchemaGetter } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { DictData } from '#/api/system/dict/dict-data-model';
+import type { FormSchemaGetter } from '@/adapter/form';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { DictData } from '@/api/system/dict/dict-data-model';
 
-import { renderDictTag } from '#/utils/render';
+import { renderDictTag } from '@/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
   {

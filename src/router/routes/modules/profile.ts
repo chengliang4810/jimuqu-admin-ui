@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import { $t } from '@vben/locales';
+import { $t } from '@/locales';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
     },
     name: 'Profile',
     path: '/profile',
-    component: () => import('#/views/_core/profile/index.vue'),
+    component: () => import('@/views/_core/profile/index.vue'),
   },
 ];
 

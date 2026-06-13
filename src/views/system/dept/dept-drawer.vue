@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import type { Dept } from '#/api/system/dept/model';
+import type { Dept } from '@/api/system/dept/model';
 
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { addFullName, cloneDeep, listToTree } from '@vben/utils';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { addFullName, cloneDeep, listToTree } from '@/utils';
 
-import { useVbenForm } from '#/adapter/form';
+import { useVbenForm } from '@/adapter/form';
 import {
   deptAdd,
   deptInfo,
   deptList,
   deptNodeList,
   deptUpdate,
-} from '#/api/system/dept';
-import { listUserByDeptId } from '#/api/system/user';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
+} from '@/api/system/dept';
+import { listUserByDeptId } from '@/api/system/user';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';
 

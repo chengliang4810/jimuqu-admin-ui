@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { Ref } from 'vue';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { GenInfo } from '#/api/tool/gen/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { GenInfo } from '@/api/tool/gen/model';
 
 import { inject, onMounted, reactive } from 'vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { dictOptionSelectList } from '#/api/system/dict/dict-type';
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { dictOptionSelectList } from '@/api/system/dict/dict-type';
 
 import { validRules, vxeTableColumns } from './gen-data';
 

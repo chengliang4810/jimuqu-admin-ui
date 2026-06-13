@@ -1,4 +1,4 @@
-import { mitt } from '@vben/utils';
+import { mitt } from '@/utils';
 
 /**
  * dictType: string

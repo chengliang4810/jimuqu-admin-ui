@@ -1,7 +1,7 @@
-import type { AxiosRequestConfig } from '@vben/request';
+import type { AxiosRequestConfig } from '@/effects/request';
 
-import { alovaInstance } from '#/utils/http';
-import { ContentTypeEnum } from '#/utils/http/helper';
+import { alovaInstance } from '@/utils/http';
+import { ContentTypeEnum } from '@/utils/http/helper';
 
 /**
  * Axios上传进度事件

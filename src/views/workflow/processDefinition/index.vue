@@ -2,20 +2,20 @@
 <script setup lang="ts">
 import type { RadioChangeEvent } from 'antdv-next';
 
-import type { VbenFormProps } from '@vben/common-ui';
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@/effects/common-ui';
+import type { Recordable } from '@/types';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, useVbenModal } from '@vben/common-ui';
-import { $t } from '@vben/locales';
+import { Page, useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
 
 import { Popconfirm, RadioGroup, Space } from 'antdv-next';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   unPublishList,
   workflowDefinitionActive,
@@ -24,9 +24,9 @@ import {
   workflowDefinitionExport,
   workflowDefinitionList,
   workflowDefinitionPublish,
-} from '#/api/workflow/definition';
-import { ApiSwitch } from '#/components/global';
-import { downloadByData } from '#/utils/file/download';
+} from '@/api/workflow/definition';
+import { ApiSwitch } from '@/components/global';
+import { downloadByData } from '@/utils/file/download';
 
 import CategoryTree from './category-tree.vue';
 import { columns, querySchema } from './data';

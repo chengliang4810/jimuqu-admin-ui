@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from 'axios';
 
-import { $t } from '#/locales';
+import { $t } from '@/locales';
 
 interface ShowMessageOptions {
   meta?: AxiosRequestConfig;

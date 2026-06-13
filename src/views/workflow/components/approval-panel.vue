@@ -7,22 +7,22 @@ import type { TabsProps } from 'antdv-next';
 
 import type { ApprovalType } from './type';
 
-import type { FlowInfoResponse } from '#/api/workflow/instance/model';
-import type { TaskInfo } from '#/api/workflow/task/model';
+import type { FlowInfoResponse } from '@/api/workflow/instance/model';
+import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { computed, h, ref, watch } from 'vue';
 
-import { Fallback, VbenAvatar } from '@vben/common-ui';
-import { DictEnum } from '@vben/constants';
-import { cn } from '@vben/utils';
+import { Fallback, VbenAvatar } from '@/effects/common-ui';
+import { DictEnum } from '@/constants';
+import { cn } from '@/utils';
 
 import { CopyOutlined } from '@antdv-next/icons';
 import { useClipboard } from '@vueuse/core';
 import { Card, Divider, Tabs } from 'antdv-next';
 
-import { flowInfo } from '#/api/workflow/instance';
-import { getTaskByTaskId } from '#/api/workflow/task';
-import { renderDict } from '#/utils/render';
+import { flowInfo } from '@/api/workflow/instance';
+import { getTaskByTaskId } from '@/api/workflow/task';
+import { renderDict } from '@/utils/render';
 
 import { FlowActions } from './actions';
 import ApprovalDetails from './approval-details.vue';

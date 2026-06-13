@@ -1,12 +1,12 @@
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { ID } from '#/api/common';
-import type { MenuOption } from '#/api/system/menu/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { ID } from '@/api/common';
+import type { MenuOption } from '@/api/system/menu/model';
 
 import { h } from 'vue';
 
-import { VbenIcon } from '@vben/icons';
+import { VbenIcon } from '@/icons-app';
 
-import { menuTypes } from '#/views/system/menu/data';
+import { menuTypes } from '@/views/system/menu/data';
 
 export interface Permission {
   checked: boolean;

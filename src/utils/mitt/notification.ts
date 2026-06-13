@@ -1,11 +1,11 @@
-import type { Notice } from '#/api/system/notice/model';
+import type { Notice } from '@/api/system/notice/model';
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
-import { mitt } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { mitt } from '@/utils';
 
-import noticePreviewModal from '#/views/system/notice/notice-preview-modal.vue';
+import noticePreviewModal from '@/views/system/notice/notice-preview-modal.vue';
 
 type NotificationEvent = {
   openModal: Notice;

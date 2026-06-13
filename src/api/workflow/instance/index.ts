@@ -1,9 +1,9 @@
 import type { TaskInfo } from '../task/model';
 import type { FlowInfoResponse, FlowInstanceVariableResp } from './model';
 
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * @param businessId 业务ID

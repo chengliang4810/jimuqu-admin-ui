@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
 
-import { useVbenForm } from '#/adapter/form';
-import { categoryTree } from '#/api/workflow/category';
+import { useVbenForm } from '@/adapter/form';
+import { categoryTree } from '@/api/workflow/category';
 import {
   workflowDefinitionAdd,
   workflowDefinitionInfo,
   workflowDefinitionUpdate,
-} from '#/api/workflow/definition';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
+} from '@/api/workflow/definition';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { modalSchema } from './data';
 

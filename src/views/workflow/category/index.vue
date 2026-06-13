@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
-import type { Recordable } from '@vben/types';
+import type { VbenFormProps } from '@/effects/common-ui';
+import type { Recordable } from '@/types';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { nextTick } from 'vue';
 
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModal } from '@/effects/common-ui';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { categoryList, categoryRemove } from '#/api/workflow/category';
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { categoryList, categoryRemove } from '@/api/workflow/category';
 
 import categoryModal from './category-modal.vue';
 import { columns, querySchema } from './data';

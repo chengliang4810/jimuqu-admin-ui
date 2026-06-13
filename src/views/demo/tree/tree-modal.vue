@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { cloneDeep, listToTree } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep, listToTree } from '@/utils';
 
-import { useVbenForm } from '#/adapter/form';
+import { useVbenForm } from '@/adapter/form';
 
 import { treeAdd, treeInfo, treeList, treeUpdate } from './api';
 import { modalSchema } from './data';

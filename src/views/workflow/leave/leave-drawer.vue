@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import type { ExtendedModalApi } from '@vben/common-ui';
+import type { ExtendedModalApi } from '@/effects/common-ui';
 
-import type { StartWorkFlowReqData } from '#/api/workflow/task/model';
+import type { StartWorkFlowReqData } from '@/api/workflow/task/model';
 
 import { computed, ref, shallowRef } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { cloneDeep } from '@vben/utils';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 
 import dayjs from 'dayjs';
 import { omit } from 'lodash-es';
 
-import { useVbenForm } from '#/adapter/form';
-import { startWorkFlow } from '#/api/workflow/task';
+import { useVbenForm } from '@/adapter/form';
+import { startWorkFlow } from '@/api/workflow/task';
 
 import {
   leaveAdd,

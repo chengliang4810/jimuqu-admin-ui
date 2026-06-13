@@ -8,17 +8,17 @@ import type { RadioChangeEvent } from 'antdv-next';
 
 import type { MenuPermissionOption } from './data';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { MenuOption } from '#/api/system/menu/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { MenuOption } from '@/api/system/menu/model';
 
 import { nextTick, onMounted, ref, shallowRef, watch } from 'vue';
 
-import { cloneDeep, findGroupParentIds } from '@vben/utils';
+import { cloneDeep, findGroupParentIds } from '@/utils';
 
 import { Alert, Checkbox, RadioGroup, Space } from 'antdv-next';
 import { uniq } from 'lodash-es';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
 
 import { columns, nodeOptions } from './data';
 import {

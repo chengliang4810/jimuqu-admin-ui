@@ -3,13 +3,13 @@ import type { UploadFile } from 'antdv-next';
 
 import { h, ref, unref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModal } from '@/effects/common-ui';
 
 import { InboxOutlined } from '@antdv-next/icons';
 import { Switch, Upload } from 'antdv-next';
 
-import { downloadImportTemplate, userImportData } from '#/api/system/user';
-import { useBlobExport } from '#/utils/file/export';
+import { downloadImportTemplate, userImportData } from '@/api/system/user';
+import { useBlobExport } from '@/utils/file/export';
 
 const emit = defineEmits<{ reload: [] }>();
 

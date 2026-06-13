@@ -7,13 +7,13 @@ import type { UploadFile, UploadProps } from 'antdv-next';
 
 import type { BaseUploadProps, UploadEmits } from './props';
 
-import { $t, I18nT } from '@vben/locales';
+import { $t, I18nT } from '@/locales';
 
 import { PlusOutlined, UploadOutlined } from '@antdv-next/icons';
 import { Image, Upload } from 'antdv-next';
 import { isFunction } from 'lodash-es';
 
-import { uploadApi } from '#/api';
+import { uploadApi } from '@/api';
 
 import { defaultImageAcceptExts } from './helper';
 import { useImagePreview, useUpload } from './hook';

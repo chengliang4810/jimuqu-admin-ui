@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAppConfig, useTabs } from '@vben/hooks';
-import { stringify } from '@vben/request';
-import { useAccessStore } from '@vben/stores';
+import { useAppConfig, useTabs } from '@/effects/hooks';
+import { stringify } from '@/effects/request';
+import { useAccessStore } from '@/stores';
 
 import { useEventListener } from '@vueuse/core';
 

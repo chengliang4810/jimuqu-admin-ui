@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { LoginLog } from '#/api/monitor/logininfo/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { LoginLog } from '@/api/monitor/logininfo/model';
 
 import { ref } from 'vue';
 
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModal } from '@/effects/common-ui';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   loginInfoClean,
   loginInfoExport,
   loginInfoList,
   loginInfoRemove,
   userUnlock,
-} from '#/api/monitor/logininfo';
-import { useBlobExport } from '#/utils/file/export';
-import { confirmDeleteModal } from '#/utils/modal';
+} from '@/api/monitor/logininfo';
+import { useBlobExport } from '@/utils/file/export';
+import { confirmDeleteModal } from '@/utils/modal';
 
 import { columns, querySchema } from './data';
 import loginInfoModal from './login-info-modal.vue';

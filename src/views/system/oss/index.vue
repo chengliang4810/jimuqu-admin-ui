@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { PageQuery } from '#/api/common';
-import type { OssFile } from '#/api/system/oss/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { PageQuery } from '@/api/common';
+import type { OssFile } from '@/api/system/oss/model';
 
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Page, useVbenModal } from '@vben/common-ui';
-import { useAppConfig } from '@vben/hooks';
-import { $t } from '@vben/locales';
-import { stringify } from '@vben/request';
-import { useAccessStore } from '@vben/stores';
+import { Page, useVbenModal } from '@/effects/common-ui';
+import { useAppConfig } from '@/effects/hooks';
+import { $t } from '@/locales';
+import { stringify } from '@/effects/request';
+import { useAccessStore } from '@/stores';
 
 import { Image, Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';
 
@@ -20,10 +20,10 @@ import {
   addSortParams,
   useVbenVxeGrid,
   vxeCheckboxChecked,
-} from '#/adapter/vxe-table';
-import { configInfoByKey } from '#/api/system/config';
-import { checkLoginBeforeDownload, ossList, ossRemove } from '#/api/system/oss';
-import { downloadByUrl } from '#/utils/file/download';
+} from '@/adapter/vxe-table';
+import { configInfoByKey } from '@/api/system/config';
+import { checkLoginBeforeDownload, ossList, ossRemove } from '@/api/system/oss';
+import { downloadByUrl } from '@/utils/file/download';
 
 import { supportImageList } from './constant';
 import { columns, querySchema } from './data';

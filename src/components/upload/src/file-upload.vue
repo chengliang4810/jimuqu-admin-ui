@@ -9,12 +9,12 @@ import type { BaseUploadProps, UploadEmits } from './props';
 
 import { computed } from 'vue';
 
-import { $t, I18nT } from '@vben/locales';
+import { $t, I18nT } from '@/locales';
 
 import { InboxOutlined, UploadOutlined } from '@antdv-next/icons';
 import { Upload } from 'antdv-next';
 
-import { uploadApi } from '#/api';
+import { uploadApi } from '@/api';
 
 import { defaultFileAcceptExts, defaultFilePreview } from './helper';
 import { useUpload } from './hook';

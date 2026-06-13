@@ -5,7 +5,7 @@ import { defineAsyncComponent, markRaw } from 'vue';
  */
 
 const LeaveDescription = defineAsyncComponent(
-  () => import('#/views/workflow/leave/leave-description.vue'),
+  () => import('@/views/workflow/leave/leave-description.vue'),
 );
 
 /**

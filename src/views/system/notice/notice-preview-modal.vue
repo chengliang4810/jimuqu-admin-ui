@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Notice } from '#/api/system/notice/model';
+import type { Notice } from '@/api/system/notice/model';
 
 import { shallowRef } from 'vue';
 
-import { useAccess } from '@vben/access';
-import { useVbenModal } from '@vben/common-ui';
+import { useAccess } from '@/effects/access';
+import { useVbenModal } from '@/effects/common-ui';
 
-import { contentWithOssIdTransform } from '#/components/tiptap';
+import { contentWithOssIdTransform } from '@/components/tiptap';
 
 const currentNotice = shallowRef<Notice | null>(null);
 const { hasAccessByCodes } = useAccess();

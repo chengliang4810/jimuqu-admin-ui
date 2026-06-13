@@ -1,14 +1,14 @@
 <!-- 流程发起(启动)的弹窗 -->
 
 <script setup lang="ts">
-import type { CompleteTaskReqData } from '#/api/workflow/task/model';
+import type { CompleteTaskReqData } from '@/api/workflow/task/model';
 
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModal } from '@/effects/common-ui';
 
 import { cloneDeep } from 'lodash-es';
 
-import { useVbenForm } from '#/adapter/form';
-import { completeTask, getTaskByTaskId } from '#/api/workflow/task';
+import { useVbenForm } from '@/adapter/form';
+import { completeTask, getTaskByTaskId } from '@/api/workflow/task';
 
 import { CopyComponent } from '.';
 

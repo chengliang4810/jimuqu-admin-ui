@@ -1,16 +1,16 @@
 <script setup lang="tsx">
 import type { DescriptionsProps } from 'antdv-next';
 
-import type { TaskInfo } from '#/api/workflow/task/model';
+import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { computed } from 'vue';
 
-import { VbenAvatar } from '@vben/common-ui';
-import { DictEnum } from '@vben/constants';
+import { VbenAvatar } from '@/effects/common-ui';
+import { DictEnum } from '@/constants';
 
 import { Descriptions, Tooltip } from 'antdv-next';
 
-import { renderDict } from '#/utils/render';
+import { renderDict } from '@/utils/render';
 
 import { getDiffTimeString } from './helper';
 

@@ -1,9 +1,9 @@
-import type { FormSchemaGetter } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { FormSchemaGetter } from '@/adapter/form';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import dayjs from 'dayjs';
 
-import { renderBrowserIcon, renderOsIcon } from '#/utils/render';
+import { renderBrowserIcon, renderOsIcon } from '@/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
   {

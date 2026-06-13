@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { EchartsUIType } from '@vben/plugins/echarts';
+import type { EchartsUIType } from '@/effects/plugins/echarts';
 
-import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+import { EchartsUI, useEcharts } from '@/effects/plugins/echarts';
 import { onMounted, ref } from 'vue';
 
 const chartRef = ref<EchartsUIType>();

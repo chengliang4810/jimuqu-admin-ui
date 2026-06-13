@@ -1,16 +1,16 @@
 <script setup lang="tsx">
 import type { DescriptionsProps } from 'antdv-next';
 
-import type { UserProfile } from '#/api/system/profile/model';
+import type { UserProfile } from '@/api/system/profile/model';
 
 import { computed } from 'vue';
 
-import { preferences, usePreferences } from '@vben/preferences';
+import { preferences, usePreferences } from '@/core/preferences';
 
 import { Card, Descriptions, Tag, Tooltip } from 'antdv-next';
 
-import { userUpdateAvatar } from '#/api/system/profile';
-import { CropperAvatar } from '#/components/cropper';
+import { userUpdateAvatar } from '@/api/system/profile';
+import { CropperAvatar } from '@/components/cropper';
 
 const props = defineProps<{ profile?: UserProfile }>();
 

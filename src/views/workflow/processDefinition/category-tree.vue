@@ -3,14 +3,14 @@ import type { Key } from 'antdv-next/dist/table/interface';
 
 import type { PropType } from 'vue';
 
-import type { CategoryTree } from '#/api/workflow/category/model';
+import type { CategoryTree } from '@/api/workflow/category/model';
 
 import { onMounted, ref } from 'vue';
 
 import { SyncOutlined } from '@antdv-next/icons';
 import { InputSearch, Skeleton, Tree } from 'antdv-next';
 
-import { categoryTree } from '#/api/workflow/category';
+import { categoryTree } from '@/api/workflow/category';
 
 defineOptions({ inheritAttrs: false });
 

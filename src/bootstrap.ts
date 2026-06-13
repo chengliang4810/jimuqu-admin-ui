@@ -1,17 +1,17 @@
 import { createApp, watchEffect } from 'vue';
 
-import { registerAccessDirective } from '@vben/access';
-import { setDefaultModalProps } from '@vben/common-ui';
-import { registerLoadingDirective } from '@vben/common-ui/es/loading';
-import { preferences } from '@vben/preferences';
-import { initStores } from '@vben/stores';
-import '@vben/styles';
-import '@vben/styles/antd';
+import { registerAccessDirective } from '@/effects/access';
+import { setDefaultModalProps } from '@/effects/common-ui';
+import { registerLoadingDirective } from '@/effects/common-ui/components/loading';
+import { preferences } from '@/core/preferences';
+import { initStores } from '@/stores';
+import '@/styles';
+import '@/styles/antd/index.css';
 
 import { useTitle } from '@vueuse/core';
 
-import { setupGlobalComponent } from '#/components/global';
-import { $t, setupI18n } from '#/locales';
+import { setupGlobalComponent } from '@/components/global';
+import { $t, setupI18n } from '@/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
@@ -56,7 +56,7 @@ async function bootstrap(namespace: string) {
   registerAccessDirective(app);
 
   // 初始化 tippy
-  const { initTippy } = await import('@vben/common-ui/es/tippy');
+  const { initTippy } = await import('@/effects/common-ui/components/tippy');
   initTippy(app);
 
   // 初始化全局弹窗方法(静态API fallback, 防止路由守卫中访问undefined)
@@ -66,7 +66,7 @@ async function bootstrap(namespace: string) {
   app.use(router);
 
   // 配置Motion插件
-  const { MotionPlugin } = await import('@vben/plugins/motion');
+  const { MotionPlugin } = await import('@/effects/plugins/motion');
   app.use(MotionPlugin);
 
   // 动态更新标题

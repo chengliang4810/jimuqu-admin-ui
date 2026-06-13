@@ -1,8 +1,8 @@
 import type { SocialInfo } from './model';
 
-import type { ID } from '#/api/common';
+import type { ID } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   root = '/system/social',

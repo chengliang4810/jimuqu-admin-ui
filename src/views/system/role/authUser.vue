@@ -3,7 +3,7 @@
 未修改文件名 而是新加了这个文件
 -->
 <script setup lang="ts">
-import RoleAssignPage from '#/views/system/role-assign/index.vue';
+import RoleAssignPage from '@/views/system/role-assign/index.vue';
 </script>
 
 <template>

@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type { AuthApi } from '#/api';
+import type { AuthApi } from '@/api';
 
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { LOGIN_PATH } from '@vben/constants';
-import { preferences } from '@vben/preferences';
-import { useAccessStore } from '@vben/stores';
-import { cn } from '@vben/utils';
+import { LOGIN_PATH } from '@/constants';
+import { preferences } from '@/core/preferences';
+import { useAccessStore } from '@/stores';
+import { cn } from '@/utils';
 
 import { Spin } from 'antdv-next';
 
-import { authCallback } from '#/api';
-import { useAuthStore } from '#/store';
+import { authCallback } from '@/api';
+import { useAuthStore } from '@/stores';
 
 import { accountBindList } from '../oauth-common';
 

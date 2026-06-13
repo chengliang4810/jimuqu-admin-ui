@@ -4,8 +4,8 @@ import type { Ref } from 'vue';
 
 import { computed, ref } from 'vue';
 
-import { prompt } from '@vben/common-ui';
-import { cn } from '@vben/utils';
+import { prompt } from '@/effects/common-ui';
+import { cn } from '@/utils';
 
 export type ToolbarBlock =
   | 'heading-1'

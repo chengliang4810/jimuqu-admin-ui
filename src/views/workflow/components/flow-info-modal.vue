@@ -1,14 +1,14 @@
 <!-- 弹窗查看流程信息 -->
 <script setup lang="ts">
-import type { TaskInfo } from '#/api/workflow/task/model';
+import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModal } from '@/effects/common-ui';
 
 import { Spin } from 'antdv-next';
 
-import { getTaskByBusinessId } from '#/api/workflow/instance';
+import { getTaskByBusinessId } from '@/api/workflow/instance';
 
 import { ApprovalPanel } from '.';
 

@@ -6,7 +6,7 @@
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useTabs } from '@vben/hooks';
+import { useTabs } from '@/effects/hooks';
 
 import { Spin } from 'antdv-next';
 

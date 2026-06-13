@@ -1,9 +1,9 @@
 import type { GenInfo } from './model';
 
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ID, IDS, PageQuery } from '@/api/common';
 
-import { ContentTypeEnum } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { ContentTypeEnum } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   batchGenCode = '/tool/gen/batchGenCode',

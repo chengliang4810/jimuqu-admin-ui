@@ -1,9 +1,9 @@
-import type { ExtendedFormApi } from '@vben/common-ui';
-import type { MaybePromise } from '@vben/types';
+import type { ExtendedFormApi } from '@/effects/common-ui';
+import type { MaybePromise } from '@/types';
 
 import { ref } from 'vue';
 
-import { $t } from '@vben/locales';
+import { $t } from '@/locales';
 
 import { isFunction } from 'lodash-es';
 

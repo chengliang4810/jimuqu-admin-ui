@@ -1,10 +1,10 @@
-import type { FormSchemaGetter } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { FormSchemaGetter } from '@/adapter/form';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
-import { DictEnum } from '@vben/constants';
+import { DictEnum } from '@/constants';
 
-import { getDictOptions } from '#/utils/dict';
-import { renderBrowserIcon, renderDict, renderOsIcon } from '#/utils/render';
+import { getDictOptions } from '@/utils/dict';
+import { renderBrowserIcon, renderDict, renderOsIcon } from '@/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
   {

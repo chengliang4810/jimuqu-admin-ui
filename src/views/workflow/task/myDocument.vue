@@ -1,12 +1,12 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
-import type { TaskInfo } from '#/api/workflow/task/model';
+import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
-import { Page } from '@vben/common-ui';
-import { useTabs } from '@vben/hooks';
-import { getPopupContainer } from '@vben/utils';
+import { Page } from '@/effects/common-ui';
+import { useTabs } from '@/effects/hooks';
+import { getPopupContainer } from '@/utils';
 
 import { FilterOutlined, RedoOutlined } from '@antdv-next/icons';
 import {
@@ -21,7 +21,7 @@ import {
 } from 'antdv-next';
 import { cloneDeep, debounce } from 'lodash-es';
 
-import { pageByCurrent } from '#/api/workflow/instance';
+import { pageByCurrent } from '@/api/workflow/instance';
 
 import { ApprovalCard, ApprovalPanel } from '../components';
 import { bottomOffset } from './constant';

@@ -1,10 +1,10 @@
 import type { User } from '../user/model';
 import type { DeptResp, Role } from './model';
 
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
-import { commonExport } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { commonExport } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   roleAllocatedList = '/system/role/authUser/allocatedList',

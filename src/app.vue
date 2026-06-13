@@ -3,16 +3,16 @@ import type { ConfigProviderProps } from 'antdv-next';
 
 import { computed } from 'vue';
 
-import { useAntdDesignTokens } from '@vben/hooks';
-import { preferences, usePreferences } from '@vben/preferences';
+import { useAntdDesignTokens } from '@/effects/hooks';
+import { preferences, usePreferences } from '@/core/preferences';
 
 import { App, ConfigProvider, Spin, theme } from 'antdv-next';
 import { storeToRefs } from 'pinia';
 
-import { antdLocale } from '#/locales';
+import { antdLocale } from '@/locales';
 
 import { waveConfigs } from './components/global/button-wave';
-import { useGlobalLoadingStore } from './store/loading';
+import { useGlobalLoadingStore } from './stores/loading';
 import { PopupContext } from './utils/context';
 
 defineOptions({ name: 'App' });

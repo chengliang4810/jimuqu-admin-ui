@@ -1,6 +1,6 @@
 import { onMounted, useTemplateRef, watch } from 'vue';
 
-import { usePreferences } from '@vben/preferences';
+import { usePreferences } from '@/core/preferences';
 
 /**
  * warmflow ref相关操作

@@ -1,9 +1,9 @@
 import type { DictType } from './dict-type-model';
 
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
-import { commonExport } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { commonExport } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   dictOptionSelectList = '/system/dict/type/optionselect',

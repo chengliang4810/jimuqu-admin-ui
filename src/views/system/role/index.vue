@@ -1,34 +1,34 @@
 <script setup lang="ts">
 import type { SwitchProps } from 'antdv-next';
 
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { Role } from '#/api/system/role/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { Role } from '@/api/system/role/model';
 
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useAccess } from '@vben/access';
-import { Page, useVbenModal } from '@vben/common-ui';
+import { useAccess } from '@/effects/access';
+import { Page, useVbenModal } from '@/effects/common-ui';
 import {
   ADMIN_ROLE_KEY,
   EnableStatus,
   SUPERADMIN_ROLE_ID,
   SUPERADMIN_ROLE_KEY,
-} from '@vben/constants';
+} from '@/constants';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   roleChangeStatus,
   roleExport,
   roleList,
   roleRemove,
-} from '#/api/system/role';
-import { ApiSwitch } from '#/components/global';
-import { useBlobExport } from '#/utils/file/export';
+} from '@/api/system/role';
+import { ApiSwitch } from '@/components/global';
+import { useBlobExport } from '@/utils/file/export';
 
 import { columns, querySchema } from './data';
 import roleAuthModal from './role-auth-modal.vue';

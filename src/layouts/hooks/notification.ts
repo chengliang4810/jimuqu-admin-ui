@@ -1,13 +1,13 @@
-import type { NotificationItem } from '@vben/layouts';
+import type { NotificationItem } from '@/effects/layouts';
 
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useNotifyStore } from '#/store/notify';
+import { useNotifyStore } from '@/stores/notify';
 import {
   notificationMitt,
   useNotificationMitt,
-} from '#/utils/mitt/notification';
+} from '@/utils/mitt/notification';
 
 export function useNotification() {
   const notifyStore = useNotifyStore();

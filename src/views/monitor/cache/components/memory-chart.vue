@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { EchartsUIType } from '@vben/plugins/echarts';
+import type { EchartsUIType } from '@/effects/plugins/echarts';
 
 import { onActivated, onMounted, ref, watch } from 'vue';
 
-import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+import { EchartsUI, useEcharts } from '@/effects/plugins/echarts';
 
 interface Props {
   data?: string;

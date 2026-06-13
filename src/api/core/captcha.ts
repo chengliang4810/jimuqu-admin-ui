@@ -1,4 +1,4 @@
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * 发送短信验证码

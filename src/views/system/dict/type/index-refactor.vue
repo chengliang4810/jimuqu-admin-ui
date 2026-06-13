@@ -1,12 +1,12 @@
 <!-- 使用vxe实现成本最小 且自带虚拟滚动  -->
 <script setup lang="ts">
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { DictType } from '#/api/system/dict/dict-type-model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { DictType } from '@/api/system/dict/dict-type-model';
 
 import { h, ref, shallowRef, watch } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
-import { cn } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { cn } from '@/utils';
 
 import {
   DeleteOutlined,
@@ -17,14 +17,14 @@ import {
 } from '@antdv-next/icons';
 import { Alert, Input, Popconfirm, Space, Tooltip } from 'antdv-next';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import {
   dictTypeExport,
   dictTypeList,
   dictTypeRemove,
   refreshDictTypeCache,
-} from '#/api/system/dict/dict-type';
-import { useBlobExport } from '#/utils/file/export';
+} from '@/api/system/dict/dict-type';
+import { useBlobExport } from '@/utils/file/export';
 
 import { emitter } from '../mitt';
 import dictTypeModal from './dict-type-modal.vue';

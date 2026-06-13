@@ -1,9 +1,9 @@
 import type { LeaveForm, LeaveQuery, LeaveVO } from './model';
 
-import type { ID, IDS, PageResult } from '#/api/common';
+import type { ID, IDS, PageResult } from '@/api/common';
 
-import { commonExport } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { commonExport } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * 查询请假申请列表

@@ -2,11 +2,11 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
 
-import type { User } from '#/api/system/user/model';
+import type { User } from '@/api/system/user/model';
 
 import { computed } from 'vue';
 
-import { useVbenModal, VbenAvatar } from '@vben/common-ui';
+import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
 
 import { Avatar, AvatarGroup, Tooltip } from 'antdv-next';
 

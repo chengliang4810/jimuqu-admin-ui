@@ -7,9 +7,9 @@ import type {
   TaskOperationType,
 } from './model';
 
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * 启动任务

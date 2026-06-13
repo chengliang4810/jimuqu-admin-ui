@@ -1,9 +1,9 @@
-import type { GrantType } from '@vben/common-ui';
-import type { HttpResponse } from '@vben/request';
+import type { GrantType } from '@/effects/common-ui';
+import type { HttpResponse } from '@/effects/request';
 
-import { useAppConfig } from '@vben/hooks';
+import { useAppConfig } from '@/effects/hooks';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 const { clientId, sseEnable } = useAppConfig(
   import.meta.env,

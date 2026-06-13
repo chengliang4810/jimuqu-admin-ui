@@ -1,4 +1,4 @@
-import { optionsToEnum } from '@vben/utils';
+import { optionsToEnum } from '@/utils';
 
 export const activityStatusOptions = [
   {

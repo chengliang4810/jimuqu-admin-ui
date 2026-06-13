@@ -1,8 +1,8 @@
 import type { Menu, MenuOption, MenuQuery, MenuResp } from './model';
 
-import type { ID, IDS } from '#/api/common';
+import type { ID, IDS } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   menuList = '/system/menu/list',

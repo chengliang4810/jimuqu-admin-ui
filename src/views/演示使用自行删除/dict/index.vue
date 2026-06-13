@@ -3,8 +3,8 @@ import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, h, ref } from 'vue';
 
-import { CodeMirror, Page } from '@vben/common-ui';
-import { DictEnum } from '@vben/constants';
+import { CodeMirror, Page } from '@/effects/common-ui';
+import { DictEnum } from '@/constants';
 
 import {
   Alert,
@@ -16,8 +16,8 @@ import {
 } from 'antdv-next';
 import { repeat } from 'lodash-es';
 
-import { DictTag } from '#/components/dict';
-import { getDictOptions } from '#/utils/dict';
+import { DictTag } from '@/components/dict';
+import { getDictOptions } from '@/utils/dict';
 
 const options = getDictOptions(DictEnum.SYS_COMMON_STATUS);
 

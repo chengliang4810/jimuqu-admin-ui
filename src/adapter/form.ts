@@ -1,12 +1,12 @@
 import type {
   VbenFormProps as FormProps,
   VbenFormSchema as FormSchema,
-} from '@vben/common-ui';
+} from '@/effects/common-ui';
 
 import type { ComponentPropsMap, ComponentType } from './component';
 
-import { setupVbenForm, useVbenForm as useForm } from '@vben/common-ui';
-import { $t } from '@vben/locales';
+import { setupVbenForm, useVbenForm as useForm } from '@/effects/common-ui';
+import { $t } from '@/locales';
 
 import { isArray } from 'lodash-es';
 

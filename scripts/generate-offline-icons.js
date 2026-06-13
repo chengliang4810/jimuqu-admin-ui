@@ -71,12 +71,12 @@ const outputLines = [
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
-  "import { addIcon } from '@vben-core/icons';",
+  "import { addIcon } from '@/core/icons';",
   '',
 ];
 
 const projectRoot = path.resolve(__dirname, '..');
-const nodeModules = path.join(projectRoot, 'packages/icons', 'node_modules');
+const nodeModules = path.join(projectRoot, 'node_modules');
 
 // Helper to find icon data
 function getIconData(prefix, name) {
@@ -151,7 +151,7 @@ uniqueIcons.forEach((iconStr) => {
 
 const outputPath = path.join(
   projectRoot,
-  'packages/icons/src/iconify-offline',
+  'src/icons-app/iconify-offline',
   'offline-icons.ts',
 );
 fs.writeFileSync(outputPath, `${outputLines.join('\n')}\n`);

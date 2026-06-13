@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModal } from '@/effects/common-ui';
 
 import { cloneDeep } from 'lodash-es';
 
-import { useVbenForm } from '#/adapter/form';
-import { workflowInstanceInvalid } from '#/api/workflow/instance';
+import { useVbenForm } from '@/adapter/form';
+import { workflowInstanceInvalid } from '@/api/workflow/instance';
 
 const emit = defineEmits<{ reload: [] }>();
 

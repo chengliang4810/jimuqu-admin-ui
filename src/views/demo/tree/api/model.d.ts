@@ -1,4 +1,4 @@
-import type { BaseEntity } from '#/api/common';
+import type { BaseEntity } from '@/api/common';
 
 export interface TreeVO {
   /**

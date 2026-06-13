@@ -1,17 +1,17 @@
 <script setup lang="ts">
 // oxlint-disable typescript/no-non-null-assertion
-import type { GenInfo } from '#/api/tool/gen/model';
+import type { GenInfo } from '@/api/tool/gen/model';
 
 import { onMounted, provide, ref, unref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { Page } from '@vben/common-ui';
-import { useTabs } from '@vben/hooks';
-import { cloneDeep, safeParseNumber } from '@vben/utils';
+import { Page } from '@/effects/common-ui';
+import { useTabs } from '@/effects/hooks';
+import { cloneDeep, safeParseNumber } from '@/utils';
 
 import { Card, Skeleton, TabPane, Tabs } from 'antdv-next';
 
-import { editSave, genInfo } from '#/api/tool/gen';
+import { editSave, genInfo } from '@/api/tool/gen';
 
 import { BasicSetting, GenConfig } from './edit-steps';
 

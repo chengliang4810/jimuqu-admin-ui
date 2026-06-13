@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import type { LoginCodeParams, VbenFormSchema } from '@vben/common-ui';
+import type { LoginCodeParams, VbenFormSchema } from '@/effects/common-ui';
 
 import { computed, ref } from 'vue';
 
-import { AuthenticationCodeLogin } from '@vben/common-ui';
-import { $t } from '@vben/locales';
+import { AuthenticationCodeLogin } from '@/effects/common-ui';
+import { $t } from '@/locales';
 
 import { Alert } from 'antdv-next';
 
-import { sendSmsCode } from '#/api/core/captcha';
-import { useAuthStore } from '#/store';
+import { sendSmsCode } from '@/api/core/captcha';
+import { useAuthStore } from '@/stores';
 
 defineOptions({ name: 'CodeLogin' });
 

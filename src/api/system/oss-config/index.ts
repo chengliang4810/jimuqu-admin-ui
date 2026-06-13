@@ -1,8 +1,8 @@
 import type { OssConfig } from './model';
 
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ID, IDS, PageQuery } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   ossConfigChangeStatus = '/resource/oss/config/changeStatus',

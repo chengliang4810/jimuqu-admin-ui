@@ -34,27 +34,27 @@ import type {
   ApiComponentSharedProps,
   BaseFormComponentType,
   IconPickerProps,
-} from '@vben/common-ui';
-import type { Recordable } from '@vben/types';
+} from '@/effects/common-ui';
+import type { Recordable } from '@/types';
 
-import type { TiptapProps } from '#/components/tiptap/index';
-import type { BaseUploadProps } from '#/components/upload/src/props';
+import type { TiptapProps } from '@/components/tiptap/index';
+import type { BaseUploadProps } from '@/components/upload/src/props';
 
 import { computed, defineAsyncComponent, defineComponent, h, ref } from 'vue';
 
-import { ApiComponent, globalShareState, IconPicker } from '@vben/common-ui';
-import { $t } from '@vben/locales';
+import { ApiComponent, globalShareState, IconPicker } from '@/effects/common-ui';
+import { $t } from '@/locales';
 
 const RichTextarea = defineAsyncComponent(() =>
-  import('#/components/tiptap/index').then((res) => res.Tiptap),
+  import('@/components/tiptap/index').then((res) => res.Tiptap),
 );
 
 const FileUpload = defineAsyncComponent(() =>
-  import('#/components/upload').then((res) => res.FileUpload),
+  import('@/components/upload').then((res) => res.FileUpload),
 );
 
 const ImageUpload = defineAsyncComponent(() =>
-  import('#/components/upload').then((res) => res.ImageUpload),
+  import('@/components/upload').then((res) => res.ImageUpload),
 );
 
 const AutoComplete = defineAsyncComponent(

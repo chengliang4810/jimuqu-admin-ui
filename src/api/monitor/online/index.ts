@@ -1,8 +1,8 @@
 import type { OnlineUser } from './model';
 
-import type { PageQuery, PageResult } from '#/api/common';
+import type { PageQuery, PageResult } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   onlineList = '/monitor/online/list',

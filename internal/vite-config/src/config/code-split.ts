@@ -121,97 +121,60 @@ const matchFrameworkChunk = createChunkMatcher([
   '/node_modules/vue/',
 ]);
 const matchVbenCoreChunk = createChunkMatcher([
-  '/packages/@core/base/',
-  '/packages/@core/composables/',
-  '/packages/constants/',
-  '/packages/types/',
-  '/packages/utils/',
-  '/node_modules/@vben-core/composables/',
-  '/node_modules/@vben-core/icons/',
-  '/node_modules/@vben-core/shared/',
-  '/node_modules/@vben-core/typings/',
-  '/node_modules/@vben/constants/',
-  '/node_modules/@vben/types/',
-  '/node_modules/@vben/utils/',
+  '/src/core/shared/',
+  '/src/core/typings/',
+  '/src/core/icons/',
+  '/src/core/design/',
+  '/src/core/composables/',
+  '/src/constants/',
+  '/src/types/',
+  '/src/utils/',
 ]);
 const matchVbenUiCoreChunk = createChunkMatcher([
-  '/packages/@core/ui-kit/',
-  '/node_modules/@vben-core/form-ui/',
-  '/node_modules/@vben-core/layout-ui/',
-  '/node_modules/@vben-core/menu-ui/',
-  '/node_modules/@vben-core/popup-ui/',
-  '/node_modules/@vben-core/shadcn-ui/',
-  '/node_modules/@vben-core/tabs-ui/',
+  '/src/core/ui/',
 ]);
 const matchVbenCommonUiAuthChunk = createChunkMatcher([
-  '/packages/effects/common-ui/src/ui/authentication/',
-  '/packages/effects/common-ui/src/ui/fallback/',
-  '/node_modules/@vben/common-ui/src/ui/authentication/',
-  '/node_modules/@vben/common-ui/src/ui/fallback/',
+  '/src/effects/common-ui/ui/authentication/',
+  '/src/effects/common-ui/ui/fallback/',
 ]);
 const matchVbenCommonUiDashboardChunk = createChunkMatcher([
-  '/packages/effects/common-ui/src/ui/about/',
-  '/packages/effects/common-ui/src/ui/dashboard/',
-  '/packages/effects/common-ui/src/ui/profile/',
-  '/node_modules/@vben/common-ui/src/ui/about/',
-  '/node_modules/@vben/common-ui/src/ui/dashboard/',
-  '/node_modules/@vben/common-ui/src/ui/profile/',
+  '/src/effects/common-ui/ui/about/',
+  '/src/effects/common-ui/ui/dashboard/',
+  '/src/effects/common-ui/ui/profile/',
 ]);
 const matchVbenCommonUiCaptchaChunk = createChunkMatcher([
-  '/packages/effects/common-ui/src/components/captcha/',
-  '/node_modules/@vben/common-ui/src/components/captcha/',
+  '/src/effects/common-ui/components/captcha/',
 ]);
 const matchVbenCommonUiEditorChunk = createChunkMatcher([
-  '/packages/effects/common-ui/src/components/code-mirror/',
-  '/packages/effects/common-ui/src/components/json-preview/',
-  '/packages/effects/common-ui/src/components/json-viewer/',
-  '/packages/effects/common-ui/src/components/markdown/',
-  '/packages/effects/common-ui/src/components/tippy/',
-  '/node_modules/@vben/common-ui/es/tippy',
-  '/node_modules/@vben/common-ui/src/components/code-mirror/',
-  '/node_modules/@vben/common-ui/src/components/json-preview/',
-  '/node_modules/@vben/common-ui/src/components/json-viewer/',
-  '/node_modules/@vben/common-ui/src/components/markdown/',
-  '/node_modules/@vben/common-ui/src/components/tippy/',
+  '/src/effects/common-ui/components/code-mirror/',
+  '/src/effects/common-ui/components/json-preview/',
+  '/src/effects/common-ui/components/json-viewer/',
+  '/src/effects/common-ui/components/markdown/',
+  '/src/effects/common-ui/components/tippy/',
 ]);
 const matchVbenCommonUiWidgetsChunk = createChunkMatcher([
-  '/packages/effects/common-ui/src/components/',
-  '/packages/effects/common-ui/src/index.ts',
-  '/packages/effects/common-ui/src/ui/index.ts',
-  '/node_modules/@vben/common-ui/es/loading',
-  '/node_modules/@vben/common-ui/src/components/',
-  '/node_modules/@vben/common-ui/src/index.ts',
-  '/node_modules/@vben/common-ui/src/ui/index.ts',
+  '/src/effects/common-ui/components/',
+  '/src/effects/common-ui/index.ts',
+  '/src/effects/common-ui/ui/index.ts',
 ]);
 const matchVbenIconsChunk = createChunkMatcher([
-  '/packages/icons/',
-  '/node_modules/@vben/icons/',
+  '/src/icons-app/',
 ]);
 const matchVbenStylesChunk = createChunkMatcher([
-  '/packages/styles/',
-  '/node_modules/@vben/styles/',
+  '/src/styles/',
 ]);
 const matchVbenLayoutChunk = createChunkMatcher([
-  '/packages/effects/access/',
-  '/packages/effects/hooks/',
-  '/packages/effects/layouts/',
-  '/node_modules/@vben/access/',
-  '/node_modules/@vben/hooks/',
-  '/node_modules/@vben/layouts/',
+  '/src/effects/access/',
+  '/src/effects/hooks/',
+  '/src/effects/layouts/',
 ]);
 const matchVbenStateChunk = createChunkMatcher([
-  '/packages/@core/preferences/',
-  '/packages/locales/',
-  '/packages/preferences/',
-  '/packages/stores/',
-  '/node_modules/@vben-core/preferences/',
-  '/node_modules/@vben/locales/',
-  '/node_modules/@vben/preferences/',
-  '/node_modules/@vben/stores/',
+  '/src/core/preferences/',
+  '/src/locales/',
+  '/src/stores/',
 ]);
 const matchVbenRequestChunk = createChunkMatcher([
-  '/packages/effects/request/',
-  '/node_modules/@vben/request/',
+  '/src/effects/request/',
 ]);
 const matchUiVendorChunk = createChunkMatcher([
   '/node_modules/.pnpm/@floating-ui+',
@@ -263,7 +226,7 @@ const matchAppCoreChunk = createChunkMatcher([
   '/src/components/global/',
   '/src/layouts/',
   '/src/router/',
-  '/src/store/',
+  '/src/stores/',
   '/src/utils/',
   '/src/views/_core/',
 ]);

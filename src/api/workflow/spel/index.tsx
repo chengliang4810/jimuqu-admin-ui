@@ -1,8 +1,8 @@
 import type { Spel } from './model';
 
-import type { ID, PageQuery, PageResult } from '#/api/common';
+import type { ID, PageQuery, PageResult } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 export function spelList(params?: PageQuery) {
   return alovaInstance.get<PageResult<Spel>>('/workflow/spel/list', { params });

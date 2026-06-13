@@ -1,10 +1,10 @@
 <!-- 审批驳回窗口 -->
 <script setup lang="ts">
-import { useVbenModal } from '@vben/common-ui';
-import { cloneDeep, getPopupContainer } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { cloneDeep, getPopupContainer } from '@/utils';
 
-import { useVbenForm } from '#/adapter/form';
-import { backProcess, getBackTaskNode } from '#/api/workflow/task';
+import { useVbenForm } from '@/adapter/form';
+import { backProcess, getBackTaskNode } from '@/api/workflow/task';
 
 const emit = defineEmits<{ complete: [] }>();
 

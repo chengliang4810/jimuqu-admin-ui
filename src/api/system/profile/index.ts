@@ -1,8 +1,8 @@
 import type { FileCallBack, UpdatePasswordParam, UserProfile } from './model';
 
-import { buildUUID } from '@vben/utils';
+import { buildUUID } from '@/utils';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   root = '/system/user/profile',

@@ -1,3 +1,5 @@
+import { resolve } from 'node:path';
+
 import { defineConfig } from '@vben/vite-config';
 
 // 自行取消注释来启用按需导入功能
@@ -20,6 +22,11 @@ export default defineConfig(async () => {
         //   ],
         // }),
       ],
+      resolve: {
+        alias: {
+          '@': resolve(import.meta.dirname, 'src'),
+        },
+      },
       server: {
         proxy: {
           '/api': {

@@ -1,13 +1,13 @@
 <script setup lang="tsx">
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { nextTick, onMounted } from 'vue';
 
-import { JsonPreview } from '@vben/common-ui';
+import { JsonPreview } from '@/effects/common-ui';
 
 import { Button, Input, InputNumber, Select, Space } from 'antdv-next';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
 
 /**
  * 与antdv集成 可以参考这里使用自定义插槽

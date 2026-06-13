@@ -1,9 +1,9 @@
 <!-- 流程图预览组件 -->
 
 <script setup lang="ts">
-import { useAppConfig } from '@vben/hooks';
-import { stringify } from '@vben/request';
-import { useAccessStore } from '@vben/stores';
+import { useAppConfig } from '@/effects/hooks';
+import { stringify } from '@/effects/request';
+import { useAccessStore } from '@/stores';
 
 import { motion } from 'motion-v';
 

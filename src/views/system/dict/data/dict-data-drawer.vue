@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { cloneDeep } from '@vben/utils';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 
-import { useVbenForm } from '#/adapter/form';
+import { useVbenForm } from '@/adapter/form';
 import {
   dictDataAdd,
   dictDataUpdate,
   dictDetailInfo,
-} from '#/api/system/dict/dict-data';
-import { tagTypes } from '#/components/dict';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
+} from '@/api/system/dict/dict-data';
+import { tagTypes } from '@/components/dict';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';
 import TagStylePicker from './tag-style-picker.vue';

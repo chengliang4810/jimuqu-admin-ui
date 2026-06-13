@@ -3,7 +3,7 @@
   "extends": "@vben/tsconfig/web-app.json",
   "compilerOptions": {
     "paths": {
-      "#/*": ["./src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "references": [{ "path": "./tsconfig.node.json" }],

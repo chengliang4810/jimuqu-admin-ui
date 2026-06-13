@@ -3,19 +3,19 @@ import type {
   GenerateMenuAndRoutesOptions,
   RouteMeta,
   RouteRecordStringComponent,
-} from '@vben/types';
+} from '@/types';
 
-import type { Menu } from '#/api';
+import type { Menu } from '@/api';
 
-import { generateAccessible } from '@vben/access';
-import { preferences } from '@vben/preferences';
+import { generateAccessible } from '@/effects/access';
+import { preferences } from '@/core/preferences';
 
-import { getAllMenusApi } from '#/api';
-import { BasicLayout, IFrameView } from '#/layouts';
-import { $t } from '#/locales';
+import { getAllMenusApi } from '@/api';
+import { BasicLayout, IFrameView } from '@/layouts';
+import { $t } from '@/locales';
 
-const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
-const NotFoundComponent = () => import('#/views/_core/fallback/not-found.vue');
+const forbiddenComponent = () => import('@/views/_core/fallback/forbidden.vue');
+const NotFoundComponent = () => import('@/views/_core/fallback/not-found.vue');
 
 /**
  * 后台路由转vben路由

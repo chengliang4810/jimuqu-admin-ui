@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { cloneDeep } from '@vben/utils';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 
 import { Alert } from 'antdv-next';
 
-import { useVbenForm } from '#/adapter/form';
+import { useVbenForm } from '@/adapter/form';
 import {
   ossConfigAdd,
   ossConfigInfo,
   ossConfigUpdate,
-} from '#/api/system/oss-config';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
+} from '@/api/system/oss-config';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';
 

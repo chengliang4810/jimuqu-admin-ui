@@ -5,7 +5,7 @@ import { computed } from 'vue';
 
 import { ColorPicker, RadioGroup, Select } from 'antdv-next';
 
-import { tagSelectOptions } from '#/components/dict';
+import { tagSelectOptions } from '@/components/dict';
 
 /**
  * 需要禁止透传

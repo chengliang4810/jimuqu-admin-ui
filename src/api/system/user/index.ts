@@ -6,10 +6,10 @@ import type {
   UserInfoResponse,
 } from './model';
 
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
-import { commonExport, ContentTypeEnum } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { commonExport, ContentTypeEnum } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   deptTree = '/system/user/deptTree',

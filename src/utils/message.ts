@@ -1,5 +1,5 @@
-import { useAppConfig } from '@vben/hooks';
-import { useAccessStore } from '@vben/stores';
+import { useAppConfig } from '@/effects/hooks';
+import { useAccessStore } from '@/stores';
 
 import { useEventSource, useWebSocket } from '@vueuse/core';
 

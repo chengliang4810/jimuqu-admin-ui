@@ -1,10 +1,10 @@
-import type { FormSchemaGetter } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { FormSchemaGetter } from '@/adapter/form';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
-import { DictEnum } from '@vben/constants';
+import { DictEnum } from '@/constants';
 
-import { OptionsTag } from '#/components/table';
-import { renderDict } from '#/utils/render';
+import { OptionsTag } from '@/components/table';
+import { renderDict } from '@/utils/render';
 
 import { activityStatusOptions } from '../processDefinition/constant';
 

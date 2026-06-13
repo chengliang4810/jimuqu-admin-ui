@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { cloneDeep } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 
-import { useVbenForm } from '#/adapter/form';
-import { roleAdd, roleInfo, roleUpdate } from '#/api/system/role';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
+import { useVbenForm } from '@/adapter/form';
+import { roleAdd, roleInfo, roleUpdate } from '@/api/system/role';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';
 

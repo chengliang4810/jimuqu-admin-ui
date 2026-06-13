@@ -1,4 +1,4 @@
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 export interface CommandStats {
   name: string;

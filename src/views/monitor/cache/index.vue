@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { RedisInfo } from '#/api/monitor/cache';
+import type { RedisInfo } from '@/api/monitor/cache';
 
 import { onMounted, reactive, ref } from 'vue';
 
-import { Page } from '@vben/common-ui';
+import { Page } from '@/effects/common-ui';
 
 import { Button, Card } from 'antdv-next';
 
-import { redisCacheInfo } from '#/api/monitor/cache';
+import { redisCacheInfo } from '@/api/monitor/cache';
 
 import { CommandChart, MemoryChart, RedisDescription } from './components';
 

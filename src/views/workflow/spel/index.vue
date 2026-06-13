@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { Spel } from '#/api/workflow/spel/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { Spel } from '@/api/workflow/spel/model';
 
-import { Page, useVbenDrawer } from '@vben/common-ui';
+import { Page, useVbenDrawer } from '@/effects/common-ui';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
-import { spelDelete, spelList } from '#/api/workflow/spel';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
+import { spelDelete, spelList } from '@/api/workflow/spel';
 
 import { columns, querySchema } from './data';
 import spelDrawer from './spel-drawer.vue';

@@ -3,7 +3,7 @@
 未修改文件名 而是新加了这个文件
 -->
 <script setup lang="ts">
-import OssConfigPage from '#/views/system/oss-config/index.vue';
+import OssConfigPage from '@/views/system/oss-config/index.vue';
 </script>
 
 <template>

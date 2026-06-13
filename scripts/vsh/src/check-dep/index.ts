@@ -17,7 +17,6 @@ const DEFAULT_CONFIG = {
   ignoreDependencies: [
     '@iconify/json',
     '@vben-core/design',
-    '@vben/commitlint-config',
     '@vben/eslint-config',
     '@vben/stylelint-config',
     '@vben/tailwind-config',

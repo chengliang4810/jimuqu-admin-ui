@@ -1,6 +1,6 @@
 import type { ConfigProviderProps } from 'antdv-next';
 
-import type { ThemePreferences } from '@vben/preferences';
+import type { ThemePreferences } from '@/core/preferences';
 
 import { createApp, h } from 'vue';
 

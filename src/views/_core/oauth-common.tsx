@@ -1,9 +1,9 @@
 import type { Component, CSSProperties } from 'vue';
 
-import { VbenIcon } from '@vben/icons';
-import { cn } from '@vben/utils';
+import { VbenIcon } from '@/icons-app';
+import { cn } from '@/utils';
 
-import { authBinding } from '#/api/core/auth';
+import { authBinding } from '@/api/core/auth';
 
 /**
  * @description: oauth登录

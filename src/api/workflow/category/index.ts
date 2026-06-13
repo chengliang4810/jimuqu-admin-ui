@@ -5,9 +5,9 @@ import type {
   CategoryVO,
 } from './model';
 
-import type { ID, IDS } from '#/api/common';
+import type { ID, IDS } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * 获取流程分类树列表

@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import type { TimelineItemProps, TimelineProps } from 'antdv-next';
 
-import type { Flow } from '#/api/workflow/instance/model';
+import type { Flow } from '@/api/workflow/instance/model';
 
 import { computed } from 'vue';
 
-import { VbenAvatar } from '@vben/common-ui';
-import { cn } from '@vben/utils';
+import { VbenAvatar } from '@/effects/common-ui';
+import { cn } from '@/utils';
 
 import { UsergroupAddOutlined } from '@antdv-next/icons';
 import { Avatar, Empty, Timeline } from 'antdv-next';

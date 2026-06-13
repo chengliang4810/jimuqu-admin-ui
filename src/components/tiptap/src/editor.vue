@@ -5,7 +5,7 @@ import type { TiptapModelValue, TiptapProps, TiptapUploadImage } from './type';
 
 import { shallowRef, watch } from 'vue';
 
-import { cn } from '@vben/utils';
+import { cn } from '@/utils';
 
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Button, ColorPicker, Select, Spin, Tooltip, Upload } from 'antdv-next';

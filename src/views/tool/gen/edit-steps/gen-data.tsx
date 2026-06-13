@@ -1,6 +1,6 @@
-import type { Recordable } from '@vben/types';
+import type { Recordable } from '@/types';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { Checkbox, Input, Select } from 'antdv-next';
 

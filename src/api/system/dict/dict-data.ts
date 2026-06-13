@@ -1,9 +1,9 @@
 import type { DictData } from './dict-data-model';
 
-import type { ID, IDS, PageQuery } from '#/api/common';
+import type { ID, IDS, PageQuery } from '@/api/common';
 
-import { commonExport } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { commonExport } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   dictDataExport = '/system/dict/data/export',

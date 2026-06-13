@@ -1,7 +1,7 @@
-import { $t } from '@vben/locales';
+import { $t } from '@/locales';
 
-import { useAuthStore } from '#/store';
-import { alovaInstance } from '#/utils/http';
+import { useAuthStore } from '@/stores';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * @description:  contentType

@@ -1,23 +1,23 @@
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 
-import type { HttpResponse } from '@vben/request';
+import type { HttpResponse } from '@/effects/request';
 import type {
   BaseAsymmetricEncryption,
   BaseSymmetricEncryption,
-} from '@vben/utils';
+} from '@/utils';
 
-import { BUSINESS_SUCCESS_CODE, UNAUTHORIZED_CODE } from '@vben/constants';
-import { useAppConfig } from '@vben/hooks';
-import { preferences } from '@vben/preferences';
-import { stringify } from '@vben/request';
-import { useAccessStore } from '@vben/stores';
+import { BUSINESS_SUCCESS_CODE, UNAUTHORIZED_CODE } from '@/constants';
+import { useAppConfig } from '@/effects/hooks';
+import { preferences } from '@/core/preferences';
+import { stringify } from '@/effects/request';
+import { useAccessStore } from '@/stores';
 import {
   AesEncryption,
   decodeBase64,
   encodeBase64,
   randomStr,
   RsaEncryption,
-} from '@vben/utils';
+} from '@/utils';
 
 import { axiosRequestAdapter } from '@alova/adapter-axios';
 import { createAlova } from 'alova';
@@ -25,7 +25,7 @@ import VueHook from 'alova/vue';
 import axios from 'axios';
 import { isEmpty, isNull, merge } from 'lodash-es';
 
-import { $t } from '#/locales';
+import { $t } from '@/locales';
 
 import { checkStatus } from './checkStatus';
 import { BusinessException } from './exception';
@@ -42,7 +42,7 @@ const { apiURL, clientId, enableEncrypt, rsaPublicKey, rsaPrivateKey } =
  *
  * 后端文件位置: ruoyi-common/ruoyi-common-encrypt/src/main/java/org/dromara/common/encrypt/filter/DecryptRequestBodyWrapper.java
  *
- * 注意前端sm-crypto库只能支持04开头的公钥! 否则加密会有问题 你可以使用前端的import { logSm2KeyPair } from '@vben/utils';方法来生成
+ * 注意前端sm-crypto库只能支持04开头的公钥! 否则加密会有问题 你可以使用前端的import { logSm2KeyPair } from '@/utils';方法来生成
  * 如果你生成的公钥开头不是04 那么不能正常加密
  * 或者使用这个网站来生成: https://tool.hiofd.com/sm2-key-gen/
  */

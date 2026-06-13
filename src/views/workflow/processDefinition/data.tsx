@@ -1,7 +1,7 @@
-import type { FormSchemaGetter } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { FormSchemaGetter } from '@/adapter/form';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
-import { OptionsTag } from '#/components/table';
+import { OptionsTag } from '@/components/table';
 
 import { publishStatusOptions } from './constant';
 

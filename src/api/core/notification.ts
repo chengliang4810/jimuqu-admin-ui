@@ -1,4 +1,4 @@
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * 持久化通知提醒

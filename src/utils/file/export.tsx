@@ -1,4 +1,4 @@
-import type { loginInfoExport } from '#/api/monitor/logininfo';
+import type { loginInfoExport } from '@/api/monitor/logininfo';
 
 import { ref } from 'vue';
 
@@ -6,7 +6,7 @@ import { useRequest } from 'alova/client';
 import { Button } from 'antdv-next';
 import dayjs from 'dayjs';
 
-import { $t } from '#/locales';
+import { $t } from '@/locales';
 
 import { downloadByData } from './download';
 

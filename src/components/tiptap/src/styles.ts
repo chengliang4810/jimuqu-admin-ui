@@ -2,7 +2,7 @@ import type { TiptapProps } from './type';
 
 import { computed } from 'vue';
 
-import { cn } from '@vben/utils';
+import { cn } from '@/utils';
 
 import { normalizeSize } from './helpers';
 

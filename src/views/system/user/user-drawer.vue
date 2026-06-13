@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import type { Role } from '#/api/system/user/model';
+import type { Role } from '@/api/system/user/model';
 
 import { computed, h, onMounted, ref } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
-import { addFullName, cloneDeep, getPopupContainer } from '@vben/utils';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
 
 import { Tag } from 'antdv-next';
 
-import { useVbenForm } from '#/adapter/form';
-import { configInfoByKey } from '#/api/system/config';
-import { postOptionSelect } from '#/api/system/post';
+import { useVbenForm } from '@/adapter/form';
+import { configInfoByKey } from '@/api/system/config';
+import { postOptionSelect } from '@/api/system/post';
 import {
   findUserInfo,
   getDeptTree,
   userAdd,
   userUpdate,
-} from '#/api/system/user';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
-import { authScopeOptions } from '#/views/system/role/data';
+} from '@/api/system/user';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
+import { authScopeOptions } from '@/views/system/role/data';
 
 import { drawerSchema } from './data';
 

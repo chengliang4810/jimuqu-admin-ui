@@ -1,17 +1,17 @@
 import type { Component as ComponentType } from 'vue';
 
-import type { DictData } from '#/api/system/dict/dict-data-model';
-import type { DictFallback } from '#/components/dict/src/type';
+import type { DictData } from '@/api/system/dict/dict-data-model';
+import type { DictFallback } from '@/components/dict/src/type';
 
 import { h } from 'vue';
 
-import { JsonPreview } from '@vben/common-ui';
-import { IconifyIcon, VbenIcon } from '@vben/icons';
-import { cn } from '@vben/utils';
+import { JsonPreview } from '@/effects/common-ui';
+import { IconifyIcon, VbenIcon } from '@/icons-app';
+import { cn } from '@/utils';
 
 import { Tag } from 'antdv-next';
 
-import { DictTag } from '#/components/dict';
+import { DictTag } from '@/components/dict';
 
 import { getDictOptions } from './dict';
 

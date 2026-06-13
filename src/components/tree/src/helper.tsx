@@ -1,9 +1,9 @@
 import type { MenuPermissionOption } from './data';
 
-import type { useVbenVxeGrid } from '#/adapter/vxe-table';
-import type { MenuOption } from '#/api/system/menu/model';
+import type { useVbenVxeGrid } from '@/adapter/vxe-table';
+import type { MenuOption } from '@/api/system/menu/model';
 
-import { eachTree, treeToList } from '@vben/utils';
+import { eachTree, treeToList } from '@/utils';
 
 import { notification } from 'antdv-next';
 import { difference, isEmpty, isUndefined } from 'lodash-es';

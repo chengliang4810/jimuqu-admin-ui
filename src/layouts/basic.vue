@@ -2,28 +2,28 @@
 import { computed, h, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
-import { useWatermark } from '@vben/hooks';
-import { BookOpenText, CircleHelp, GiteeIcon } from '@vben/icons';
+import { AuthenticationLoginExpiredModal } from '@/effects/common-ui';
+import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@/constants';
+import { useWatermark } from '@/effects/hooks';
+import { BookOpenText, CircleHelp, GiteeIcon } from '@/icons-app';
 import {
   BasicLayout,
   LockScreen,
   Notification,
   UserDropdown,
-} from '@vben/layouts';
-import { preferences, usePreferences } from '@vben/preferences';
-import { useAccessStore, useUserStore } from '@vben/stores';
-import { openWindow } from '@vben/utils';
+} from '@/effects/layouts';
+import { preferences, usePreferences } from '@/core/preferences';
+import { useAccessStore, useUserStore } from '@/stores';
+import { openWindow } from '@/utils';
 
 import { GithubOutlined, UserOutlined } from '@antdv-next/icons';
 import { Badge } from 'antdv-next';
 
-import { $t } from '#/locales';
-import { resetRoutes } from '#/router';
-import { useAuthStore } from '#/store';
-import { useVersionUpdate } from '#/utils/check-update';
-import LoginForm from '#/views/_core/authentication/login.vue';
+import { $t } from '@/locales';
+import { resetRoutes } from '@/router';
+import { useAuthStore } from '@/stores';
+import { useVersionUpdate } from '@/utils/check-update';
+import LoginForm from '@/views/_core/authentication/login.vue';
 
 import { useNotification } from './hooks/notification';
 

@@ -1,13 +1,13 @@
-import type { FormSchemaGetter } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { FormSchemaGetter } from '@/adapter/form';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
-import { DictEnum } from '@vben/constants';
-import { getPopupContainer } from '@vben/utils';
+import { DictEnum } from '@/constants';
+import { getPopupContainer } from '@/utils';
 
 import { Tag, Tooltip } from 'antdv-next';
 
-import { getDictOptions } from '#/utils/dict';
-import { renderDict, renderDictTags } from '#/utils/render';
+import { getDictOptions } from '@/utils/dict';
+import { renderDict, renderDictTags } from '@/utils/render';
 
 function renderList(list: string[], allText: string) {
   const accessPathList = (list as string[]) ?? [];

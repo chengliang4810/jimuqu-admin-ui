@@ -5,13 +5,13 @@ import type { CropendResult, Cropper } from './typing';
 
 import { ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
-import { $t as t } from '@vben/locales';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t as t } from '@/locales';
 
 import { Avatar, Space, Tooltip, Upload } from 'antdv-next';
 import { isFunction } from 'lodash-es';
 
-import { dataURLtoBlob } from '#/utils/file/base64Conver';
+import { dataURLtoBlob } from '@/utils/file/base64Conver';
 
 import CropperImage from './cropper.vue';
 

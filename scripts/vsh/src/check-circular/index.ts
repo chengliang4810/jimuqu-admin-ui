@@ -21,9 +21,9 @@ const DEFAULT_CONFIG = {
     '.cache',
     'scripts',
     'internal',
-    'packages/effects/request/src/',
-    'packages/@core/ui-kit/menu-ui/src/',
-    'packages/@core/ui-kit/popup-ui/src/',
+    'src/effects/request/',
+    'src/core/ui/menu/',
+    'src/core/ui/popup/',
   ],
   threshold: 0, // 循环依赖的阈值
 } as const;

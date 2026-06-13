@@ -1,9 +1,9 @@
 import type { OssFile } from './model';
 
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
-import { ContentTypeEnum } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { ContentTypeEnum } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   ossDownload = '/resource/oss/download',

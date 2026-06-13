@@ -1,6 +1,6 @@
-import { $t } from '@vben/locales';
+import { $t } from '@/locales';
 
-import { useAuthStore } from '#/store';
+import { useAuthStore } from '@/stores';
 
 import {
   ImpossibleReturn401Exception,

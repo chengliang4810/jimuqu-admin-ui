@@ -3,14 +3,14 @@ import type { DropdownEmits, MenuItemType } from 'antdv-next';
 
 import type { ApprovalType } from '../type';
 
-import type { User } from '#/api/core/user';
-import type { TaskInfo } from '#/api/workflow/task/model';
+import type { User } from '@/api/core/user';
+import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { computed, h } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useVbenModal } from '@vben/common-ui';
-import { cn, getPopupContainer } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { cn, getPopupContainer } from '@/utils';
 
 import {
   ArrowLeftOutlined,
@@ -28,12 +28,12 @@ import { Dropdown, Space } from 'antdv-next';
 import {
   cancelProcessApply,
   deleteByInstanceIds,
-} from '#/api/workflow/instance';
+} from '@/api/workflow/instance';
 import {
   taskOperation,
   terminationTask,
   updateAssignee,
-} from '#/api/workflow/task';
+} from '@/api/workflow/task';
 
 import { approvalModal, approvalRejectionModal, flowInterfereModal } from '..';
 import { approveWithReasonModal } from '../helper';

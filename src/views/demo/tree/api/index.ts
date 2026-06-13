@@ -1,8 +1,8 @@
 import type { TreeForm, TreeQuery, TreeVO } from './model';
 
-import type { ID, IDS } from '#/api/common';
+import type { ID, IDS } from '@/api/common';
 
-import { alovaInstance } from '#/utils/http';
+import { alovaInstance } from '@/utils/http';
 
 /**
  * 查询测试树列表

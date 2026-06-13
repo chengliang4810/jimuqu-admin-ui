@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { UserProfile } from '#/api/system/profile/model';
+import type { UserProfile } from '@/api/system/profile/model';
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import { Page } from '@vben/common-ui';
-import { useUserStore } from '@vben/stores';
+import { Page } from '@/effects/common-ui';
+import { useUserStore } from '@/stores';
 
-import { userProfile } from '#/api/system/profile';
-import { useAuthStore } from '#/store';
+import { userProfile } from '@/api/system/profile';
+import { useAuthStore } from '@/stores';
 
 import { emitter } from './mitt';
 import ProfilePanel from './profile-panel.vue';

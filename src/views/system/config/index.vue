@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { SysConfig } from '#/api/system/config/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { SysConfig } from '@/api/system/config/model';
 
-import { Page, useVbenModal } from '@vben/common-ui';
-import { YesNo } from '@vben/constants';
+import { Page, useVbenModal } from '@/effects/common-ui';
+import { YesNo } from '@/constants';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   configExport,
   configList,
   configRefreshCache,
   configRemove,
-} from '#/api/system/config';
-import { useBlobExport } from '#/utils/file/export';
+} from '@/api/system/config';
+import { useBlobExport } from '@/utils/file/export';
 
 import configModal from './config-modal.vue';
 import { columns, querySchema } from './data';

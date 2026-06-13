@@ -1,13 +1,6 @@
 packages:
   - internal/*
   - internal/lint-configs/*
-  - packages/*
-  - packages/@core/base/*
-  - packages/@core/ui-kit/*
-  - packages/@core/forward/*
-  - packages/@core/*
-  - packages/effects/*
-  - packages/business/*
   - scripts/*
 
 publicHoistPattern:
@@ -53,6 +46,8 @@ catalog:
   '@ctrl/tinycolor': ^4.2.0
   '@eslint-community/eslint-plugin-eslint-comments': ^4.7.1
   '@eslint/js': ^10.0.1
+  '@iconify/icons-ri': ^1.2.10
+  '@iconify/icons-simple-icons': ^1.2.74
   '@iconify/json': ^2.2.460
   '@iconify/tailwind4': ^1.2.3
   '@iconify/vue': ^5.0.1
@@ -77,6 +72,7 @@ catalog:
   '@tiptap/vue-3': ^3.22.3
   '@tsdown/css': ^0.21.8
   '@types/archiver': ^7.0.0
+  '@types/crypto-js': ^4.2.2
   '@types/html-minifier-terser': ^7.0.2
   '@types/json-bigint': ^1.0.4
   '@types/lodash-es': ^4.17.12
@@ -85,6 +81,7 @@ catalog:
   '@types/nprogress': ^0.2.3
   '@types/qrcode': ^1.5.6
   '@types/qs': ^6.15.1
+  '@types/sm-crypto': ^0.3.4
   '@types/sortablejs': ^1.15.9
   '@typescript-eslint/eslint-plugin': ^8.59.4
   '@typescript-eslint/parser': ^8.59.4
@@ -113,6 +110,7 @@ catalog:
   consola: ^3.4.2
   cropperjs: ^1.6.2
   cross-env: ^10.1.0
+  crypto-js: ^4.2.0
   cspell: ^10.0.0
   cz-git: ^1.13.1
   czg: ^1.13.1
@@ -134,12 +132,14 @@ catalog:
   eslint-plugin-vue: ^10.9.1
   eslint-plugin-yml: ^3.3.2
   execa: ^9.6.1
+  file-type: ^19.5.0
   find-up: ^8.0.0
   get-port: ^7.2.0
   globals: ^17.4.0
   happy-dom: ^20.8.9
   html-minifier-terser: ^7.2.0
   is-ci: ^4.1.0
+  jsencrypt: ^3.5.4
   json-bigint: ^1.0.0
   json-editor-vue: ^0.18.1
   knip: ^6.14.1
@@ -170,6 +170,7 @@ catalog:
   sass: ^1.99.0
   sass-embedded: ^1.100.0
   secure-ls: ^2.0.0
+  sm-crypto: ^0.3.13
   sortablejs: ^1.15.7
   stylelint: ^17.12.0
   stylelint-config-recess-order: ^7.7.0

@@ -1,9 +1,9 @@
 import type { OperationLog } from './model';
 
-import type { IDS, PageQuery, PageResult } from '#/api/common';
+import type { IDS, PageQuery, PageResult } from '@/api/common';
 
-import { commonExport } from '#/api/helper';
-import { alovaInstance } from '#/utils/http';
+import { commonExport } from '@/api/helper';
+import { alovaInstance } from '@/utils/http';
 
 enum Api {
   operLogClean = '/monitor/operlog/clean',

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-import { DEFAULT_CLIENT_ID } from '@vben/constants';
-import { $t } from '@vben/locales';
-import { cloneDeep } from '@vben/utils';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { DEFAULT_CLIENT_ID } from '@/constants';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 
-import { useVbenForm } from '#/adapter/form';
-import { clientAdd, clientInfo, clientUpdate } from '#/api/system/client';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '#/utils/popup';
+import { useVbenForm } from '@/adapter/form';
+import { clientAdd, clientInfo, clientUpdate } from '@/api/system/client';
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';
 import SecretInput from './secret-input.vue';

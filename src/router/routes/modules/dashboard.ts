@@ -1,8 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import { IFrameView } from '@vben/layouts';
+import { IFrameView } from '@/effects/layouts';
 
-import { $t } from '#/locales';
+import { $t } from '@/locales';
 
 const {
   version,
@@ -22,7 +22,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'Analytics',
         path: '/analytics',
-        component: () => import('#/views/dashboard/analytics/index.vue'),
+        component: () => import('@/views/dashboard/analytics/index.vue'),
         meta: {
           affixTab: true,
           title: $t('page.dashboard.analytics'),
@@ -31,7 +31,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'Workspace',
         path: '/workspace',
-        component: () => import('#/views/dashboard/workspace/index.vue'),
+        component: () => import('@/views/dashboard/workspace/index.vue'),
         meta: {
           title: $t('page.dashboard.workspace'),
         },
@@ -50,7 +50,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'V5UpdateLog',
         path: '/changelog',
-        component: () => import('#/views/演示使用自行删除/changelog/index.vue'),
+        component: () => import('@/views/演示使用自行删除/changelog/index.vue'),
         meta: {
           icon: 'lucide:book-open-text',
           keepAlive: true,
@@ -62,7 +62,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    component: () => import('#/views/_core/about/index.vue'),
+    component: () => import('@/views/_core/about/index.vue'),
     meta: {
       icon: 'lucide:copyright',
       order: 9999,

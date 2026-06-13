@@ -1,20 +1,20 @@
 <!-- 审批同意的弹窗 -->
 <script setup lang="ts">
-import type { User } from '#/api/system/user/model';
+import type { User } from '@/api/system/user/model';
 import type {
   CompleteTaskReqData,
   NextNodeInfo,
-} from '#/api/workflow/task/model';
+} from '@/api/workflow/task/model';
 
 import { ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
-import { cloneDeep } from '@vben/utils';
+import { useVbenModal } from '@/effects/common-ui';
+import { cloneDeep } from '@/utils';
 
 import { omit } from 'lodash-es';
 
-import { useVbenForm } from '#/adapter/form';
-import { completeTask, getNextNodeList } from '#/api/workflow/task';
+import { useVbenForm } from '@/adapter/form';
+import { completeTask, getNextNodeList } from '@/api/workflow/task';
 
 import { CopyComponent } from '.';
 

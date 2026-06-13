@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { Notice } from '#/api/system/notice/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { Notice } from '@/api/system/notice/model';
 
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModal } from '@/effects/common-ui';
 
 import { Popconfirm, Space } from 'antdv-next';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
-import { noticeList, noticeRemove } from '#/api/system/notice';
-import { notificationMitt } from '#/utils/mitt/notification';
+import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
+import { noticeList, noticeRemove } from '@/api/system/notice';
+import { notificationMitt } from '@/utils/mitt/notification';
 
 import { columns, querySchema } from './data';
 import noticeModal from './notice-modal.vue';

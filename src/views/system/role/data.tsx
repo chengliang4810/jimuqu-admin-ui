@@ -1,12 +1,12 @@
-import type { FormSchemaGetter } from '#/adapter/form';
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { FormSchemaGetter } from '@/adapter/form';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
-import { DictEnum } from '@vben/constants';
-import { getPopupContainer } from '@vben/utils';
+import { DictEnum } from '@/constants';
+import { getPopupContainer } from '@/utils';
 
 import { Tag } from 'antdv-next';
 
-import { getDictOptions } from '#/utils/dict';
+import { getDictOptions } from '@/utils/dict';
 
 /**
  * authScopeOptions user也会用到

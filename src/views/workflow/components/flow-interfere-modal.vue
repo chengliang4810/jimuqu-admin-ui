@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import type { DescriptionsProps } from 'antdv-next';
 
-import type { User } from '#/api/system/user/model';
-import type { TaskInfo } from '#/api/workflow/task/model';
+import type { User } from '@/api/system/user/model';
+import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModal } from '@/effects/common-ui';
 
 import { Descriptions } from 'antdv-next';
 
@@ -14,7 +14,7 @@ import {
   getTaskByTaskId,
   taskOperation,
   terminationTask,
-} from '#/api/workflow/task';
+} from '@/api/workflow/task';
 
 import { userSelectModal } from '.';
 

@@ -1,6 +1,6 @@
-import { UnauthorizedException } from '#/api/helper';
-import { dictDataInfo } from '#/api/system/dict/dict-data';
-import { useDictStore } from '#/store/dict';
+import { UnauthorizedException } from '@/api/helper';
+import { dictDataInfo } from '@/api/system/dict/dict-data';
+import { useDictStore } from '@/stores/dict';
 
 /**
  * 一般是Select, Radio, Checkbox等组件使用

@@ -1,4 +1,4 @@
-import { ossInfo } from '#/api/system/oss';
+import { ossInfo } from '@/api/system/oss';
 
 /**
  * 富文本内容中图片ossId转换  确保每次链接都是最新获取的(对于私有桶情况)

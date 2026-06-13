@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { useRoute } from 'vue-router';
 
-import { useVbenDrawer } from '@vben/common-ui';
+import { useVbenDrawer } from '@/effects/common-ui';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { roleSelectAll, roleUnallocatedList } from '#/api/system/role';
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { roleSelectAll, roleUnallocatedList } from '@/api/system/role';
 
 import { columns, querySchema } from './data';
 

@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import type { DescriptionsProps } from 'antdv-next';
 
-import type { OperationLog } from '#/api/monitor/operlog/model';
+import type { OperationLog } from '@/api/monitor/operlog/model';
 
 import { computed, shallowRef } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-import { DictEnum } from '@vben/constants';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { DictEnum } from '@/constants';
 
 import { Descriptions, Tag } from 'antdv-next';
 
@@ -14,7 +14,7 @@ import {
   renderDict,
   renderHttpMethodTag,
   renderJsonPreview,
-} from '#/utils/render';
+} from '@/utils/render';
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
   onOpenChange: handleOpenChange,

@@ -1,8 +1,8 @@
 import type { UploadFile } from 'antdv-next';
 import type { RcFile } from 'antdv-next/es/vc-upload/interface';
 
-import type { UploadApi, UploadResult } from '#/api';
-import type { OssFile } from '#/api/system/oss/model';
+import type { UploadApi, UploadResult } from '@/api';
+import type { OssFile } from '@/api/system/oss/model';
 
 import { UploadChangeParam } from 'antdv-next';
 

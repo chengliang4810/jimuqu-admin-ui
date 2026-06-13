@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import type { Recordable } from '@vben/types';
+import type { Recordable } from '@/types';
 
-import type { UserProfile } from '#/api/system/profile/model';
+import type { UserProfile } from '@/api/system/profile/model';
 
 import { onMounted } from 'vue';
 
-import { DictEnum } from '@vben/constants';
-import { useUserStore } from '@vben/stores';
+import { DictEnum } from '@/constants';
+import { useUserStore } from '@/stores';
 
 import { pick } from 'lodash-es';
 
-import { useVbenForm } from '#/adapter/form';
-import { userProfileUpdate } from '#/api/system/profile';
-import { useAuthStore } from '#/store';
-import { getDictOptions } from '#/utils/dict';
+import { useVbenForm } from '@/adapter/form';
+import { userProfileUpdate } from '@/api/system/profile';
+import { useAuthStore } from '@/stores';
+import { getDictOptions } from '@/utils/dict';
 
 import { emitter } from '../mitt';
 

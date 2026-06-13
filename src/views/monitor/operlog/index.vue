@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@vben/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
-import type { VxeGridProps } from '#/adapter/vxe-table';
-import type { PageQuery } from '#/api/common';
-import type { OperationLog } from '#/api/monitor/operlog/model';
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { PageQuery } from '@/api/common';
+import type { OperationLog } from '@/api/monitor/operlog/model';
 
-import { Page, useVbenDrawer } from '@vben/common-ui';
-import { $t } from '@vben/locales';
+import { Page, useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
 
 import { Space } from 'antdv-next';
 
@@ -14,15 +14,15 @@ import {
   addSortParams,
   useVbenVxeGrid,
   vxeCheckboxChecked,
-} from '#/adapter/vxe-table';
+} from '@/adapter/vxe-table';
 import {
   operLogClean,
   operLogDelete,
   operLogExport,
   operLogList,
-} from '#/api/monitor/operlog';
-import { useBlobExport } from '#/utils/file/export';
-import { confirmDeleteModal } from '#/utils/modal';
+} from '@/api/monitor/operlog';
+import { useBlobExport } from '@/utils/file/export';
+import { confirmDeleteModal } from '@/utils/modal';
 
 import { columns, querySchema } from './data';
 import operationPreviewDrawer from './operation-preview-drawer.vue';
