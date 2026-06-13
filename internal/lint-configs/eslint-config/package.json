@@ -11,19 +11,15 @@
   },
   "license": "MIT",
   "type": "module",
-  "scripts": {
-    "stub": "pnpm exec tsdown"
-  },
   "files": [
-    "dist"
+    "src"
   ],
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.mjs",
+  "module": "./src/index.mjs",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs"
+      "import": "./src/index.mjs",
+      "default": "./src/index.mjs"
     }
   },
   "dependencies": {

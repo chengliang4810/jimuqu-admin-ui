@@ -1,8 +1,6 @@
-import type { Linter } from 'eslint';
+import { interopDefault } from '../util.mjs';
 
-import { interopDefault } from '../util';
-
-export async function perfectionist(): Promise<Linter.Config[]> {
+export async function perfectionist() {
   const perfectionistPlugin = await interopDefault(
     import('eslint-plugin-perfectionist'),
   );

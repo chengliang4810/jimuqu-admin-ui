@@ -1,8 +1,6 @@
-import type { Linter } from 'eslint';
-
 const restrictedImportIgnores = ['**/vite.config.mts'];
 
-const customConfig: Linter.Config[] = [
+const customConfig = [
   // shadcn-ui 内部组件是自动生成的，不做太多限制
   {
     files: ['src/core/ui/shadcn/**/**'],

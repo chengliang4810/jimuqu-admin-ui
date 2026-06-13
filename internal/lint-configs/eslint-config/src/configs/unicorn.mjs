@@ -1,6 +1,4 @@
-import type { Linter } from 'eslint';
-
-import { interopDefault } from '../util';
+import { interopDefault } from '../util.mjs';
 
 const rulesCoveredByOxlint = new Set([
   'unicorn/consistent-function-scoping',
@@ -9,7 +7,7 @@ const rulesCoveredByOxlint = new Set([
   'unicorn/prefer-module',
 ]);
 
-export async function unicorn(): Promise<Linter.Config[]> {
+export async function unicorn() {
   const pluginUnicorn = await interopDefault(import('eslint-plugin-unicorn'));
   const recommendedRules = Object.fromEntries(
     Object.entries(pluginUnicorn.configs.recommended.rules ?? {}).filter(

@@ -1,15 +1,13 @@
-import type { Linter } from 'eslint';
-
-import { interopDefault } from '../util';
+import { interopDefault } from '../util.mjs';
 
 // 由 unused-imports 插件统一负责未使用变量检测,避免与 ts 规则重复报告
 const rulesHandledElsewhere = new Set(['@typescript-eslint/no-unused-vars']);
 
-export async function typescript(): Promise<Linter.Config[]> {
+export async function typescript() {
   const [pluginTs, parserTs] = await Promise.all([
     interopDefault(import('@typescript-eslint/eslint-plugin')),
     interopDefault(import('@typescript-eslint/parser')),
-  ] as const);
+  ]);
   const strictRules = Object.fromEntries(
     Object.entries(pluginTs.configs.strict?.rules ?? {}).filter(
       ([ruleName]) => !rulesHandledElsewhere.has(ruleName),
@@ -38,7 +36,7 @@ export async function typescript(): Promise<Linter.Config[]> {
         },
       },
       plugins: {
-        '@typescript-eslint': pluginTs as any,
+        '@typescript-eslint': pluginTs,
       },
       rules: {
         ...pluginTs.configs['eslint-recommended']?.overrides?.[0]?.rules,

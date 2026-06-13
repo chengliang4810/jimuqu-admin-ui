@@ -1,13 +1,11 @@
-import type { Linter } from 'eslint';
+import { interopDefault } from '../util.mjs';
 
-import { interopDefault } from '../util';
-
-export async function vue(): Promise<Linter.Config[]> {
+export async function vue() {
   const [pluginVue, parserVue, parserTs] = await Promise.all([
     interopDefault(import('eslint-plugin-vue')),
     interopDefault(import('vue-eslint-parser')),
     interopDefault(import('@typescript-eslint/parser')),
-  ] as const);
+  ]);
 
   const flatEssential = pluginVue.configs?.['flat/essential'] || [];
   const flatStronglyRecommended =

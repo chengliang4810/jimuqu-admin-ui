@@ -1,5 +1,3 @@
-import type { Linter } from 'eslint';
-
 import js from '@eslint/js';
 import pluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
@@ -64,7 +62,7 @@ const rulesCoveredByOxlint = new Set([
   'valid-typeof',
 ]);
 
-export async function javascript(): Promise<Linter.Config[]> {
+export async function javascript() {
   const recommendedRules = Object.fromEntries(
     Object.entries(js.configs.recommended.rules).filter(
       ([ruleName]) => !rulesCoveredByOxlint.has(ruleName),

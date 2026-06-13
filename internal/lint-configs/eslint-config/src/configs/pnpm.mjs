@@ -1,12 +1,10 @@
-import type { Linter } from 'eslint';
+import { interopDefault } from '../util.mjs';
 
-import { interopDefault } from '../util';
-
-export async function pnpm(): Promise<Linter.Config[]> {
+export async function pnpm() {
   const [pluginPnpm, parserPnpm] = await Promise.all([
     interopDefault(import('eslint-plugin-pnpm')),
     interopDefault(import('yaml-eslint-parser')),
-  ] as const);
+  ]);
 
   return [
     {

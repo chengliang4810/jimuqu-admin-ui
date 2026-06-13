@@ -1,5 +1,3 @@
-import type { Linter } from 'eslint';
-
 import prettierConfig from 'eslint-config-prettier';
 
 import {
@@ -13,19 +11,11 @@ import {
   unicorn,
   vue,
   yaml,
-} from './configs';
-import { customConfig } from './custom-config';
+} from './configs/index.mjs';
+import { customConfig } from './custom-config.mjs';
 
-type FlatConfig = Linter.Config;
-
-type FlatConfigPromise =
-  | FlatConfig
-  | FlatConfig[]
-  | Promise<FlatConfig>
-  | Promise<FlatConfig[]>;
-
-async function defineConfig(config: FlatConfig[] = []) {
-  const configs: FlatConfigPromise[] = [
+async function defineConfig(config = []) {
+  const configs = [
     vue(),
     javascript(),
     ignores(),
@@ -39,7 +29,7 @@ async function defineConfig(config: FlatConfig[] = []) {
     ...customConfig,
     ...config,
     // 关闭与 prettier 冲突的格式化规则,必须放在最后
-    prettierConfig as FlatConfig,
+    prettierConfig,
   ];
 
   const resolved = await Promise.all(configs);

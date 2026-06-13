@@ -1,8 +1,6 @@
-import type { Linter } from 'eslint';
+import { interopDefault } from '../util.mjs';
 
-import { interopDefault } from '../util';
-
-export async function jsonc(): Promise<Linter.Config[]> {
+export async function jsonc() {
   const pluginJsonc = await interopDefault(import('eslint-plugin-jsonc'));
 
   return [
@@ -10,7 +8,7 @@ export async function jsonc(): Promise<Linter.Config[]> {
       files: ['**/*.json', '**/*.json5', '**/*.jsonc', '*.code-workspace'],
       language: 'jsonc/x',
       plugins: {
-        jsonc: pluginJsonc as any,
+        jsonc: pluginJsonc,
       },
       rules: {
         'jsonc/no-bigint-literals': 'error',
@@ -47,7 +45,7 @@ export async function jsonc(): Promise<Linter.Config[]> {
   ];
 }
 
-function sortPackageJson(): Linter.Config {
+function sortPackageJson() {
   return {
     files: ['**/package.json'],
     rules: {
@@ -126,7 +124,7 @@ function sortPackageJson(): Linter.Config {
   };
 }
 
-function sortCspellJson(): Linter.Config {
+function sortCspellJson() {
   return {
     files: ['**/cspell.json', '**/.cspell.json'],
     rules: {
@@ -141,7 +139,7 @@ function sortCspellJson(): Linter.Config {
   };
 }
 
-function sortTsconfig(): Linter.Config {
+function sortTsconfig() {
   return {
     files: [
       '**/tsconfig.json',
