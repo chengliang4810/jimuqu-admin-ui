@@ -274,6 +274,7 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
 <template>
   <div>
     <Drawer
+      content-class="overflow-x-hidden px-1"
       :description="$t('preferences.subtitle')"
       :title="$t('preferences.title')"
       :width="385"
