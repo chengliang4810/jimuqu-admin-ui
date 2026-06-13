@@ -1,3 +1,4 @@
+import type { Locale as AntdLocale } from 'antdv-next/dist/locale/index';
 import type { App } from 'vue';
 import type { Locale } from 'vue-i18n';
 
@@ -8,8 +9,12 @@ import type {
   SupportedLanguagesType,
 } from './typing';
 
+import { preferences } from '@/core/preferences';
+import antdEnLocale from 'antdv-next/locale/en_US';
+import antdDefaultLocale from 'antdv-next/locale/zh_CN';
+import dayjs from 'dayjs';
 import { useSimpleLocale } from '@/core/composables';
-import { unref } from 'vue';
+import { ref, unref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 const i18n = createI18n({
@@ -20,6 +25,7 @@ const i18n = createI18n({
 });
 const $t = i18n.global.t;
 const $te = i18n.global.te;
+const antdLocale = ref<AntdLocale>(antdDefaultLocale);
 
 const modules = import.meta.glob('./langs/**/*.json');
 
@@ -121,6 +127,54 @@ function getLocaleMessages(lang: SupportedLanguagesType) {
   return localesMap[lang]?.();
 }
 
+async function loadMessagesWithThirdParty(lang: SupportedLanguagesType) {
+  const [appLocaleMessages] = await Promise.all([
+    getLocaleMessages(lang),
+    loadThirdPartyMessage(lang),
+  ]);
+  return appLocaleMessages?.default;
+}
+
+async function loadThirdPartyMessage(lang: SupportedLanguagesType) {
+  await Promise.all([loadAntdLocale(lang), loadDayjsLocale(lang)]);
+}
+
+async function loadDayjsLocale(lang: SupportedLanguagesType) {
+  let locale;
+  switch (lang) {
+    case 'en-US': {
+      locale = await import('dayjs/locale/en');
+      break;
+    }
+    case 'zh-CN': {
+      locale = await import('dayjs/locale/zh-cn');
+      break;
+    }
+    default: {
+      locale = await import('dayjs/locale/en');
+    }
+  }
+
+  if (locale) {
+    dayjs.locale(locale);
+  } else {
+    console.error(`Failed to load dayjs locale for ${lang}`);
+  }
+}
+
+async function loadAntdLocale(lang: SupportedLanguagesType) {
+  switch (lang) {
+    case 'en-US': {
+      antdLocale.value = antdEnLocale;
+      break;
+    }
+    case 'zh-CN': {
+      antdLocale.value = antdDefaultLocale;
+      break;
+    }
+  }
+}
+
 /**
  * Load locale messages
  * @param lang
@@ -143,13 +197,24 @@ async function loadLocaleMessages(lang: SupportedLanguagesType) {
   return setI18nLanguage(lang);
 }
 
+async function setupI18n(app: App, options: LocaleSetupOptions = {}) {
+  await setupCoreI18n(app, {
+    defaultLocale: preferences.app.locale,
+    loadMessages: loadMessagesWithThirdParty,
+    missingWarn: !import.meta.env.PROD,
+    ...options,
+  });
+}
+
 export {
   $t,
   $te,
+  antdLocale,
   getLocaleMessages,
   i18n,
   loadLocaleMessages,
   loadLocalesMap,
   loadLocalesMapFromDir,
   setupCoreI18n,
+  setupI18n,
 };
