@@ -28,6 +28,7 @@
     "@typescript-eslint/parser": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
+    "eslint-plugin-import": "catalog:",
     "eslint-plugin-jsonc": "catalog:",
     "eslint-plugin-n": "catalog:",
     "eslint-plugin-perfectionist": "catalog:",

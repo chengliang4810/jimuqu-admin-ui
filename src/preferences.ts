@@ -28,10 +28,6 @@ export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
     /**
-     * 不需要refresh token 由后端处理
-     */
-    enableRefreshToken: false,
-    /**
      * 这里可以设置默认头像 url链接或vite导入的图片链接
      */
     // defaultAvatar: '',

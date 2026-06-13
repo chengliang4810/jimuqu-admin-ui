@@ -21,7 +21,6 @@ const defaultPreferences: Preferences = {
     enableCheckUpdates: true,
     enableCopyPreferences: true,
     enablePreferences: true,
-    enableRefreshToken: false,
     enableStickyPreferencesNavigationBar: true,
     isMobile: false,
     layout: 'sidebar-nav',

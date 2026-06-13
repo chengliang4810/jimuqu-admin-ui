@@ -2,6 +2,7 @@ import prettierConfig from 'eslint-config-prettier';
 
 import {
   ignores,
+  imports,
   javascript,
   jsonc,
   node,
@@ -18,6 +19,7 @@ async function defineConfig(config = []) {
   const configs = [
     vue(),
     javascript(),
+    imports(),
     ignores(),
     typescript(),
     jsonc(),
