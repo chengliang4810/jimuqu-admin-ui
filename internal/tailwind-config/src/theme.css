@@ -303,6 +303,8 @@
   html {
     @apply text-foreground bg-background font-sans;
 
+    /* Reserve scrollbar space to avoid layout width jitter while scrolling. */
+    scrollbar-gutter: stable;
     scroll-behavior: smooth;
     font-size: var(--font-size-base, 16px);
     font-variation-settings: normal;

@@ -483,7 +483,7 @@ const idMainContent = ELEMENT_ID_MAIN_CONTENT;
 </script>
 
 <template>
-  <div class="relative flex min-h-full w-full">
+  <div class="relative flex min-h-full w-full overflow-x-hidden">
     <LayoutSidebar
       v-if="sidebarEnableState"
       v-model:collapse="sidebarCollapse"
@@ -529,7 +529,7 @@ const idMainContent = ELEMENT_ID_MAIN_CONTENT;
 
     <div
       ref="contentRef"
-      class="flex flex-1 flex-col overflow-hidden transition-all duration-300 ease-in"
+      class="flex min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300 ease-in"
     >
       <div
         :class="[

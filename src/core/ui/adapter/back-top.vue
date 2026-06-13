@@ -63,16 +63,18 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <transition name="fade-down">
-    <Button
-      v-if="visible"
-      type="text"
-      shape="circle"
-      :style="backTopStyle"
-      class="z-popup bg-background shadow-float hover:bg-heavy dark:bg-accent fixed size-10 duration-500"
-      @click="handleClick"
-    >
-      <ArrowUpToLine class="size-4" />
-    </Button>
-  </transition>
+  <Teleport to="body">
+    <transition name="fade-down">
+      <Button
+        v-if="visible"
+        type="text"
+        shape="circle"
+        :style="backTopStyle"
+        class="z-popup bg-background shadow-float hover:bg-heavy dark:bg-accent fixed size-10 duration-500"
+        @click="handleClick"
+      >
+        <ArrowUpToLine class="size-4" />
+      </Button>
+    </transition>
+  </Teleport>
 </template>
