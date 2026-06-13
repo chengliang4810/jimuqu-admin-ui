@@ -25,51 +25,7 @@ body {
   }
 }
 
-/* useVbenForm对错误边框的兼容 */
-.form-valid-error {
-  --vben-form-error-shadow: 0 0 0 2px rgba(255, 35, 5, 0.1);
-
-  /*
-   * 红色边框:直接覆盖各 outlined 组件「带边框根元素」的 border-color。
-   * 用 !important 让 静态 / hover / focus 三态都保持红 —— antd 自身边框走
-   * --ant-*-border-color 变量,与 vben 的 border-destructive 工具类同特异性,
-   * 但 antd 样式后加载会盖掉工具类,所以必须 !important。
-   * .ant-input-outlined 同时覆盖 Input / Textarea / 密码框(其 wrapper 也带此类)。
-   */
-  .ant-input-outlined,
-  .ant-input-number-outlined,
-  .ant-mentions-outlined,
-  .ant-picker-outlined,
-  .ant-select.ant-select-outlined:not(.valid-success) {
-    border-color: hsl(var(--destructive)) !important;
-  }
-
-  /*
-   * 聚焦阴影:antd 的 :focus 规则用 var(--ant-*-active-shadow) 画蓝色阴影,
-   * 该变量在组件自身 css-var 作用域、祖先无法覆盖,故直接写 box-shadow + !important。
-   * :focus-within 兼容密码框/数字框「焦点在内层 input」的结构。
-   */
-  .ant-input-outlined:focus,
-  .ant-input-outlined:focus-within,
-  .ant-input-number-outlined:focus,
-  .ant-input-number-outlined:focus-within,
-  .ant-mentions-outlined:focus,
-  .ant-mentions-outlined:focus-within,
-  .ant-picker-outlined:focus,
-  .ant-picker-outlined:focus-within {
-    box-shadow: var(--vben-form-error-shadow) !important;
-  }
-
-  /* Select 系聚焦阴影(antdv-next 边框/阴影画在 .ant-select 容器自身) */
-  .ant-select.ant-select-outlined.ant-select-focused:not(.valid-success) {
-    box-shadow: var(--vben-form-error-shadow) !important;
-  }
-
-  /* 区间选择器下方来回切换时的指示条 */
-  .ant-picker-active-bar {
-    background-color: hsl(var(--destructive));
-  }
-}
+/** note: 由于useVbenForm底层已经使用antdv-next的Form 这里不需要做对边框颜色的兼容了  */
 
 /** 前后置小圆点样式 */
 .dot-before-common {
