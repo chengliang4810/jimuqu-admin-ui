@@ -62,12 +62,6 @@ type LoginExpiredModeType = 'modal' | 'page';
 type BreadcrumbStyleType = 'background' | 'normal';
 
 /**
- * 权限模式
- * mixed 混合权限模式
- */
-type AccessModeType = 'mixed';
-
-/**
  * 标签栏风格
  * brisk 轻快
  * card 卡片
@@ -90,7 +84,6 @@ type PageTransitionType = 'fade' | 'fade-down' | 'fade-slide' | 'fade-up';
 type AuthPageLayoutType = 'panel-center' | 'panel-left' | 'panel-right';
 
 export type {
-  AccessModeType,
   AuthPageLayoutType,
   BreadcrumbStyleType,
   BuiltinThemeType,

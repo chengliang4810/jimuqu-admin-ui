@@ -1,10 +1,6 @@
-import type { Component, DefineComponent } from 'vue';
+import type { GenerateMenuAndRoutesOptions, RouteRecordRaw } from '@/types';
 
-import type {
-  AccessModeType,
-  GenerateMenuAndRoutesOptions,
-  RouteRecordRaw,
-} from '@/types';
+import type { Component, DefineComponent } from 'vue';
 
 import { defineComponent, h } from 'vue';
 
@@ -19,16 +15,13 @@ import {
   setObjToUrlParams,
 } from '@/utils';
 
-async function generateAccessible(
-  mode: AccessModeType,
-  options: GenerateMenuAndRoutesOptions,
-) {
+async function generateAccessible(options: GenerateMenuAndRoutesOptions) {
   const { router } = options;
 
   options.routes = cloneDeep(options.routes);
 
   // 生成路由
-  const accessibleRoutes = await generateRoutes(mode, options);
+  const accessibleRoutes = await generateRoutes(options);
 
   const root = router
     .getRoutes()
@@ -84,13 +77,9 @@ async function generateAccessible(
 
 /**
  * Generate routes
- * @param mode
  * @param options
  */
-async function generateRoutes(
-  mode: AccessModeType,
-  options: GenerateMenuAndRoutesOptions,
-) {
+async function generateRoutes(options: GenerateMenuAndRoutesOptions) {
   const { forbiddenComponent, roles, routes } = options;
 
   const [frontendResultRoutes, backendResultRoutes] = await Promise.all([

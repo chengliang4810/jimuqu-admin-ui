@@ -1,3 +1,4 @@
+import type { Menu } from '@/api';
 import type {
   ComponentRecordType,
   GenerateMenuAndRoutesOptions,
@@ -5,12 +6,8 @@ import type {
   RouteRecordStringComponent,
 } from '@/types';
 
-import type { Menu } from '@/api';
-
-import { generateAccessible } from '@/effects/access';
-import { preferences } from '@/core/preferences';
-
 import { getAllMenusApi } from '@/api';
+import { generateAccessible } from '@/effects/access';
 import { BasicLayout, IFrameView } from '@/layouts';
 import { $t } from '@/locales';
 
@@ -209,7 +206,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
     NotFoundComponent,
   };
 
-  return await generateAccessible('mixed', {
+  return await generateAccessible({
     ...options,
     fetchMenuListAsync: async () => {
       // 清除以前的message

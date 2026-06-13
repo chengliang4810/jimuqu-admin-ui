@@ -1,14 +1,8 @@
-import { computed } from 'vue';
-
-import { preferences } from '@/core/preferences';
 import { useAccessStore, useUserStore } from '@/stores';
 
 function useAccess() {
   const accessStore = useAccessStore();
   const userStore = useUserStore();
-  const accessMode = computed(() => {
-    return preferences.app.accessMode;
-  });
 
   /**
    * 基于角色判断是否有权限
@@ -44,7 +38,6 @@ function useAccess() {
   }
 
   return {
-    accessMode,
     hasAccessByCodes,
     hasAccessByRoles,
   };

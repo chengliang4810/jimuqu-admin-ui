@@ -28,13 +28,6 @@ export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
     /**
-     * antdv-next改为mix模式
-     * - 后端路由 通过菜单管理进行配置
-     * - 前端路由 直接在`apps/web-antd/src/router/routes/modules`新增文件并默认导出即可
-     * 然后路由会进行合并
-     */
-    accessMode: 'mixed',
-    /**
      * 不需要refresh token 由后端处理
      */
     enableRefreshToken: false,
