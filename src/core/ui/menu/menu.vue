@@ -51,6 +51,25 @@ provide('menuActivePath', computed(() => selectedKeys.value[0] || ''));
 // 构建菜单路径映射
 const menuPathMap = computed(() => buildMenuPathMap(props.menus));
 
+function resolveOpenKeys(keys: string[]) {
+  if (!props.accordion || props.mode === 'horizontal') {
+    return keys;
+  }
+
+  const addedKeys = keys.filter((key) => !openKeys.value.includes(key));
+  const latestKey = addedKeys.at(-1);
+
+  if (!latestKey) {
+    return keys;
+  }
+
+  const keepKeys = new Set([
+    ...(menuPathMap.value.get(latestKey) || []),
+    latestKey,
+  ]);
+  return keys.filter((key) => keepKeys.has(key));
+}
+
 // antdv-next mode 映射：vertical → inline（保留缩进和展开箭头）
 const antdvMode = computed(() =>
   props.mode === 'horizontal' ? 'horizontal' : 'inline',
@@ -92,7 +111,9 @@ watch(
       // 自动展开父级路径
       const parents = menuPathMap.value.get(active);
       if (parents?.length) {
-        openKeys.value = [...new Set([...openKeys.value, ...parents])];
+        openKeys.value = props.accordion
+          ? parents
+          : [...new Set([...openKeys.value, ...parents])];
       }
     }
   },
@@ -113,11 +134,12 @@ function handleSelect(info: { key: string; keyPath: string[] }) {
   emit('select', info.key, parents);
 }
 
-// 处理 submenu 展开/关闭（手风琴由 antdv inline 模式内置处理）
+// 处理 submenu 展开/关闭，并在手风琴模式下收敛同级展开项
 function handleOpenChange(keys: string[]) {
+  const nextKeys = resolveOpenKeys(keys);
   const prevKeys = [...openKeys.value];
-  const addedKeys = keys.filter((k) => !prevKeys.includes(k));
-  const removedKeys = prevKeys.filter((k) => !keys.includes(k));
+  const addedKeys = nextKeys.filter((k) => !prevKeys.includes(k));
+  const removedKeys = prevKeys.filter((k) => !nextKeys.includes(k));
 
   // 处理新增展开
   for (const key of addedKeys) {
@@ -131,17 +153,17 @@ function handleOpenChange(keys: string[]) {
     emit('close', key, parents);
   }
 
-  openKeys.value = keys;
+  openKeys.value = nextKeys;
 }
 </script>
 
 <template>
   <Menu
-    v-model:open-keys="openKeys"
     v-model:selected-keys="selectedKeys"
     :class="menuClass"
     :inline-collapsed="collapse"
     :mode="antdvMode"
+    :open-keys="openKeys"
     :theme="antdvTheme"
     :trigger-sub-menu-action="collapse ? 'hover' : 'click'"
     @open-change="handleOpenChange"

@@ -2,7 +2,7 @@ import type { ThemeModeType } from '@/core/typings';
 
 interface MenuProps {
   /**
-   * @zh_CN 是否开启手风琴模式（antdv inline 模式内置手风琴，此字段已不生效）
+   * @zh_CN 是否开启手风琴模式
    * @default true
    */
   accordion?: boolean;
