@@ -6,11 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   formatDate,
   formatDateTime,
-  getCurrentTimezone,
-  getSystemTimezone,
   isDate,
   isDayjsObject,
-  setCurrentTimezone,
 } from '../date';
 
 dayjs.extend(utc);
@@ -19,12 +16,6 @@ dayjs.extend(timezone);
 describe('dateUtils', () => {
   const sampleISO = '2024-10-30T12:34:56Z';
   const sampleTimestamp = Date.parse(sampleISO);
-
-  beforeEach(() => {
-    // 重置时区
-    dayjs.tz.setDefault();
-    setCurrentTimezone(); // 重置为系统默认
-  });
 
   afterEach(() => {
     vi.restoreAllMocks();
@@ -107,37 +98,4 @@ describe('dateUtils', () => {
     });
   });
 
-  // ===============================
-  // getSystemTimezone
-  // ===============================
-  describe('getSystemTimezone', () => {
-    it('should return a valid IANA timezone string', () => {
-      const tz = getSystemTimezone();
-      expect(typeof tz).toBe('string');
-      expect(tz).toMatch(/^[A-Z]+\/[A-Z_]+/i);
-    });
-  });
-
-  // ===============================
-  // setCurrentTimezone / getCurrentTimezone
-  // ===============================
-  describe('setCurrentTimezone & getCurrentTimezone', () => {
-    it('should set and retrieve the current timezone', () => {
-      setCurrentTimezone('Asia/Shanghai');
-      expect(getCurrentTimezone()).toBe('Asia/Shanghai');
-    });
-
-    it('should reset to system timezone when called with no args', () => {
-      const guessed = getSystemTimezone();
-      setCurrentTimezone();
-      expect(getCurrentTimezone()).toBe(guessed);
-    });
-
-    it('should update dayjs default timezone', () => {
-      setCurrentTimezone('America/New_York');
-      const d = dayjs('2024-01-01T00:00:00Z');
-      // 校验时区转换生效（小时变化）
-      expect(d.tz().format('HH')).not.toBe('00');
-    });
-  });
 });

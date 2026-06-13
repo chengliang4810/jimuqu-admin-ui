@@ -23,8 +23,6 @@ const appPreferencesButtonPosition = defineModel<string>(
   'appPreferencesButtonPosition',
 );
 const widgetRefresh = defineModel<boolean>('widgetRefresh');
-const widgetTimezone = defineModel<boolean>('widgetTimezone');
-
 const positionItems = computed((): SelectOption[] => [
   {
     label: $t('preferences.position.auto'),
@@ -69,9 +67,6 @@ const positionItems = computed((): SelectOption[] => [
   </SwitchItem>
   <SwitchItem v-model="widgetRefresh">
     {{ $t('preferences.widget.refresh') }}
-  </SwitchItem>
-  <SwitchItem v-model="widgetTimezone">
-    {{ $t('preferences.widget.timezone') }}
   </SwitchItem>
   <SelectItem v-model="appPreferencesButtonPosition" :items="positionItems">
     {{ $t('preferences.position.title') }}

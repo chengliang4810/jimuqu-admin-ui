@@ -158,7 +158,6 @@ interface AppPreferences {
   /**
    * @zh_CN 应用时区
    */
-  timezone: string;
   /**
    * @zh_CN 是否开启水印
    */
@@ -356,8 +355,6 @@ interface WidgetPreferences {
   sidebarToggle: boolean;
   /** 是否显示主题切换部件 */
   themeToggle: boolean;
-  /** 是否显示时区部件 */
-  timezone: boolean;
 }
 
 interface Preferences {

@@ -8,5 +8,4 @@ export * from './lock-screen';
 export * from './notification';
 export * from './preferences';
 export * from './theme-toggle';
-export * from './timezone';
 export * from './user-dropdown';

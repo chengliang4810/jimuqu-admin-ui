@@ -38,7 +38,6 @@
 	"mode": "Mode",
 	"general": "General",
 	"language": "Language",
-	"timezone": "Timezone",
 	"dynamicTitle": "Dynamic Title",
 	"watermark": "Watermark",
 	"watermarkContent": "Please input Watermark content",
@@ -188,7 +187,6 @@
 		"notification": "Enable Notification",
 		"sidebarToggle": "Enable Sidebar Toggle",
 		"lockScreen": "Enable Lock Screen",
-		"refresh": "Enable Refresh",
-		"timezone": "Enable Timezone"
+		"refresh": "Enable Refresh"
 	}
 }
