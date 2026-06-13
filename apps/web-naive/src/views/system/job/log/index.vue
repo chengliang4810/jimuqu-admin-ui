@@ -4,7 +4,7 @@ import { formatDateTime } from '@vben/utils';
 
 import { NTag } from 'naive-ui';
 
-import { requestClient } from '#/api/request';
+import { downloadFile, requestClient } from '#/api/request';
 
 const message = useMessage();
 const dialog = useDialog();
@@ -21,6 +21,11 @@ interface JobLogVo {
   endTime: string;
   durationMs: number;
   errorMessage: string;
+  resultType: string;
+  resultFileName: string;
+  resultFileSize: number;
+  resultTotalRows: number;
+  resultFileCount: number;
   createTime: string;
 }
 
@@ -42,6 +47,41 @@ function renderStatus(status: number) {
 
 function formatOptionalDateTime({ cellValue }: { cellValue?: null | string }) {
   return cellValue ? formatDateTime(cellValue) : '';
+}
+
+function formatFileSize(size?: null | number) {
+  if (!size) {
+    return '';
+  }
+  if (size < 1024) {
+    return `${size} B`;
+  }
+  if (size < 1024 * 1024) {
+    return `${(size / 1024).toFixed(1)} KB`;
+  }
+  return `${(size / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function renderResult(row: JobLogVo) {
+  if (!row.resultType) {
+    return <span class="text-gray-400">无</span>;
+  }
+  const parts = [`${row.resultTotalRows || 0} 行`];
+  if (row.resultFileCount) {
+    parts.push(`${row.resultFileCount} 个文件`);
+  }
+  const size = formatFileSize(row.resultFileSize);
+  if (size) {
+    parts.push(size);
+  }
+  return (
+    <div class="flex flex-col gap-1">
+      <NTag size="small" type="success">
+        {row.resultFileName || '导出结果'}
+      </NTag>
+      <span class="text-xs text-gray-500">{parts.join(' / ')}</span>
+    </div>
+  );
 }
 
 const formOptions: VbenFormProps = {
@@ -113,6 +153,14 @@ const gridOptions: VxeGridProps<JobLogVo> = {
       minWidth: 170,
     },
     { field: 'durationMs', title: '耗时(ms)', width: 110 },
+    {
+      field: 'resultFileName',
+      title: '导出结果',
+      minWidth: 220,
+      slots: {
+        default: ({ row }) => renderResult(row),
+      },
+    },
     { field: 'errorMessage', title: '错误信息', minWidth: 220 },
     {
       field: 'action',
@@ -195,6 +243,11 @@ function handleClear() {
     title: '清空运行日志',
   });
 }
+
+async function handleDownload(row: JobLogVo) {
+  const fileName = row.resultFileName || `job-log-${row.id}.txt`;
+  await downloadFile(`/system/job/log/download/${row.id}`, fileName);
+}
 </script>
 
 <template>
@@ -212,6 +265,14 @@ function handleClear() {
       </template>
       <template #action="{ row }">
         <n-flex class="mx-2" justify="space-around" size="small">
+          <n-button
+            ghost
+            size="small"
+            type="primary"
+            @click="handleDownload(row)"
+          >
+            {{ row.resultType ? '下载结果' : '下载日志' }}
+          </n-button>
           <n-popconfirm @positive-click="handleDelete(row.id)">
             <template #trigger>
               <n-button ghost size="small" type="error">删除</n-button>
