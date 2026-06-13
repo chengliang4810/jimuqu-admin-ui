@@ -13,9 +13,6 @@ defineProps<{ currentLayout?: LayoutType; disabled: boolean }>();
 
 const sidebarEnable = defineModel<boolean>('sidebarEnable');
 const sidebarWidth = defineModel<number>('sidebarWidth');
-const sidebarCollapsedShowTitle = defineModel<boolean>(
-  'sidebarCollapsedShowTitle',
-);
 const sidebarAutoActivateChild = defineModel<boolean>(
   'sidebarAutoActivateChild',
 );
@@ -57,12 +54,6 @@ const handleCheckboxChange = () => {
     :tip="$t('preferences.sidebar.expandOnHoverTip')"
   >
     {{ $t('preferences.sidebar.expandOnHover') }}
-  </SwitchItem>
-  <SwitchItem
-    v-model="sidebarCollapsedShowTitle"
-    :disabled="!sidebarEnable || disabled || !sidebarCollapsed"
-  >
-    {{ $t('preferences.sidebar.collapsedShowTitle') }}
   </SwitchItem>
   <SwitchItem
     v-model="sidebarAutoActivateChild"

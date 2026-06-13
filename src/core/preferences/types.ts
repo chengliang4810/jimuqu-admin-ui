@@ -246,8 +246,6 @@ interface SidebarPreferences {
   collapsed: boolean;
   /** 侧边栏折叠按钮是否可见 */
   collapsedButton: boolean;
-  /** 侧边栏折叠时，是否显示title */
-  collapsedShowTitle: boolean;
   /** 侧边栏折叠宽度 */
   collapseWidth: number;
   /** 侧边栏是否可见 */

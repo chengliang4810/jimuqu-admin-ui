@@ -57,7 +57,6 @@
 		"width": "宽度",
 		"visible": "显示侧边栏",
 		"collapsed": "折叠菜单",
-		"collapsedShowTitle": "折叠显示菜单名",
 		"autoActivateChild": "自动激活子菜单",
 		"autoActivateChildTip": "点击顶层菜单时,自动激活第一个子菜单或者上一次激活的子菜单",
 		"expandOnHover": "鼠标悬停展开",

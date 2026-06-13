@@ -57,7 +57,6 @@
 		"width": "Width",
 		"visible": "Show Sidebar",
 		"collapsed": "Collpase Menu",
-		"collapsedShowTitle": "Show Menu Title",
 		"autoActivateChild": "Auto Activate SubMenu",
 		"autoActivateChildTip": "`Enabled` to automatically activate the submenu while click menu.",
 		"expandOnHover": "Expand On Hover",

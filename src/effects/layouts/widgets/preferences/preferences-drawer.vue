@@ -87,9 +87,6 @@ const themeSemiDarkHeader = defineModel<boolean>('themeSemiDarkHeader');
 const sidebarEnable = defineModel<boolean>('sidebarEnable');
 const sidebarWidth = defineModel<number>('sidebarWidth');
 const sidebarCollapsed = defineModel<boolean>('sidebarCollapsed');
-const sidebarCollapsedShowTitle = defineModel<boolean>(
-  'sidebarCollapsedShowTitle',
-);
 const sidebarAutoActivateChild = defineModel<boolean>(
   'sidebarAutoActivateChild',
 );
@@ -374,7 +371,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
               <Sidebar
                 v-model:sidebar-auto-activate-child="sidebarAutoActivateChild"
                 v-model:sidebar-collapsed="sidebarCollapsed"
-                v-model:sidebar-collapsed-show-title="sidebarCollapsedShowTitle"
                 v-model:sidebar-enable="sidebarEnable"
                 v-model:sidebar-expand-on-hover="sidebarExpandOnHover"
                 v-model:sidebar-width="sidebarWidth"

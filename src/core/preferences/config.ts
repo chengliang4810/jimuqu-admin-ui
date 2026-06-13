@@ -76,7 +76,6 @@ const defaultPreferences: Preferences = {
     autoActivateChild: false,
     collapsed: false,
     collapsedButton: true,
-    collapsedShowTitle: false,
     collapseWidth: 60,
     enable: true,
     expandOnHover: true,

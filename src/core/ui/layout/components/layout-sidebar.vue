@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
 
-import { computed, onUnmounted, shallowRef, useSlots, watchEffect } from 'vue';
+import { computed, useSlots, watchEffect } from 'vue';
 
 import { VbenScrollbar } from '@/core/ui/adapter';
 
 import { useScrollLock } from '@vueuse/core';
 
-import { useSidebarDrag } from '../hooks/use-sidebar-drag';
 import { SidebarCollapseButton, SidebarFixedButton } from './widgets';
 
 interface Props {
@@ -108,8 +107,7 @@ const props = withDefaults(defineProps<Props>(), {
   zIndex: 0,
 });
 
-const emit = defineEmits<{ leave: []; 'update:width': [value: number] }>();
-const draggable = defineModel<boolean>('draggable');
+const emit = defineEmits<{ leave: [] }>();
 const collapse = defineModel<boolean>('collapse');
 const extraCollapse = defineModel<boolean>('extraCollapse');
 const expandOnHovering = defineModel<boolean>('expandOnHovering');
@@ -118,9 +116,6 @@ const extraVisible = defineModel<boolean>('extraVisible');
 
 const isLocked = useScrollLock(document.body);
 const slots = useSlots();
-
-const asideRef = shallowRef<HTMLElement | null>(null);
-const dragBarRef = shallowRef<HTMLElement | null>(null);
 
 const hiddenSideStyle = computed((): CSSProperties => calcMenuWidthStyle(true));
 
@@ -262,39 +257,6 @@ function handleMouseleave() {
   extraVisible.value = false;
 }
 
-const { startDrag, endDrag } = useSidebarDrag();
-
-const handleDragSidebar = (e: MouseEvent) => {
-  const { isSidebarMixed, collapseWidth, width } = props;
-  const minLimit = isSidebarMixed ? width + collapseWidth : collapseWidth;
-  const maxLimit = isSidebarMixed ? width + 320 : 320;
-
-  startDrag(
-    e,
-    {
-      min: minLimit,
-      max: maxLimit,
-    },
-    {
-      target: asideRef.value,
-      dragBar: dragBarRef.value,
-    },
-    (newWidth) => {
-      if (isSidebarMixed) {
-        emit('update:width', newWidth - width);
-        extraCollapse.value = collapse.value =
-          newWidth - width <= collapseWidth;
-      } else {
-        emit('update:width', newWidth);
-        collapse.value = extraCollapse.value = newWidth <= collapseWidth;
-      }
-    },
-  );
-};
-
-onUnmounted(() => {
-  endDrag();
-});
 </script>
 
 <template>
@@ -305,7 +267,6 @@ onUnmounted(() => {
     class="h-full transition-all duration-150"
   ></div>
   <aside
-    ref="asideRef"
     :style="style"
     class="fixed left-0 top-0 h-full transition-all duration-150"
     :class="theme"
@@ -379,11 +340,5 @@ onUnmounted(() => {
         <slot name="extra"></slot>
       </VbenScrollbar>
     </div>
-    <div
-      v-if="draggable"
-      ref="dragBarRef"
-      class="absolute inset-y-0 -right-px z-1000 w-0.5 cursor-col-resize hover:bg-primary"
-      @mousedown="handleDragSidebar"
-    ></div>
   </aside>
 </template>
