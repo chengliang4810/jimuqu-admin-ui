@@ -16,7 +16,7 @@ export async function typescript() {
 
   return [
     {
-      files: ['**/*.?([cm])[jt]s?(x)'],
+      files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
       languageOptions: {
         parser: parserTs,
         parserOptions: {
@@ -29,7 +29,7 @@ export async function typescript() {
           jsxPragma: 'React',
           // 扁平化为单仓后,使用 projectService 按文件就近解析各 workspace 的 tsconfig
           projectService: {
-            allowDefaultProject: ['*.js', '*.cjs', '*.mjs', '*.config.ts'],
+            allowDefaultProject: ['*.config.ts'],
           },
           sourceType: 'module',
           tsconfigRootDir: process.cwd(),
