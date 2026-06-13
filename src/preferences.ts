@@ -70,10 +70,6 @@ export const overridesPreferences = defineOverridesPreferences({
     /** 默认主题模式 */
     mode: 'light',
     /**
-     * 按钮水波纹样式
-     */
-    buttonWaveMode: 'Default',
-    /**
      * 浅色sidebar
      */
     semiDarkSidebar: false,

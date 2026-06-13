@@ -11,7 +11,6 @@ import { storeToRefs } from 'pinia';
 
 import { antdLocale } from '@/locales';
 
-import { waveConfigs } from './components/global/button-wave';
 import { useGlobalLoadingStore } from './stores/loading';
 import { PopupContext } from './utils/context';
 
@@ -36,15 +35,8 @@ const tokenTheme = computed(() => {
   };
 });
 
-// 按钮水波纹样式配置
-const waveConfig = computed(() => {
-  const { buttonWaveMode } = preferences.theme;
-  const found = waveConfigs.find((item) => item.name === buttonWaveMode);
-  return found ? found.wave : {};
-});
-
 const otherProps = computed<
-  Omit<ConfigProviderProps, 'locale' | 'theme' | 'wave'>
+  Omit<ConfigProviderProps, 'locale' | 'theme'>
 >(() => {
   // 目前不生效?
   return {
@@ -61,7 +53,6 @@ const { globalLoading } = storeToRefs(loadingStore);
   <ConfigProvider
     :locale="antdLocale"
     :theme="tokenTheme"
-    :wave="waveConfig"
     v-bind="otherProps"
   >
     <App :message="{ maxCount: 1 }">

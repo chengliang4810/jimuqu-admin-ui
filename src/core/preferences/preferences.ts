@@ -238,10 +238,7 @@ class PreferenceManager {
   private handleUpdates(updates: DeepPartial<Preferences>) {
     const { theme, app } = updates;
 
-    if (
-      theme &&
-      (Object.keys(theme).length > 0 || Reflect.has(theme, 'fontSize'))
-    ) {
+    if (theme && Object.keys(theme).length > 0) {
       updateCSSVariables(this.state);
     }
 

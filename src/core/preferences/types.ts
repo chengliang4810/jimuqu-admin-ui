@@ -323,8 +323,6 @@ interface TabbarPreferences {
 interface ThemePreferences {
   /** 内置主题名 */
   builtinType: BuiltinThemeType;
-  /** 按钮波纹模式 */
-  buttonWaveMode: 'Default' | 'Disabled' | 'Happy' | 'Inset' | 'Shake';
   /** 错误色 */
   colorDestructive: string;
   /** 主题色 */
@@ -333,8 +331,6 @@ interface ThemePreferences {
   colorSuccess: string;
   /** 警告色 */
   colorWarning: string;
-  /** 字体大小（单位：px） */
-  fontSize: number;
   /** 当前主题 */
   mode: ThemeModeType;
   /** 圆角 */

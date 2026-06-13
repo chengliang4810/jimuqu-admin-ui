@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { SupportedLanguagesType } from '@/locales';
 import type { CustomPreferencesRecord } from '@/core/preferences';
+import type { SegmentedItem } from '@/core/ui/adapter';
+import type { SupportedLanguagesType } from '@/locales';
 import type {
   BreadcrumbStyleType,
   BuiltinThemeType,
@@ -13,12 +14,8 @@ import type {
   ThemeModeType,
 } from '@/types';
 
-import type { SegmentedItem } from '@/core/ui/adapter';
-
 import { computed, ref } from 'vue';
 
-import { Copy, Pin, PinOff, RotateCw } from '@/icons-app';
-import { $t, loadLocaleMessages } from '@/locales';
 import {
   clearCache,
   preferences,
@@ -26,15 +23,11 @@ import {
   updateCustomPreferences,
   usePreferences,
 } from '@/core/preferences';
-
-import { useVbenDrawer } from '@/core/ui/popup';
 import { globalShareState } from '@/core/shared/global-state';
-import {
-  VbenButton,
-  VbenIconButton,
-  VbenSegmented,
-} from '@/core/ui/adapter';
-
+import { VbenButton, VbenIconButton, VbenSegmented } from '@/core/ui/adapter';
+import { useVbenDrawer } from '@/core/ui/popup';
+import { Copy, Pin, PinOff, RotateCw } from '@/icons-app';
+import { $t, loadLocaleMessages } from '@/locales';
 import { useClipboard } from '@vueuse/core';
 
 import {
@@ -42,19 +35,16 @@ import {
   Block,
   Breadcrumb,
   BuiltinTheme,
-  ButtonWaveMode,
   ColorMode,
   Content,
   Copyright,
   Custom,
-  FontSize,
   Footer,
   General,
   GlobalShortcutKeys,
   Header,
   Layout,
   Navigation,
-  Radius,
   Sidebar,
   Tabbar,
   Theme,
@@ -93,9 +83,6 @@ const transitionEnable = defineModel<boolean>('transitionEnable');
 const themeColorPrimary = defineModel<string>('themeColorPrimary');
 const themeBuiltinType = defineModel<BuiltinThemeType>('themeBuiltinType');
 const themeMode = defineModel<ThemeModeType>('themeMode');
-const themeRadius = defineModel<string>('themeRadius');
-const themeButtonWaveMode = defineModel<string>('themeButtonWaveMode');
-const themeFontSize = defineModel<number>('themeFontSize');
 const themeSemiDarkSidebar = defineModel<boolean>('themeSemiDarkSidebar');
 const themeSemiDarkSidebarSub = defineModel<boolean>('themeSemiDarkSidebarSub');
 const themeSemiDarkHeader = defineModel<boolean>('themeSemiDarkHeader');
@@ -324,7 +311,7 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
           >
             <span
               v-if="mergedDiffPreference"
-              class="absolute top-0.5 right-0.5 size-2 rounded-sm bg-primary"
+              class="bg-primary absolute top-0.5 right-0.5 size-2 rounded-sm"
             ></span>
             <RotateCw class="size-4" />
           </VbenIconButton>
@@ -395,15 +382,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 v-model:theme-color-primary="themeColorPrimary"
                 :is-dark="isDark"
               />
-            </Block>
-            <Block :title="$t('preferences.theme.radius')">
-              <Radius v-model="themeRadius" />
-            </Block>
-            <Block :title="$t('preferences.theme.buttonWaveMode')">
-              <ButtonWaveMode v-model="themeButtonWaveMode" />
-            </Block>
-            <Block :title="$t('preferences.theme.fontSize')">
-              <FontSize v-model="themeFontSize" />
             </Block>
             <Block :title="$t('preferences.other')">
               <ColorMode
@@ -572,6 +550,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
 
 <style scoped>
 :deep(.sticky-tabs-header [role='tablist']) {
-  @apply -top-3 z-9999 sticky;
+  @apply sticky -top-3 z-9999;
 }
 </style>
