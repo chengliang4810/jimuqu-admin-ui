@@ -1,23 +1,23 @@
 import { createApp, watchEffect } from 'vue';
 
+import { setupGlobalComponent } from '@/components/global';
+import { preferences } from '@/core/preferences';
 import { registerAccessDirective } from '@/effects/access';
 import { setDefaultModalProps } from '@/effects/common-ui';
 import { registerLoadingDirective } from '@/effects/common-ui/components/loading';
-import { preferences } from '@/core/preferences';
-import { initStores } from '@/stores';
-import '@/styles';
-import '@/styles/antd/index.css';
-
-import { useTitle } from '@vueuse/core';
-
-import { setupGlobalComponent } from '@/components/global';
 import { $t, setupI18n } from '@/locales';
+import { initStores } from '@/stores';
+import { useTitle } from '@vueuse/core';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
 import App from './app.vue';
 import { router } from './router';
 import { initPopupContext } from './utils/context';
+
+import '@/styles';
+
+import '@/styles/antdv-next/index.css';
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器

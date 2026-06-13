@@ -1,37 +1,20 @@
+@reference "tailwindcss";
 /* antdv-next 组件库的一些样式重置 */
+
+body {
+  /**
+   * 全局启用 抗锯齿字体
+   * @see https://developer.mozilla.org/zh-CN/docs/Web/CSS/font-smooth
+   */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 .ant-app {
   width: 100%;
   height: 100%;
   overscroll-behavior: none;
   color: inherit;
-}
-
-.ant-btn {
-  .anticon {
-    display: inline-flex;
-  }
-
-  /* * 修复按钮添加图标时的位置问题 */
-  > .ant-btn-icon {
-    svg {
-      display: inline-block;
-    }
-
-    svg + span {
-      margin-inline-start: 6px;
-    }
-  }
-}
-
-.ant-tag {
-  > svg {
-    display: inline-block;
-  }
-
-  > svg + span {
-    margin-inline-start: 4px;
-  }
 }
 
 .ant-message-notice-content,
@@ -42,39 +25,68 @@
   }
 }
 
+/* useVbenForm对错误边框的兼容 */
 .form-valid-error {
-  /** select 选择器的样式 */
+  --vben-form-error-shadow: 0 0 0 2px rgba(255, 35, 5, 0.1);
 
-  .ant-select:not(.valid-success) {
+  /*
+   * 红色边框:直接覆盖各 outlined 组件「带边框根元素」的 border-color。
+   * 用 !important 让 静态 / hover / focus 三态都保持红 —— antd 自身边框走
+   * --ant-*-border-color 变量,与 vben 的 border-destructive 工具类同特异性,
+   * 但 antd 样式后加载会盖掉工具类,所以必须 !important。
+   * .ant-input-outlined 同时覆盖 Input / Textarea / 密码框(其 wrapper 也带此类)。
+   */
+  .ant-input-outlined,
+  .ant-input-number-outlined,
+  .ant-mentions-outlined,
+  .ant-picker-outlined,
+  .ant-select.ant-select-outlined:not(.valid-success) {
     border-color: hsl(var(--destructive)) !important;
   }
 
-  .ant-select-focused {
-    box-shadow: 0 0 0 2px rgb(255 38 5 / 6%) !important;
+  /*
+   * 聚焦阴影:antd 的 :focus 规则用 var(--ant-*-active-shadow) 画蓝色阴影,
+   * 该变量在组件自身 css-var 作用域、祖先无法覆盖,故直接写 box-shadow + !important。
+   * :focus-within 兼容密码框/数字框「焦点在内层 input」的结构。
+   */
+  .ant-input-outlined:focus,
+  .ant-input-outlined:focus-within,
+  .ant-input-number-outlined:focus,
+  .ant-input-number-outlined:focus-within,
+  .ant-mentions-outlined:focus,
+  .ant-mentions-outlined:focus-within,
+  .ant-picker-outlined:focus,
+  .ant-picker-outlined:focus-within {
+    box-shadow: var(--vben-form-error-shadow) !important;
   }
 
-  /** 数字输入框样式 */
-  .ant-input-number-focused {
-    box-shadow: 0 0 0 2px rgb(255 38 5 / 6%);
+  /* Select 系聚焦阴影(antdv-next 边框/阴影画在 .ant-select 容器自身) */
+  .ant-select.ant-select-outlined.ant-select-focused:not(.valid-success) {
+    box-shadow: var(--vben-form-error-shadow) !important;
   }
 
-  /** 密码输入框样式 */
-  .ant-input-affix-wrapper:hover {
-    border-color: hsl(var(--destructive));
-    box-shadow: 0 0 0 2px rgb(255 38 5 / 6%);
-  }
-
-  .ant-input:not(.valid-success) {
-    border-color: hsl(var(--destructive)) !important;
+  /* 区间选择器下方来回切换时的指示条 */
+  .ant-picker-active-bar {
+    background-color: hsl(var(--destructive));
   }
 }
 
-/** 区间选择器下面来回切换时的样式 */
-.ant-app .form-valid-error .ant-picker-active-bar {
-  background-color: hsl(var(--destructive));
+/** 前后置小圆点样式 */
+.dot-before-common {
+  @apply before:relative before:top-[-2px] before:mr-[5px] before:inline-block before:size-[6px] before:rounded-full before:content-[''];
 }
 
-/** 时间选择器的样式 */
-.ant-app .form-valid-error .ant-picker-focused {
-  box-shadow: 0 0 0 2px rgb(255 38 5 / 6%);
+.dot-before-red {
+  @apply before:relative before:top-[-2px] before:mr-[5px] before:inline-block before:size-[6px] before:rounded-full before:bg-red-500 before:content-[''];
+}
+
+.dot-before-green {
+  @apply before:relative before:top-[-2px] before:mr-[5px] before:inline-block before:size-[6px] before:rounded-full before:bg-green-500 before:content-[''];
+}
+
+/* 一些重置属性 */
+html {
+  .ant-drawer .ant-drawer-body {
+    --ant-padding-lg: 12px;
+  }
 }
