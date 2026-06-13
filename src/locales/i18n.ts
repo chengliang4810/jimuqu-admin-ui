@@ -18,6 +18,8 @@ const i18n = createI18n({
   locale: '',
   messages: {},
 });
+const $t = i18n.global.t;
+const $te = i18n.global.te;
 
 const modules = import.meta.glob('./langs/**/*.json');
 
@@ -98,7 +100,7 @@ function setI18nLanguage(locale: Locale) {
   document?.querySelector('html')?.setAttribute('lang', locale);
 }
 
-async function setupI18n(app: App, options: LocaleSetupOptions = {}) {
+async function setupCoreI18n(app: App, options: LocaleSetupOptions = {}) {
   const { defaultLocale = 'zh-CN' } = options;
   // app可以自行扩展一些第三方库和组件库的国际化
   loadMessages = options.loadMessages || (async () => ({}));
@@ -113,6 +115,10 @@ async function setupI18n(app: App, options: LocaleSetupOptions = {}) {
       );
     }
   });
+}
+
+function getLocaleMessages(lang: SupportedLanguagesType) {
+  return localesMap[lang]?.();
 }
 
 /**
@@ -138,9 +144,12 @@ async function loadLocaleMessages(lang: SupportedLanguagesType) {
 }
 
 export {
+  $t,
+  $te,
+  getLocaleMessages,
   i18n,
   loadLocaleMessages,
   loadLocalesMap,
   loadLocalesMapFromDir,
-  setupI18n,
+  setupCoreI18n,
 };

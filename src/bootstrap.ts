@@ -55,10 +55,6 @@ async function bootstrap(namespace: string) {
   // 安装权限指令
   registerAccessDirective(app);
 
-  // 初始化 tippy
-  const { initTippy } = await import('@/effects/common-ui/components/tippy');
-  initTippy(app);
-
   // 初始化全局弹窗方法(静态API fallback, 防止路由守卫中访问undefined)
   initPopupContext();
 

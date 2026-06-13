@@ -2,15 +2,11 @@ import type { Locale } from 'antdv-next/dist/locale/index';
 
 import type { App } from 'vue';
 
-import type { LocaleSetupOptions, SupportedLanguagesType } from './core';
+import type { LocaleSetupOptions, SupportedLanguagesType } from './typing';
 
 import { ref } from 'vue';
 
-import {
-  $t,
-  setupI18n as coreSetup,
-  loadLocalesMapFromDir,
-} from './core';
+import { $t, getLocaleMessages, setupCoreI18n } from './i18n';
 import { preferences } from '@/core/preferences';
 
 import antdEnLocale from 'antdv-next/locale/en_US';
@@ -18,13 +14,6 @@ import antdDefaultLocale from 'antdv-next/locale/zh_CN';
 import dayjs from 'dayjs';
 
 const antdLocale = ref<Locale>(antdDefaultLocale);
-
-const modules = import.meta.glob('./langs/**/*.json');
-
-const localesMap = loadLocalesMapFromDir(
-  /\.\/langs\/([^/]+)\/(.*)\.json$/,
-  modules,
-);
 /**
  * 加载应用特有的语言包
  * 这里也可以改造为从服务端获取翻译数据
@@ -32,11 +21,10 @@ const localesMap = loadLocalesMapFromDir(
  */
 async function loadMessages(lang: SupportedLanguagesType) {
   const [appLocaleMessages] = await Promise.all([
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    localesMap[lang]!(),
+    getLocaleMessages(lang),
     loadThirdPartyMessage(lang),
   ]);
-  return appLocaleMessages.default;
+  return appLocaleMessages?.default;
 }
 
 /**
@@ -92,7 +80,7 @@ async function loadAntdLocale(lang: SupportedLanguagesType) {
 }
 
 async function setupI18n(app: App, options: LocaleSetupOptions = {}) {
-  await coreSetup(app, {
+  await setupCoreI18n(app, {
     defaultLocale: preferences.app.locale,
     loadMessages,
     missingWarn: !import.meta.env.PROD,
