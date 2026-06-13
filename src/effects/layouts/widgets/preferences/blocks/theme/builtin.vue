@@ -2,14 +2,14 @@
 import type { BuiltinThemePreset } from '@/core/preferences';
 import type { BuiltinThemeType } from '@/types';
 
-import { computed, ref, watch } from 'vue';
+import { computed, watch } from 'vue';
 
-import { UserRoundPen } from '@/icons-app';
 import { $t } from '@/locales';
 import { BUILT_IN_THEME_PRESETS } from '@/core/preferences';
 import { convertToHsl, TinyColor } from '@/utils';
 
 import { useThrottleFn } from '@vueuse/core';
+import { ColorPicker } from 'antdv-next';
 
 defineOptions({
   name: 'PreferenceBuiltinTheme',
@@ -17,7 +17,6 @@ defineOptions({
 
 const props = defineProps<{ isDark: boolean }>();
 
-const colorInput = ref();
 const modelValue = defineModel<BuiltinThemeType>({ default: 'default' });
 const themeColorPrimary = defineModel<string>('themeColorPrimary');
 
@@ -30,7 +29,7 @@ const updateThemeColorPrimary = useThrottleFn(
   true,
 );
 
-const inputValue = computed(() => {
+const customColorValue = computed(() => {
   return new TinyColor(themeColorPrimary.value || '').toHexString();
 });
 
@@ -92,13 +91,9 @@ function handleSelect(theme: BuiltinThemePreset) {
   modelValue.value = theme.type;
 }
 
-function handleInputChange(e: Event) {
-  const target = e.target as HTMLInputElement;
-  updateThemeColorPrimary(convertToHsl(target.value));
-}
-
-function selectColor() {
-  colorInput.value?.[0]?.click?.();
+function handleCustomColorChange(_value: unknown, css: string) {
+  modelValue.value = 'custom';
+  updateThemeColorPrimary(convertToHsl(css));
 }
 
 watch(
@@ -108,6 +103,10 @@ watch(
       (item) => item.type === themeType,
     );
     if (theme) {
+      if (theme.type === 'custom') {
+        return;
+      }
+
       const primaryColor = isDark
         ? theme.darkPrimaryColor || theme.primaryColor
         : theme.primaryColor;
@@ -135,19 +134,14 @@ watch(
             ></div>
           </template>
           <template v-else>
-            <div class="size-full px-9 py-2" @click.stop="selectColor">
-              <div class="relative flex-center size-5 rounded-sm">
-                <UserRoundPen
-                  class="absolute z-1 size-5 opacity-60 group-hover:opacity-100"
-                />
-                <input
-                  ref="colorInput"
-                  :value="inputValue"
-                  class="absolute inset-0 opacity-0"
-                  type="color"
-                  @input="handleInputChange"
-                />
-              </div>
+            <div class="flex-center size-full px-9 py-2" @click.stop>
+              <ColorPicker
+                :value="customColorValue"
+                disabled-alpha
+                disabled-format
+                size="small"
+                @change="handleCustomColorChange"
+              />
             </div>
           </template>
         </div>
