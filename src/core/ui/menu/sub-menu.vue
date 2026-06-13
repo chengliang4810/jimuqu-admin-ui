@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { MenuRecordRaw } from '@/core/typings';
 
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
+import { MenuItem, SubMenu } from 'antdv-next';
 
-import { MenuBadge, MenuItem, SubMenu as SubMenuComp } from './components';
-import SubMenu from './sub-menu.vue';
+import { VbenIcon } from '@/core/ui/adapter';
+
+import { MenuBadge } from './components';
 
 interface Props {
   /**
@@ -19,6 +21,9 @@ defineOptions({
 
 const props = withDefaults(defineProps<Props>(), {});
 
+// 从 MenuView 注入当前激活路径
+const activePath = inject<{ value: string }>('menuActivePath', { value: '' });
+
 /**
  * 判断是否有子节点，动态渲染 menu-item/sub-menu-item
  */
@@ -28,44 +33,51 @@ const hasChildren = computed(() => {
     Reflect.has(menu, 'children') && !!menu.children && menu.children.length > 0
   );
 });
+
+const computedIcon = computed(() =>
+  activePath.value === props.menu.path
+    ? props.menu.activeIcon || props.menu.icon
+    : props.menu.icon,
+);
 </script>
 
 <template>
+  <!-- 叶子节点：渲染 MenuItem -->
   <MenuItem
     v-if="!hasChildren"
     :key="menu.path"
-    :active-icon="menu.activeIcon"
-    :badge="menu.badge"
-    :badge-type="menu.badgeType"
-    :badge-variants="menu.badgeVariants"
-    :icon="menu.icon"
-    :path="menu.path"
-    :query="menu.query"
+    @click="$emit('itemClick', menu)"
   >
-    <template #title>
-      <span>{{ menu.name }}</span>
+    <template v-if="computedIcon" #icon>
+      <VbenIcon :icon="computedIcon" fallback />
     </template>
-  </MenuItem>
-  <SubMenuComp
-    v-else
-    :key="`${menu.path}_sub`"
-    :active-icon="menu.activeIcon"
-    :icon="menu.icon"
-    :path="menu.path"
-  >
-    <template #content>
+    <span>{{ menu.name }}</span>
+    <template #extra>
       <MenuBadge
         :badge="menu.badge"
         :badge-type="menu.badgeType"
         :badge-variants="menu.badgeVariants"
-        class="right-6"
       />
+    </template>
+  </MenuItem>
+
+  <!-- 分支节点：渲染 SubMenu -->
+  <SubMenu v-else :key="`${menu.path}_sub`" @click="$emit('subMenuClick', menu)">
+    <template v-if="computedIcon" #icon>
+      <VbenIcon :icon="computedIcon" fallback />
     </template>
     <template #title>
       <span>{{ menu.name }}</span>
+      <MenuBadge
+        :badge="menu.badge"
+        :badge-type="menu.badgeType"
+        :badge-variants="menu.badgeVariants"
+        class="ml-2"
+      />
     </template>
+    <!-- 递归子菜单 -->
     <template v-for="childItem in menu.children || []" :key="childItem.path">
-      <SubMenu :menu="childItem" />
+      <SubMenuUi :menu="childItem" />
     </template>
-  </SubMenuComp>
+  </SubMenu>
 </template>

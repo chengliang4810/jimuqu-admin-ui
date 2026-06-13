@@ -3,10 +3,12 @@ import type { MenuRecordRaw } from '@/core/typings';
 
 import type { MenuProps } from './types';
 
-import { useForwardProps } from '@/core/composables';
+import { computed, provide, ref, watch } from 'vue';
+import { Menu } from 'antdv-next';
 
-import { Menu } from './components';
 import SubMenu from './sub-menu.vue';
+import { useMenuScroll } from './hooks/use-menu-scroll';
+import { buildMenuPathMap } from './utils/menu-path';
 
 interface Props extends MenuProps {
   menus: MenuRecordRaw[];
@@ -17,14 +19,134 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<Props>(), {
+  accordion: true,
   collapse: false,
+  collapseShowTitle: false,
+  defaultActive: '',
+  defaultOpeneds: () => [],
+  menus: () => [],
+  mode: 'vertical',
+  rounded: true,
+  scrollToActive: false,
+  theme: 'dark',
 });
 
-const forward = useForwardProps(props);
+const emit = defineEmits<{
+  close: [string, string[]];
+  open: [string, string[]];
+  select: [string, string[]];
+}>();
+
+// 激活的菜单项
+const selectedKeys = ref<string[]>([props.defaultActive]);
+
+// 展开的菜单项
+const openKeys = ref<string[]>(
+  props.collapse ? [] : [...props.defaultOpeneds],
+);
+
+// 提供给子组件的激活路径
+provide('menuActivePath', computed(() => selectedKeys.value[0] || ''));
+
+// 构建菜单路径映射
+const menuPathMap = computed(() => buildMenuPathMap(props.menus));
+
+// antdv-next mode 映射：vertical → inline（保留缩进和展开箭头）
+const antdvMode = computed(() =>
+  props.mode === 'horizontal' ? 'horizontal' : 'inline',
+);
+
+// antdv-next theme 只能为 'dark' | 'light'，'auto' 降级为 'light'
+const antdvTheme = computed(() =>
+  props.theme === 'auto' ? 'light' : props.theme,
+);
+
+// 主题 class（用于 rounded 等自定义）
+const menuClass = computed(() => {
+  const classes: string[] = [];
+  if (props.rounded) {
+    classes.push('menu-rounded');
+  }
+  if (props.collapseShowTitle) {
+    classes.push('collapse-show-title');
+  }
+  return classes;
+});
+
+// 监听 collapse 变化，重置 openKeys
+watch(
+  () => props.collapse,
+  (collapsed) => {
+    if (collapsed) {
+      openKeys.value = [];
+    }
+  },
+);
+
+// 监听 defaultActive 变化
+watch(
+  () => props.defaultActive,
+  (active) => {
+    if (active) {
+      selectedKeys.value = [active];
+      // 自动展开父级路径
+      const parents = menuPathMap.value.get(active);
+      if (parents?.length) {
+        openKeys.value = [...new Set([...openKeys.value, ...parents])];
+      }
+    }
+  },
+  { immediate: true },
+);
+
+// 自动滚动到激活项
+useMenuScroll(computed(() => selectedKeys.value[0]), {
+  enable: computed(
+    () => props.scrollToActive && props.mode === 'vertical' && !props.collapse,
+  ),
+  delay: 320,
+});
+
+// 处理菜单项选择
+function handleSelect(info: { key: string; keyPath: string[] }) {
+  const parents = menuPathMap.value.get(info.key) || info.keyPath.slice(1);
+  emit('select', info.key, parents);
+}
+
+// 处理 submenu 展开/关闭（手风琴由 antdv inline 模式内置处理）
+function handleOpenChange(keys: string[]) {
+  const prevKeys = [...openKeys.value];
+  const addedKeys = keys.filter((k) => !prevKeys.includes(k));
+  const removedKeys = prevKeys.filter((k) => !keys.includes(k));
+
+  // 处理新增展开
+  for (const key of addedKeys) {
+    const parents = menuPathMap.value.get(key) || [];
+    emit('open', key, parents);
+  }
+
+  // 处理关闭
+  for (const key of removedKeys) {
+    const parents = menuPathMap.value.get(key) || [];
+    emit('close', key, parents);
+  }
+
+  openKeys.value = keys;
+}
 </script>
 
 <template>
-  <Menu v-bind="forward">
+  <Menu
+    v-model:open-keys="openKeys"
+    v-model:selected-keys="selectedKeys"
+    :class="menuClass"
+    :inline-collapsed="collapse"
+    :mode="antdvMode"
+    :theme="antdvTheme"
+    :trigger-sub-menu-action="collapse ? 'hover' : 'click'"
+    @open-change="handleOpenChange"
+    @select="handleSelect"
+  >
     <template v-for="menu in menus" :key="menu.path">
       <SubMenu :menu="menu" />
     </template>

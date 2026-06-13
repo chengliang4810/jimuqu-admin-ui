@@ -84,6 +84,50 @@ body {
   @apply before:relative before:top-[-2px] before:mr-[5px] before:inline-block before:size-[6px] before:rounded-full before:bg-green-500 before:content-[''];
 }
 
+/* 菜单样式覆盖 */
+.ant-menu {
+  /* 基础变量 */
+  &.menu-rounded {
+    --ant-menu-item-margin-inline: 8px;
+    --ant-menu-item-border-radius: 6px;
+  }
+
+  /* collapseShowTitle: 折叠时显示标题在图标下方 */
+  &.collapse-show-title.ant-menu-inline-collapsed {
+    .ant-menu-item {
+      flex-direction: column;
+      height: auto;
+      padding: 12px 0 !important;
+    }
+  }
+
+  &.ant-menu-dark {
+    background: hsl(var(--menu));
+  }
+
+  &.ant-menu-light {
+    background: hsl(var(--menu));
+  }
+
+  /* 水平模式 */
+  &.ant-menu-horizontal {
+    height: var(--height-horizontal-height, 52px);
+    background: transparent;
+
+    &.ant-menu-dark,
+    &.ant-menu-light {
+      background: transparent;
+    }
+  }
+}
+
+/* 折叠状态下的 item 图标居中 */
+.ant-menu-inline-collapsed .ant-menu-item {
+  .ant-menu-item-icon {
+    margin-right: 0;
+  }
+}
+
 /* 一些重置属性 */
 html {
   .ant-drawer .ant-drawer-body {

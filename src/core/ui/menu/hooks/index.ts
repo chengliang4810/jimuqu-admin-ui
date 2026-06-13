@@ -1,2 +1,1 @@
-export * from './use-menu';
-export * from './use-menu-context';
+export { useMenuScroll } from './use-menu-scroll';
