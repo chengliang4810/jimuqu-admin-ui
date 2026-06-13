@@ -205,13 +205,12 @@ onBeforeUnmount(() => {
           rootMenu.theme,
           nsMenu.e('popup-container'),
           is(rootMenu.theme, true),
-          opened ? '' : 'hidden',
           'overflow-auto',
           'max-h-[calc(var(--reka-hover-card-content-available-height)-20px)]',
           mode === 'horizontal' ? 'is-horizontal' : '',
         ]"
         :content-props="contentProps"
-        :open="true"
+        :open="opened"
         :open-delay="0"
       >
         <template #trigger>

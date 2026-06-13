@@ -453,6 +453,7 @@ $namespace: vben;
   --menu-item-popup-padding-x: 12px;
   --menu-item-margin-y: 2px;
   --menu-item-margin-x: 0px;
+  --menu-item-collapse-size: 42px;
   --menu-item-collapse-padding-y: 23.5px;
   --menu-item-collapse-padding-x: 0px;
   --menu-item-collapse-margin-y: 4px;
@@ -667,13 +668,17 @@ $namespace: vben;
 
     .#{$namespace}-sub-menu-content,
     .#{$namespace}-menu-item {
+      box-sizing: border-box;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--menu-item-collapse-padding-y)
-        var(--menu-item-collapse-padding-x);
+      width: calc(100% - var(--menu-item-collapse-margin-x) * 2);
+      min-width: var(--menu-item-collapse-size);
+      height: var(--menu-item-collapse-size);
+      padding: 0;
       margin: var(--menu-item-collapse-margin-y)
         var(--menu-item-collapse-margin-x);
+      overflow: hidden;
       transition: all 0.3s;
 
       &.is-active {
@@ -696,14 +701,18 @@ $namespace: vben;
       .#{$namespace}-sub-menu-content,
       .#{$namespace}-menu-item {
         &.is-collapse-show-title {
+          width: calc(100% - 16px);
+          height: auto;
           // padding: 32px 0 !important;
           margin: 4px 8px !important;
+          overflow: visible;
         }
       }
     }
   }
 
   &__popup-container {
+    min-width: 144px;
     max-width: 240px;
     height: unset;
     padding: 0;
@@ -716,7 +725,14 @@ $namespace: vben;
 
     .#{$namespace}-sub-menu-content,
     .#{$namespace}-menu-item {
+      box-sizing: border-box;
+      width: auto;
+      min-width: 120px;
+      height: var(--menu-item-height);
       padding: var(--menu-item-popup-padding-y) var(--menu-item-popup-padding-x);
+      margin-right: 0;
+      margin-left: 0;
+      overflow: visible;
     }
   }
 
