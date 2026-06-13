@@ -132,10 +132,6 @@ interface AppPreferences {
   /** 是否显示偏好设置 */
   enablePreferences: boolean;
   /**
-   * @zh_CN 是否开启refreshToken
-   */
-  enableRefreshToken: boolean;
-  /**
    * @zh_CN 是否开启首选项导航栏吸顶效果
    */
   enableStickyPreferencesNavigationBar: boolean;
