@@ -209,7 +209,7 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
     NotFoundComponent,
   };
 
-  return await generateAccessible(preferences.app.accessMode, {
+  return await generateAccessible('mixed', {
     ...options,
     fetchMenuListAsync: async () => {
       // 清除以前的message

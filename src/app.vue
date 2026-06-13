@@ -3,13 +3,11 @@ import type { ConfigProviderProps } from 'antdv-next';
 
 import { computed } from 'vue';
 
-import { useAntdDesignTokens } from '@/effects/hooks';
 import { preferences, usePreferences } from '@/core/preferences';
-
+import { useAntdDesignTokens } from '@/effects/hooks';
+import { antdLocale } from '@/locales';
 import { App, ConfigProvider, Spin, theme } from 'antdv-next';
 import { storeToRefs } from 'pinia';
-
-import { antdLocale } from '@/locales';
 
 import { useGlobalLoadingStore } from './stores/loading';
 import { PopupContext } from './utils/context';
@@ -35,26 +33,22 @@ const tokenTheme = computed(() => {
   };
 });
 
-const otherProps = computed<
-  Omit<ConfigProviderProps, 'locale' | 'theme'>
->(() => {
-  // 目前不生效?
-  return {
-    modal: { mask: { blur: false } },
-    drawer: { mask: { blur: false } },
-  };
-});
+const otherProps = computed<Omit<ConfigProviderProps, 'locale' | 'theme'>>(
+  () => {
+    // 目前不生效?
+    return {
+      modal: { mask: { blur: false } },
+      drawer: { mask: { blur: false } },
+    };
+  },
+);
 
 const loadingStore = useGlobalLoadingStore();
 const { globalLoading } = storeToRefs(loadingStore);
 </script>
 
 <template>
-  <ConfigProvider
-    :locale="antdLocale"
-    :theme="tokenTheme"
-    v-bind="otherProps"
-  >
+  <ConfigProvider :locale="antdLocale" :theme="tokenTheme" v-bind="otherProps">
     <App :message="{ maxCount: 1 }">
       <RouterView />
       <PopupContext />

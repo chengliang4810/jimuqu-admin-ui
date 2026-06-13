@@ -93,32 +93,14 @@ async function generateRoutes(
 ) {
   const { forbiddenComponent, roles, routes } = options;
 
-  let resultRoutes: RouteRecordRaw[] = routes;
-  switch (mode) {
-    case 'backend': {
-      resultRoutes = await generateRoutesByBackend(options);
-      break;
-    }
-    case 'frontend': {
-      resultRoutes = await generateRoutesByFrontend(
-        routes,
-        roles || [],
-        forbiddenComponent,
-      );
-      break;
-    }
-    case 'mixed': {
-      const [frontend_resultRoutes, backend_resultRoutes] = await Promise.all([
-        generateRoutesByFrontend(routes, roles || [], forbiddenComponent),
-        generateRoutesByBackend(options),
-      ]);
-      resultRoutes = mergeRoutesByName(
-        backend_resultRoutes,
-        frontend_resultRoutes,
-      );
-      break;
-    }
-  }
+  const [frontendResultRoutes, backendResultRoutes] = await Promise.all([
+    generateRoutesByFrontend(routes, roles || [], forbiddenComponent),
+    generateRoutesByBackend(options),
+  ]);
+  let resultRoutes = mergeRoutesByName(
+    backendResultRoutes,
+    frontendResultRoutes,
+  );
 
   /**
    * 调整路由树，做以下处理：

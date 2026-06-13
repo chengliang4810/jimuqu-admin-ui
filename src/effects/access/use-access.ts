@@ -1,6 +1,6 @@
 import { computed } from 'vue';
 
-import { preferences, updatePreferences } from '@/core/preferences';
+import { preferences } from '@/core/preferences';
 import { useAccessStore, useUserStore } from '@/stores';
 
 function useAccess() {
@@ -43,20 +43,10 @@ function useAccess() {
     return intersection.length > 0;
   }
 
-  async function toggleAccessMode() {
-    updatePreferences({
-      app: {
-        accessMode:
-          preferences.app.accessMode === 'frontend' ? 'backend' : 'frontend',
-      },
-    });
-  }
-
   return {
     accessMode,
     hasAccessByCodes,
     hasAccessByRoles,
-    toggleAccessMode,
   };
 }
 
