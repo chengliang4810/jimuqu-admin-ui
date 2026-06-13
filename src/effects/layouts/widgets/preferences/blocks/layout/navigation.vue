@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import type { SelectOption } from '@/types';
-
 import { $t } from '@/locales';
 
 import SwitchItem from '../switch-item.vue';
-import ToggleItem from '../toggle-item.vue';
 
 defineOptions({
   name: 'PreferenceNavigationConfig',
@@ -12,24 +9,11 @@ defineOptions({
 
 defineProps<{ disabled?: boolean; disabledNavigationSplit?: boolean }>();
 
-const navigationStyleType = defineModel<string>('navigationStyleType');
 const navigationSplit = defineModel<boolean>('navigationSplit');
 const navigationAccordion = defineModel<boolean>('navigationAccordion');
-
-const stylesItems: SelectOption[] = [
-  { label: $t('preferences.rounded'), value: 'rounded' },
-  { label: $t('preferences.plain'), value: 'plain' },
-];
 </script>
 
 <template>
-  <ToggleItem
-    v-model="navigationStyleType"
-    :disabled="disabled"
-    :items="stylesItems"
-  >
-    {{ $t('preferences.navigationMenu.style') }}
-  </ToggleItem>
   <SwitchItem
     v-model="navigationSplit"
     :disabled="disabledNavigationSplit || disabled"

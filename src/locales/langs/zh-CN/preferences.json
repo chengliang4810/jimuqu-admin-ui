@@ -102,7 +102,6 @@
 	},
 	"navigationMenu": {
 		"title": "导航菜单",
-		"style": "导航菜单风格",
 		"accordion": "侧边导航菜单手风琴模式",
 		"split": "导航菜单分离",
 		"splitTip": "开启时，侧边栏显示顶栏对应菜单的子菜单"

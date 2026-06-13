@@ -85,9 +85,7 @@ const logoClass = computed(() => {
   return classes.join(' ');
 });
 
-const isMenuRounded = computed(() => {
-  return preferences.navigation.styleType === 'rounded';
-});
+const isMenuRounded = false;
 
 const logoCollapsed = computed(() => {
   if (isMobile.value && sidebarCollapsed.value) {

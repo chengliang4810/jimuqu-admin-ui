@@ -9,7 +9,6 @@ import type {
   LayoutHeaderModeType,
   LayoutType,
   LoginExpiredModeType,
-  NavigationStyleType,
   PageTransitionType,
   PreferencesButtonPositionType,
   TabsStyleType,
@@ -238,8 +237,6 @@ interface NavigationPreferences {
   accordion: boolean;
   /** 导航菜单是否切割，只在 layout=mixed-nav 生效 */
   split: boolean;
-  /** 导航菜单风格 */
-  styleType: NavigationStyleType;
 }
 
 interface SidebarPreferences {

@@ -102,7 +102,6 @@
 	},
 	"navigationMenu": {
 		"title": "Navigation Menu",
-		"style": "Navigation Menu Style",
 		"accordion": "Sidebar Accordion Menu",
 		"split": "Navigation Menu Separation",
 		"splitTip": "When enabled, the sidebar displays the top bar's submenu"

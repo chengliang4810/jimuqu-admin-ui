@@ -70,13 +70,6 @@ type BreadcrumbStyleType = 'background' | 'normal';
 type AccessModeType = 'backend' | 'frontend' | 'mixed';
 
 /**
- * 导航风格
- * plain 朴素
- * rounded 圆润
- */
-type NavigationStyleType = 'plain' | 'rounded';
-
-/**
  * 标签栏风格
  * brisk 轻快
  * card 卡片
@@ -108,7 +101,6 @@ export type {
   LayoutHeaderModeType,
   LayoutType,
   LoginExpiredModeType,
-  NavigationStyleType,
   PageTransitionType,
   PreferencesButtonPositionType,
   TabsStyleType,

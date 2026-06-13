@@ -9,7 +9,6 @@ import type {
   LayoutHeaderMenuAlignType,
   LayoutHeaderModeType,
   LayoutType,
-  NavigationStyleType,
   PreferencesButtonPositionType,
   ThemeModeType,
 } from '@/types';
@@ -125,9 +124,6 @@ const tabbarMiddleClickToClose = defineModel<boolean>(
   'tabbarMiddleClickToClose',
 );
 
-const navigationStyleType = defineModel<NavigationStyleType>(
-  'navigationStyleType',
-);
 const navigationSplit = defineModel<boolean>('navigationSplit');
 const navigationAccordion = defineModel<boolean>('navigationAccordion');
 
@@ -404,7 +400,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
               <Navigation
                 v-model:navigation-accordion="navigationAccordion"
                 v-model:navigation-split="navigationSplit"
-                v-model:navigation-style-type="navigationStyleType"
                 :disabled="isFullContent"
                 :disabled-navigation-split="!isMixedNav"
               />
