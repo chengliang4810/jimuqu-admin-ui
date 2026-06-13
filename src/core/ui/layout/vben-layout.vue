@@ -11,9 +11,8 @@ import {
   useLayoutHeaderStyle,
 } from '@/core/composables';
 import { IconifyIcon } from '@/core/icons';
-import { VbenIconButton } from '@/core/ui/adapter';
 import { ELEMENT_ID_MAIN_CONTENT } from '@/core/shared/constants';
-
+import { VbenIconButton } from '@/core/ui/shadcn/components/button';
 import { useMouse, useScroll, useThrottleFn } from '@vueuse/core';
 
 import {
@@ -627,7 +626,7 @@ const idMainContent = ELEMENT_ID_MAIN_CONTENT;
     <div
       v-if="maskVisible"
       :style="maskStyle"
-      class="fixed top-0 left-0 size-full bg-overlay transition-[background-color] duration-200"
+      class="bg-overlay fixed top-0 left-0 size-full transition-[background-color] duration-200"
       @click="handleClickMask"
     ></div>
   </div>

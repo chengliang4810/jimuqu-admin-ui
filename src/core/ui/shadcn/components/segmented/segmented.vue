@@ -4,7 +4,6 @@ import type { SegmentedItem } from './types';
 import { computed } from 'vue';
 
 import { cn } from '@/core/shared/utils';
-
 import { TabsTrigger } from 'reka-ui';
 
 import { Tabs, TabsContent, TabsList } from '../../ui';
