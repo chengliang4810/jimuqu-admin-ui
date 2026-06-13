@@ -2,28 +2,26 @@
 import { computed, h, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { AuthenticationLoginExpiredModal } from '@/effects/common-ui';
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@/constants';
+import { preferences, usePreferences } from '@/core/preferences';
+import { AuthenticationLoginExpiredModal } from '@/effects/common-ui';
 import { useWatermark } from '@/effects/hooks';
-import { BookOpenText, CircleHelp, GiteeIcon } from '@/icons-app';
 import {
   BasicLayout,
   LockScreen,
   Notification,
   UserDropdown,
 } from '@/effects/layouts';
-import { preferences, usePreferences } from '@/core/preferences';
-import { useAccessStore, useUserStore } from '@/stores';
-import { openWindow } from '@/utils';
-
-import { GithubOutlined, UserOutlined } from '@antdv-next/icons';
-import { Badge } from 'antdv-next';
-
+import { BookOpenText, CircleHelp, GiteeIcon } from '@/icons-app';
 import { $t } from '@/locales';
 import { resetRoutes } from '@/router';
+import { useAccessStore, useUserStore } from '@/stores';
 import { useAuthStore } from '@/stores';
+import { openWindow } from '@/utils';
 import { useVersionUpdate } from '@/utils/check-update';
 import LoginForm from '@/views/_core/authentication/login.vue';
+import { GithubOutlined, UserOutlined } from '@antdv-next/icons';
+import { Badge } from 'antdv-next';
 
 import { useNotification } from './hooks/notification';
 
