@@ -71,7 +71,7 @@ const defaultPreferences: Preferences = {
   navigation: {
     accordion: true,
     split: true,
-    styleType: 'rounded',
+    styleType: 'plain',
   },
   sidebar: {
     autoActivateChild: false,
