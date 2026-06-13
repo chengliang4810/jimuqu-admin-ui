@@ -83,7 +83,7 @@ async function handleClosed() {
 </script>
 
 <template>
-  <BasicModal :title="title" class="w-[550px]">
+  <BasicModal :title="title" :width="550">
     <BasicForm />
   </BasicModal>
 </template>

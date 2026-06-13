@@ -119,7 +119,7 @@ const items = computed<DescriptionsProps['items']>(() => {
 </script>
 
 <template>
-  <BasicDrawer :footer="false" class="w-[600px]" title="查看日志">
+  <BasicDrawer :footer="false" :width="600" title="查看日志">
     <Descriptions
       :classes="{ label: 'min-w-[120px]' }"
       :column="1"

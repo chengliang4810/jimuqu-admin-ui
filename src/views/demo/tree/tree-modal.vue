@@ -98,7 +98,7 @@ async function handleCancel() {
 </script>
 
 <template>
-  <BasicModal :close-on-click-modal="false" :title="title" class="w-[550px]">
+  <BasicModal :close-on-click-modal="false" :title="title" :width="550">
     <BasicForm />
   </BasicModal>
 </template>

@@ -126,6 +126,10 @@ export interface DrawerProps {
    */
   titleTooltip?: string;
   /**
+   * 抽屉宽度（水平方向时生效，与 antdv-next 的 width 属性一致）
+   */
+  width?: number | string;
+  /**
    * 抽屉层级
    */
   zIndex?: number;

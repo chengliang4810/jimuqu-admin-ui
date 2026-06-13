@@ -123,7 +123,7 @@ async function handleOk() {
     :confirm-text="t('component.cropper.okText')"
     :fullscreen-button="false"
     :title="t('component.cropper.modalTitle')"
-    class="w-[800px]"
+    :width="800"
   >
     <div :class="prefixCls">
       <div :class="`${prefixCls}-left`" class="w-full">

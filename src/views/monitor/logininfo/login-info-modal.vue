@@ -97,7 +97,7 @@ const items = computed<DescriptionsProps['items']>(() => {
   <BasicModal
     :footer="false"
     :fullscreen-button="false"
-    class="w-[550px]"
+    :width="550"
     title="登录日志"
   >
     <Descriptions

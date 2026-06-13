@@ -142,6 +142,10 @@ export interface ModalProps {
    */
   titleTooltip?: string;
   /**
+   * 弹窗宽度（与 antdv-next 的 width 属性一致）
+   */
+  width?: number | string;
+  /**
    * 弹窗层级
    */
   zIndex?: number;

@@ -37,7 +37,7 @@ const showMultiActions = computed(() => {
 
 const [BasicModal, modalApi] = useVbenModal({
   title: '流程干预',
-  class: 'w-[800px]',
+  width: 800,
   fullscreenButton: false,
   async onOpenChange(isOpen) {
     if (!isOpen) {

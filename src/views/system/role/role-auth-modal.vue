@@ -53,7 +53,7 @@ let deptTreeData: DeptOption[] = [];
 const deptTree = ref<DeptOption[]>([]);
 
 const [BasicModal, modalApi] = useVbenModal({
-  class: 'w-[800px]',
+  width: 800,
   fullscreenButton: true,
   onConfirm: handleConfirm,
   onClosed: handleClosed,

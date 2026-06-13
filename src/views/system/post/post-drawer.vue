@@ -107,7 +107,7 @@ async function handleClosed() {
 </script>
 
 <template>
-  <BasicDrawer :title="title" class="w-[600px]">
+  <BasicDrawer :title="title" :width="600">
     <BasicForm />
   </BasicDrawer>
 </template>

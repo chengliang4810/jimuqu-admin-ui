@@ -82,7 +82,7 @@ function handleReset() {
 </script>
 
 <template>
-  <BasicDrawer class="w-[800px]" title="选择用户">
+  <BasicDrawer :width="800" title="选择用户">
     <BasicTable />
   </BasicDrawer>
 </template>

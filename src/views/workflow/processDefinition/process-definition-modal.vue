@@ -129,7 +129,7 @@ async function handleClosed() {
 </script>
 
 <template>
-  <BasicDrawer :fullscreen-button="false" :title="title" class="w-[550px]">
+  <BasicDrawer :fullscreen-button="false" :title="title" :width="550">
     <div class="min-h-[400px]">
       <BasicForm />
     </div>

@@ -42,7 +42,7 @@ const emit = defineEmits<{
 
 const [BasicModal, modalApi] = useVbenModal({
   title: '选择人员',
-  class: 'w-[1060px]',
+  width: 1060,
   fullscreenButton: false,
   onClosed: () => emit('cancel'),
   onConfirm: handleSubmit,

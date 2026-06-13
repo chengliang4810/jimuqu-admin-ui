@@ -139,7 +139,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <BasicModal class="w-[800px]" title="导入表">
+  <BasicModal :width="800" title="导入表">
     <BasicTable />
   </BasicModal>
 </template>

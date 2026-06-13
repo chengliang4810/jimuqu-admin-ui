@@ -59,6 +59,7 @@ const {
   submitting,
   title,
   titleTooltip,
+  width: propWidth,
   zIndex,
 } = usePriorityValues(props, state);
 
@@ -80,9 +81,11 @@ const getContainer = computed(() => {
 });
 
 const widthInfo = computed(() => extractWidthFromClass(modalClass.value));
-const modalWidth = computed(() =>
-  shouldFullscreen.value ? '100vw' : (widthInfo.value.width ?? 520),
-);
+const modalWidth = computed(() => {
+  if (shouldFullscreen.value) return '100vw';
+  if (propWidth.value != null) return propWidth.value;
+  return widthInfo.value.width ?? 520;
+});
 const restClass = computed(() => widthInfo.value.rest);
 
 const DefaultButton = computed(() => components.DefaultButton || Button);

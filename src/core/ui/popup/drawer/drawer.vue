@@ -61,6 +61,7 @@ const {
   submitting,
   title,
   titleTooltip,
+  width: propWidth,
   zIndex,
 } = usePriorityValues(props, state);
 
@@ -70,9 +71,11 @@ const isHorizontal = computed(
 
 const widthInfo = computed(() => extractWidthFromClass(drawerClass.value));
 const restClass = computed(() => widthInfo.value.rest);
-const drawerWidth = computed(() =>
-  isHorizontal.value ? (widthInfo.value.width ?? 520) : undefined,
-);
+const drawerWidth = computed(() => {
+  if (!isHorizontal.value) return undefined;
+  if (propWidth.value != null) return propWidth.value;
+  return widthInfo.value.width ?? 520;
+});
 const drawerHeight = computed(() =>
   isHorizontal.value ? undefined : (widthInfo.value.width ?? undefined),
 );

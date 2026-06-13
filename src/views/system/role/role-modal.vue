@@ -39,7 +39,7 @@ const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
 );
 
 const [BasicModal, modalApi] = useVbenModal({
-  class: 'w-[550px]',
+  width: 550,
   onBeforeClose,
   onClosed: handleClosed,
   onConfirm: handleConfirm,

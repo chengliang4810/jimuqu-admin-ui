@@ -12,7 +12,7 @@ const currentNotice = shallowRef<Notice | null>(null);
 const { hasAccessByCodes } = useAccess();
 
 const [BasicModal, modalApi] = useVbenModal({
-  class: 'w-[800px]',
+  width: 800,
   fullscreenButton: true,
   footer: false,
   onOpenChange: async (isOpen) => {

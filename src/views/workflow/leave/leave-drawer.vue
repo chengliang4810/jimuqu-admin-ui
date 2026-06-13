@@ -181,7 +181,7 @@ async function handleStartWorkFlow() {
 </script>
 
 <template>
-  <BasicDrawer :title="title" class="w-[600px]">
+  <BasicDrawer :title="title" :width="600">
     <BasicForm />
     <template #center-footer>
       <a-button @click="handleTempSave">暂存</a-button>

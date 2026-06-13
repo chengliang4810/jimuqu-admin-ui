@@ -10,7 +10,7 @@ const [Modal] = useVbenModal({
 </script>
 
 <template>
-  <Modal class="w-[600px]">
+  <Modal :width="600">
     <div class="p-4">
       <h2 class="mb-2 text-lg font-bold">Vben5 代码生成模板</h2>
       <p class="mb-4 text-red-500">注意antdv-next专用 跟ant-design-vue不兼容</p>

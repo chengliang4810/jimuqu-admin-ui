@@ -93,7 +93,7 @@ async function handleClosed() {
 </script>
 
 <template>
-  <BasicDrawer :title="title" class="w-[650px]">
+  <BasicDrawer :title="title" :width="650">
     <BasicForm>
       <template #tip>
         <div class="ml-7 w-full">

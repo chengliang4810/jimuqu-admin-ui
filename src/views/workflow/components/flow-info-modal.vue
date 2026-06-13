@@ -20,7 +20,7 @@ const taskInfo = ref<TaskInfo>();
 
 const [BasicModal, modalApi] = useVbenModal({
   title: '流程信息',
-  class: 'w-[1000px]',
+  width: 1000,
   footer: false,
   onClosed: () => {
     taskInfo.value = undefined;
