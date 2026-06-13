@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { cn } from '@/core/shared/utils';
+
 import { Button } from 'antdv-next';
 
 interface Props {
@@ -44,7 +46,7 @@ const antdType = computed(() => {
 
 const danger = computed(() => props.variant === 'destructive');
 
-// vben size → antd size
+// vben size → antd size (icon maps to middle = 32px, matching original h-8 w-8)
 const antdSize = computed(() => {
   switch (props.size) {
     case 'lg': {
@@ -59,6 +61,8 @@ const antdSize = computed(() => {
     }
   }
 });
+
+const isIconVariant = computed(() => props.variant === 'icon');
 </script>
 
 <template>
@@ -66,9 +70,10 @@ const antdSize = computed(() => {
     :type="antdType"
     :danger="danger"
     :size="antdSize"
+    :shape="isIconVariant ? 'circle' : undefined"
     :loading="loading"
     :disabled="disabled"
-    :class="props.class"
+    :class="isIconVariant ? cn('!text-lg min-w-0 h-8 w-8 flex-center', props.class) : props.class"
   >
     <slot></slot>
   </Button>

@@ -1,16 +1,14 @@
 <script lang="ts" setup>
 import type { ThemeModeType } from '@/types';
 
-import { MoonStar, Sun, SunMoon } from '@/icons-app';
-import { $t } from '@/locales';
 import {
   preferences,
   updatePreferences,
   usePreferences,
 } from '@/core/preferences';
-
 import { VbenTooltip } from '@/core/ui/adapter';
-
+import { MoonStar, Sun, SunMoon } from '@/icons-app';
+import { $t } from '@/locales';
 import { Segmented } from 'antdv-next';
 
 import ThemeButton from './theme-button.vue';

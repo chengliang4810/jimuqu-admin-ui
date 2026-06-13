@@ -33,7 +33,7 @@ const showTooltip = computed(() => !!slots.tooltip || !!props.tooltip);
     type="text"
     shape="circle"
     :disabled="disabled"
-    :class="cn('flex-center', props.class)"
+    :class="cn('flex-center !text-lg', props.class)"
     @click="onClick"
   >
     <slot></slot>
@@ -49,7 +49,7 @@ const showTooltip = computed(() => !!slots.tooltip || !!props.tooltip);
         type="text"
         shape="circle"
         :disabled="disabled"
-        :class="cn('flex-center', props.class)"
+        :class="cn('flex-center !text-lg', props.class)"
         @click="onClick"
       >
         <slot></slot>
