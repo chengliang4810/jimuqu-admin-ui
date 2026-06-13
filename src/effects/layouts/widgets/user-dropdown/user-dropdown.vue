@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import type { Component } from 'vue';
-
 import type { AnyFunction } from '@/types';
+
+import type { Component } from 'vue';
 
 import { computed, ref, useTemplateRef } from 'vue';
 
+import { preferences, usePreferences } from '@/core/preferences';
+import { VbenAvatar, VbenIcon } from '@/core/ui/adapter';
+import { useVbenModal } from '@/core/ui/popup';
 import { LockKeyhole, LogOut, Settings } from '@/icons-app';
 import { $t } from '@/locales';
-import { preferences, usePreferences } from '@/core/preferences';
 import { useAccessStore } from '@/stores';
 import { isWindowsOs } from '@/utils';
-
-import { useVbenModal } from '@/core/ui/popup';
-import { VbenAvatar, VbenIcon } from '@/core/ui/adapter';
-
 import { useMagicKeys, whenever } from '@vueuse/core';
 import { Badge, Dropdown } from 'antdv-next';
 
@@ -203,7 +201,7 @@ if (enableShortcutKey.value) {
     placement="bottomRight"
     @open-change="(v: boolean) => (openPopover = v)"
   >
-    <div class="mr-2 ml-1 cursor-pointer rounded-full p-1.5 hover:bg-accent">
+    <div class="hover:bg-accent mr-2 ml-1 cursor-pointer rounded-full p-1.5">
       <div class="flex-center hover:text-accent-foreground">
         <VbenAvatar :alt="text" :src="avatar" class="size-8" dot />
       </div>
@@ -223,10 +221,10 @@ if (enableShortcutKey.value) {
           <div class="ml-2 w-full">
             <div
               v-if="tagText || text || $slots.tagText"
-              class="mb-1 flex items-center text-sm font-medium text-foreground"
+              class="text-foreground mb-1 flex items-center text-sm font-medium"
             >
               <div
-                class="max-w-[100px] overflow-hidden text-ellipsis break-keep"
+                class="max-w-[100px] overflow-hidden break-keep text-ellipsis"
                 :title="text"
               >
                 {{ text }}
@@ -242,7 +240,7 @@ if (enableShortcutKey.value) {
                 </Badge>
               </slot>
             </div>
-            <div class="text-xs font-normal text-muted-foreground">
+            <div class="text-muted-foreground text-xs font-normal">
               {{ description }}
             </div>
           </div>
@@ -251,7 +249,7 @@ if (enableShortcutKey.value) {
         <div
           v-for="menu in menus"
           :key="menu.text"
-          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
+          class="hover:bg-accent mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8"
           @click="menu.handler"
         >
           <VbenIcon :icon="menu.icon" class="mr-2 size-4" />
@@ -260,7 +258,7 @@ if (enableShortcutKey.value) {
         <div class="border-border my-1 border-t"></div>
         <div
           v-if="preferencesButtonPosition.userDropdown"
-          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
+          class="hover:bg-accent mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8"
           @click="handleOpenSettings"
         >
           <Settings class="mr-2 size-4" />
@@ -268,7 +266,7 @@ if (enableShortcutKey.value) {
         </div>
         <div
           v-if="preferences.widget.lockScreen"
-          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
+          class="hover:bg-accent mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8"
           @click="handleOpenLock"
         >
           <LockKeyhole class="mr-2 size-4" />
@@ -285,7 +283,7 @@ if (enableShortcutKey.value) {
           class="border-border my-1 border-t"
         ></div>
         <div
-          class="mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8 hover:bg-accent"
+          class="hover:bg-accent mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8"
           @click="handleLogout"
         >
           <LogOut class="mr-2 size-4" />
