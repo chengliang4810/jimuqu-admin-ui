@@ -119,7 +119,7 @@ Upload.Dragger只会影响样式
       >
         <template #size>
           <span
-            class="mx-1 font-medium text-primary"
+            class="text-primary mx-1 font-medium"
             :class="{ 'upload-text__disabled': disabled }"
           >
             {{ maxSize }}MB
@@ -127,7 +127,7 @@ Upload.Dragger只会影响样式
         </template>
         <template #ext>
           <span
-            class="mx-1 font-medium text-primary"
+            class="text-primary mx-1 font-medium"
             :class="{ 'upload-text__disabled': disabled }"
           >
             {{ acceptStr }}

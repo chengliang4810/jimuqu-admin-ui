@@ -65,7 +65,7 @@ function handleCancel() {
       accept="application/json"
     >
       <p class="ant-upload-drag-icon flex items-center justify-center">
-        <InboxOutlined class="size-[48px] text-primary" />
+        <InboxOutlined class="text-primary size-[48px]" />
       </p>
       <p class="ant-upload-text">点击或者拖拽到此处上传[json]文件</p>
     </UploadDragger>

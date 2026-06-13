@@ -39,7 +39,9 @@ const isAtRight = ref(false);
 
 const showShadowTop = computed(() => props.shadow && props.shadowTop);
 const showShadowBottom = computed(() => props.shadow && props.shadowBottom);
-const hideNativeScrollbar = computed(() => hasHiddenClass(props.scrollBarClass));
+const hideNativeScrollbar = computed(() =>
+  hasHiddenClass(props.scrollBarClass),
+);
 
 function hasHiddenClass(value: ClassType): boolean {
   if (!value) {
@@ -65,8 +67,14 @@ function hasHiddenClass(value: ClassType): boolean {
 
 function handleScroll(e: Event) {
   const el = e.target as HTMLElement;
-  const { clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth } =
-    el;
+  const {
+    clientHeight,
+    clientWidth,
+    scrollHeight,
+    scrollLeft,
+    scrollTop,
+    scrollWidth,
+  } = el;
   isAtTop.value = scrollTop <= 0;
   isAtBottom.value = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
   isAtLeft.value = scrollLeft <= 0;

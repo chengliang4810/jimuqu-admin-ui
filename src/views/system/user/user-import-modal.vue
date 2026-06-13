@@ -85,7 +85,7 @@ async function handleExport() {
       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
     >
       <p class="ant-upload-drag-icon flex items-center justify-center">
-        <InboxOutlined class="size-[48px] text-primary" />
+        <InboxOutlined class="text-primary size-[48px]" />
       </p>
       <p class="ant-upload-text">点击或者拖拽到此处上传文件</p>
     </UploadDragger>

@@ -180,7 +180,7 @@ const { copy } = useClipboard({ legacy: true });
         class="h-[calc(100vh-80px)] w-full overflow-y-scroll text-[16px]"
         readonly
       />
-      <div class="fixed right-20 top-20">
+      <div class="fixed top-20 right-20">
         <a-button @click="copy(codeContent)">复制</a-button>
       </div>
     </div>

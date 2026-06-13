@@ -74,7 +74,7 @@ function handleSelect(keys: Key[]) {
         class="bg-background flex h-full flex-col overflow-y-auto rounded-lg"
       >
         <!-- 固定在顶部 必须加上bg-background背景色 否则会产生'穿透'效果 -->
-        <div class="bg-background z-100 sticky left-0 top-0 p-[8px]">
+        <div class="bg-background sticky top-0 left-0 z-100 p-[8px]">
           <InputSearch
             v-model:value="searchValue"
             :placeholder="$t('pages.common.search')"

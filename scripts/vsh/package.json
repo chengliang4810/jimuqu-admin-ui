@@ -4,20 +4,18 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "scripts": {
-    "stub": "pnpm exec tsdown"
-  },
   "files": [
-    "dist"
+    "bin",
+    "src"
   ],
   "bin": {
     "vsh": "./bin/vsh.mjs"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
+  "main": "./src/index.mjs",
+  "module": "./src/index.mjs",
   "exports": {
     ".": {
-      "default": "./dist/index.mjs"
+      "default": "./src/index.mjs"
     },
     "./package.json": "./package.json"
   },

@@ -75,7 +75,12 @@ export const columns: VxeGridProps['columns'] = [
         if (!row.grantTypeList) {
           return '无';
         }
-        return renderDictTags(row.grantTypeList, getDictOptions(DictEnum.SYS_GRANT_TYPE), true, 4);
+        return renderDictTags(
+          row.grantTypeList,
+          getDictOptions(DictEnum.SYS_GRANT_TYPE),
+          true,
+          4,
+        );
       },
     },
   },

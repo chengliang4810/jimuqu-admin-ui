@@ -2,7 +2,9 @@ function getBrowserCrypto(): Crypto {
   const browserCrypto = globalThis.crypto;
 
   if (!browserCrypto) {
-    throw new Error('Web Crypto API is not available in the current environment.');
+    throw new Error(
+      'Web Crypto API is not available in the current environment.',
+    );
   }
 
   return browserCrypto;

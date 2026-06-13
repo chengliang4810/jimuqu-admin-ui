@@ -82,7 +82,7 @@ function resetContent() {
 
       <div :class="outputPanelClass">
         <div
-          class="flex items-center justify-between gap-3 border-b border-border px-4 py-3"
+          class="border-border flex items-center justify-between gap-3 border-b px-4 py-3"
         >
           <span class="text-sm font-medium">内容输出</span>
           <RadioGroup

@@ -130,9 +130,7 @@ const matchVbenCoreChunk = createChunkMatcher([
   '/src/types/',
   '/src/utils/',
 ]);
-const matchVbenUiCoreChunk = createChunkMatcher([
-  '/src/core/ui/',
-]);
+const matchVbenUiCoreChunk = createChunkMatcher(['/src/core/ui/']);
 const matchVbenCommonUiAuthChunk = createChunkMatcher([
   '/src/effects/common-ui/ui/authentication/',
   '/src/effects/common-ui/ui/fallback/',
@@ -157,12 +155,8 @@ const matchVbenCommonUiWidgetsChunk = createChunkMatcher([
   '/src/effects/common-ui/index.ts',
   '/src/effects/common-ui/ui/index.ts',
 ]);
-const matchVbenIconsChunk = createChunkMatcher([
-  '/src/icons-app/',
-]);
-const matchVbenStylesChunk = createChunkMatcher([
-  '/src/styles/',
-]);
+const matchVbenIconsChunk = createChunkMatcher(['/src/icons-app/']);
+const matchVbenStylesChunk = createChunkMatcher(['/src/styles/']);
 const matchVbenLayoutChunk = createChunkMatcher([
   '/src/effects/access/',
   '/src/effects/hooks/',
@@ -173,9 +167,7 @@ const matchVbenStateChunk = createChunkMatcher([
   '/src/locales/',
   '/src/stores/',
 ]);
-const matchVbenRequestChunk = createChunkMatcher([
-  '/src/effects/request/',
-]);
+const matchVbenRequestChunk = createChunkMatcher(['/src/effects/request/']);
 const matchUiVendorChunk = createChunkMatcher([
   '/node_modules/.pnpm/@floating-ui+',
   '/node_modules/.pnpm/@iconify+',

@@ -23,5 +23,5 @@ const text = computed(() => {
 </script>
 
 <template>
-  <div class="w-full break-all rounded-[4px] bg-[black]/5 p-2">{{ text }}</div>
+  <div class="w-full rounded-[4px] bg-[black]/5 p-2 break-all">{{ text }}</div>
 </template>

@@ -47,7 +47,7 @@ function handleClick(value: string) {
     >
       <div
         :class="`${item}-slow`"
-        class="h-10 w-12 rounded-md bg-primary"
+        class="bg-primary h-10 w-12 rounded-md"
       ></div>
     </div>
   </div>

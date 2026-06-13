@@ -8,11 +8,7 @@ import type {
 
 import { computed } from 'vue';
 
-import {
-  cn,
-  isFunction,
-  mergeWithArrayOverride,
-} from '@/core/shared/utils';
+import { cn, isFunction, mergeWithArrayOverride } from '@/core/shared/utils';
 
 import { Form } from 'antdv-next';
 

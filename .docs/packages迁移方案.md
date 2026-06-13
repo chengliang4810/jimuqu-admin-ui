@@ -84,15 +84,15 @@ src/ (应用入口，消费所有包)
 
 ### 1.3 关键数据
 
-| 指标 | 数值 |
-|------|------|
-| packages/ 源文件数 | 779 |
-| src/ 源文件数 | 333 |
-| `@vben/*` 导入引用数 | 1089 |
-| `@vben-core/*` 导入引用数 | 448 |
-| **需更新的导入总数** | **~1537** |
-| 独立 package.json 数 | 20+ |
-| 被迁移的包数 | 22 |
+| 指标                      | 数值      |
+| ------------------------- | --------- |
+| packages/ 源文件数        | 779       |
+| src/ 源文件数             | 333       |
+| `@vben/*` 导入引用数      | 1089      |
+| `@vben-core/*` 导入引用数 | 448       |
+| **需更新的导入总数**      | **~1537** |
+| 独立 package.json 数      | 20+       |
+| 被迁移的包数              | 22        |
 
 ### 1.4 当前痛点
 
@@ -170,59 +170,59 @@ refactor-vben5/
 
 ### 3.1 核心层映射
 
-| 原导入 | 新导入 |
-|--------|--------|
-| `@vben-core/shared` | `@/core/shared` |
-| `@vben-core/shared/constants` | `@/core/shared/constants` |
-| `@vben-core/shared/utils` | `@/core/shared/utils` |
-| `@vben-core/shared/color` | `@/core/shared/color` |
-| `@vben-core/shared/cache` | `@/core/shared/cache` |
-| `@vben-core/shared/store` | `@/core/shared/store` |
+| 原导入                           | 新导入                       |
+| -------------------------------- | ---------------------------- |
+| `@vben-core/shared`              | `@/core/shared`              |
+| `@vben-core/shared/constants`    | `@/core/shared/constants`    |
+| `@vben-core/shared/utils`        | `@/core/shared/utils`        |
+| `@vben-core/shared/color`        | `@/core/shared/color`        |
+| `@vben-core/shared/cache`        | `@/core/shared/cache`        |
+| `@vben-core/shared/store`        | `@/core/shared/store`        |
 | `@vben-core/shared/global-state` | `@/core/shared/global-state` |
-| `@vben-core/typings` | `@/core/typings` |
-| `@vben-core/icons` | `@/core/icons` |
-| `@vben-core/design` | `@/core/design` |
-| `@vben-core/design/bem` | `@/core/design/bem` |
-| `@vben-core/design/theme` | `@/core/design/theme` |
-| `@vben-core/composables` | `@/core/composables` |
-| `@vben-core/preferences` | `@/core/preferences` |
-| `@vben-core/ui-adapter` | `@/core/ui/adapter` |
-| `@vben-core/shadcn-ui` | `@/core/ui/shadcn` |
-| `@vben-core/layout-ui` | `@/core/ui/layout` |
-| `@vben-core/menu-ui` | `@/core/ui/menu` |
-| `@vben-core/tabs-ui` | `@/core/ui/tabs` |
-| `@vben-core/popup-ui` | `@/core/ui/popup` |
-| `@vben-core/form-ui` | `@/core/ui/form` |
+| `@vben-core/typings`             | `@/core/typings`             |
+| `@vben-core/icons`               | `@/core/icons`               |
+| `@vben-core/design`              | `@/core/design`              |
+| `@vben-core/design/bem`          | `@/core/design/bem`          |
+| `@vben-core/design/theme`        | `@/core/design/theme`        |
+| `@vben-core/composables`         | `@/core/composables`         |
+| `@vben-core/preferences`         | `@/core/preferences`         |
+| `@vben-core/ui-adapter`          | `@/core/ui/adapter`          |
+| `@vben-core/shadcn-ui`           | `@/core/ui/shadcn`           |
+| `@vben-core/layout-ui`           | `@/core/ui/layout`           |
+| `@vben-core/menu-ui`             | `@/core/ui/menu`             |
+| `@vben-core/tabs-ui`             | `@/core/ui/tabs`             |
+| `@vben-core/popup-ui`            | `@/core/ui/popup`            |
+| `@vben-core/form-ui`             | `@/core/ui/form`             |
 
 ### 3.2 效果层映射
 
-| 原导入 | 新导入 |
-|--------|--------|
-| `@vben/access` | `@/effects/access` |
-| `@vben/common-ui` | `@/effects/common-ui` |
+| 原导入                       | 新导入                        |
+| ---------------------------- | ----------------------------- |
+| `@vben/access`               | `@/effects/access`            |
+| `@vben/common-ui`            | `@/effects/common-ui`         |
 | `@vben/common-ui/es/loading` | `@/effects/common-ui/loading` |
-| `@vben/hooks` | `@/effects/hooks` |
-| `@vben/layouts` | `@/effects/layouts` |
-| `@vben/plugins` | `@/effects/plugins` |
-| `@vben/request` | `@/effects/request` |
+| `@vben/hooks`                | `@/effects/hooks`             |
+| `@vben/layouts`              | `@/effects/layouts`           |
+| `@vben/plugins`              | `@/effects/plugins`           |
+| `@vben/request`              | `@/effects/request`           |
 
 ### 3.3 应用层映射
 
-| 原导入 | 新导入 | 说明 |
-|--------|--------|------|
-| `@vben/constants` | `@/constants` | 合并到 src/constants |
-| `@vben/types` | `@/types` | 合并到 src/types |
-| `@vben/utils` | `@/utils` | 合并到 src/utils |
-| `@vben/icons` | `@/icons-app` | 避免与 core/icons 冲突 |
-| `@vben/locales` | `@/locales` | 合并到 src/locales |
-| `@vben/preferences` | `@/core/preferences` | 薄包装，直接用 core |
-| `@vben/stores` | `@/stores` | 合并到 src/stores |
-| `@vben/styles` | `@/styles` | 合并到 src/styles |
-| `@vben/styles/antd` | `@/styles/antd` | |
-| `@vben/styles/antdv-next` | `@/styles/antdv-next` | |
-| `@vben/styles/ele` | `@/styles/ele` | |
-| `@vben/styles/naive` | `@/styles/naive` | |
-| `@vben/styles/global` | `@/styles/global` | |
+| 原导入                    | 新导入                | 说明                   |
+| ------------------------- | --------------------- | ---------------------- |
+| `@vben/constants`         | `@/constants`         | 合并到 src/constants   |
+| `@vben/types`             | `@/types`             | 合并到 src/types       |
+| `@vben/utils`             | `@/utils`             | 合并到 src/utils       |
+| `@vben/icons`             | `@/icons-app`         | 避免与 core/icons 冲突 |
+| `@vben/locales`           | `@/locales`           | 合并到 src/locales     |
+| `@vben/preferences`       | `@/core/preferences`  | 薄包装，直接用 core    |
+| `@vben/stores`            | `@/stores`            | 合并到 src/stores      |
+| `@vben/styles`            | `@/styles`            | 合并到 src/styles      |
+| `@vben/styles/antd`       | `@/styles/antd`       |                        |
+| `@vben/styles/antdv-next` | `@/styles/antdv-next` |                        |
+| `@vben/styles/ele`        | `@/styles/ele`        |                        |
+| `@vben/styles/naive`      | `@/styles/naive`      |                        |
+| `@vben/styles/global`     | `@/styles/global`     |                        |
 
 ---
 
@@ -304,7 +304,7 @@ packages:
 ### 5.1 stores ↔ store
 
 | 来源 | 文件 | 处理方式 |
-|------|------|---------|
+| --- | --- | --- |
 | packages/stores/src/modules/user.ts | Pinia user store | → `src/stores/modules/user.ts` |
 | packages/stores/src/modules/access.ts | 权限 store | → `src/stores/modules/access.ts` |
 | packages/stores/src/modules/tabbar.ts | 标签页 store | → `src/stores/modules/tabbar.ts` |
@@ -320,7 +320,7 @@ packages:
 ### 5.2 locales
 
 | 来源 | 文件 | 处理方式 |
-|------|------|---------|
+| --- | --- | --- |
 | packages/locales/src/i18n.ts | i18n 核心配置 | → `src/locales/i18n.ts` |
 | packages/locales/src/typing.ts | 类型定义 | → `src/locales/typing.ts` |
 | packages/locales/src/langs/ | 语言文件 (zh-CN, en-US) | → `src/locales/langs/` |
@@ -331,7 +331,7 @@ packages:
 ### 5.3 utils
 
 | 来源 | 文件 | 处理方式 |
-|------|------|---------|
+| --- | --- | --- |
 | packages/utils/src/encryption/ | 加密工具 (AES, RSA, SM) | → `src/utils/encryption/` |
 | packages/utils/src/helpers/ | 路由、菜单、树等工具 | → `src/utils/helpers/` |
 | src/utils/http/ | HTTP 工具 | 保持 |
@@ -359,6 +359,7 @@ packages/preferences 只有 1 个文件（index.ts），是 `@vben-core/preferen
 ### 阶段一：准备工作（不影响运行）
 
 **步骤 1.1** — 创建 `src/core/` 和 `src/effects/` 目录骨架
+
 ```bash
 mkdir -p src/core/{shared,typings,icons,design,composables,preferences}
 mkdir -p src/core/ui/{adapter,shadcn,layout,menu,tabs,popup,form}
@@ -366,6 +367,7 @@ mkdir -p src/effects/{access,common-ui,hooks,layouts,plugins,request}
 ```
 
 **步骤 1.2** — 移动核心层文件（直接复制，不删除原文件）
+
 ```bash
 # @core/base
 cp -r packages/@core/base/shared/src/* src/core/shared/
@@ -388,6 +390,7 @@ cp -r packages/@core/ui-kit/form-ui/src/* src/core/ui/form/
 ```
 
 **步骤 1.3** — 移动效果层文件
+
 ```bash
 cp -r packages/effects/access/src/* src/effects/access/
 cp -r packages/effects/common-ui/src/* src/effects/common-ui/
@@ -471,6 +474,7 @@ sed -i "s|from '@vben/types|from '@/types|g"
 ### 阶段三：合并同名目录
 
 **步骤 3.1** — 合并 stores（store → stores）
+
 ```bash
 # 统一命名
 mv src/store src/stores-old
@@ -485,54 +489,63 @@ rm -rf src/stores-old
 ```
 
 **步骤 3.2** — 合并 locales
+
 - packages/locales/src/langs/ → src/locales/langs/
 - packages/locales/src/i18n.ts → src/locales/
 - 手工合并两个 index.ts
 
 **步骤 3.3** — 合并 utils
+
 - packages/utils/src/encryption/ → src/utils/encryption/
 - packages/utils/src/helpers/ → src/utils/helpers/
 
 **步骤 3.4** — 迁移 icons → icons-app
+
 ```bash
 mkdir -p src/icons-app
 cp -r packages/icons/src/* src/icons-app/
 ```
 
 **步骤 3.5** — 迁移 styles
+
 ```bash
 mkdir -p src/styles
 cp -r packages/styles/src/* src/styles/
 ```
 
 **步骤 3.6** — 迁移 types 和 constants
-- packages/types/src/* → src/types/
-- packages/constants/src/* → src/constants/
+
+- packages/types/src/\* → src/types/
+- packages/constants/src/\* → src/constants/
 
 **步骤 3.7** — 移除 packages/preferences（薄包装，直接用 core）
+
 - 更新所有 `@vben/preferences` → `@/core/preferences` 导入（已在步骤 2.2 完成）
 
 ### 阶段四：配置更新
 
 **步骤 4.1** — 更新 tsconfig.json
+
 ```jsonc
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+    },
     // 移除 #/* 别名和 @vben/*, @vben-core/* 别名
-  }
+  },
 }
 ```
 
 **步骤 4.2** — 更新 package.json
+
 - 搜集所有被迁移包的 `dependencies`
 - 去重后合并到根 `package.json` 的 `dependencies`
 - 移除 `@vben/*` 和 `@vben-core/*` 的 `workspace:*` 引用
 - 移除 `postinstall` 中的 `stub` 脚本
 
 **步骤 4.3** — 更新 pnpm-workspace.yaml
+
 ```yaml
 packages:
   - internal/*
@@ -541,32 +554,38 @@ packages:
 ```
 
 **步骤 4.4** — 更新 vite.config.ts
+
 - 确认别名配置与 tsconfig 一致
 - 移除子包独立处理逻辑（如有）
 
 ### 阶段五：清理与验证
 
 **步骤 5.1** — 验证 TypeScript 编译
+
 ```bash
 pnpm typecheck
 ```
 
 **步骤 5.2** — 验证开发服务器
+
 ```bash
 pnpm dev
 ```
 
 **步骤 5.3** — 验证构建
+
 ```bash
 pnpm build
 ```
 
 **步骤 5.4** — 删除原 packages 目录
+
 ```bash
 rm -rf packages/
 ```
 
 **步骤 5.5** — 清理 pnpm
+
 ```bash
 pnpm install  # 刷新 lockfile
 ```
@@ -576,7 +595,7 @@ pnpm install  # 刷新 lockfile
 ## 7. 风险与缓解
 
 | 风险 | 影响 | 缓解措施 |
-|------|------|---------|
+| --- | --- | --- |
 | 导入替换遗漏 | 编译/运行时报错 | 用 `grep` 验证无残留 `@vben` 导入；分步替换，每步验证 |
 | 同名文件冲突 | 数据丢失 | 先 diff 对比，再手工合并；全程 git 版本控制 |
 | 依赖版本冲突 | 运行时错误 | 合并依赖时去重取最高版本；用 pnpm why 分析依赖树 |
@@ -593,7 +612,7 @@ pnpm install  # 刷新 lockfile
 <summary>点击展开完整对照表 (27 个包)</summary>
 
 | 序号 | 原路径 | 目标路径 | 类型 |
-|------|--------|---------|------|
+| --- | --- | --- | --- |
 | 1 | `packages/@core/base/shared/src/` | `src/core/shared/` | 核心 |
 | 2 | `packages/@core/base/typings/src/` | `src/core/typings/` | 核心 |
 | 3 | `packages/@core/base/icons/src/` | `src/core/icons/` | 核心 |

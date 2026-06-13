@@ -59,13 +59,13 @@ const slots = useSlots();
     </span>
     <div class="relative">
       <Input
-v-model:value="inputValue"
+        v-model:value="inputValue"
         class="h-8 w-41.25"
         :placeholder="placeholder"
       />
       <CircleX
         v-if="inputValue"
-        class="absolute top-1/2 right-2 size-3 -translate-y-1/2 transform cursor-pointer text-foreground/60 hover:text-foreground"
+        class="text-foreground/60 hover:text-foreground absolute top-1/2 right-2 size-3 -translate-y-1/2 transform cursor-pointer"
         @click="() => (inputValue = '')"
       />
     </div>

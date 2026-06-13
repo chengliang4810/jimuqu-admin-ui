@@ -68,7 +68,7 @@ onMounted(() => {
       ref="headerRef"
       :class="
         cn(
-          'relative flex items-end border-b border-border bg-card px-6 py-4',
+          'border-border bg-card relative flex items-end border-b px-6 py-4',
           headerClass,
         )
       "
@@ -92,16 +92,13 @@ onMounted(() => {
       </div>
     </div>
 
-    <div
-      :class="cn('h-full min-w-0 p-4', contentClass)"
-      :style="contentStyle"
-    >
+    <div :class="cn('h-full min-w-0 p-4', contentClass)" :style="contentStyle">
       <slot></slot>
     </div>
     <div
       v-if="$slots.footer"
       ref="footerRef"
-      :class="cn('align-center flex bg-card px-6 py-4', footerClass)"
+      :class="cn('align-center bg-card flex px-6 py-4', footerClass)"
     >
       <slot name="footer"></slot>
     </div>

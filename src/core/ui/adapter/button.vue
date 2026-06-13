@@ -73,7 +73,11 @@ const isIconVariant = computed(() => props.variant === 'icon');
     :shape="isIconVariant ? 'circle' : undefined"
     :loading="loading"
     :disabled="disabled"
-    :class="isIconVariant ? cn('!text-lg min-w-0 h-8 w-8 flex-center', props.class) : props.class"
+    :class="
+      isIconVariant
+        ? cn('flex-center h-8 w-8 min-w-0 !text-lg', props.class)
+        : props.class
+    "
   >
     <slot></slot>
   </Button>

@@ -3,12 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
-import {
-  addFullName,
-  cloneDeep,
-  getPopupContainer,
-  listToTree,
-} from '@/utils';
+import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 
 import { Skeleton } from 'antdv-next';
 import JsonEditorVue from 'json-editor-vue';

@@ -39,9 +39,7 @@ export function normalizeRules(
 /**
  * 判断字段是否需要显示必填标记。
  */
-export function isRequiredRule(
-  rules: FormSchemaRuleType | undefined,
-): boolean {
+export function isRequiredRule(rules: FormSchemaRuleType | undefined): boolean {
   if (!rules) {
     return false;
   }

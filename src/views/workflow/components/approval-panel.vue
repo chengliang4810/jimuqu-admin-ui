@@ -219,7 +219,7 @@ const tabItems = computed<TabsProps['items']>(() => {
           <div class="flex items-center gap-2">
             <VbenAvatar
               :alt="task?.createByName ?? ''"
-              class="size-[28px] rounded-full bg-primary text-white"
+              class="bg-primary size-[28px] rounded-full text-white"
               src=""
             />
 

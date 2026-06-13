@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import type { LoginAndRegisterParams, VbenFormSchema } from '@/effects/common-ui';
+import type {
+  LoginAndRegisterParams,
+  VbenFormSchema,
+} from '@/effects/common-ui';
 
 import type { CaptchaResponse } from '@/api/core/captcha';
 

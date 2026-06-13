@@ -256,7 +256,6 @@ function handleMouseleave() {
   collapse.value = true;
   extraVisible.value = false;
 }
-
 </script>
 
 <template>
@@ -268,7 +267,7 @@ function handleMouseleave() {
   ></div>
   <aside
     :style="style"
-    class="fixed left-0 top-0 h-full transition-all duration-150"
+    class="fixed top-0 left-0 h-full transition-all duration-150"
     :class="theme"
     @mouseenter="handleMouseenter"
     @mouseleave="handleMouseleave"
@@ -290,14 +289,14 @@ function handleMouseleave() {
       <div
         v-if="slots.logo"
         :style="headerStyle"
-        class="border-r border-border"
+        class="border-border border-r"
       >
         <slot name="logo"></slot>
       </div>
       <div
         v-if="slots.logo"
         :style="{ top: `${headerHeight - 1}px` }"
-        class="pointer-events-none absolute right-0 h-2 border-r border-border"
+        class="border-border pointer-events-none absolute right-0 h-2 border-r"
       ></div>
       <VbenScrollbar :style="contentStyle">
         <slot></slot>
@@ -318,7 +317,7 @@ function handleMouseleave() {
         },
       ]"
       :style="extraStyle"
-      class="fixed top-0 h-full overflow-hidden bg-sidebar transition-all duration-200"
+      class="bg-sidebar fixed top-0 h-full overflow-hidden transition-all duration-200"
     >
       <SidebarCollapseButton
         v-if="isSidebarMixed && expandOnHover"
@@ -332,7 +331,7 @@ function handleMouseleave() {
       <div
         v-if="!extraCollapse"
         :style="extraTitleStyle"
-        class="border-r border-border pl-2"
+        class="border-border border-r pl-2"
       >
         <slot name="extra-title"></slot>
       </div>

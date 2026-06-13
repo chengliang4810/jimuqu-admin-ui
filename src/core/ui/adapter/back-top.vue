@@ -26,7 +26,7 @@ const backTopStyle = computed(() => ({
 
 function getTarget() {
   return props.target
-    ? (document.querySelector(props.target) as HTMLElement | null) ?? window
+    ? ((document.querySelector(props.target) as HTMLElement | null) ?? window)
     : window;
 }
 </script>

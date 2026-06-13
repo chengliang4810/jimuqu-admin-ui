@@ -3,12 +3,7 @@ import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  formatDate,
-  formatDateTime,
-  isDate,
-  isDayjsObject,
-} from '../date';
+import { formatDate, formatDateTime, isDate, isDayjsObject } from '../date';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -97,5 +92,4 @@ describe('dateUtils', () => {
       expect(isDayjsObject('string')).toBe(false);
     });
   });
-
 });

@@ -185,7 +185,7 @@ defineExpose({
   <div :class="rootClass" :style="editorStyle">
     <div
       v-if="toolbar"
-      class="flex flex-wrap items-center gap-1 border-b border-border bg-muted/30 p-2"
+      class="border-border bg-muted/30 flex flex-wrap items-center gap-1 border-b p-2"
       role="toolbar"
       aria-label="Tiptap 编辑器工具栏"
     >
@@ -202,7 +202,7 @@ defineExpose({
       <template v-for="(group, groupIndex) in toolbarGroups" :key="groupIndex">
         <span
           v-if="groupIndex > 0"
-          class="mx-1 h-5 w-px bg-border"
+          class="bg-border mx-1 h-5 w-px"
           aria-hidden="true"
         ></span>
         <template v-for="item in group" :key="item.key">

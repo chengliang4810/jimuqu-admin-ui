@@ -58,7 +58,7 @@ const style = computed((): CSSProperties => {
   <main
     ref="contentElement"
     :style="style"
-    class="relative min-w-0 overflow-x-hidden bg-background-deep"
+    class="bg-background-deep relative min-w-0 overflow-x-hidden"
   >
     <div :style="overlayStyle">
       <slot name="overlay"></slot>

@@ -205,11 +205,11 @@ onMounted(async () => {
   <Page :auto-content-height="true">
     <div class="flex h-full gap-2">
       <div
-        class="relative flex h-full min-w-[320px] max-w-[320px] flex-col rounded-lg bg-background"
+        class="bg-background relative flex h-full max-w-[320px] min-w-[320px] flex-col rounded-lg"
       >
         <!-- 搜索条件 -->
         <div
-          class="sticky left-0 top-0 z-100 w-full rounded-t-lg border-b-[1px] border-solid bg-background p-2"
+          class="bg-background sticky top-0 left-0 z-100 w-full rounded-t-lg border-b-[1px] border-solid p-2"
         >
           <Segmented
             v-model:value="currentType"
@@ -324,14 +324,14 @@ onMounted(async () => {
           <!-- 遮罩loading层 -->
           <div
             v-if="loading"
-            class="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.1)]"
+            class="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.1)]"
           >
             <Spin tip="加载中..." />
           </div>
         </div>
         <!-- total显示 -->
         <div
-          class="sticky bottom-0 w-full rounded-b-lg border-t-[1px] bg-background py-2"
+          class="bg-background sticky bottom-0 w-full rounded-b-lg border-t-[1px] py-2"
         >
           <div class="flex items-center justify-center">
             共 {{ taskTotal }} 条记录

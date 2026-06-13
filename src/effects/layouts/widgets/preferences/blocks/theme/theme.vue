@@ -78,7 +78,7 @@ function nameView(name: string) {
         >
           <component :is="theme.icon" class="mx-9 size-5" />
         </div>
-        <div class="mt-2 text-center text-xs text-muted-foreground">
+        <div class="text-muted-foreground mt-2 text-center text-xs">
           {{ nameView(theme.name) }}
         </div>
       </div>

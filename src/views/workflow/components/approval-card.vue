@@ -75,7 +75,7 @@ const items = computed<DescriptionsProps['items']>(() => {
       <div class="flex items-center gap-1 overflow-hidden whitespace-nowrap">
         <VbenAvatar
           :alt="info?.createByName"
-          class="size-[24px] rounded-full bg-primary text-[10px] text-white"
+          class="bg-primary size-[24px] rounded-full text-[10px] text-white"
           src=""
         />
         <span class="overflow-hidden text-ellipsis opacity-50">

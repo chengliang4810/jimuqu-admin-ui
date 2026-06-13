@@ -109,12 +109,12 @@ function handleSelect(keys: Key[]) {
       class="p-[8px]"
     >
       <div
-        class="flex h-full flex-col overflow-y-auto rounded-lg bg-background"
+        class="bg-background flex h-full flex-col overflow-y-auto rounded-lg"
       >
         <!-- 固定在顶部 必须加上bg-background背景色 否则会产生'穿透'效果 -->
         <div
           v-if="showSearch"
-          class="sticky left-0 top-0 z-100 bg-background p-[8px]"
+          class="bg-background sticky top-0 left-0 z-100 p-[8px]"
         >
           <SpaceCompact class="w-full">
             <Input

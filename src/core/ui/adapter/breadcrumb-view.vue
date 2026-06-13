@@ -3,7 +3,13 @@ import type { BreadcrumbProps } from './types';
 
 import { ChevronDown } from '@/core/icons';
 
-import { Breadcrumb, BreadcrumbItem, Dropdown, Menu, MenuItem } from 'antdv-next';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Dropdown,
+  Menu,
+  MenuItem,
+} from 'antdv-next';
 
 import VbenIcon from './icon.vue';
 

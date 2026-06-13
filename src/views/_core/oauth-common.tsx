@@ -46,14 +46,19 @@ export async function handleAuthBinding(source: string) {
 export const accountBindList: BindItem[] = [
   {
     avatar: (
-      <span class={cn('icon-[simple-icons--gitee]', 'size-6')} style={{ color: '#c71d23' }} />
+      <span
+        class={cn('icon-[simple-icons--gitee]', 'size-6')}
+        style={{ color: '#c71d23' }}
+      />
     ),
     description: '绑定Gitee账号',
     source: 'gitee',
     title: 'Gitee',
   },
   {
-    avatar: <span class={cn('icon-[fa--github-alt]', 'text-[#333]', 'size-6')} />,
+    avatar: (
+      <span class={cn('icon-[fa--github-alt]', 'text-[#333]', 'size-6')} />
+    ),
     description: '绑定Github账号',
     source: 'github',
     title: 'Github',

@@ -81,7 +81,7 @@ async function handleForceOffline(row: OnlineUser) {
         <div class="mr-1 pl-1 text-[1rem]">
           <div>
             在线用户列表 (共
-            <span class="font-bold text-primary">{{ onlineCount }}</span>
+            <span class="text-primary font-bold">{{ onlineCount }}</span>
             人在线)
           </div>
         </div>

@@ -36,10 +36,7 @@ export interface FormActions {
   /** 设置单个字段值 */
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   /** 批量设置字段值 */
-  setValues: (
-    fields: Record<string, any>,
-    shouldValidate?: boolean,
-  ) => void;
+  setValues: (fields: Record<string, any>, shouldValidate?: boolean) => void;
   /** 提交(仅校验) */
   submitForm: () => Promise<{ errors: Record<string, any>; valid: boolean }>;
   /** 校验全部 */
@@ -566,8 +563,5 @@ export interface VbenFormAdapterOptions<
     emptyStateValue?: null | undefined;
     modelPropNameMap?: Partial<Record<T, string>>;
   };
-  defineRules?: Record<
-    string,
-    (value: any, label: string) => string | true
-  >;
+  defineRules?: Record<string, (value: any, label: string) => string | true>;
 }

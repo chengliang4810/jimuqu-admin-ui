@@ -9,10 +9,7 @@ export async function imports() {
         import: pluginImport,
       },
       rules: {
-        'import/consistent-type-specifier-style': [
-          'error',
-          'prefer-top-level',
-        ],
+        'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
         'import/first': 'error',
         'import/no-duplicates': 'error',
         'import/no-mutable-exports': 'error',

@@ -139,7 +139,7 @@ function onAfterOpenChange(open: boolean) {
           v-if="closable && closeIconPlacement === 'left'"
           type="text"
           size="small"
-          class="mr-2 flex-center size-6 rounded-full"
+          class="flex-center mr-2 size-6 rounded-full"
           :disabled="submitting"
           @click="handleClose"
         >
@@ -151,7 +151,7 @@ function onAfterOpenChange(open: boolean) {
             <Tooltip v-if="titleTooltip">
               <template #title>{{ titleTooltip }}</template>
               <span
-                class="ml-1 inline-flex size-3.5 cursor-help items-center justify-center rounded-full border text-[10px] leading-none text-muted-foreground"
+                class="text-muted-foreground ml-1 inline-flex size-3.5 cursor-help items-center justify-center rounded-full border text-[10px] leading-none"
               >
                 ?
               </span>
@@ -174,7 +174,7 @@ function onAfterOpenChange(open: boolean) {
           v-if="closable && closeIconPlacement === 'right'"
           type="text"
           size="small"
-          class="ml-0.5 flex-center size-6 rounded-full"
+          class="flex-center ml-0.5 size-6 rounded-full"
           :disabled="submitting"
           @click="handleClose"
         >
@@ -198,10 +198,7 @@ function onAfterOpenChange(open: boolean) {
     <template v-if="showFooter" #footer>
       <div
         :class="
-          cn(
-            'flex w-full flex-row items-center justify-end gap-2',
-            footerClass,
-          )
+          cn('flex w-full flex-row items-center justify-end gap-2', footerClass)
         "
       >
         <slot name="prepend-footer"></slot>

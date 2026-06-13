@@ -157,7 +157,7 @@ async function handleOpenChange(val: boolean) {
           :disabled="loading"
           @click="doCancel"
         >
-          <X class="size-4 text-muted-foreground" />
+          <X class="text-muted-foreground size-4" />
         </Button>
       </div>
       <div class="m-4 min-h-7.5">

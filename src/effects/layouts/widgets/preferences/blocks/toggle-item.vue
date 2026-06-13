@@ -20,7 +20,7 @@ const modelValue = defineModel<string>();
     :class="{
       'pointer-events-none opacity-50': disabled,
     }"
-    class="flex w-full items-center justify-between rounded-md p-2 hover:bg-accent"
+    class="hover:bg-accent flex w-full items-center justify-between rounded-md p-2"
     disabled
   >
     <span class="text-sm">

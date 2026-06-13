@@ -1,9 +1,5 @@
+import type { BaseFormComponentType, ExtendedFormApi } from '@/core/ui/form';
 import type { VxeGridInstance } from 'vxe-table';
-
-import type {
-  BaseFormComponentType,
-  ExtendedFormApi,
-} from '@/core/ui/form';
 
 import type { VxeGridProps } from './types';
 import type { ViewedRowHelper } from './use-viewed-row';

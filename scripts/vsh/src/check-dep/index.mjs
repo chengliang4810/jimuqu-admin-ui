@@ -1,5 +1,3 @@
-import type { CAC } from 'cac';
-
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
@@ -13,7 +11,7 @@ const knipCli = join(dirname(knipMain), '..', 'bin', 'knip.js');
 
 const DEFAULT_CONFIG = {
   ignore: ['dist/**', 'docs/**', 'node_modules/**', 'public/**'],
-  ignoreBinaries: [] as string[],
+  ignoreBinaries: [],
   ignoreDependencies: [
     '@iconify/json',
     '@vben-core/design',
@@ -28,29 +26,7 @@ const DEFAULT_CONFIG = {
   ignoreWorkspaces: ['internal/lint-configs/*', 'scripts/*'],
 };
 
-interface KnipDependency {
-  col: number;
-  line: number;
-  name: string;
-  pos: number;
-}
-
-interface KnipFileIssue {
-  dependencies: KnipDependency[];
-  devDependencies: KnipDependency[];
-  file: string;
-  optionalPeerDependencies: KnipDependency[];
-}
-
-interface KnipResult {
-  issues: KnipFileIssue[];
-}
-
-/**
- * 格式化依赖检查结果
- * @param result - 依赖检查结果
- */
-function formatResult(result: KnipResult): void {
+function formatResult(result) {
   let hasIssues = false;
 
   for (const issue of result.issues) {
@@ -84,10 +60,7 @@ function formatResult(result: KnipResult): void {
   }
 }
 
-/**
- * 运行依赖检查
- */
-async function runKnipCheck(): Promise<void> {
+async function runKnipCheck() {
   const cwd = process.cwd();
   const tempDir = await mkdtemp(join(tmpdir(), 'vsh-check-dep-'));
   const configFile = join(tempDir, 'knip.json');
@@ -108,14 +81,11 @@ async function runKnipCheck(): Promise<void> {
 
     await execa(process.execPath, args, { cwd });
     console.log('\n✅ Dependency check completed, no issues found');
-  } catch (error: unknown) {
-    const execaError = error as {
-      exitCode?: number;
-      stdout?: string;
-    };
+  } catch (error) {
+    const execaError = error;
 
-    if (execaError.exitCode === 1 && execaError.stdout) {
-      const result: KnipResult = JSON.parse(execaError.stdout);
+    if (execaError?.exitCode === 1 && execaError?.stdout) {
+      const result = JSON.parse(execaError.stdout);
       formatResult(result);
       return;
     }
@@ -129,11 +99,7 @@ async function runKnipCheck(): Promise<void> {
   }
 }
 
-/**
- * 定义依赖检查命令
- * @param cac - CAC实例
- */
-function defineCheckDepCommand(cac: CAC): void {
+function defineCheckDepCommand(cac) {
   cac
     .command('check-dep')
     .usage('Analyze project dependencies using knip')

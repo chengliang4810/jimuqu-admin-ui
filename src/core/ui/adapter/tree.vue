@@ -268,7 +268,9 @@ defineExpose({
   >
     <div
       v-if="$slots.header"
-      :class="cn('my-0.5 flex w-full items-center p-1', bordered ? 'border-b' : '')"
+      :class="
+        cn('my-0.5 flex w-full items-center p-1', bordered ? 'border-b' : '')
+      "
     >
       <slot name="header"></slot>
     </div>
@@ -293,7 +295,9 @@ defineExpose({
 
     <div
       v-if="$slots.footer"
-      :class="cn('my-0.5 flex w-full items-center p-1', bordered ? 'border-t' : '')"
+      :class="
+        cn('my-0.5 flex w-full items-center p-1', bordered ? 'border-t' : '')
+      "
     >
       <slot name="footer"></slot>
     </div>

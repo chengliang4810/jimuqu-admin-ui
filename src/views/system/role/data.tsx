@@ -66,7 +66,9 @@ export const columns: VxeGridProps['columns'] = [
     field: 'dataScope',
     slots: {
       default: ({ row }) => {
-        const found = authScopeOptions.find((item) => item.value === row.dataScope);
+        const found = authScopeOptions.find(
+          (item) => item.value === row.dataScope,
+        );
         if (found) {
           return <Tag color={found.color}>{found.label}</Tag>;
         }

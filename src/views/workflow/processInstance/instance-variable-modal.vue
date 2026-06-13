@@ -202,7 +202,7 @@ async function handleSubmit(values: any) {
     >
       <JsonPreview :data="data" />
     </div>
-    <div class="mt-2 break-all text-sm font-medium text-orange-500">
+    <div class="mt-2 text-sm font-medium break-all text-orange-500">
       需要支持变量类型需要更改后端代码(原版只支持string类型)
       <div>
         ruoyi-modules/ruoyi-workflow/src/main/java/org/dromara/workflow/domain/bo/FlowVariableBo.java

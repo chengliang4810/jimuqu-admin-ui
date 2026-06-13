@@ -11,7 +11,9 @@ import { resolveFieldNamePath } from './field-name';
 /**
  * 将 vben 的 fieldName(支持 a.b、a[0]、[原始key])转换为 antd FormItem 的 name 路径
  */
-export function toAntdNamePath(fieldName: string): (number | string)[] | string {
+export function toAntdNamePath(
+  fieldName: string,
+): (number | string)[] | string {
   const { pathSegments, rawKey } = resolveFieldNamePath(fieldName);
   if (rawKey !== undefined) {
     return [rawKey];

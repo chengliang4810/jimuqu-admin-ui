@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import type { DescriptionsProps } from 'antdv-next';
 
-import { Card, Descriptions } from 'antdv-next';
+import { computed, h } from 'vue';
+
 import { VBEN_DOC_URL, VBEN_GITHUB_URL, VBEN_PREVIEW_URL } from '@/constants';
 import { Page } from '@/effects/common-ui';
-
-import { computed, h } from 'vue';
+import { Card, Descriptions } from 'antdv-next';
 
 defineOptions({ name: 'About' });
 
@@ -116,7 +116,7 @@ const devDependenciesItems = computed<AboutDescriptionItem>(() =>
 <template>
   <Page :title="title" content-class="flex flex-col gap-4">
     <template #description>
-      <p class="mt-3 text-sm/6 text-foreground">
+      <p class="text-foreground mt-3 text-sm/6">
         <a :href="VBEN_GITHUB_URL" class="vben-link" target="_blank">
           {{ name }}
         </a>

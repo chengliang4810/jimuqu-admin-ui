@@ -145,7 +145,7 @@ watch(
             </div>
           </template>
         </div>
-        <div class="my-2 text-center text-xs text-muted-foreground">
+        <div class="text-muted-foreground my-2 text-center text-xs">
           {{ typeView(theme.type) }}
         </div>
       </div>

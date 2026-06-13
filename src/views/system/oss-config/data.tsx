@@ -58,7 +58,9 @@ export const columns: VxeGridProps['columns'] = [
     field: 'accessPolicy',
     slots: {
       default: ({ row }) => {
-        const current = accessPolicyOptions.find((item) => item.value === row.accessPolicy);
+        const current = accessPolicyOptions.find(
+          (item) => item.value === row.accessPolicy,
+        );
         if (current) {
           return <Tag color={current.color}>{current.label}</Tag>;
         }

@@ -39,13 +39,13 @@ const items = computed<TimelineProps['items']>(() => {
           {!isMultiplePerson && (
             <VbenAvatar
               alt={item?.approveName ?? 'unknown'}
-              class="size-[36px] rounded-full bg-primary text-white"
+              class="bg-primary size-[36px] rounded-full text-white"
               src=""
             />
           )}
           <div
             class={cn(
-              'absolute bottom-0 right-[-2px]',
+              'absolute right-[-2px] bottom-0',
               'size-[12px] rounded-full bg-green-500',
               'border-[2px] border-white',
             )}

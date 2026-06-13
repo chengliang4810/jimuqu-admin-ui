@@ -42,7 +42,11 @@ import type { BaseUploadProps } from '@/components/upload/src/props';
 
 import { computed, defineAsyncComponent, defineComponent, h, ref } from 'vue';
 
-import { ApiComponent, globalShareState, IconPicker } from '@/effects/common-ui';
+import {
+  ApiComponent,
+  globalShareState,
+  IconPicker,
+} from '@/effects/common-ui';
 import { $t } from '@/locales';
 
 const RichTextarea = defineAsyncComponent(() =>

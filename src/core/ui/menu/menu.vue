@@ -40,12 +40,13 @@ const emit = defineEmits<{
 const selectedKeys = ref<string[]>([props.defaultActive]);
 
 // 展开的菜单项
-const openKeys = ref<string[]>(
-  props.collapse ? [] : [...props.defaultOpeneds],
-);
+const openKeys = ref<string[]>(props.collapse ? [] : [...props.defaultOpeneds]);
 
 // 提供给子组件的激活路径
-provide('menuActivePath', computed(() => selectedKeys.value[0] || ''));
+provide(
+  'menuActivePath',
+  computed(() => selectedKeys.value[0] || ''),
+);
 
 // 构建菜单路径映射
 const menuPathMap = computed(() => buildMenuPathMap(props.menus));
@@ -117,12 +118,16 @@ watch(
 );
 
 // 自动滚动到激活项
-useMenuScroll(computed(() => selectedKeys.value[0]), {
-  enable: computed(
-    () => props.scrollToActive && props.mode === 'vertical' && !props.collapse,
-  ),
-  delay: 320,
-});
+useMenuScroll(
+  computed(() => selectedKeys.value[0]),
+  {
+    enable: computed(
+      () =>
+        props.scrollToActive && props.mode === 'vertical' && !props.collapse,
+    ),
+    delay: 320,
+  },
+);
 
 // 处理菜单项选择
 function handleSelect(info: { key: string; keyPath: string[] }) {

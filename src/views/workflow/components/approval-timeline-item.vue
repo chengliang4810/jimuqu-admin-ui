@@ -59,12 +59,12 @@ const flowStatusOptions = getDictOptions(DictEnum.WF_TASK_STATUS);
       <div :class="cn('mt-2 flex flex-wrap gap-2')" v-if="isMultiplePerson">
         <!-- 如果昵称中带, 这里的处理是不准确的 -->
         <div
-          :class="cn('flex items-center rounded-full bg-foreground/5', 'p-1')"
+          :class="cn('bg-foreground/5 flex items-center rounded-full', 'p-1')"
           v-for="(name, index) in item.approveName.split(',')"
           :key="index"
         >
           <Avatar
-            class="flex items-center justify-center bg-primary-400"
+            class="bg-primary-400 flex items-center justify-center"
             :size="24"
             :icon="h(UserOutlined)"
           />
@@ -80,7 +80,7 @@ const flowStatusOptions = getDictOptions(DictEnum.WF_TASK_STATUS);
         :class="cn('flex gap-2')"
       >
         <MessageOutlined />
-        <div class="break-all text-foreground/75">{{ item.message }}</div>
+        <div class="text-foreground/75 break-all">{{ item.message }}</div>
       </div>
       <div v-if="attachmentInfo.length > 0" class="flex flex-wrap gap-4">
         <!-- 这里下载的文件名不是原始文件名 -->

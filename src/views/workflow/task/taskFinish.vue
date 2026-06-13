@@ -156,11 +156,11 @@ onMounted(async () => {
   <Page :auto-content-height="true">
     <div class="flex h-full gap-2">
       <div
-        class="bg-background relative flex h-full min-w-[320px] max-w-[320px] flex-col rounded-lg"
+        class="bg-background relative flex h-full max-w-[320px] min-w-[320px] flex-col rounded-lg"
       >
         <!-- 搜索条件 -->
         <div
-          class="bg-background z-100 sticky left-0 top-0 w-full rounded-t-lg border-b-[1px] border-solid p-2"
+          class="bg-background sticky top-0 left-0 z-100 w-full rounded-t-lg border-b-[1px] border-solid p-2"
         >
           <div class="flex items-center gap-1">
             <InputSearch
@@ -267,7 +267,7 @@ onMounted(async () => {
           <!-- 遮罩loading层 -->
           <div
             v-if="loading"
-            class="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.1)]"
+            class="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-[rgba(0,0,0,0.1)]"
           >
             <Spin tip="加载中..." />
           </div>

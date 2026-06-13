@@ -19,9 +19,7 @@ export function useMenuScroll(
     const isEnabled = typeof enable === 'boolean' ? enable : enable.value;
     if (!isEnabled) return;
 
-    const activeElement = document.querySelector(
-      `.ant-menu-item-selected`,
-    );
+    const activeElement = document.querySelector(`.ant-menu-item-selected`);
     if (activeElement) {
       activeElement.scrollIntoView({
         behavior: 'smooth',

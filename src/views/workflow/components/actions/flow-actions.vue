@@ -351,7 +351,7 @@ const handleMenuClick: DropdownEmits['menuClick'] = (e) => {
       cn(
         'absolute bottom-0 left-0',
         'border-t-solid border-t-[1px]',
-        'w-full bg-background p-3',
+        'bg-background w-full p-3',
         'z-[100]',
       )
     "

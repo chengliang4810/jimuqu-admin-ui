@@ -130,7 +130,7 @@ function currentPreview(file: UploadFile) {
       >
         <template #size>
           <span
-            class="mx-1 font-medium text-primary"
+            class="text-primary mx-1 font-medium"
             :class="{ 'upload-text__disabled': disabled }"
           >
             {{ maxSize }}MB
@@ -138,7 +138,7 @@ function currentPreview(file: UploadFile) {
         </template>
         <template #ext>
           <span
-            class="mx-1 font-medium text-primary"
+            class="text-primary mx-1 font-medium"
             :class="{ 'upload-text__disabled': disabled }"
           >
             {{ acceptStr }}

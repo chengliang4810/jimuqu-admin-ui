@@ -114,7 +114,10 @@ watch(
 );
 
 function handleFullscreen() {
-  props.modalApi?.setState((prev) => ({ ...prev, fullscreen: !fullscreen.value }));
+  props.modalApi?.setState((prev) => ({
+    ...prev,
+    fullscreen: !fullscreen.value,
+  }));
 }
 
 function handleCancel() {
@@ -156,7 +159,7 @@ function handleClosed() {
           <Tooltip v-if="titleTooltip">
             <template #title>{{ titleTooltip }}</template>
             <span
-              class="ml-1 inline-flex size-3.5 cursor-help items-center justify-center rounded-full border text-[10px] leading-none text-muted-foreground"
+              class="text-muted-foreground ml-1 inline-flex size-3.5 cursor-help items-center justify-center rounded-full border text-[10px] leading-none"
             >
               ?
             </span>
@@ -237,8 +240,8 @@ function handleClosed() {
 .vben-modal-fullscreen .ant-modal {
   top: 0;
   max-width: 100vw;
-  margin: 0;
   padding-bottom: 0;
+  margin: 0;
 }
 
 .vben-modal-fullscreen .ant-modal-content {

@@ -3,12 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
-import {
-  addFullName,
-  cloneDeep,
-  getPopupContainer,
-  listToTree,
-} from '@/utils';
+import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 
 import { useVbenForm } from '@/adapter/form';
 import {

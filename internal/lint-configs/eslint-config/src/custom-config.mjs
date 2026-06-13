@@ -31,8 +31,7 @@ const customConfig = [
           patterns: [
             {
               group: ['@/*'],
-              message:
-                'The core package cannot import the app-level packages',
+              message: 'The core package cannot import the app-level packages',
             },
           ],
         },

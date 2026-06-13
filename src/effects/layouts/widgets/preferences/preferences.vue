@@ -83,7 +83,7 @@ const listen = computed(() => {
       <VbenButton
         v-if="props.showButton"
         :title="$t('preferences.title')"
-        class="flex-col-center size-10 cursor-pointer rounded-l-lg rounded-r-none border-none bg-primary"
+        class="flex-col-center bg-primary size-10 cursor-pointer rounded-l-lg rounded-r-none border-none"
         @click="() => drawerApi.open()"
       >
         <Settings class="size-5" />

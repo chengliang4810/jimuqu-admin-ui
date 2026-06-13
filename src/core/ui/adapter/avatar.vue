@@ -60,7 +60,7 @@ const rootStyle = computed<CSSProperties>(() => {
       v-if="dot"
       :class="
         cn(
-          'border-background absolute bottom-0 right-0 size-3 rounded-full border-2',
+          'border-background absolute right-0 bottom-0 size-3 rounded-full border-2',
           dotClass,
         )
       "

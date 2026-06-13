@@ -14,7 +14,9 @@ interface ExtractWidthResult {
  * 而 antd Modal/Drawer 的宽度由 `width` 属性(内联 style，优先级高于 class)控制。
  * 这里把 class 中的宽度令牌提取出来转成 antd 的 width，并返回剩余 class。
  */
-export function extractWidthFromClass(classValue: ClassType): ExtractWidthResult {
+export function extractWidthFromClass(
+  classValue: ClassType,
+): ExtractWidthResult {
   const classStr = cn(classValue);
   if (!classStr) {
     return { rest: '' };

@@ -170,7 +170,7 @@ watch(searchValue, (value) => {
   <div
     :class="
       cn(
-        'flex max-h-[100vh] w-[360px] flex-col overflow-y-hidden bg-background',
+        'bg-background flex max-h-[100vh] w-[360px] flex-col overflow-y-hidden',
         'rounded-lg',
         'dict-type-card',
       )

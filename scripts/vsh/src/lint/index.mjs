@@ -1,19 +1,8 @@
-import type { CAC } from 'cac';
-
 import { execSync } from 'node:child_process';
 
 import { execaCommand } from '@vben/node-utils';
 
-interface LintCommandOptions {
-  /**
-   * Format lint problem.
-   */
-  format?: boolean;
-}
-
-async function runLint({ format }: LintCommandOptions) {
-  // process.env.FORCE_COLOR = '3';
-
+async function runLint({ format }) {
   if (format) {
     await execaCommand(`stylelint "**/*.{vue,css,less,scss}" --cache --fix`, {
       stdio: 'inherit',
@@ -26,6 +15,7 @@ async function runLint({ format }: LintCommandOptions) {
     });
     return;
   }
+
   const subprocesses = [
     execaCommand(`prettier . --check --cache --log-level warn`, {
       stdio: 'inherit',
@@ -52,12 +42,13 @@ async function runLint({ format }: LintCommandOptions) {
         // process may have already exited
       }
     }
+
     await Promise.allSettled(subprocesses);
     throw error;
   }
 }
 
-function defineLintCommand(cac: CAC) {
+function defineLintCommand(cac) {
   cac
     .command('lint')
     .usage('Batch execute project lint check.')

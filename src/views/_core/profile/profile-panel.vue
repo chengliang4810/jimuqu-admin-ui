@@ -80,14 +80,14 @@ const items = computed<DescriptionsProps['items']>(() => {
           />
         </Tooltip>
         <div class="flex flex-col items-center gap-[8px]">
-          <span class="text-xl font-bold text-foreground">
+          <span class="text-foreground text-xl font-bold">
             {{ profile.user.nickName ?? '未知' }}
           </span>
           <!-- https://www.jinrishici.com/doc/#image -->
           <img :src="poetrySrc" />
         </div>
       </div>
-      <div class="px-6 w-full">
+      <div class="w-full px-6">
         <Descriptions :column="1" :items="items" />
       </div>
     </div>

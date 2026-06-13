@@ -1,5 +1,3 @@
-import type { CAC } from 'cac';
-
 import { join, relative } from 'node:path';
 
 import {
@@ -15,19 +13,12 @@ import {
 
 const CODE_WORKSPACE_FILE = join('vben-admin.code-workspace');
 
-interface CodeWorkspaceCommandOptions {
-  autoCommit?: boolean;
-  spaces?: number;
-}
-
-async function createCodeWorkspace({
-  autoCommit = false,
-  spaces = 2,
-}: CodeWorkspaceCommandOptions) {
+async function createCodeWorkspace({ autoCommit = false, spaces = 2 }) {
   const { packages, rootDir } = await getPackages();
 
   let folders = packages.map((pkg) => {
     const { dir, packageJson } = pkg;
+
     return {
       name: packageJson.name,
       path: toPosixPath(relative(rootDir, dir)),
@@ -38,31 +29,31 @@ async function createCodeWorkspace({
 
   const monorepoRoot = findMonorepoRoot();
   const outputPath = join(monorepoRoot, CODE_WORKSPACE_FILE);
-  await outputJSON(outputPath, { folders }, spaces);
 
+  await outputJSON(outputPath, { folders }, spaces);
   await formatFile(outputPath);
+
   if (autoCommit) {
     await gitAdd(CODE_WORKSPACE_FILE, monorepoRoot);
   }
 }
 
-async function runCodeWorkspace({
-  autoCommit,
-  spaces,
-}: CodeWorkspaceCommandOptions) {
+async function runCodeWorkspace({ autoCommit, spaces }) {
   await createCodeWorkspace({
     autoCommit,
     spaces,
   });
+
   if (autoCommit) {
     return;
   }
+
   consola.log('');
   consola.success(colors.green(`${CODE_WORKSPACE_FILE} is updated!`));
   consola.log('');
 }
 
-function defineCodeWorkspaceCommand(cac: CAC) {
+function defineCodeWorkspaceCommand(cac) {
   cac
     .command('code-workspace')
     .usage('Update the `.code-workspace` file')

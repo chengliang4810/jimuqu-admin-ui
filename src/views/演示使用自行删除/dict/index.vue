@@ -155,7 +155,7 @@ const items: DescriptionsProps['items'] = [
 
         这里使用computed过滤了部分选项
         <a
-          class="font-semibold text-primary"
+          class="text-primary font-semibold"
           target="_blank"
           href="https://dapdap.top/function/dict.html#%E7%BB%99-form-%E7%BB%84%E4%BB%B6%E8%B5%8B%E5%80%BC%E5%89%8D-%E9%9C%80%E8%A6%81%E5%81%9A%E5%A4%84%E7%90%86%E5%AD%97%E5%85%B8%E5%90%8E%E5%B1%95%E7%A4%BA%E7%9A%84%E6%83%85%E5%86%B5"
         >

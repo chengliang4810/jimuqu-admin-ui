@@ -66,7 +66,6 @@ function updateCSSVariables(preferences: Preferences) {
   if (Reflect.has(theme, 'radius')) {
     document.documentElement.style.setProperty('--radius', `${radius}rem`);
   }
-
 }
 
 /**
