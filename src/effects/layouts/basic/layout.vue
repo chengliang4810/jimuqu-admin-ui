@@ -71,12 +71,7 @@ const headerTheme = computed(() => {
 });
 
 const logoClass = computed(() => {
-  const { collapsedShowTitle } = preferences.sidebar;
   const classes: string[] = [];
-
-  if (collapsedShowTitle && sidebarCollapsed.value && !isMixedNav.value) {
-    classes.push('mx-auto');
-  }
 
   if (isSideMixedNav.value) {
     classes.push('flex-center');
@@ -239,7 +234,6 @@ const headerSlots = computed(() => {
     :is-mobile="preferences.app.isMobile"
     :layout="layout"
     :sidebar-collapse="preferences.sidebar.collapsed"
-    :sidebar-collapse-show-title="preferences.sidebar.collapsedShowTitle"
     :sidebar-enable="sidebarVisible"
     :sidebar-collapsed-button="preferences.sidebar.collapsedButton"
     :sidebar-fixed-button="preferences.sidebar.fixedButton"
@@ -334,7 +328,6 @@ const headerSlots = computed(() => {
       <LayoutMenu
         :accordion="preferences.navigation.accordion"
         :collapse="preferences.sidebar.collapsed"
-        :collapse-show-title="preferences.sidebar.collapsedShowTitle"
         :default-active="sidebarActive"
         :menus="wrapperMenus(sidebarMenus)"
         :rounded="isMenuRounded"

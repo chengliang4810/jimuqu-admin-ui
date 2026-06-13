@@ -112,11 +112,6 @@ interface VbenLayoutProps {
    */
   sidebarCollapsedButton?: boolean;
   /**
-   * 侧边菜单是否折叠时，是否显示title
-   * @default true
-   */
-  sidebarCollapseShowTitle?: boolean;
-  /**
    * 侧边栏是否可见
    * @default true
    */

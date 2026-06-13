@@ -49,7 +49,6 @@ const props = withDefaults(defineProps<Props>(), {
   isMobile: false,
   layout: 'sidebar-nav',
   sidebarCollapsedButton: true,
-  sidebarCollapseShowTitle: false,
   sidebarExtraCollapsedWidth: 60,
   sidebarFixedButton: true,
   sidebarHidden: false,
@@ -122,15 +121,9 @@ const headerWrapperHeight = computed(() => {
 });
 
 const getSideCollapseWidth = computed(() => {
-  const {
-    sidebarCollapseShowTitle,
-    sidebarExtraCollapsedWidth,
-    sideCollapseWidth,
-  } = props;
+  const { sidebarExtraCollapsedWidth, sideCollapseWidth } = props;
 
-  return sidebarCollapseShowTitle ||
-    isSidebarMixedNav.value ||
-    isHeaderMixedNav.value
+  return isSidebarMixedNav.value || isHeaderMixedNav.value
     ? sidebarExtraCollapsedWidth
     : sideCollapseWidth;
 });

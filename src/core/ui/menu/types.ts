@@ -13,12 +13,6 @@ interface MenuProps {
   collapse?: boolean;
 
   /**
-   * @zh_CN 菜单折叠时是否显示菜单名称
-   * @default false
-   */
-  collapseShowTitle?: boolean;
-
-  /**
    * @zh_CN 默认激活的菜单
    */
   defaultActive?: string;

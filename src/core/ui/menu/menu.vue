@@ -21,7 +21,6 @@ defineOptions({
 const props = withDefaults(defineProps<Props>(), {
   accordion: true,
   collapse: false,
-  collapseShowTitle: false,
   defaultActive: '',
   defaultOpeneds: () => [],
   menus: () => [],
@@ -85,9 +84,6 @@ const menuClass = computed(() => {
   const classes: string[] = [];
   if (props.rounded) {
     classes.push('menu-rounded');
-  }
-  if (props.collapseShowTitle) {
-    classes.push('collapse-show-title');
   }
   return classes;
 });
