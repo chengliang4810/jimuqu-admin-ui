@@ -313,11 +313,11 @@ onUnmounted(() => {
     @mouseleave="handleMouseleave"
   >
     <div
-      class="h-full"
+      class="relative h-full"
       :class="[
         {
           'bg-sidebar-deep': isSidebarMixed,
-          'border-r border-border bg-sidebar': !isSidebarMixed,
+          'bg-sidebar': !isSidebarMixed,
         },
       ]"
       :style="{ width: `${width}px` }"
@@ -326,10 +326,19 @@ onUnmounted(() => {
         v-if="!collapse && !isSidebarMixed && showFixedButton"
         v-model:expand-on-hover="expandOnHover"
       />
-      <div v-if="slots.logo" :style="headerStyle">
+      <div
+        v-if="slots.logo"
+        :style="headerStyle"
+        class="border-r border-border"
+      >
         <slot name="logo"></slot>
       </div>
-      <VbenScrollbar :style="contentStyle" shadow shadow-border>
+      <div
+        v-if="slots.logo"
+        :style="{ top: `${headerHeight - 1}px` }"
+        class="pointer-events-none absolute right-0 h-2 border-r border-border"
+      ></div>
+      <VbenScrollbar :style="contentStyle">
         <slot></slot>
       </VbenScrollbar>
 
@@ -348,7 +357,7 @@ onUnmounted(() => {
         },
       ]"
       :style="extraStyle"
-      class="fixed top-0 h-full overflow-hidden border-r border-border bg-sidebar transition-all duration-200"
+      class="fixed top-0 h-full overflow-hidden bg-sidebar transition-all duration-200"
     >
       <SidebarCollapseButton
         v-if="isSidebarMixed && expandOnHover"
@@ -359,15 +368,14 @@ onUnmounted(() => {
         v-if="!extraCollapse"
         v-model:expand-on-hover="expandOnHover"
       />
-      <div v-if="!extraCollapse" :style="extraTitleStyle" class="pl-2">
+      <div
+        v-if="!extraCollapse"
+        :style="extraTitleStyle"
+        class="border-r border-border pl-2"
+      >
         <slot name="extra-title"></slot>
       </div>
-      <VbenScrollbar
-        :style="extraContentStyle"
-        class="border-border py-2"
-        shadow
-        shadow-border
-      >
+      <VbenScrollbar :style="extraContentStyle" class="border-border py-2">
         <slot name="extra"></slot>
       </VbenScrollbar>
     </div>
