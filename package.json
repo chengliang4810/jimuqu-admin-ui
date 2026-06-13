@@ -91,7 +91,6 @@
     "tailwind-merge": "catalog:",
     "theme-colors": "catalog:",
     "tinymce": "catalog:",
-    "tippy.js": "catalog:",
     "unplugin-vue-components": "catalog:",
     "vditor": "catalog:",
     "vee-validate": "catalog:",
@@ -102,7 +101,6 @@
     "vue-json-pretty": "catalog:",
     "vue-json-viewer": "catalog:",
     "vue-router": "catalog:",
-    "vue-tippy": "catalog:",
     "vxe-pc-ui": "catalog:",
     "vxe-table": "catalog:",
     "watermark-js-plus": "catalog:"
