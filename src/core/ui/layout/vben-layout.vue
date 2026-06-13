@@ -12,7 +12,7 @@ import {
 } from '@/core/composables';
 import { IconifyIcon } from '@/core/icons';
 import { ELEMENT_ID_MAIN_CONTENT } from '@/core/shared/constants';
-import { VbenIconButton } from '@/core/ui/shadcn/components/button';
+import { VbenIconButton } from '@/core/ui/adapter';
 import { useMouse, useScroll, useThrottleFn } from '@vueuse/core';
 
 import {
