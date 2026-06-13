@@ -109,7 +109,9 @@ async function generateRoutes(options: GenerateMenuAndRoutesOptions) {
       }>;
       route.component = async () => {
         const component = await originalComponent();
-        if (!component.default) return component;
+        if (!component.default) {
+          return component;
+        }
         return defineComponent({
           name: route.name as string,
           setup(props, { attrs, slots }) {
