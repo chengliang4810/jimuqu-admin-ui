@@ -38,5 +38,9 @@
     "ora": "catalog:",
     "pkg-types": "catalog:",
     "rimraf": "catalog:"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
   }
 }

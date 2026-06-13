@@ -51,6 +51,8 @@
     "rollup-plugin-visualizer": "catalog:",
     "sass": "catalog:",
     "sass-embedded": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
     "unplugin-dts": "catalog:",
     "vite": "catalog:",
     "vite-plugin-compression": "catalog:",

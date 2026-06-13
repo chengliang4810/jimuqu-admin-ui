@@ -1,5 +1,3 @@
-import { optionsToEnum } from '@/utils';
-
 export const activityStatusOptions = [
   {
     label: '激活',
@@ -15,7 +13,10 @@ export const activityStatusOptions = [
   },
 ] as const;
 
-export const ActivityStatusEnum = optionsToEnum(activityStatusOptions);
+export const ActivityStatusEnum = {
+  Active: 1,
+  Suspended: 0,
+};
 
 export const publishStatusOptions = [
   {
