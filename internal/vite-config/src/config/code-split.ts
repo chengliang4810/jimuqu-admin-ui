@@ -124,7 +124,7 @@ const matchVbenCoreChunk = createChunkMatcher([
   '/src/core/shared/',
   '/src/core/typings/',
   '/src/core/icons/',
-  '/src/core/design/',
+  '/src/styles/design/',
   '/src/core/composables/',
   '/src/constants/',
   '/src/types/',

@@ -14,7 +14,6 @@ const DEFAULT_CONFIG = {
   ignoreBinaries: [],
   ignoreDependencies: [
     '@iconify/json',
-    '@vben-core/design',
     '@vben/eslint-config',
     '@vben/stylelint-config',
     '@vben/tailwind-config',

@@ -2,10 +2,9 @@
 
 <script setup lang="ts">
 import { useAppConfig } from '@/effects/hooks';
-import { stringify } from '@/effects/request';
 import { useAccessStore } from '@/stores';
-
 import { motion } from 'motion-v';
+import { stringify } from 'qs';
 
 import { useWarmflowIframe } from './hook';
 

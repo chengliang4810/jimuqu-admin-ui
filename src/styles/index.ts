@@ -1,1 +1,1 @@
-import '@/core/design';
+import './design';
