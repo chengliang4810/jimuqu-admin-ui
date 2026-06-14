@@ -8,7 +8,6 @@ import { Expand, Shrink } from '@/core/icons';
 import { ELEMENT_ID_MAIN_CONTENT } from '@/core/shared/constants';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/core/shared/utils';
-
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
 
 import { extractWidthFromClass } from '../extract-width';

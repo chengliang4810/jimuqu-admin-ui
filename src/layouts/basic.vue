@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router';
 
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@/constants';
 import { preferences, usePreferences } from '@/core/preferences';
-import { AuthenticationLoginExpiredModal } from '@/effects/common-ui';
 import { useWatermark } from '@/effects/hooks';
 import {
   BasicLayout,
@@ -15,11 +14,9 @@ import {
 import { BookOpenText, CircleHelp, GiteeIcon } from '@/icons-app';
 import { $t } from '@/locales';
 import { resetRoutes } from '@/router';
-import { useAccessStore, useUserStore } from '@/stores';
-import { useAuthStore } from '@/stores';
+import { useAuthStore, useUserStore } from '@/stores';
 import { openWindow } from '@/utils';
 import { useVersionUpdate } from '@/utils/check-update';
-import LoginForm from '@/views/_core/authentication/login.vue';
 import { GithubOutlined, UserOutlined } from '@antdv-next/icons';
 import { Badge } from 'antdv-next';
 
@@ -27,7 +24,6 @@ import { useNotification } from './hooks/notification';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
-const accessStore = useAccessStore();
 const router = useRouter();
 const { destroyWatermark, updateWatermark } = useWatermark();
 const { isDark } = usePreferences();
@@ -180,14 +176,6 @@ useVersionUpdate();
       </Badge>
 
       <NoticePreviewModal />
-    </template>
-    <template #extra>
-      <AuthenticationLoginExpiredModal
-        v-model:open="accessStore.loginExpired"
-        :avatar
-      >
-        <LoginForm />
-      </AuthenticationLoginExpiredModal>
     </template>
     <template #lock-screen>
       <LockScreen :avatar @to-login="handleLogout" />
