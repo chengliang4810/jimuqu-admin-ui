@@ -137,12 +137,7 @@ async function handleAccountLogin(values: LoginAndRegisterParams) {
     :loading="authStore.loginLoading"
     :show-register="false"
     :show-third-party-login="true"
-    :submit-btn-extra-props="{
-      type: 'primary',
-      size: 'large',
-      disabled: captchaLoading,
-    }"
-    :mobile-login-btn-extra-props="{ size: 'large' }"
+    :submit-disabled="captchaLoading"
     @submit="handleAccountLogin"
   >
     <!-- 可通过show-third-party-login控制是否显示第三方登录 -->

@@ -16,8 +16,7 @@ import ThirdPartyLogin from './third-party-login.vue';
 
 interface Props extends AuthenticationProps {
   formSchema?: VbenFormSchema[];
-  submitBtnExtraProps?: Record<string, any>;
-  mobileLoginBtnExtraProps?: Record<string, any>;
+  submitDisabled?: boolean;
 }
 
 defineOptions({
@@ -36,10 +35,9 @@ const props = withDefaults(defineProps<Props>(), {
   showRememberMe: true,
   showThirdPartyLogin: true,
   submitButtonText: '',
+  submitDisabled: false,
   subTitle: '',
   title: '',
-  submitBtnExtraProps: () => ({}),
-  mobileLoginBtnExtraProps: () => ({}),
 });
 
 const emit = defineEmits<{
@@ -135,11 +133,13 @@ defineExpose({
       </span>
     </div>
     <Button
-      v-bind="submitBtnExtraProps"
       :class="cn({ 'cursor-wait': loading }, 'h-10')"
+      :disabled="submitDisabled"
       :loading="loading"
       aria-label="login"
       class="w-full"
+      size="large"
+      type="primary"
       @click="handleSubmit"
     >
       {{ submitButtonText || $t('common.login') }}
@@ -150,9 +150,9 @@ defineExpose({
       class="mt-4 mb-2 flex items-center justify-between"
     >
       <Button
-        v-bind="mobileLoginBtnExtraProps"
         v-if="showCodeLogin"
         class="w-1/2"
+        size="large"
         @click="handleGo(codeLoginPath)"
       >
         {{ $t('authentication.mobileLogin') }}
