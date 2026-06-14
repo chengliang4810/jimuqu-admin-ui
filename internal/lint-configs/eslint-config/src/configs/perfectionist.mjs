@@ -75,6 +75,7 @@ export async function perfectionist() {
             type: 'natural',
           },
         ],
+        'perfectionist/sort-interfaces': 'off',
         'perfectionist/sort-modules': 'off',
         'perfectionist/sort-named-exports': [
           'error',

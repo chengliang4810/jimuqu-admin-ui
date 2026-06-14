@@ -1,8 +1,7 @@
 import type { AxiosRequestConfig } from 'axios';
 
-import { $t } from '@/locales';
-
 import { handleUnauthorizedLogout } from '@/api/helper';
+import { $t } from '@/locales';
 
 import { showAntdMessage } from './popup';
 
