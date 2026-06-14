@@ -145,7 +145,6 @@ async function handleAccountLogin(values: LoginAndRegisterParams) {
       disabled: captchaLoading,
     }"
     :mobile-login-btn-extra-props="{ size: 'large' }"
-    :qrcode-login-btn-extra-props="{ size: 'large' }"
     @submit="handleAccountLogin"
   >
     <!-- 可通过show-third-party-login控制是否显示第三方登录 -->
