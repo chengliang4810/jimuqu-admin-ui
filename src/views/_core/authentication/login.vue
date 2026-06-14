@@ -1,21 +1,18 @@
 <script lang="ts" setup>
+import type { CaptchaResponse } from '@/api/core/captcha';
 import type {
   LoginAndRegisterParams,
   VbenFormSchema,
 } from '@/effects/common-ui';
 
-import type { CaptchaResponse } from '@/api/core/captcha';
-
 import { computed, markRaw, onMounted, ref, useTemplateRef } from 'vue';
 
+import { captchaImage } from '@/api/core/captcha';
 import { AuthenticationLogin } from '@/effects/common-ui';
 import { $t } from '@/locales';
-
+import { useAuthStore } from '@/stores';
 import { Button, Checkbox, Input, InputPassword } from 'antdv-next';
 import { omit } from 'lodash-es';
-
-import { captchaImage } from '@/api/core/captcha';
-import { useAuthStore } from '@/stores';
 
 import InputCaptcha from './input-captcha.vue';
 import OAuthLogin from './oauth-login.vue';

@@ -22,7 +22,6 @@ interface Props extends AuthenticationProps {
   checkboxComponent?: Component;
   submitBtnExtraProps?: Record<string, any>;
   mobileLoginBtnExtraProps?: Record<string, any>;
-  qrcodeLoginBtnExtraProps?: Record<string, any>;
 }
 
 defineOptions({
@@ -47,7 +46,6 @@ const props = withDefaults(defineProps<Props>(), {
   buttonComponent: () => VbenButton,
   submitBtnExtraProps: () => ({}),
   mobileLoginBtnExtraProps: () => ({}),
-  qrcodeLoginBtnExtraProps: () => ({}),
 });
 
 const emit = defineEmits<{
