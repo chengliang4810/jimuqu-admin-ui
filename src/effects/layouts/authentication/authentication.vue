@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   pageTitle: '',
   sloganImage: '',
   toolbar: true,
-  toolbarList: () => ['color', 'language', 'layout', 'theme'],
+  toolbarList: () => ['language', 'layout', 'theme'],
   clickLogo: () => {},
 });
 

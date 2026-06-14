@@ -22,25 +22,7 @@ type PreferencesButtonPositionType =
   | 'header'
   | 'user-dropdown';
 
-type BuiltinThemeType =
-  | 'custom'
-  | 'deep-blue'
-  | 'deep-green'
-  | 'default'
-  | 'gray'
-  | 'green'
-  | 'neutral'
-  | 'orange'
-  | 'pink'
-  | 'red'
-  | 'rose'
-  | 'sky-blue'
-  | 'slate'
-  | 'stone'
-  | 'violet'
-  | 'yellow'
-  | 'zinc'
-  | (Record<never, never> & string);
+type BuiltinThemeType = 'default';
 
 type ContentCompactType = 'compact' | 'wide';
 

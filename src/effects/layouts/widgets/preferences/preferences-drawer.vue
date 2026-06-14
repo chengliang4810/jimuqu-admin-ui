@@ -4,7 +4,6 @@ import type { SegmentedItem } from '@/core/ui/adapter';
 import type { SupportedLanguagesType } from '@/locales';
 import type {
   BreadcrumbStyleType,
-  BuiltinThemeType,
   ContentCompactType,
   LayoutHeaderMenuAlignType,
   LayoutHeaderModeType,
@@ -33,7 +32,6 @@ import {
   Animation,
   Block,
   Breadcrumb,
-  BuiltinTheme,
   ColorMode,
   Content,
   Copyright,
@@ -77,8 +75,6 @@ const transitionName = defineModel<string>('transitionName');
 const transitionLoading = defineModel<boolean>('transitionLoading');
 const transitionEnable = defineModel<boolean>('transitionEnable');
 
-const themeColorPrimary = defineModel<string>('themeColorPrimary');
-const themeBuiltinType = defineModel<BuiltinThemeType>('themeBuiltinType');
 const themeMode = defineModel<ThemeModeType>('themeMode');
 const themeSemiDarkSidebar = defineModel<boolean>('themeSemiDarkSidebar');
 const themeSemiDarkSidebarSub = defineModel<boolean>('themeSemiDarkSidebarSub');
@@ -150,7 +146,6 @@ const {
   customPreferences,
   diffCustomPreference,
   diffPreference,
-  isDark,
   isFullContent,
   isHeaderNav,
   isHeaderSidebarNav,
@@ -343,13 +338,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 v-model:theme-semi-dark-header="themeSemiDarkHeader"
                 v-model:theme-semi-dark-sidebar="themeSemiDarkSidebar"
                 v-model:theme-semi-dark-sidebar-sub="themeSemiDarkSidebarSub"
-              />
-            </Block>
-            <Block :title="$t('preferences.theme.builtin.title')">
-              <BuiltinTheme
-                v-model="themeBuiltinType"
-                v-model:theme-color-primary="themeColorPrimary"
-                :is-dark="isDark"
               />
             </Block>
             <Block :title="$t('preferences.other')">

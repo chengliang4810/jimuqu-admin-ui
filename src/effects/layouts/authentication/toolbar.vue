@@ -6,7 +6,6 @@ import { computed } from 'vue';
 import { preferences } from '@/core/preferences';
 
 import {
-  AuthenticationColorToggle,
   AuthenticationLayoutToggle,
   LanguageToggle,
   ThemeToggle,
@@ -21,10 +20,9 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<Props>(), {
-  toolbarList: () => ['color', 'language', 'layout', 'theme'],
+  toolbarList: () => ['language', 'layout', 'theme'],
 });
 
-const showColor = computed(() => props.toolbarList.includes('color'));
 const showLayout = computed(() => props.toolbarList.includes('layout'));
 const showLanguage = computed(() => props.toolbarList.includes('language'));
 const showTheme = computed(() => props.toolbarList.includes('theme'));
@@ -39,7 +37,6 @@ const showTheme = computed(() => props.toolbarList.includes('theme'));
   >
     <!-- Only show on medium and larger screens -->
     <div class="hidden md:flex">
-      <AuthenticationColorToggle v-if="showColor" />
       <AuthenticationLayoutToggle v-if="showLayout" />
     </div>
     <!-- Always show Language and Theme toggles -->

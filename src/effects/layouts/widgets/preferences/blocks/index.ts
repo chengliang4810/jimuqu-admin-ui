@@ -13,6 +13,5 @@ export { default as Sidebar } from './layout/sidebar.vue';
 export { default as Tabbar } from './layout/tabbar.vue';
 export { default as Widget } from './layout/widget.vue';
 export { default as SwitchItem } from './switch-item.vue';
-export { default as BuiltinTheme } from './theme/builtin.vue';
 export { default as ColorMode } from './theme/color-mode.vue';
 export { default as Theme } from './theme/theme.vue';

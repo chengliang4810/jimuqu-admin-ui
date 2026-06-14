@@ -18,7 +18,12 @@ function updateCSSVariables(preferences: Preferences) {
 
   const theme = preferences?.theme ?? {};
 
-  const { builtinType, mode, radius } = theme;
+  const { mode, radius } = theme;
+  const defaultTheme = BUILT_IN_THEME_PRESETS[0];
+  const builtinType = 'default';
+  if (!defaultTheme) {
+    return;
+  }
 
   // html 设置 dark 类
   if (Reflect.has(theme, 'mode')) {
@@ -28,6 +33,11 @@ function updateCSSVariables(preferences: Preferences) {
 
   // html 设置 data-theme=[builtinType]
   if (Reflect.has(theme, 'builtinType')) {
+    if (theme.builtinType !== builtinType) {
+      theme.builtinType = builtinType;
+      theme.colorPrimary = defaultTheme.color;
+    }
+
     const rootTheme = root.dataset.theme;
     if (rootTheme !== builtinType) {
       root.dataset.theme = builtinType;
@@ -35,9 +45,7 @@ function updateCSSVariables(preferences: Preferences) {
   }
 
   // 获取当前的内置主题
-  const currentBuiltType = [...BUILT_IN_THEME_PRESETS].find(
-    (item) => item.type === builtinType,
-  );
+  const currentBuiltType = defaultTheme;
 
   let builtinTypeColorPrimary: string | undefined = '';
 
