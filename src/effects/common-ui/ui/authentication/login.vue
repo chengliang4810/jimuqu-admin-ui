@@ -1,25 +1,21 @@
 <script setup lang="ts">
 import type { VbenFormSchema } from '@/core/ui/form';
 
-import type { Component } from 'vue';
-
 import type { AuthenticationProps, LoginAndRegisterParams } from './types';
 
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { cloneDeep, cn } from '@/core/shared/utils';
-import { VbenButton, VbenCheckbox } from '@/core/ui/adapter';
 import { useVbenForm } from '@/core/ui/form';
 import { $t } from '@/locales';
+import { Button, Checkbox } from 'antdv-next';
 
 import Title from './auth-title.vue';
 import ThirdPartyLogin from './third-party-login.vue';
 
 interface Props extends AuthenticationProps {
   formSchema?: VbenFormSchema[];
-  buttonComponent?: Component;
-  checkboxComponent?: Component;
   submitBtnExtraProps?: Record<string, any>;
   mobileLoginBtnExtraProps?: Record<string, any>;
 }
@@ -42,8 +38,6 @@ const props = withDefaults(defineProps<Props>(), {
   submitButtonText: '',
   subTitle: '',
   title: '',
-  checkboxComponent: () => VbenCheckbox,
-  buttonComponent: () => VbenButton,
   submitBtnExtraProps: () => ({}),
   mobileLoginBtnExtraProps: () => ({}),
 });
@@ -123,14 +117,13 @@ defineExpose({
       class="mb-6 flex justify-between"
     >
       <div class="flex-center">
-        <component
-          :is="checkboxComponent"
+        <Checkbox
           v-if="showRememberMe"
-          v-model="rememberMe"
+          v-model:checked="rememberMe"
           name="rememberMe"
         >
           {{ $t('authentication.rememberMe') }}
-        </component>
+        </Checkbox>
       </div>
 
       <span
@@ -141,8 +134,7 @@ defineExpose({
         {{ $t('authentication.forgetPassword') }}
       </span>
     </div>
-    <component
-      :is="buttonComponent"
+    <Button
       v-bind="submitBtnExtraProps"
       :class="cn({ 'cursor-wait': loading }, 'h-10')"
       :loading="loading"
@@ -151,22 +143,20 @@ defineExpose({
       @click="handleSubmit"
     >
       {{ submitButtonText || $t('common.login') }}
-    </component>
+    </Button>
 
     <div
       v-if="showCodeLogin"
       class="mt-4 mb-2 flex items-center justify-between"
     >
-      <component
-        :is="buttonComponent"
+      <Button
         v-bind="mobileLoginBtnExtraProps"
         v-if="showCodeLogin"
         class="w-1/2"
-        variant="outline"
         @click="handleGo(codeLoginPath)"
       >
         {{ $t('authentication.mobileLogin') }}
-      </component>
+      </Button>
     </div>
 
     <!-- 第三方登录 -->

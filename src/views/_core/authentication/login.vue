@@ -11,7 +11,7 @@ import { captchaImage } from '@/api/core/captcha';
 import { AuthenticationLogin } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { useAuthStore } from '@/stores';
-import { Button, Checkbox, Input, InputPassword } from 'antdv-next';
+import { Input, InputPassword } from 'antdv-next';
 import { omit } from 'lodash-es';
 
 import InputCaptcha from './input-captcha.vue';
@@ -137,8 +137,6 @@ async function handleAccountLogin(values: LoginAndRegisterParams) {
     :loading="authStore.loginLoading"
     :show-register="false"
     :show-third-party-login="true"
-    :checkbox-component="Checkbox"
-    :button-component="Button"
     :submit-btn-extra-props="{
       type: 'primary',
       size: 'large',
