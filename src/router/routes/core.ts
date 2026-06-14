@@ -2,7 +2,6 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { LOGIN_PATH } from '@/constants';
 import { preferences } from '@/core/preferences';
-
 import { $t } from '@/locales';
 
 const BasicLayout = () => import('@/layouts/basic.vue');
@@ -70,15 +69,6 @@ const coreRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/_core/authentication/code-login.vue'),
         meta: {
           title: $t('page.auth.codeLogin'),
-        },
-      },
-      {
-        name: 'QrCodeLogin',
-        path: 'qrcode-login',
-        component: () =>
-          import('@/views/_core/authentication/qrcode-login.vue'),
-        meta: {
-          title: $t('page.auth.qrcodeLogin'),
         },
       },
       {

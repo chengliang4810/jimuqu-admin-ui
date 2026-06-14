@@ -98,7 +98,6 @@
     "@types/lodash-es": "catalog:",
     "@types/node": "catalog:",
     "@types/nprogress": "catalog:",
-    "@types/qrcode": "catalog:",
     "@types/qs": "catalog:",
     "@types/sm-crypto": "catalog:",
     "@types/sortablejs": "catalog:",

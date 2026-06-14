@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import type { Component } from 'vue';
-
 import type { VbenFormSchema } from '@/core/ui/form';
+
+import type { Component } from 'vue';
 
 import type { AuthenticationProps, LoginAndRegisterParams } from './types';
 
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { $t } from '@/locales';
-
-import { useVbenForm } from '@/core/ui/form';
 import { cloneDeep, cn } from '@/core/shared/utils';
 import { VbenButton, VbenCheckbox } from '@/core/ui/adapter';
+import { useVbenForm } from '@/core/ui/form';
+import { $t } from '@/locales';
 
 import Title from './auth-title.vue';
 import ThirdPartyLogin from './third-party-login.vue';
@@ -35,11 +34,9 @@ const props = withDefaults(defineProps<Props>(), {
   forgetPasswordPath: '/auth/forget-password',
   formSchema: () => [],
   loading: false,
-  qrCodeLoginPath: '/auth/qrcode-login',
   registerPath: '/auth/register',
   showCodeLogin: true,
   showForgetPassword: true,
-  showQrcodeLogin: true,
   showRegister: true,
   showRememberMe: true,
   showThirdPartyLogin: true,
@@ -159,7 +156,7 @@ defineExpose({
     </component>
 
     <div
-      v-if="showCodeLogin || showQrcodeLogin"
+      v-if="showCodeLogin"
       class="mt-4 mb-2 flex items-center justify-between"
     >
       <component
@@ -171,16 +168,6 @@ defineExpose({
         @click="handleGo(codeLoginPath)"
       >
         {{ $t('authentication.mobileLogin') }}
-      </component>
-      <component
-        :is="buttonComponent"
-        v-bind="qrcodeLoginBtnExtraProps"
-        v-if="showQrcodeLogin"
-        class="ml-4 w-1/2"
-        variant="outline"
-        @click="handleGo(qrCodeLoginPath)"
-      >
-        {{ $t('authentication.qrcodeLogin') }}
       </component>
     </div>
 
