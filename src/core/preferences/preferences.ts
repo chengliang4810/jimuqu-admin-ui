@@ -12,7 +12,6 @@ import { markRaw, reactive, readonly, watch } from 'vue';
 
 import { MemoryStorageDriver, StorageManager } from '@/core/shared/cache';
 import { isMacOs, merge } from '@/core/shared/utils';
-
 import {
   breakpointsTailwind,
   useBreakpoints,
