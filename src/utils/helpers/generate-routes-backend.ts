@@ -1,10 +1,10 @@
-import type { RouteRecordRaw } from 'vue-router';
-
 import type {
   ComponentRecordType,
   GenerateMenuAndRoutesOptions,
   RouteRecordStringComponent,
 } from '@/core/typings';
+
+import type { RouteRecordRaw } from 'vue-router';
 
 import { mapTree } from '@/core/shared/utils';
 

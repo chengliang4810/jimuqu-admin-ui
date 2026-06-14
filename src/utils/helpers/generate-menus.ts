@@ -1,10 +1,10 @@
-import type { Router, RouteRecordRaw } from 'vue-router';
-
 import type {
   ExRouteRecordRaw,
   MenuRecordRaw,
   RouteMeta,
 } from '@/core/typings';
+
+import type { Router, RouteRecordRaw } from 'vue-router';
 
 import { filterTree, mapTree, sortTree } from '@/core/shared/utils';
 

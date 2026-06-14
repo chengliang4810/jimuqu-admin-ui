@@ -1,9 +1,10 @@
-import type { HttpResponse } from '@/effects/request';
 import type {
   BaseAsymmetricEncryption,
   BaseSymmetricEncryption,
 } from '@/utils';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
+
+import type { HttpResponse } from './type';
 
 import { BUSINESS_SUCCESS_CODE, UNAUTHORIZED_CODE } from '@/constants';
 import { preferences } from '@/core/preferences';
@@ -319,53 +320,63 @@ const alovaInstance = createAlova({
   },
 });
 
-alovaInstance.get = function (url, options) {
-  return this.Get(url, options);
+const get: typeof alovaInstance.Get = (url, options) => {
+  return alovaInstance.Get(url, options);
 };
 
-alovaInstance.post = function (url, data, config) {
-  return this.Post(url, data, config);
+const post: typeof alovaInstance.Post = (url, data, config) => {
+  return alovaInstance.Post(url, data, config);
 };
 
-alovaInstance.put = function (url, data, config) {
-  return this.Put(url, data, config);
+const put: typeof alovaInstance.Put = (url, data, config) => {
+  return alovaInstance.Put(url, data, config);
 };
 
-alovaInstance.delete = function (url, data, config) {
-  return this.Delete(url, data, config);
+const deleteRequest: typeof alovaInstance.Delete = (url, data, config) => {
+  return alovaInstance.Delete(url, data, config);
 };
+
+alovaInstance.get = get;
+alovaInstance.post = post;
+alovaInstance.put = put;
+alovaInstance.delete = deleteRequest;
 
 /**
 提供xxWithMessage方法，用于请求成功后弹出提示
  */
 
-alovaInstance.getWithMsg = function (url, options) {
-  return this.Get(url, {
+const getWithMsg: typeof alovaInstance.Get = (url, options) => {
+  return alovaInstance.Get(url, {
     ...options,
     successMessageMode: 'message',
   });
 };
 
-alovaInstance.postWithMsg = function (url, data, config) {
-  return this.Post(url, data, {
+const postWithMsg: typeof alovaInstance.Post = (url, data, config) => {
+  return alovaInstance.Post(url, data, {
     ...config,
     successMessageMode: 'message',
   });
 };
 
-alovaInstance.putWithMsg = function (url, data, config) {
-  return this.Put(url, data, {
+const putWithMsg: typeof alovaInstance.Put = (url, data, config) => {
+  return alovaInstance.Put(url, data, {
     ...config,
     successMessageMode: 'message',
   });
 };
 
-alovaInstance.deleteWithMsg = function (url, data, config) {
-  return this.Delete(url, data, {
+const deleteWithMsg: typeof alovaInstance.Delete = (url, data, config) => {
+  return alovaInstance.Delete(url, data, {
     ...config,
     successMessageMode: 'message',
   });
 };
+
+alovaInstance.getWithMsg = getWithMsg;
+alovaInstance.postWithMsg = postWithMsg;
+alovaInstance.putWithMsg = putWithMsg;
+alovaInstance.deleteWithMsg = deleteWithMsg;
 
 export type AlovaInstanceType = typeof alovaInstance;
 

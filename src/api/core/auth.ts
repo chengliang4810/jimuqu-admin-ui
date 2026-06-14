@@ -1,8 +1,6 @@
 import type { GrantType } from '@/effects/common-ui';
-import type { HttpResponse } from '@/effects/request';
 
 import { useAppConfig } from '@/effects/hooks';
-
 import { alovaInstance } from '@/utils/http';
 
 const { clientId, sseEnable } = useAppConfig(
@@ -89,7 +87,7 @@ export async function loginApi(data: AuthApi.LoginParams) {
  * @returns void
  */
 export function doLogout() {
-  return alovaInstance.post<HttpResponse<void>>('/auth/logout');
+  return alovaInstance.post<void>('/auth/logout');
 }
 
 /**
