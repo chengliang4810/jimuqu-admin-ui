@@ -1,4 +1,4 @@
-import { isFunction, isObject, isString } from '@vue/shared';
+import { isFunction, isObject, isString } from 'lodash-es';
 
 /**
  * 检查传入的值是否为undefined。

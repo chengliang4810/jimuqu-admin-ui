@@ -42,9 +42,7 @@
     "@ctrl/tinycolor": "catalog:",
     "@iconify/json": "catalog:",
     "@iconify/vue": "catalog:",
-    "@intlify/core-base": "catalog:",
     "@tanstack/vue-store": "catalog:",
-    "@tinymce/tinymce-vue": "catalog:",
     "@tiptap/core": "catalog:",
     "@tiptap/extension-highlight": "catalog:",
     "@tiptap/extension-image": "catalog:",
@@ -54,7 +52,6 @@
     "@tiptap/extension-underline": "catalog:",
     "@tiptap/starter-kit": "catalog:",
     "@tiptap/vue-3": "catalog:",
-    "@vue/shared": "catalog:",
     "@vueuse/core": "catalog:",
     "@vueuse/integrations": "catalog:",
     "@vueuse/motion": "catalog:",
@@ -62,7 +59,6 @@
     "alova": "catalog:",
     "antdv-next": "catalog:",
     "axios": "catalog:",
-    "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "codemirror": "catalog:",
     "cropperjs": "catalog:",
@@ -101,8 +97,7 @@
     "vue-json-viewer": "catalog:",
     "vue-router": "catalog:",
     "vxe-pc-ui": "catalog:",
-    "vxe-table": "catalog:",
-    "watermark-js-plus": "catalog:"
+    "vxe-table": "catalog:"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",
