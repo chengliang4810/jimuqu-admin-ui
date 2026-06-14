@@ -128,7 +128,7 @@ async function handleDeSelect() {
 </script>
 
 <template>
-  <BasicDrawer :title="title" :width="600">
+  <BasicDrawer :title="title" :size="600">
     <BasicForm>
       <template #listClass="slotProps">
         <TagStylePicker

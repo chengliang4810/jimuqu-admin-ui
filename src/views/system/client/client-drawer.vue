@@ -139,7 +139,7 @@ async function handleClosed() {
 </script>
 
 <template>
-  <BasicDrawer :title="title" :width="600">
+  <BasicDrawer :title="title" :size="600">
     <BasicForm>
       <template #clientSecret="slotProps">
         <SecretInput v-bind="slotProps" :disabled="isUpdate" />

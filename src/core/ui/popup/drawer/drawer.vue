@@ -64,24 +64,19 @@ const {
   submitting,
   title,
   titleTooltip,
-  width: propWidth,
+  size: propSize,
   zIndex,
 } = usePriorityValues(props, state);
 
-const isHorizontal = computed(
-  () => placement.value === 'left' || placement.value === 'right',
-);
-
 const widthInfo = computed(() => extractWidthFromClass(drawerClass.value));
 const restClass = computed(() => widthInfo.value.rest);
-const drawerWidth = computed(() => {
-  if (!isHorizontal.value) return undefined;
-  if (propWidth.value != null) return propWidth.value;
+const drawerSize = computed(() => {
+  if (propSize.value != null) {
+    return propSize.value;
+  }
+
   return widthInfo.value.width ?? 520;
 });
-const drawerHeight = computed(() =>
-  isHorizontal.value ? undefined : (widthInfo.value.width ?? undefined),
-);
 
 const getContainer = computed(() => {
   if (!appendToMain.value) {
@@ -122,8 +117,7 @@ function onAfterOpenChange(open: boolean) {
   <Drawer
     :open="state?.isOpen"
     :placement="placement"
-    :width="drawerWidth"
-    :height="drawerHeight"
+    :size="drawerSize"
     :mask="modal"
     :mask-closable="closeOnClickModal && !submitting"
     :keyboard="closeOnPressEscape && !submitting"
@@ -189,7 +183,10 @@ function onAfterOpenChange(open: boolean) {
       </div>
     </template>
 
-    <Spin :spinning="!!(showLoading || submitting)" wrapper-class-name="h-full">
+    <Spin
+      :spinning="!!(showLoading || submitting)"
+      :classes="{ root: 'h-full' }"
+    >
       <div
         :class="
           cn('relative h-full overflow-y-auto', contentClass, {

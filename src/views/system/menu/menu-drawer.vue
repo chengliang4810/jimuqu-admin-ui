@@ -175,7 +175,7 @@ const jsonEditorMode: any = 'text';
 </script>
 
 <template>
-  <BasicDrawer :title="title" :width="600">
+  <BasicDrawer :title="title" :size="600">
     <Skeleton active v-if="loading" />
     <BasicForm class="system-menu-form" v-show="!loading">
       <template #queryParam="slotProps">
