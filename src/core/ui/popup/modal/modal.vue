@@ -9,6 +9,7 @@ import { ELEMENT_ID_MAIN_CONTENT } from '@/core/shared/constants';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/core/shared/utils';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
+import { merge } from 'lodash-es';
 
 import { extractWidthFromClass } from '../extract-width';
 
@@ -32,7 +33,6 @@ const state = props.modalApi?.useStore?.();
 
 const {
   appendToMain,
-  bordered,
   cancelText,
   centered,
   class: modalClass,
@@ -71,6 +71,24 @@ const shouldCentered = computed(
 );
 
 const wrapClass = `vben-modal-${id}`;
+const modalStylesComputed = computed(() => {
+  const selfStyles: ModalProps['styles'] = {
+    container: {
+      '--ant-modal-content-padding': '0',
+    },
+    header: {
+      padding: '12px 16px',
+      borderBottom: '1px solid var(--ant-color-border)',
+      '--ant-modal-header-margin-bottom': '0',
+    },
+    footer: {
+      padding: '8px',
+      borderTop: '1px solid var(--ant-color-border)',
+      '--ant-modal-footer-margin-top': '0',
+    },
+  };
+  return merge({}, selfStyles, modalStyles.value ?? {});
+});
 
 const getContainer = computed(() => {
   if (!appendToMain.value) {
@@ -152,7 +170,7 @@ function handleClosed() {
     :class="restClass"
     :classes="modalClasses"
     :style="modalStyle"
-    :styles="modalStyles"
+    :styles="modalStylesComputed"
     :footer="modalFooter"
     @cancel="handleCancel"
     :after-close="handleClosed"
@@ -201,13 +219,7 @@ function handleClosed() {
 
     <template v-if="showFooter" #footer>
       <div
-        :class="
-          cn(
-            'flex flex-row items-center justify-end gap-2',
-            { 'border-t pt-2': bordered },
-            footerClass,
-          )
-        "
+        :class="cn('flex flex-row items-center justify-end gap-2', footerClass)"
       >
         <slot name="prepend-footer"></slot>
         <slot name="footer">
