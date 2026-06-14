@@ -102,10 +102,10 @@ const defaultPreferences: Preferences = {
   },
   theme: {
     builtinType: 'default',
-    colorDestructive: 'hsl(348 100% 61%)',
+    colorDestructive: 'hsl(359 100% 65%)',
     colorPrimary: 'hsl(215 100% 54%)',
-    colorSuccess: 'hsl(144 57% 58%)',
-    colorWarning: 'hsl(42 84% 61%)',
+    colorSuccess: 'hsl(100 77% 44%)',
+    colorWarning: 'hsl(40 96% 53%)',
     mode: 'auto',
     radius: '0.5',
     semiDarkHeader: false,

@@ -44,6 +44,7 @@ import {
   Sidebar,
   Tabbar,
   Theme,
+  ThemeColor,
   Widget,
 } from './blocks';
 
@@ -75,6 +76,10 @@ const transitionName = defineModel<string>('transitionName');
 const transitionLoading = defineModel<boolean>('transitionLoading');
 const transitionEnable = defineModel<boolean>('transitionEnable');
 
+const themeColorDestructive = defineModel<string>('themeColorDestructive');
+const themeColorPrimary = defineModel<string>('themeColorPrimary');
+const themeColorSuccess = defineModel<string>('themeColorSuccess');
+const themeColorWarning = defineModel<string>('themeColorWarning');
 const themeMode = defineModel<ThemeModeType>('themeMode');
 const themeSemiDarkSidebar = defineModel<boolean>('themeSemiDarkSidebar');
 const themeSemiDarkSidebarSub = defineModel<boolean>('themeSemiDarkSidebarSub');
@@ -340,6 +345,24 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 v-model:theme-semi-dark-sidebar-sub="themeSemiDarkSidebarSub"
               />
             </Block>
+            <div class="py-4">
+              <ThemeColor
+                v-model="themeColorPrimary"
+                :label="$t('preferences.theme.colorPrimary')"
+              />
+              <ThemeColor
+                v-model="themeColorSuccess"
+                :label="$t('preferences.theme.colorSuccess')"
+              />
+              <ThemeColor
+                v-model="themeColorWarning"
+                :label="$t('preferences.theme.colorWarning')"
+              />
+              <ThemeColor
+                v-model="themeColorDestructive"
+                :label="$t('preferences.theme.colorDestructive')"
+              />
+            </div>
             <Block :title="$t('preferences.other')">
               <ColorMode
                 v-model:app-color-gray-mode="appColorGrayMode"

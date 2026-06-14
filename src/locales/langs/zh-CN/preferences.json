@@ -128,6 +128,10 @@
     "darkSidebarSub": "深色侧边栏子栏",
     "darkSidebarSubTip": "当主题为浅色，开启深色侧边栏且布局使用双列菜单模式时可开启",
     "darkHeader": "深色顶栏",
+    "colorPrimary": "主题色",
+    "colorSuccess": "成功色",
+    "colorWarning": "警告色",
+    "colorDestructive": "错误色",
     "weakMode": "色弱模式",
     "grayMode": "灰色模式",
     "builtin": {
