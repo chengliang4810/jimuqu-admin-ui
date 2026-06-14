@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { CSSProperties } from 'vue';
+
 import { computed, h, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -18,15 +20,24 @@ import { useAuthStore, useUserStore } from '@/stores';
 import { openWindow } from '@/utils';
 import { useVersionUpdate } from '@/utils/check-update';
 import { GithubOutlined, UserOutlined } from '@antdv-next/icons';
-import { Badge } from 'antdv-next';
+import { Badge, Watermark } from 'antdv-next';
 
 import { useNotification } from './hooks/notification';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const router = useRouter();
-const { destroyWatermark, updateWatermark } = useWatermark();
+const { destroyWatermark, updateWatermark, watermark } = useWatermark();
 const { isDark } = usePreferences();
+
+const watermarkStyle: CSSProperties = {
+  height: '100vh',
+  inset: 0,
+  pointerEvents: 'none',
+  position: 'fixed',
+  width: '100vw',
+  zIndex: 999,
+};
 
 const menus = computed(() => {
   const defaultMenus = [
@@ -181,4 +192,9 @@ useVersionUpdate();
       <LockScreen :avatar @to-login="handleLogout" />
     </template>
   </BasicLayout>
+  <Watermark
+    v-if="watermark.visible"
+    v-bind="watermark.props"
+    :style="watermarkStyle"
+  />
 </template>

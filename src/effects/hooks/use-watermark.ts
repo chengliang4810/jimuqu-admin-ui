@@ -1,71 +1,64 @@
-import type { Watermark, WatermarkOptions } from 'watermark-js-plus';
+import type { WatermarkProps } from 'antdv-next';
 
-import { nextTick, onUnmounted, readonly, ref } from 'vue';
+import { nextTick, onUnmounted, ref, shallowReadonly } from 'vue';
 
-const watermark = ref<Watermark>();
-const unmountedHooked = ref<boolean>(false);
-const cachedOptions = ref<Partial<WatermarkOptions>>({
-  advancedStyle: {
-    colorStops: [
-      {
-        color: 'gray',
-        offset: 0,
-      },
-      {
-        color: 'gray',
-        offset: 1,
-      },
-    ],
-    type: 'linear',
-  },
-  // fontSize: '20px',
-  content: '',
-  contentType: 'multi-line-text',
-  globalAlpha: 0.25,
-  gridLayoutOptions: {
-    cols: 2,
-    gap: [20, 20],
-    matrix: [
-      [1, 0],
-      [0, 1],
-    ],
-    rows: 2,
-  },
-  height: 200,
-  layout: 'grid',
-  rotate: 30,
-  width: 160,
+interface WatermarkState {
+  props: WatermarkProps;
+  visible: boolean;
+}
+
+const watermark = ref<WatermarkState>({
+  props: {},
+  visible: false,
 });
+const unmountedHooked = ref<boolean>(false);
+const cachedOptions = ref<Partial<WatermarkProps>>({});
+
+function normalizeContent(content: WatermarkProps['content']) {
+  if (typeof content === 'string' && content.includes('\n')) {
+    return content.split(/\r?\n/).filter(Boolean);
+  }
+
+  return content;
+}
+
+function normalizeWatermarkProps(
+  options: Partial<WatermarkProps>,
+): WatermarkProps {
+  return {
+    content: normalizeContent(options.content),
+    height: options.height,
+    image: options.image,
+    inherit: false,
+    offset: options.offset,
+    rotate: options.rotate,
+    width: options.width,
+    zIndex: options.zIndex,
+  };
+}
 
 export function useWatermark() {
-  async function initWatermark(options: Partial<WatermarkOptions>) {
-    const { Watermark } = await import('watermark-js-plus');
-
+  async function initWatermark(options: Partial<WatermarkProps>) {
     cachedOptions.value = {
       ...cachedOptions.value,
       ...options,
     };
-    watermark.value = new Watermark(cachedOptions.value);
-    await watermark.value?.create();
+    watermark.value = {
+      props: normalizeWatermarkProps(cachedOptions.value),
+      visible: true,
+    };
   }
 
-  async function updateWatermark(options: Partial<WatermarkOptions>) {
-    if (watermark.value) {
-      await nextTick();
-      await watermark.value?.changeOptions({
-        ...cachedOptions.value,
-        ...options,
-      });
-    } else {
-      await initWatermark(options);
-    }
+  async function updateWatermark(options: Partial<WatermarkProps>) {
+    await nextTick();
+    await initWatermark(options);
   }
 
   function destroyWatermark() {
-    if (watermark.value) {
-      watermark.value.destroy();
-      watermark.value = undefined;
-    }
+    watermark.value = {
+      props: normalizeWatermarkProps(cachedOptions.value),
+      visible: false,
+    };
   }
 
   // 只在第一次调用时注册卸载钩子，防止重复注册以致于在路由切换时销毁了水印
@@ -79,6 +72,6 @@ export function useWatermark() {
   return {
     destroyWatermark,
     updateWatermark,
-    watermark: readonly(watermark),
+    watermark: shallowReadonly(watermark),
   };
 }
