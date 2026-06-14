@@ -22,8 +22,6 @@ type PreferencesButtonPositionType =
   | 'header'
   | 'user-dropdown';
 
-type BuiltinThemeType = 'default';
-
 type ContentCompactType = 'compact' | 'wide';
 
 type LayoutHeaderModeType = 'auto' | 'auto-scroll' | 'fixed' | 'static';
@@ -68,7 +66,6 @@ type AuthPageLayoutType = 'panel-center' | 'panel-left' | 'panel-right';
 export type {
   AuthPageLayoutType,
   BreadcrumbStyleType,
-  BuiltinThemeType,
   ContentCompactType,
   LayoutHeaderMenuAlignType,
   LayoutHeaderModeType,

@@ -1,9 +1,10 @@
+import type { DeepPartial } from '@/core/typings';
+
 import type {
   CustomPreferencesRecord,
   Preferences,
   PreferencesExtension,
 } from './types';
-import type { DeepPartial } from '@/core/typings';
 
 import { preferencesManager } from './preferences';
 
@@ -41,6 +42,5 @@ export const preferences: Preferences = getPreferences();
 
 export { preferencesManager };
 
-export * from './constants';
 export type * from './types';
 export * from './use-preferences';

@@ -109,8 +109,7 @@
   color-scheme: light;
 }
 
-.light,
-.light[data-theme='default'] {
+.light {
   /* Default background color of <body />...etc */
   --background: 0 0% 100%;
 
@@ -189,4 +188,3 @@
   accent-color: var(--primary);
   color-scheme: light;
 }
-

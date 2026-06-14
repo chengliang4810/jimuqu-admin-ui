@@ -1,5 +1,4 @@
-.dark,
-.dark[data-theme='default'] {
+.dark {
   /* Default background color of <body />...etc */
   --background: 222.34deg 10.43% 12.27%;
 
@@ -105,4 +104,3 @@
 
   color-scheme: dark;
 }
-

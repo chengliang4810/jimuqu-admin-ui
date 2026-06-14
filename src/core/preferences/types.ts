@@ -1,7 +1,6 @@
 import type {
   AuthPageLayoutType,
   BreadcrumbStyleType,
-  BuiltinThemeType,
   ContentCompactType,
   DeepPartial,
   LayoutHeaderMenuAlignType,
@@ -291,8 +290,6 @@ interface TabbarPreferences {
 }
 
 interface ThemePreferences {
-  /** 内置主题名 */
-  builtinType: BuiltinThemeType;
   /** 错误色 */
   colorDestructive: string;
   /** 主题色 */

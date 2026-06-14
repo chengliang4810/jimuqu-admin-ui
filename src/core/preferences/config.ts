@@ -101,7 +101,6 @@ const defaultPreferences: Preferences = {
     wheelable: true,
   },
   theme: {
-    builtinType: 'default',
     colorDestructive: 'hsl(359 100% 65%)',
     colorPrimary: 'hsl(215 100% 54%)',
     colorSuccess: 'hsl(100 77% 44%)',

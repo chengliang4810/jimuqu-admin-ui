@@ -3,8 +3,6 @@ import type { Preferences } from './types';
 import { generatorColorVariables } from '@/core/shared/color';
 import { updateCSSVariables as executeUpdateCSSVariables } from '@/core/shared/utils';
 
-import { BUILT_IN_THEME_PRESETS } from './constants';
-
 /**
  * 更新主题的 CSS 变量以及其他 CSS 变量
  * @param preferences - 当前偏好设置对象，它的主题值将被用来设置文档的主题。
@@ -19,11 +17,6 @@ function updateCSSVariables(preferences: Preferences) {
   const theme = preferences?.theme ?? {};
 
   const { mode, radius } = theme;
-  const defaultTheme = BUILT_IN_THEME_PRESETS[0];
-  const builtinType = 'default';
-  if (!defaultTheme) {
-    return;
-  }
 
   // html 设置 dark 类
   if (Reflect.has(theme, 'mode')) {
@@ -31,42 +24,13 @@ function updateCSSVariables(preferences: Preferences) {
     root.classList.toggle('dark', dark);
   }
 
-  // html 设置 data-theme=[builtinType]
-  if (Reflect.has(theme, 'builtinType')) {
-    if (theme.builtinType !== builtinType) {
-      theme.builtinType = builtinType;
-      theme.colorPrimary = defaultTheme.color;
-    }
-
-    const rootTheme = root.dataset.theme;
-    if (rootTheme !== builtinType) {
-      root.dataset.theme = builtinType;
-    }
-  }
-
-  // 获取当前的内置主题
-  const currentBuiltType = defaultTheme;
-
-  let builtinTypeColorPrimary: string | undefined = '';
-
-  if (currentBuiltType) {
-    const isDark = isDarkTheme(preferences.theme.mode);
-    // 设置不同主题的主要颜色
-    const color = isDark
-      ? currentBuiltType.darkPrimaryColor || currentBuiltType.primaryColor
-      : currentBuiltType.primaryColor;
-    builtinTypeColorPrimary = color || currentBuiltType.color;
-  }
-
-  // 如果内置主题颜色和自定义颜色都不存在，则不更新主题颜色
+  // 如果颜色变量存在，则更新主题颜色
   if (
-    builtinTypeColorPrimary ||
     Reflect.has(theme, 'colorPrimary') ||
     Reflect.has(theme, 'colorDestructive') ||
     Reflect.has(theme, 'colorSuccess') ||
     Reflect.has(theme, 'colorWarning')
   ) {
-    // preferences.theme.colorPrimary = builtinTypeColorPrimary || colorPrimary;
     updateMainColorVariables(preferences);
   }
 
