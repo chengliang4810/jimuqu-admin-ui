@@ -1,6 +1,7 @@
-import type { Component, Ref } from 'vue';
-
 import type { ClassType, MaybePromise } from '@/core/typings';
+import type { ModalProps as AntdModalProps } from 'antdv-next';
+
+import type { Component, Ref, StyleValue } from 'vue';
 
 import type { ModalApi } from './modal-api';
 
@@ -31,6 +32,11 @@ export interface ModalProps {
   centered?: boolean;
 
   class?: ClassType;
+
+  /**
+   * 语义化 class，与 antdv-next Modal 的 classes 属性一致
+   */
+  classes?: AntdModalProps['classes'];
 
   /**
    * 是否显示右上角的关闭按钮
@@ -129,6 +135,14 @@ export interface ModalProps {
    * @default true
    */
   showConfirmButton?: boolean;
+  /**
+   * 弹窗样式，与 antdv-next Modal 的 style 属性一致
+   */
+  style?: StyleValue;
+  /**
+   * 语义化样式，与 antdv-next Modal 的 styles 属性一致
+   */
+  styles?: AntdModalProps['styles'];
   /**
    * 提交中（锁定弹窗状态）
    */

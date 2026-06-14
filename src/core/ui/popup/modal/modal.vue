@@ -36,6 +36,7 @@ const {
   cancelText,
   centered,
   class: modalClass,
+  classes: modalClasses,
   closable,
   closeOnClickModal,
   closeOnPressEscape,
@@ -55,6 +56,8 @@ const {
   modal,
   showCancelButton,
   showConfirmButton,
+  style: modalStyle,
+  styles: modalStyles,
   submitting,
   title,
   titleTooltip,
@@ -147,6 +150,9 @@ function handleClosed() {
       cn('vben-modal', wrapClass, { 'vben-modal-fullscreen': shouldFullscreen })
     "
     :class="restClass"
+    :classes="modalClasses"
+    :style="modalStyle"
+    :styles="modalStyles"
     :footer="modalFooter"
     @cancel="handleCancel"
     :after-close="handleClosed"

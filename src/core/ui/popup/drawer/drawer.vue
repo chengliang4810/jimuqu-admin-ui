@@ -39,6 +39,7 @@ const {
   appendToMain,
   cancelText,
   class: drawerClass,
+  classes: drawerClasses,
   closable,
   closeIconPlacement,
   closeOnClickModal,
@@ -58,6 +59,8 @@ const {
   placement,
   showCancelButton,
   showConfirmButton,
+  style: drawerStyle,
+  styles: drawerStyles,
   submitting,
   title,
   titleTooltip,
@@ -129,6 +132,9 @@ function onAfterOpenChange(open: boolean) {
     :destroy-on-close="destroyOnClose"
     :closable="false"
     :class="restClass"
+    :classes="drawerClasses"
+    :style="drawerStyle"
+    :styles="drawerStyles"
     root-class-name="vben-drawer"
     @close="handleClose"
     :after-open-change="onAfterOpenChange"

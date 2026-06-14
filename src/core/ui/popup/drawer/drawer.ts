@@ -1,6 +1,8 @@
-import type { Component, Ref } from 'vue';
+import type { Component, Ref, StyleValue } from 'vue';
 
 import type { ClassType, MaybePromise } from '@/core/typings';
+
+import type { DrawerProps as AntdDrawerProps } from 'antdv-next';
 
 import type { DrawerApi } from './drawer-api';
 
@@ -19,6 +21,10 @@ export interface DrawerProps {
    */
   cancelText?: string;
   class?: ClassType;
+  /**
+   * 语义化 class，与 antdv-next Drawer 的 classes 属性一致
+   */
+  classes?: AntdDrawerProps['classes'];
   /**
    * 是否显示关闭按钮
    * @default true
@@ -113,6 +119,14 @@ export interface DrawerProps {
    * @default true
    */
   showConfirmButton?: boolean;
+  /**
+   * 抽屉样式，与 antdv-next Drawer 的 style 属性一致
+   */
+  style?: StyleValue;
+  /**
+   * 语义化样式，与 antdv-next Drawer 的 styles 属性一致
+   */
+  styles?: AntdDrawerProps['styles'];
   /**
    * 提交中（锁定抽屉状态）
    */
