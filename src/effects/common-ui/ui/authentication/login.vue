@@ -145,16 +145,8 @@ defineExpose({
       {{ submitButtonText || $t('common.login') }}
     </Button>
 
-    <div
-      v-if="showCodeLogin"
-      class="mt-4 mb-2 flex items-center justify-between"
-    >
-      <Button
-        v-if="showCodeLogin"
-        class="w-1/2"
-        size="large"
-        @click="handleGo(codeLoginPath)"
-      >
+    <div v-if="showCodeLogin" class="mt-4 mb-2">
+      <Button :block="true" size="large" @click="handleGo(codeLoginPath)">
         {{ $t('authentication.mobileLogin') }}
       </Button>
     </div>

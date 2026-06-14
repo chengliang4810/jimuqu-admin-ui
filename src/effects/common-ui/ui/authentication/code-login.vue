@@ -4,10 +4,9 @@ import type { VbenFormSchema } from '@/core/ui/form';
 import { computed, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { $t } from '@/locales';
-
 import { useVbenForm } from '@/core/ui/form';
-import { VbenButton } from '@/core/ui/adapter';
+import { $t } from '@/locales';
+import { Button } from 'antdv-next';
 
 import Title from './auth-title.vue';
 
@@ -104,25 +103,27 @@ defineExpose({
       </template>
     </Title>
     <Form />
-    <VbenButton
+    <Button
       :class="{
         'cursor-wait': loading,
       }"
+      size="large"
       :loading="loading"
+      type="primary"
       class="w-full"
       @click="handleSubmit"
     >
       <slot name="submitButtonText">
         {{ submitButtonText || $t('common.login') }}
       </slot>
-    </VbenButton>
-    <VbenButton
+    </Button>
+    <Button
       v-if="showBack"
+      size="large"
       class="mt-4 w-full"
-      variant="outline"
       @click="goToLogin()"
     >
       {{ $t('common.back') }}
-    </VbenButton>
+    </Button>
   </div>
 </template>

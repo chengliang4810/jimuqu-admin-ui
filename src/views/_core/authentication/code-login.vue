@@ -3,13 +3,11 @@ import type { LoginCodeParams, VbenFormSchema } from '@/effects/common-ui';
 
 import { computed, ref } from 'vue';
 
+import { sendSmsCode } from '@/api/core/captcha';
 import { AuthenticationCodeLogin } from '@/effects/common-ui';
 import { $t } from '@/locales';
-
-import { Alert } from 'antdv-next';
-
-import { sendSmsCode } from '@/api/core/captcha';
 import { useAuthStore } from '@/stores';
+import { Alert } from 'antdv-next';
 
 defineOptions({ name: 'CodeLogin' });
 
