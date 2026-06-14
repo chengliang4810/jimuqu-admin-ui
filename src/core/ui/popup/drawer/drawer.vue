@@ -8,7 +8,6 @@ import { X } from '@/core/icons';
 import { ELEMENT_ID_MAIN_CONTENT } from '@/core/shared/constants';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/core/shared/utils';
-
 import { Button, Drawer, Spin, Tooltip } from 'antdv-next';
 
 import { extractWidthFromClass } from '../extract-width';
@@ -189,7 +188,7 @@ function onAfterOpenChange(open: boolean) {
     >
       <div
         :class="
-          cn('relative h-full overflow-y-auto', contentClass, {
+          cn('relative h-full', contentClass, {
             'pointer-events-none': showLoading || submitting,
           })
         "
