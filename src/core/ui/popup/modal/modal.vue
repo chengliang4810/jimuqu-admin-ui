@@ -86,6 +86,9 @@ const modalStylesComputed = computed(() => {
       borderTop: '1px solid var(--ant-color-border)',
       '--ant-modal-footer-margin-top': '0',
     },
+    close: {
+      '--ant-padding': '12px',
+    },
   };
   return merge({}, selfStyles, modalStyles.value ?? {});
 });
