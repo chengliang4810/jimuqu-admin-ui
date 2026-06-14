@@ -142,7 +142,7 @@ export interface DrawerProps {
   /**
    * 抽屉尺寸，与 antdv-next 的 size 属性一致
    */
-  size?: number | string;
+  size?: AntdDrawerProps['size'];
   /**
    * 抽屉层级
    */
