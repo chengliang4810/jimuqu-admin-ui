@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@/effects/common-ui';
-import { $t } from '@/locales';
-import { cloneDeep } from '@/utils';
-
-import { Alert } from 'antdv-next';
-
 import { useVbenForm } from '@/adapter/form';
 import {
   ossConfigAdd,
   ossConfigInfo,
   ossConfigUpdate,
 } from '@/api/system/oss-config';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
+import { Alert } from 'antdv-next';
 
 import { drawerSchema } from './data';
 
@@ -96,7 +94,7 @@ async function handleClosed() {
   <BasicDrawer :title="title" :size="650">
     <BasicForm>
       <template #tip>
-        <div class="ml-7 w-full">
+        <div class="pl-7">
           <Alert show-icon type="warning">
             <template #message>
               私有桶(minio)使用自定义域名需要参考

@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import type { SwitchProps } from 'antdv-next';
-
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { OssConfig } from '@/api/system/oss-config/model';
-
-import { useAccess } from '@/effects/access';
-import { Page, useVbenDrawer } from '@/effects/common-ui';
-import { EnableStatus, YesNo } from '@/constants';
-
-import { Popconfirm, Space } from 'antdv-next';
+import type { VbenFormProps } from '@/effects/common-ui';
+import type { SwitchProps } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -19,6 +11,10 @@ import {
   ossConfigRemove,
 } from '@/api/system/oss-config';
 import { ApiSwitch } from '@/components/global';
+import { EnableStatus, YesNo } from '@/constants';
+import { useAccess } from '@/effects/access';
+import { Page, useVbenDrawer } from '@/effects/common-ui';
+import { Popconfirm, Space } from 'antdv-next';
 
 import { columns, querySchema } from './data';
 import ossConfigDrawer from './oss-config-drawer.vue';
