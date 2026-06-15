@@ -272,7 +272,7 @@ function handleMouseleave() {
     @mouseleave="handleMouseleave"
   >
     <div
-      class="relative h-full"
+      class="border-border relative h-full border-r"
       :class="[
         {
           'bg-sidebar-deep': isSidebarMixed,
@@ -285,18 +285,9 @@ function handleMouseleave() {
         v-if="!collapse && !isSidebarMixed && showFixedButton"
         v-model:expand-on-hover="expandOnHover"
       />
-      <div
-        v-if="slots.logo"
-        :style="headerStyle"
-        class="border-border border-r"
-      >
+      <div v-if="slots.logo" :style="headerStyle">
         <slot name="logo"></slot>
       </div>
-      <div
-        v-if="slots.logo"
-        :style="{ top: `${headerHeight - 1}px` }"
-        class="border-border pointer-events-none absolute right-0 h-2 border-r"
-      ></div>
       <VbenScrollbar :style="contentStyle" overlay>
         <slot></slot>
       </VbenScrollbar>

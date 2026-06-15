@@ -66,6 +66,14 @@ body {
     background: hsl(var(--menu));
   }
 
+  /* 去掉 inline/vertical 菜单根自带的右边框（antd 默认 border-inline-end: 1px）
+   * 侧边栏右侧的边框由 layout-sidebar 的全高容器统一绘制，
+   * 否则两条会叠加成 2px，且菜单自带的这条到不了头部/底部。 */
+  &.ant-menu-root.ant-menu-inline,
+  &.ant-menu-root.ant-menu-vertical {
+    border-inline-end: 0;
+  }
+
   /* 水平模式 */
   &.ant-menu-horizontal {
     height: var(--height-horizontal-height, 52px);
