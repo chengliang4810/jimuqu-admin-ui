@@ -4,9 +4,9 @@ import type { VbenFormSchema } from '@/core/ui/form';
 import { computed, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { VbenButton } from '@/core/ui/adapter';
 import { useVbenForm } from '@/core/ui/form';
 import { $t } from '@/locales';
+import { Button } from 'antdv-next';
 
 import Title from './auth-title.vue';
 
@@ -95,21 +95,23 @@ defineExpose({
     <Form />
 
     <div>
-      <VbenButton
+      <Button
         :class="{
           'cursor-wait': loading,
         }"
         aria-label="submit"
         class="mt-2 w-full"
+        size="large"
+        type="primary"
         @click="handleSubmit"
       >
         <slot name="submitButtonText">
           {{ submitButtonText || $t('authentication.sendResetLink') }}
         </slot>
-      </VbenButton>
-      <VbenButton class="mt-4 w-full" variant="outline" @click="goToLogin()">
+      </Button>
+      <Button class="mt-4 w-full" size="large" @click="goToLogin()">
         {{ $t('common.back') }}
-      </VbenButton>
+      </Button>
     </div>
   </div>
 </template>

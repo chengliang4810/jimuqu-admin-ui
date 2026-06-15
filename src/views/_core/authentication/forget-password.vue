@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { VbenFormSchema } from '@/effects/common-ui';
+import type { VbenFormSchema } from '@/adapter/form';
 import type { Recordable } from '@/types';
 
 import { computed, ref } from 'vue';
@@ -14,9 +14,10 @@ const loading = ref(false);
 const formSchema = computed((): VbenFormSchema[] => {
   return [
     {
-      component: 'VbenInput',
+      component: 'Input',
       componentProps: {
         placeholder: 'example@example.com',
+        size: 'large',
       },
       fieldName: 'email',
       label: $t('authentication.email'),
