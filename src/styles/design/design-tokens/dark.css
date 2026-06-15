@@ -101,3 +101,33 @@
 
   color-scheme: dark;
 }
+
+/* 深色侧边栏(semiDarkSidebar):浅色主题下侧边栏单独使用深色。
+ * 此时菜单走 antd theme="dark"，背景为 antd 暗色菜单写死的固定色(#001529)，
+ * 但侧边栏容器 bg-sidebar 经 theme.css 的 @theme inline 内联为
+ * var(--ant-color-bg-container)，浅色主题下 antd 输出白色，故整条 aside 与菜单割裂。
+ * 这里在「html 非 dark（浅色主题）+ 内部 .dark（深色侧边栏）」作用域下，
+ * 把该子树的 antd 表面色喂成 antd 暗色菜单色，使整条 aside 对齐菜单。
+ * 色值来自 antd CLI / antdv-next menu token：
+ *   darkItemBg/darkPopupBg = #001529
+ *   darkSubMenuItemBg      = #000c17（深一层，用于 mixed 模式 bg-sidebar-deep）
+ * 真·暗色模式(html.dark)不命中此规则，侧边栏仍与整体保持一致。 */
+html:not(.dark) .dark {
+  /* 容器：bg-sidebar / bg-sidebar-deep 内联消费 antd 表面色 */
+  --ant-color-bg-container: #001529;
+  --ant-color-bg-layout: #000c17;
+
+  /* 深底之上的前景/填充改用 antd 暗色取值，
+     否则非菜单元素(如底部折叠/固定按钮 text-foreground + bg-accent)
+     仍是浅色主题的深字 + 近透明填充，贴到 navy 上会"隐形"。
+     菜单自身走 antd theme="dark" 的 darkItem* 取值，不受影响。 */
+  --ant-color-text: rgb(255 255 255 / 85%);
+  --ant-color-fill-tertiary: rgb(255 255 255 / 8%);
+  --ant-color-fill-secondary: rgb(255 255 255 / 12%);
+
+  /* 菜单根背景桥接(.ant-menu-dark { background: hsl(var(--menu)) })，
+     避免菜单根/圆角缝隙露出非对齐色 */
+  --sidebar: 209 100% 8%;
+  --sidebar-deep: 209 100% 4.5%;
+  /* --menu 继承 var(--sidebar)，自动对齐 */
+}
