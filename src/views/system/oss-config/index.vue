@@ -11,7 +11,7 @@ import {
   ossConfigRemove,
 } from '@/api/system/oss-config';
 import { ApiSwitch } from '@/components/global';
-import { EnableStatus, YesNo } from '@/constants';
+import { YesNo } from '@/constants';
 import { useAccess } from '@/effects/access';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { Popconfirm, Space } from 'antdv-next';
@@ -106,7 +106,7 @@ async function handleChangeStatus(
   await ossConfigChangeStatus({
     ossConfigId: row.ossConfigId,
     configKey: row.configKey,
-    status: checked ? EnableStatus.Enable : EnableStatus.Disable,
+    status: checked ? YesNo.Yes : YesNo.No,
   });
 }
 </script>
