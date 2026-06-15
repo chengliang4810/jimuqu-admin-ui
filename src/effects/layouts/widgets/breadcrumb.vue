@@ -53,7 +53,7 @@ function handleSelect(path: string) {
 }
 </script>
 <template>
-  <div class="flex items-center gap-2">
+  <div class="flex items-center gap-2" :class="{ 'ml-2': !showHome }">
     <VbenIconButton
       v-if="showHome"
       class="my-0 rounded-md"
