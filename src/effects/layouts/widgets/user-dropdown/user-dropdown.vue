@@ -81,11 +81,6 @@ const accessStore = useAccessStore();
 const [LockModal, lockModalApi] = useVbenModal({
   connectedComponent: LockScreenModal,
 });
-const [LogoutModal, logoutModalApi] = useVbenModal({
-  onConfirm() {
-    handleSubmitLogout();
-  },
-});
 
 const refPreferences = useTemplateRef('refPreferences');
 const openPopover = ref(false);
@@ -129,14 +124,17 @@ function handleSubmitLock(lockScreenPassword: string) {
 }
 
 function handleLogout() {
-  // emit
-  logoutModalApi.open();
   openPopover.value = false;
-}
-
-function handleSubmitLogout() {
-  emit('logout');
-  logoutModalApi.close();
+  window.modal.confirm({
+    title: $t('common.prompt'),
+    content: $t('ui.widgets.logoutTip'),
+    centered: true,
+    cancelText: $t('common.cancel'),
+    okText: $t('common.confirm'),
+    onOk: () => {
+      emit('logout');
+    },
+  });
 }
 
 // 设置 - 打开偏好设置抽屉
@@ -174,19 +172,6 @@ if (enableShortcutKey.value) {
     :text="text"
     @submit="handleSubmitLock"
   />
-
-  <LogoutModal
-    :cancel-text="$t('common.cancel')"
-    :confirm-text="$t('common.confirm')"
-    :fullscreen-button="false"
-    :title="$t('common.prompt')"
-    centered
-    content-class="px-8 min-h-10"
-    footer-class="border-none mb-3 mr-3"
-    header-class="border-none"
-  >
-    {{ $t('ui.widgets.logoutTip') }}
-  </LogoutModal>
 
   <Preferences
     v-if="preferencesButtonPosition.userDropdown"
