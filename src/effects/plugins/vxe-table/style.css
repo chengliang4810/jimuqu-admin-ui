@@ -1,4 +1,4 @@
-@reference "@vben/tailwind-config/theme";
+@reference "@/styles/design/theme.css";
 
 :root .vxe-grid {
   --vxe-ui-font-color: var(--ant-color-text);

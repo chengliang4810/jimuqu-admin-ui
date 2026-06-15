@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite';
 
-const REFERENCE_LINE = '@reference "@vben/tailwind-config/theme";\n';
+const REFERENCE_LINE = '@reference "@/styles/design/theme.css";\n';
 
 /**
  * Auto-inject @reference into Vue SFC <style> blocks that use @apply.

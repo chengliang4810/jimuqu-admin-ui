@@ -58,7 +58,7 @@ function menuIcon(menu: MenuRecordRaw) {
   </ul>
 </template>
 <style scoped>
-@reference "@vben/tailwind-config/theme";
+@reference "@/styles/design/theme.css";
 
 .vben-normal-menu {
   --menu-item-margin-y: 4px;
