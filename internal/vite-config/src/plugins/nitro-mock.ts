@@ -2,10 +2,10 @@ import type { PluginOption } from 'vite';
 
 import type { NitroMockPluginOptions } from '../typing';
 
-import { colors, consola, getPackage } from '../utils';
-
 import getPort from 'get-port';
 import { build, createDevServer, createNitro, prepare } from 'nitropack';
+
+import { colors, consola, getPackage } from '../utils';
 
 const hmrKeyRe = /^runtimeConfig\.|routeRules\./;
 

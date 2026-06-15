@@ -5,7 +5,7 @@ import { onMounted, onUnmounted, ref } from 'vue';
 
 import { userProfile } from '@/api/system/profile';
 import { Page } from '@/effects/common-ui';
-import { useAuthStore , useUserStore } from '@/stores';
+import { useAuthStore, useUserStore } from '@/stores';
 
 import { emitter } from './mitt';
 import ProfilePanel from './profile-panel.vue';

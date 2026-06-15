@@ -2,11 +2,10 @@ import type { ConfigEnv, UserConfig } from 'vite';
 
 import type { DefineLibraryOptions } from '../typing';
 
-import { readPackageJSON } from '../utils';
-
 import { defineConfig, mergeConfig } from 'vite';
 
 import { loadLibraryPlugins } from '../plugins';
+import { readPackageJSON } from '../utils';
 import { getCommonConfig } from './common';
 
 function defineLibraryConfig(userConfigPromise?: DefineLibraryOptions) {

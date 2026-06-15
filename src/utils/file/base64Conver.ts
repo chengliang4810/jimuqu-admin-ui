@@ -31,7 +31,6 @@ export function urlToBase64(url: string, mineType?: string): Promise<string> {
     img.crossOrigin = '';
     img.addEventListener('load', () => {
       if (!canvas || !ctx) {
-         
         return reject();
       }
       canvas.height = img.height;

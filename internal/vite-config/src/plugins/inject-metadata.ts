@@ -1,13 +1,13 @@
 import type { PluginOption } from 'vite';
 
+import { readWorkspaceManifest } from '@pnpm/workspace.read-manifest';
+
 import {
   dateUtil,
   findMonorepoRoot,
   getPackages,
   readPackageJSON,
 } from '../utils';
-
-import { readWorkspaceManifest } from '@pnpm/workspace.read-manifest';
 
 function resolvePackageVersion(
   pkgsMeta: Record<string, string>,

@@ -7,7 +7,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { authCallback } from '@/api';
 import { LOGIN_PATH } from '@/constants';
 import { preferences } from '@/core/preferences';
-import { useAccessStore , useAuthStore } from '@/stores';
+import { useAccessStore, useAuthStore } from '@/stores';
 import { cn } from '@/utils';
 import { Spin } from 'antdv-next';
 

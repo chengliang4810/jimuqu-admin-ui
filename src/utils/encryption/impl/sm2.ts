@@ -1,5 +1,3 @@
- 
- 
 import { sm2 } from 'sm-crypto';
 
 import { BaseAsymmetricEncryption } from '../base';

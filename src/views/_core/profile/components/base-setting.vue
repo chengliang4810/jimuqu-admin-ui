@@ -7,7 +7,7 @@ import { onMounted } from 'vue';
 import { useVbenForm } from '@/adapter/form';
 import { userProfileUpdate } from '@/api/system/profile';
 import { DictEnum } from '@/constants';
-import { useAuthStore , useUserStore } from '@/stores';
+import { useAuthStore, useUserStore } from '@/stores';
 import { getDictOptions } from '@/utils/dict';
 import { pick } from 'lodash-es';
 

@@ -1,11 +1,6 @@
 import type { PluginOption } from 'vite';
 
-import {
-  colors,
-  generatorContentHash,
-  readPackageJSON,
-} from '../utils';
-
+import { colors, generatorContentHash, readPackageJSON } from '../utils';
 import { loadEnv } from '../utils/env';
 
 interface PluginOptions {

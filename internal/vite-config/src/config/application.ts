@@ -4,13 +4,12 @@ import type { DefineApplicationOptions } from '../typing';
 
 import path, { relative } from 'node:path';
 
-import { findMonorepoRoot } from '../utils';
-
 import { NodePackageImporter } from 'sass-embedded';
 import { defineConfig, loadEnv, mergeConfig } from 'vite';
 
 import { defaultImportmapOptions, getDefaultPwaOptions } from '../options';
 import { loadApplicationPlugins } from '../plugins';
+import { findMonorepoRoot } from '../utils';
 import { loadAndConvertEnv } from '../utils/env';
 import { createApplicationCodeSplitting } from './code-split';
 import { getCommonConfig } from './common';

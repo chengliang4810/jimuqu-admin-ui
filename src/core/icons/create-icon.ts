@@ -1,8 +1,8 @@
-import type {IconifyIcon} from '@iconify/vue';
+import type { IconifyIcon } from '@iconify/vue';
 
 import { defineComponent, h } from 'vue';
 
-import { addIcon, Icon  } from '@iconify/vue';
+import { addIcon, Icon } from '@iconify/vue';
 
 function createIconifyIcon(icon: string) {
   return defineComponent({

@@ -3,7 +3,7 @@ import type { Router } from 'vue-router';
 import { LOGIN_PATH } from '@/constants';
 import { preferences } from '@/core/preferences';
 import { accessRoutes, coreRouteNames } from '@/router/routes';
-import { useAccessStore, useAuthStore , useUserStore } from '@/stores';
+import { useAccessStore, useAuthStore, useUserStore } from '@/stores';
 import { startProgress, stopProgress } from '@/utils';
 
 import { generateAccess } from './access';
