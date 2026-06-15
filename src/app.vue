@@ -4,7 +4,7 @@ import type { ConfigProviderProps } from 'antdv-next';
 import { computed } from 'vue';
 
 import { preferences, usePreferences } from '@/core/preferences';
-import { useAntdDesignTokens } from '@/effects/hooks';
+import { useAntdvNextTokens } from '@/effects/hooks';
 import { antdLocale } from '@/locales';
 import { App, ConfigProvider, Spin, theme } from 'antdv-next';
 import { storeToRefs } from 'pinia';
@@ -15,7 +15,7 @@ import { PopupContext } from './utils/context';
 defineOptions({ name: 'App' });
 
 const { isDark } = usePreferences();
-const { tokens } = useAntdDesignTokens();
+const { tokens } = useAntdvNextTokens();
 
 const tokenTheme = computed(() => {
   const algorithm = isDark.value
@@ -29,7 +29,11 @@ const tokenTheme = computed(() => {
 
   return {
     algorithm,
-    token: tokens,
+    // 开启 antd cssVar:将全套 token 以 --ant-* 输出到 :root，作为颜色真相源
+    cssVar: { key: 'ant' },
+    // 关闭样式 hash，保证 --ant-* 变量名稳定，可被 tailwind / 自定义层引用
+    hashed: false,
+    token: tokens.value,
   };
 });
 

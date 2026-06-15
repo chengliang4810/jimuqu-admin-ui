@@ -1,7 +1,6 @@
 import type { Preferences } from './types';
 
-import { generatorColorVariables } from '@/core/shared/color';
-import { updateCSSVariables as executeUpdateCSSVariables } from '@/core/shared/utils';
+import { convertToHslCssVar } from '@/core/shared/color';
 
 /**
  * 更新主题的 CSS 变量以及其他 CSS 变量
@@ -41,8 +40,12 @@ function updateCSSVariables(preferences: Preferences) {
 }
 
 /**
- * 更新主要的 CSS 变量
- * @param  preference - 当前偏好设置对象，它的颜色值将被转换成 HSL 格式并设置为 CSS 变量。
+ * 更新主题种子色变量。
+ *
+ * 反转后 antd 接管了完整色阶(--ant-*)，这里不再生成 50~900 色阶，
+ * 仅注入 4 个种子主色(HSL 裸值)，供 default.css 中 accent-color 等原生属性引用。
+ * (antd seed 已由 use-antdv-next-tokens 直接读取 preferences，不再依赖这些变量。)
+ * @param preference - 当前偏好设置对象。
  */
 function updateMainColorVariables(preference: Preferences) {
   if (!preference.theme) {
@@ -51,30 +54,18 @@ function updateMainColorVariables(preference: Preferences) {
   const { colorDestructive, colorPrimary, colorSuccess, colorWarning } =
     preference.theme;
 
-  const colorVariables = generatorColorVariables([
-    { color: colorPrimary, name: 'primary' },
-    { alias: 'warning', color: colorWarning, name: 'yellow' },
-    { alias: 'success', color: colorSuccess, name: 'green' },
-    { alias: 'destructive', color: colorDestructive, name: 'red' },
-  ]);
-
-  // 要设置的 CSS 变量映射
-  const colorMappings = {
-    '--green-500': '--success',
-    '--primary-500': '--primary',
-    '--red-500': '--destructive',
-    '--yellow-500': '--warning',
+  const seedColors: Record<string, string | undefined> = {
+    '--destructive': colorDestructive,
+    '--primary': colorPrimary,
+    '--success': colorSuccess,
+    '--warning': colorWarning,
   };
 
-  // 统一处理颜色变量的更新
-  Object.entries(colorMappings).forEach(([sourceVar, targetVar]) => {
-    const colorValue = colorVariables[sourceVar];
-    if (colorValue) {
-      document.documentElement.style.setProperty(targetVar, colorValue);
+  Object.entries(seedColors).forEach(([cssVar, color]) => {
+    if (color) {
+      document.documentElement.style.setProperty(cssVar, convertToHslCssVar(color));
     }
   });
-
-  executeUpdateCSSVariables(colorVariables);
 }
 
 function isDarkTheme(theme: string) {

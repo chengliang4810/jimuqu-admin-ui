@@ -155,10 +155,10 @@ function toggleTheme(event: MouseEvent) {
 }
 
 .theme-toggle:hover > svg .theme-toggle__sun {
-  fill: hsl(var(--foreground));
+  fill: var(--ant-color-text);
 }
 
 .theme-toggle:hover > svg .theme-toggle__sun-beams {
-  stroke: hsl(var(--foreground));
+  stroke: var(--ant-color-text);
 }
 </style>

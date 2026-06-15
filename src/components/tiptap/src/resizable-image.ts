@@ -58,8 +58,8 @@ function createResizableImageView({
     maxWidth: '100%',
   });
   Object.assign(handle.style, {
-    backgroundColor: 'hsl(var(--primary, 221 83% 53%))',
-    border: '2px solid hsl(var(--background, 0 0% 100%))',
+    backgroundColor: 'var(--ant-color-primary)',
+    border: '2px solid var(--ant-color-bg-base)',
     borderRadius: '9999px',
     bottom: '0',
     cursor: 'nwse-resize',

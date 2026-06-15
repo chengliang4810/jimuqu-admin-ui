@@ -51,12 +51,12 @@ const getIconRender = computed(() => {
       switch (props.icon) {
         case 'error': {
           iconRender = h(CircleX, {
-            style: { color: 'hsl(var(--destructive))' },
+            style: { color: 'var(--ant-color-error)' },
           });
           break;
         }
         case 'info': {
-          iconRender = h(Info, { style: { color: 'hsl(var(--info))' } });
+          iconRender = h(Info, { style: { color: 'var(--ant-color-info)' } });
           break;
         }
         case 'question': {
@@ -65,13 +65,13 @@ const getIconRender = computed(() => {
         }
         case 'success': {
           iconRender = h(CircleCheckBig, {
-            style: { color: 'hsl(var(--success))' },
+            style: { color: 'var(--ant-color-success)' },
           });
           break;
         }
         case 'warning': {
           iconRender = h(CircleAlert, {
-            style: { color: 'hsl(var(--warning))' },
+            style: { color: 'var(--ant-color-warning)' },
           });
           break;
         }

@@ -21,7 +21,7 @@ body {
 .ant-message-notice-content,
 .ant-notification-notice {
   &:is(.dark *) {
-    border-color: hsl(var(--border) / 60%);
+    border-color: color-mix(in srgb, var(--ant-color-border) 60%, transparent);
     border-width: 1px;
   }
 }

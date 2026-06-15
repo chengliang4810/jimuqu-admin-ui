@@ -21,7 +21,7 @@
       <path
         id="svg_2"
         d="m-3.37838,3.7543a1.93401,4.02457 0 0 1 1.93401,-4.02457l11.3488,0l0,66.40541l-11.3488,0a1.93401,4.02457 0 0 1 -1.93401,-4.02457l0,-58.35627z"
-        fill="hsl(var(--primary))"
+        fill="var(--ant-color-primary)"
         stroke="null"
       />
       <rect
@@ -46,7 +46,7 @@
       />
       <rect
         id="svg_8"
-        fill="hsl(var(--primary))"
+        fill="var(--ant-color-primary)"
         height="9.07027"
         rx="2"
         stroke="null"

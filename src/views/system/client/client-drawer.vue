@@ -153,7 +153,7 @@ async function handleClosed() {
 自定义组件校验失败样式
 */
 :deep(.form-valid-error .ant-input[name='clientSecret']) {
-  border-color: hsl(var(--destructive));
+  border-color: var(--ant-color-error);
   box-shadow: 0 0 0 2px rgb(255 38 5 / 6%);
 }
 </style>

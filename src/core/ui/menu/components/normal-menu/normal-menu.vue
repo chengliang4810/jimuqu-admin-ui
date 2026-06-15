@@ -116,7 +116,7 @@ function menuIcon(menu: MenuRecordRaw) {
   /* max-height: 64px; */
   padding: var(--menu-item-padding-y) var(--menu-item-padding-x);
   margin: var(--menu-item-margin-y) var(--menu-item-margin-x);
-  color: hsl(var(--foreground) / 90%);
+  color: color-mix(in srgb, var(--ant-color-text) 90%, transparent);
   cursor: pointer;
   border-radius: var(--menu-item-radius);
   transition:

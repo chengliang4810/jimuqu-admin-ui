@@ -270,7 +270,7 @@ watch(searchValue, (value) => {
     .vxe-body--row {
       &.row--current {
         // 选中行背景色
-        background-color: hsl(var(--accent-hover)) !important;
+        background-color: var(--ant-color-fill-secondary) !important;
       }
     }
   }

@@ -137,7 +137,7 @@
       />
       <rect
         id="svg_5"
-        fill="hsl(var(--primary))"
+        fill="var(--ant-color-primary)"
         height="56.81191"
         stroke="null"
         width="15.44642"
