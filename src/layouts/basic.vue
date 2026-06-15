@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { CSSProperties } from 'vue';
 
-import { computed, h, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@/constants';
@@ -63,7 +63,8 @@ const menus = computed(() => {
           target: '_blank',
         });
       },
-      icon: () => h(GiteeIcon, { class: 'text-red-800' }),
+      icon: GiteeIcon,
+      iconClass: 'text-red-800',
       text: 'Gitee项目地址',
     },
     {

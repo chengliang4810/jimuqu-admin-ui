@@ -8,6 +8,7 @@ import { computed, ref, useTemplateRef } from 'vue';
 import { preferences, usePreferences } from '@/core/preferences';
 import { VbenAvatar, VbenIcon } from '@/core/ui/adapter';
 import { useVbenModal } from '@/core/ui/popup';
+import { cn } from '@/core/shared/utils';
 import { LockKeyhole, LogOut, Settings } from '@/icons-app';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
@@ -37,6 +38,7 @@ interface Props {
   menus?: Array<{
     handler: AnyFunction;
     icon?: Component | Function | string;
+    iconClass?: string;
     text: string;
   }>;
 
@@ -237,7 +239,10 @@ if (enableShortcutKey.value) {
           class="hover:bg-accent mx-1 flex cursor-pointer items-center rounded-sm px-2 py-1 leading-8"
           @click="menu.handler"
         >
-          <VbenIcon :icon="menu.icon" class="mr-2 size-4" />
+          <VbenIcon
+            :icon="menu.icon"
+            :class="cn('mr-2 size-4', menu.iconClass)"
+          />
           {{ menu.text }}
         </div>
         <div class="border-border my-1 border-t"></div>
