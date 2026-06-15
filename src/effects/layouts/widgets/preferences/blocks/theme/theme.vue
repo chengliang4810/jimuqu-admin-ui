@@ -18,7 +18,6 @@ defineOptions({
 const modelValue = defineModel<string>({ default: 'auto' });
 const themeSemiDarkSidebar = defineModel<boolean>('themeSemiDarkSidebar');
 const themeSemiDarkSidebarSub = defineModel<boolean>('themeSemiDarkSidebarSub');
-const themeSemiDarkHeader = defineModel<boolean>('themeSemiDarkHeader');
 
 const { layout } = usePreferences();
 
@@ -106,9 +105,6 @@ function nameView(name: string) {
       :tip="$t('preferences.theme.darkSidebarSubTip')"
     >
       {{ $t('preferences.theme.darkSidebarSub') }}
-    </SwitchItem>
-    <SwitchItem v-model="themeSemiDarkHeader" :disabled="modelValue === 'dark'">
-      {{ $t('preferences.theme.darkHeader') }}
     </SwitchItem>
   </div>
 </template>

@@ -83,7 +83,6 @@ const themeColorWarning = defineModel<string>('themeColorWarning');
 const themeMode = defineModel<ThemeModeType>('themeMode');
 const themeSemiDarkSidebar = defineModel<boolean>('themeSemiDarkSidebar');
 const themeSemiDarkSidebarSub = defineModel<boolean>('themeSemiDarkSidebarSub');
-const themeSemiDarkHeader = defineModel<boolean>('themeSemiDarkHeader');
 
 const sidebarEnable = defineModel<boolean>('sidebarEnable');
 const sidebarWidth = defineModel<number>('sidebarWidth');
@@ -340,7 +339,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
             <Block :title="$t('preferences.theme.title')">
               <Theme
                 v-model="themeMode"
-                v-model:theme-semi-dark-header="themeSemiDarkHeader"
                 v-model:theme-semi-dark-sidebar="themeSemiDarkSidebar"
                 v-model:theme-semi-dark-sidebar-sub="themeSemiDarkSidebarSub"
               />

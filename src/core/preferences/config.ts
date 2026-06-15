@@ -107,7 +107,6 @@ const defaultPreferences: Preferences = {
     colorWarning: '#faae14',
     mode: 'auto',
     borderRadius: 6,
-    semiDarkHeader: false,
     semiDarkSidebar: false,
     semiDarkSidebarSub: false,
   },

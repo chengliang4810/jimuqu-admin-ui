@@ -66,8 +66,7 @@ const sidebarThemeSub = computed(() => {
 });
 
 const headerTheme = computed(() => {
-  const dark = isDark.value || preferences.theme.semiDarkHeader;
-  return dark ? 'dark' : 'light';
+  return isDark.value ? 'dark' : 'light';
 });
 
 const logoClass = computed(() => {

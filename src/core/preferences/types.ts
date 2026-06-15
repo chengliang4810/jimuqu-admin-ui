@@ -302,8 +302,6 @@ interface ThemePreferences {
   mode: ThemeModeType;
   /** 圆角(px 数值，如 6) */
   borderRadius: number;
-  /** 是否开启半深色header（只在theme='light'时生效） */
-  semiDarkHeader: boolean;
   /** 是否开启半深色菜单（只在theme='light'时生效） */
   semiDarkSidebar: boolean;
   /** 是否开启半深色子菜单（只在theme='light'时生效） */
