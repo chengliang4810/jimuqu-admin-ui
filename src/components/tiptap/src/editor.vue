@@ -97,7 +97,12 @@ const editor = useEditor({
     syncToolbarState(editor);
   },
   onUpdate: ({ editor }) => {
-    const value = getEditorValue(editor, props.output);
+    /**
+     * tiptap默认会使用<p></p> 会过form的空校验 实际不符合业务
+     * 通过editor.isEmpty判断
+     * @see https://github.com/ueberdosis/tiptap/issues/154#issuecomment-1406214495
+     */
+    const value = editor.isEmpty ? '' : getEditorValue(editor, props.output);
     content.value = value;
     emit('change', value, editor);
   },
