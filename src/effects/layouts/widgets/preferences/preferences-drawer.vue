@@ -268,7 +268,7 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
       content-class="overflow-x-hidden px-1"
       :description="$t('preferences.subtitle')"
       :title="$t('preferences.title')"
-      :size="385"
+      :size="390"
     >
       <template #extra>
         <div class="flex items-center">
