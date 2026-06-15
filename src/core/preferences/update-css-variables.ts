@@ -1,13 +1,14 @@
 import type { Preferences } from './types';
 
-import { convertToHslCssVar } from '@/core/shared/color';
-
 /**
- * 更新主题的 CSS 变量以及其他 CSS 变量
+ * 更新主题相关的 CSS 变量。
+ *
+ * 反转后 antd 接管了全部颜色(--ant-*)，这里只负责:
+ * 1. 切换 .dark 类(供 tailwind dark: variant 与自定义语义色的暗色覆盖)
+ * 2. 注入圆角 --radius(tailwind --radius-* 派生使用)
  * @param preferences - 当前偏好设置对象，它的主题值将被用来设置文档的主题。
  */
 function updateCSSVariables(preferences: Preferences) {
-  // 当修改到颜色变量时，更新 css 变量
   const root = document.documentElement;
   if (!root) {
     return;
@@ -23,49 +24,10 @@ function updateCSSVariables(preferences: Preferences) {
     root.classList.toggle('dark', dark);
   }
 
-  // 如果颜色变量存在，则更新主题颜色
-  if (
-    Reflect.has(theme, 'colorPrimary') ||
-    Reflect.has(theme, 'colorDestructive') ||
-    Reflect.has(theme, 'colorSuccess') ||
-    Reflect.has(theme, 'colorWarning')
-  ) {
-    updateMainColorVariables(preferences);
-  }
-
   // 更新圆角
   if (Reflect.has(theme, 'radius')) {
-    document.documentElement.style.setProperty('--radius', `${radius}rem`);
+    root.style.setProperty('--radius', `${radius}rem`);
   }
-}
-
-/**
- * 更新主题种子色变量。
- *
- * 反转后 antd 接管了完整色阶(--ant-*)，这里不再生成 50~900 色阶，
- * 仅注入 4 个种子主色(HSL 裸值)，供 default.css 中 accent-color 等原生属性引用。
- * (antd seed 已由 use-antdv-next-tokens 直接读取 preferences，不再依赖这些变量。)
- * @param preference - 当前偏好设置对象。
- */
-function updateMainColorVariables(preference: Preferences) {
-  if (!preference.theme) {
-    return;
-  }
-  const { colorDestructive, colorPrimary, colorSuccess, colorWarning } =
-    preference.theme;
-
-  const seedColors: Record<string, string | undefined> = {
-    '--destructive': colorDestructive,
-    '--primary': colorPrimary,
-    '--success': colorSuccess,
-    '--warning': colorWarning,
-  };
-
-  Object.entries(seedColors).forEach(([cssVar, color]) => {
-    if (color) {
-      document.documentElement.style.setProperty(cssVar, convertToHslCssVar(color));
-    }
-  });
 }
 
 function isDarkTheme(theme: string) {

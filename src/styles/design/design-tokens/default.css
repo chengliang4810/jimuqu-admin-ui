@@ -105,7 +105,7 @@
   /* header */
   --header: 0 0% 100%;
 
-  accent-color: var(--primary);
+  accent-color: var(--ant-color-primary);
   color-scheme: light;
 }
 
@@ -185,6 +185,6 @@
   /* header */
   --header: 0 0% 100%;
 
-  accent-color: var(--primary);
+  accent-color: var(--ant-color-primary);
   color-scheme: light;
 }
