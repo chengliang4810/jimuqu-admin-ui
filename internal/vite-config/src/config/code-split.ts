@@ -1,125 +1,132 @@
 const createChunkMatcher = (patterns: string[]) => {
   return (id: string) => {
-    const normalizedId = id.replaceAll('\\', '/');
+    const normalizedId = id.includes('\\') ? id.replaceAll('\\', '/') : id;
     return patterns.some((pattern) => normalizedId.includes(pattern));
   };
 };
 
-const matchAntdvNextIconsChunk = createChunkMatcher([
-  '/node_modules/.pnpm/@ant-design+icons-svg@',
-  '/node_modules/.pnpm/@antdv-next+icons@',
-  '/node_modules/@ant-design/icons-svg/',
-  '/node_modules/@antdv-next/icons/',
-]);
+// 将包名/作用域展开为 pnpm 虚拟目录与提升后真实目录两种匹配前缀
+// 作用域: '@vue'           → '/node_modules/.pnpm/@vue+'  '/node_modules/@vue/'
+// 包名:   'vue' | '@a/b'   → '/node_modules/.pnpm/vue@'   '/node_modules/vue/'
+const fromPnpm = (...specs: string[]) =>
+  specs.flatMap((spec) =>
+    spec.startsWith('@') && !spec.includes('/')
+      ? [`/node_modules/.pnpm/${spec}+`, `/node_modules/${spec}/`]
+      : [
+          `/node_modules/.pnpm/${spec.replaceAll('/', '+')}@`,
+          `/node_modules/${spec}/`,
+        ],
+  );
+
+// antdv-next 各子模块构建产物目录
+const fromAntdvDist = (...names: string[]) =>
+  names.map((name) => `/node_modules/antdv-next/dist/${name}/`);
+
+const matchAntdvNextIconsChunk = createChunkMatcher(
+  fromPnpm('@ant-design/icons-svg', '@antdv-next/icons'),
+);
 const matchAntdvNextThemeChunk = createChunkMatcher([
-  '/node_modules/.pnpm/@ant-design+colors@',
-  '/node_modules/.pnpm/@ant-design+fast-color@',
-  '/node_modules/.pnpm/@antdv-next+cssinjs@',
-  '/node_modules/.pnpm/@antdv-next+happy-work-theme@',
-  '/node_modules/antdv-next/dist/config-provider/',
-  '/node_modules/antdv-next/dist/locale/',
-  '/node_modules/antdv-next/dist/style/',
-  '/node_modules/antdv-next/dist/theme/',
-  '/node_modules/@ant-design/colors/',
-  '/node_modules/@ant-design/fast-color/',
-  '/node_modules/@antdv-next/cssinjs/',
-  '/node_modules/@antdv-next/happy-work-theme/',
+  ...fromPnpm(
+    '@ant-design/colors',
+    '@ant-design/fast-color',
+    '@antdv-next/cssinjs',
+    '@antdv-next/happy-work-theme',
+  ),
+  ...fromAntdvDist('config-provider', 'locale', 'style', 'theme'),
 ]);
-const matchAntdvNextFormChunk = createChunkMatcher([
-  '/node_modules/antdv-next/dist/auto-complete/',
-  '/node_modules/antdv-next/dist/calendar/',
-  '/node_modules/antdv-next/dist/cascader/',
-  '/node_modules/antdv-next/dist/checkbox/',
-  '/node_modules/antdv-next/dist/color-picker/',
-  '/node_modules/antdv-next/dist/date-picker/',
-  '/node_modules/antdv-next/dist/form/',
-  '/node_modules/antdv-next/dist/input-number/',
-  '/node_modules/antdv-next/dist/input/',
-  '/node_modules/antdv-next/dist/mentions/',
-  '/node_modules/antdv-next/dist/radio/',
-  '/node_modules/antdv-next/dist/rate/',
-  '/node_modules/antdv-next/dist/select/',
-  '/node_modules/antdv-next/dist/slider/',
-  '/node_modules/antdv-next/dist/switch/',
-  '/node_modules/antdv-next/dist/time-picker/',
-  '/node_modules/antdv-next/dist/transfer/',
-  '/node_modules/antdv-next/dist/tree-select/',
-  '/node_modules/antdv-next/dist/upload/',
-]);
-const matchAntdvNextOverlayChunk = createChunkMatcher([
-  '/node_modules/antdv-next/dist/drawer/',
-  '/node_modules/antdv-next/dist/dropdown/',
-  '/node_modules/antdv-next/dist/message/',
-  '/node_modules/antdv-next/dist/modal/',
-  '/node_modules/antdv-next/dist/notification/',
-  '/node_modules/antdv-next/dist/popconfirm/',
-  '/node_modules/antdv-next/dist/popover/',
-  '/node_modules/antdv-next/dist/tooltip/',
-  '/node_modules/antdv-next/dist/tour/',
-]);
-const matchAntdvNextDataChunk = createChunkMatcher([
-  '/node_modules/antdv-next/dist/avatar/',
-  '/node_modules/antdv-next/dist/badge/',
-  '/node_modules/antdv-next/dist/card/',
-  '/node_modules/antdv-next/dist/descriptions/',
-  '/node_modules/antdv-next/dist/empty/',
-  '/node_modules/antdv-next/dist/image/',
-  '/node_modules/antdv-next/dist/list/',
-  '/node_modules/antdv-next/dist/pagination/',
-  '/node_modules/antdv-next/dist/progress/',
-  '/node_modules/antdv-next/dist/qrcode/',
-  '/node_modules/antdv-next/dist/skeleton/',
-  '/node_modules/antdv-next/dist/statistic/',
-  '/node_modules/antdv-next/dist/table/',
-  '/node_modules/antdv-next/dist/tag/',
-  '/node_modules/antdv-next/dist/timeline/',
-  '/node_modules/antdv-next/dist/tree/',
-]);
-const matchAntdvNextLayoutChunk = createChunkMatcher([
-  '/node_modules/antdv-next/dist/affix/',
-  '/node_modules/antdv-next/dist/alert/',
-  '/node_modules/antdv-next/dist/anchor/',
-  '/node_modules/antdv-next/dist/app/',
-  '/node_modules/antdv-next/dist/border-beam/',
-  '/node_modules/antdv-next/dist/breadcrumb/',
-  '/node_modules/antdv-next/dist/button/',
-  '/node_modules/antdv-next/dist/carousel/',
-  '/node_modules/antdv-next/dist/collapse/',
-  '/node_modules/antdv-next/dist/divider/',
-  '/node_modules/antdv-next/dist/flex/',
-  '/node_modules/antdv-next/dist/float-button/',
-  '/node_modules/antdv-next/dist/grid/',
-  '/node_modules/antdv-next/dist/layout/',
-  '/node_modules/antdv-next/dist/masonry/',
-  '/node_modules/antdv-next/dist/menu/',
-  '/node_modules/antdv-next/dist/result/',
-  '/node_modules/antdv-next/dist/segmented/',
-  '/node_modules/antdv-next/dist/space/',
-  '/node_modules/antdv-next/dist/spin/',
-  '/node_modules/antdv-next/dist/splitter/',
-  '/node_modules/antdv-next/dist/steps/',
-  '/node_modules/antdv-next/dist/tabs/',
-  '/node_modules/antdv-next/dist/typography/',
-  '/node_modules/antdv-next/dist/watermark/',
-]);
+const matchAntdvNextFormChunk = createChunkMatcher(
+  fromAntdvDist(
+    'auto-complete',
+    'calendar',
+    'cascader',
+    'checkbox',
+    'color-picker',
+    'date-picker',
+    'form',
+    'input-number',
+    'input',
+    'mentions',
+    'radio',
+    'rate',
+    'select',
+    'slider',
+    'switch',
+    'time-picker',
+    'transfer',
+    'tree-select',
+    'upload',
+  ),
+);
+const matchAntdvNextOverlayChunk = createChunkMatcher(
+  fromAntdvDist(
+    'drawer',
+    'dropdown',
+    'message',
+    'modal',
+    'notification',
+    'popconfirm',
+    'popover',
+    'tooltip',
+    'tour',
+  ),
+);
+const matchAntdvNextDataChunk = createChunkMatcher(
+  fromAntdvDist(
+    'avatar',
+    'badge',
+    'card',
+    'descriptions',
+    'empty',
+    'image',
+    'list',
+    'pagination',
+    'progress',
+    'qrcode',
+    'skeleton',
+    'statistic',
+    'table',
+    'tag',
+    'timeline',
+    'tree',
+  ),
+);
+const matchAntdvNextLayoutChunk = createChunkMatcher(
+  fromAntdvDist(
+    'affix',
+    'alert',
+    'anchor',
+    'app',
+    'border-beam',
+    'breadcrumb',
+    'button',
+    'carousel',
+    'collapse',
+    'divider',
+    'flex',
+    'float-button',
+    'grid',
+    'layout',
+    'masonry',
+    'menu',
+    'result',
+    'segmented',
+    'space',
+    'spin',
+    'splitter',
+    'steps',
+    'tabs',
+    'typography',
+    'watermark',
+  ),
+);
 const matchAntdvNextSharedChunk = createChunkMatcher([
   '/node_modules/.pnpm/antdv-next@',
-  '/node_modules/.pnpm/@v-c+',
-  '/node_modules/@v-c/',
+  ...fromPnpm('@v-c'),
 ]);
 const matchAntdvNextChunk = createChunkMatcher(['antdv-next']);
-const matchFrameworkChunk = createChunkMatcher([
-  '/node_modules/.pnpm/@vue+',
-  '/node_modules/.pnpm/@vueuse+',
-  '/node_modules/.pnpm/pinia@',
-  '/node_modules/.pnpm/vue-router@',
-  '/node_modules/.pnpm/vue@',
-  '/node_modules/@vue/',
-  '/node_modules/@vueuse/',
-  '/node_modules/pinia/',
-  '/node_modules/vue-router/',
-  '/node_modules/vue/',
-]);
+const matchFrameworkChunk = createChunkMatcher(
+  fromPnpm('@vue', '@vueuse', 'pinia', 'vue-router', 'vue'),
+);
 const matchVbenCoreChunk = createChunkMatcher([
   '/src/core/shared/',
   '/src/core/typings/',
@@ -168,42 +175,20 @@ const matchVbenStateChunk = createChunkMatcher([
   '/src/stores/',
 ]);
 const matchVbenRequestChunk = createChunkMatcher(['/src/effects/request/']);
-const matchUiVendorChunk = createChunkMatcher([
-  '/node_modules/.pnpm/@floating-ui+',
-  '/node_modules/.pnpm/@iconify+',
-  '/node_modules/.pnpm/@vueuse+motion',
-  '/node_modules/.pnpm/lucide-vue-next@',
-  '/node_modules/.pnpm/radix-vue@',
-  '/node_modules/.pnpm/tippy.js@',
-  '/node_modules/@floating-ui/',
-  '/node_modules/@iconify/',
-  '/node_modules/@vueuse/motion/',
-  '/node_modules/lucide-vue-next/',
-  '/node_modules/radix-vue/',
-  '/node_modules/tippy.js/',
-]);
-const matchUtilsVendorChunk = createChunkMatcher([
-  '/node_modules/.pnpm/@intlify+',
-  '/node_modules/.pnpm/async-validator@',
-  '/node_modules/.pnpm/axios@',
-  '/node_modules/.pnpm/dayjs@',
-  '/node_modules/.pnpm/lodash-es@',
-  '/node_modules/.pnpm/mitt@',
-  '/node_modules/.pnpm/nprogress@',
-  '/node_modules/.pnpm/qs@',
-  '/node_modules/.pnpm/uuid@',
-  '/node_modules/.pnpm/zod@',
-  '/node_modules/@intlify/',
-  '/node_modules/async-validator/',
-  '/node_modules/axios/',
-  '/node_modules/dayjs/',
-  '/node_modules/lodash-es/',
-  '/node_modules/mitt/',
-  '/node_modules/nprogress/',
-  '/node_modules/qs/',
-  '/node_modules/uuid/',
-  '/node_modules/zod/',
-]);
+const matchUtilsVendorChunk = createChunkMatcher(
+  fromPnpm(
+    '@intlify',
+    'async-validator',
+    'axios',
+    'dayjs',
+    'lodash-es',
+    'mitt',
+    'nprogress',
+    'qs',
+    'uuid',
+    'zod',
+  ),
+);
 const matchAppAuthChunk = createChunkMatcher([
   '/src/api/core/auth',
   '/src/api/core/captcha',
@@ -331,11 +316,6 @@ function createApplicationCodeSplitting() {
         name: 'vben-request',
         priority: 13,
         test: matchVbenRequestChunk,
-      },
-      {
-        name: 'ui-vendor',
-        priority: 10,
-        test: matchUiVendorChunk,
       },
       {
         name: 'utils-vendor',
