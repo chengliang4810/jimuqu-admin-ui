@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
   formSchema: () => [],
   loading: false,
   registerPath: '/auth/register',
-  showCodeLogin: true,
+  showCodeLogin: false,
   showForgetPassword: true,
   showRegister: true,
   showRememberMe: true,
