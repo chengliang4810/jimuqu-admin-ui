@@ -298,7 +298,7 @@ function handleMouseleave() {
         :style="{ top: `${headerHeight - 1}px` }"
         class="border-border pointer-events-none absolute right-0 h-2 border-r"
       ></div>
-      <VbenScrollbar :style="contentStyle">
+      <VbenScrollbar :style="contentStyle" overlay>
         <slot></slot>
       </VbenScrollbar>
 
@@ -335,7 +335,7 @@ function handleMouseleave() {
       >
         <slot name="extra-title"></slot>
       </div>
-      <VbenScrollbar :style="extraContentStyle" class="border-border py-2">
+      <VbenScrollbar :style="extraContentStyle" class="border-border py-2" overlay>
         <slot name="extra"></slot>
       </VbenScrollbar>
     </div>
