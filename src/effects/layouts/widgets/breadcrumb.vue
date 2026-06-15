@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { BreadcrumbStyleType } from '@/types';
-
 import type { IBreadcrumb } from '@/core/ui/adapter';
 
 import { computed } from 'vue';
@@ -14,13 +12,11 @@ interface Props {
   hideWhenOnlyOne?: boolean;
   showHome?: boolean;
   showIcon?: boolean;
-  type?: BreadcrumbStyleType;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showHome: false,
   showIcon: false,
-  type: 'normal',
 });
 
 const route = useRoute();
@@ -67,7 +63,6 @@ function handleSelect(path: string) {
   <VbenBreadcrumbView
     :breadcrumbs="breadcrumbs"
     :show-icon="showIcon"
-    :style-type="type"
     class="ml-2"
     @select="handleSelect"
   />

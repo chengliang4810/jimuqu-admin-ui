@@ -1,7 +1,5 @@
 import type { Component } from 'vue';
 
-import type { BreadcrumbStyleType } from '@/core/typings';
-
 export interface IContextMenuItem {
   disabled?: boolean;
   handler?: (data: any) => void;
@@ -43,5 +41,4 @@ export interface IBreadcrumb {
 export interface BreadcrumbProps {
   breadcrumbs: IBreadcrumb[];
   showIcon?: boolean;
-  styleType?: BreadcrumbStyleType;
 }

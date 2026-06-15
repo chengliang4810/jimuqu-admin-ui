@@ -3,9 +3,7 @@ import type { CustomPreferencesRecord } from '@/core/preferences';
 import type { SegmentedItem } from '@/core/ui/adapter';
 import type { SupportedLanguagesType } from '@/locales';
 import type {
-  BreadcrumbStyleType,
   ContentCompactType,
-  LayoutHeaderMenuAlignType,
   LayoutHeaderModeType,
   LayoutType,
   PreferencesButtonPositionType,
@@ -34,9 +32,7 @@ import {
   Breadcrumb,
   ColorMode,
   Content,
-  Copyright,
   Custom,
-  Footer,
   General,
   Header,
   Layout,
@@ -95,15 +91,10 @@ const sidebarCollapsedButton = defineModel<boolean>('sidebarCollapsedButton');
 const sidebarFixedButton = defineModel<boolean>('sidebarFixedButton');
 const headerEnable = defineModel<boolean>('headerEnable');
 const headerMode = defineModel<LayoutHeaderModeType>('headerMode');
-const headerMenuAlign =
-  defineModel<LayoutHeaderMenuAlignType>('headerMenuAlign');
 
 const breadcrumbEnable = defineModel<boolean>('breadcrumbEnable');
 const breadcrumbShowIcon = defineModel<boolean>('breadcrumbShowIcon');
 const breadcrumbShowHome = defineModel<boolean>('breadcrumbShowHome');
-const breadcrumbStyleType = defineModel<BreadcrumbStyleType>(
-  'breadcrumbStyleType',
-);
 const breadcrumbHideOnlyOne = defineModel<boolean>('breadcrumbHideOnlyOne');
 
 const tabbarEnable = defineModel<boolean>('tabbarEnable');
@@ -124,19 +115,6 @@ const navigationSplit = defineModel<boolean>('navigationSplit');
 const navigationAccordion = defineModel<boolean>('navigationAccordion');
 
 // const logoVisible = defineModel<boolean>('logoVisible');
-
-const footerEnable = defineModel<boolean>('footerEnable');
-const footerFixed = defineModel<boolean>('footerFixed');
-
-const copyrightSettingShow = defineModel<boolean>('copyrightSettingShow');
-const copyrightEnable = defineModel<boolean>('copyrightEnable');
-const copyrightCompanyName = defineModel<string>('copyrightCompanyName');
-const copyrightCompanySiteLink = defineModel<string>(
-  'copyrightCompanySiteLink',
-);
-const copyrightDate = defineModel<string>('copyrightDate');
-const copyrightIcp = defineModel<string>('copyrightIcp');
-const copyrightIcpLink = defineModel<string>('copyrightIcpLink');
 
 const widgetGlobalSearch = defineModel<boolean>('widgetGlobalSearch');
 const widgetFullscreen = defineModel<boolean>('widgetFullscreen');
@@ -393,7 +371,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
             <Block :title="$t('preferences.header.title')">
               <Header
                 v-model:header-enable="headerEnable"
-                v-model:header-menu-align="headerMenuAlign"
                 v-model:header-mode="headerMode"
                 :disabled="isFullContent"
               />
@@ -414,7 +391,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 v-model:breadcrumb-hide-only-one="breadcrumbHideOnlyOne"
                 v-model:breadcrumb-show-home="breadcrumbShowHome"
                 v-model:breadcrumb-show-icon="breadcrumbShowIcon"
-                v-model:breadcrumb-style-type="breadcrumbStyleType"
                 :disabled="
                   !showBreadcrumbConfig ||
                   !(isSideNav || isSideMixedNav || isHeaderSidebarNav)
@@ -449,26 +425,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 v-model:widget-refresh="widgetRefresh"
                 v-model:widget-sidebar-toggle="widgetSidebarToggle"
                 v-model:widget-theme-toggle="widgetThemeToggle"
-              />
-            </Block>
-            <Block :title="$t('preferences.footer.title')">
-              <Footer
-                v-model:footer-enable="footerEnable"
-                v-model:footer-fixed="footerFixed"
-              />
-            </Block>
-            <Block
-              v-if="copyrightSettingShow"
-              :title="$t('preferences.copyright.title')"
-            >
-              <Copyright
-                v-model:copyright-company-name="copyrightCompanyName"
-                v-model:copyright-company-site-link="copyrightCompanySiteLink"
-                v-model:copyright-date="copyrightDate"
-                v-model:copyright-enable="copyrightEnable"
-                v-model:copyright-icp="copyrightIcp"
-                v-model:copyright-icp-link="copyrightIcpLink"
-                :disabled="!footerEnable"
               />
             </Block>
           </template>

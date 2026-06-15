@@ -109,8 +109,6 @@
     "home": "Show Home Button",
     "enable": "Enable Breadcrumb",
     "icon": "Show Breadcrumb Icon",
-    "background": "background",
-    "style": "Breadcrumb Style",
     "hideOnlyOne": "Hidden when only one"
   },
   "animation": {
@@ -158,25 +156,7 @@
     "modeStatic": "Static",
     "modeFixed": "Fixed",
     "modeAuto": "Auto hide & Show",
-    "modeAutoScroll": "Scroll to Hide & Show",
-    "menuAlign": "Menu Align",
-    "menuAlignStart": "Start",
-    "menuAlignEnd": "End",
-    "menuAlignCenter": "Center"
-  },
-  "footer": {
-    "title": "Footer",
-    "visible": "Show Footer",
-    "fixed": "Fixed at Bottom"
-  },
-  "copyright": {
-    "title": "Copyright",
-    "enable": "Enable Copyright",
-    "companyName": "Company Name",
-    "companySiteLink": "Company Site Link",
-    "date": "Date",
-    "icp": "ICP License Number",
-    "icpLink": "ICP Site Link"
+    "modeAutoScroll": "Scroll to Hide & Show"
   },
   "widget": {
     "title": "Widget",

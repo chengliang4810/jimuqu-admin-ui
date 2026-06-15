@@ -25,7 +25,6 @@ type PreferencesButtonPositionType =
 type ContentCompactType = 'compact' | 'wide';
 
 type LayoutHeaderModeType = 'auto' | 'auto-scroll' | 'fixed' | 'static';
-type LayoutHeaderMenuAlignType = 'center' | 'end' | 'start';
 
 /**
  * 登录过期模式
@@ -33,13 +32,6 @@ type LayoutHeaderMenuAlignType = 'center' | 'end' | 'start';
  * page 页面模式
  */
 type LoginExpiredModeType = 'modal' | 'page';
-
-/**
- * 面包屑样式
- * background 背景
- * normal 默认
- */
-type BreadcrumbStyleType = 'background' | 'normal';
 
 /**
  * 标签栏风格
@@ -65,9 +57,7 @@ type AuthPageLayoutType = 'panel-center' | 'panel-left' | 'panel-right';
 
 export type {
   AuthPageLayoutType,
-  BreadcrumbStyleType,
   ContentCompactType,
-  LayoutHeaderMenuAlignType,
   LayoutHeaderModeType,
   LayoutType,
   LoginExpiredModeType,

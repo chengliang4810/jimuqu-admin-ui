@@ -37,27 +37,11 @@ const defaultPreferences: Preferences = {
     hideOnlyOne: false,
     showHome: false,
     showIcon: true,
-    styleType: 'normal',
-  },
-  copyright: {
-    companyName: 'Vben',
-    companySiteLink: 'https://www.vben.pro',
-    date: '2024',
-    enable: true,
-    icp: '',
-    icpLink: '',
-    settingShow: true,
-  },
-  footer: {
-    enable: false,
-    fixed: false,
-    height: 32,
   },
   header: {
     enable: true,
     height: 50,
     hidden: false,
-    menuAlign: 'start',
     mode: 'fixed',
   },
 

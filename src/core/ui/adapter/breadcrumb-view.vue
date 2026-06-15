@@ -19,7 +19,6 @@ interface Props extends BreadcrumbProps {
 
 withDefaults(defineProps<Props>(), {
   showIcon: false,
-  styleType: 'normal',
 });
 
 const emit = defineEmits<{ select: [string] }>();

@@ -4,7 +4,6 @@ import type { CSSProperties } from 'vue';
 import {
   CSS_VARIABLE_LAYOUT_CONTENT_HEIGHT,
   CSS_VARIABLE_LAYOUT_CONTENT_WIDTH,
-  CSS_VARIABLE_LAYOUT_FOOTER_HEIGHT,
   CSS_VARIABLE_LAYOUT_HEADER_HEIGHT,
 } from '@/core/shared/constants';
 import { getElementVisibleRect } from '@/core/shared/utils';
@@ -67,19 +66,6 @@ export function useLayoutHeaderStyle() {
     },
     setLayoutHeaderHeight: (height: number) => {
       headerHeight.value = `${height}px`;
-    },
-  };
-}
-
-export function useLayoutFooterStyle() {
-  const footerHeight = useCssVar(CSS_VARIABLE_LAYOUT_FOOTER_HEIGHT);
-
-  return {
-    getLayoutFooterHeight: () => {
-      return Number.parseInt(`${footerHeight.value}`, 10);
-    },
-    setLayoutFooterHeight: (height: number) => {
-      footerHeight.value = `${height}px`;
     },
   };
 }

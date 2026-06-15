@@ -42,12 +42,6 @@ export const overridesPreferences = defineOverridesPreferences({
      */
     // loginExpiredMode: 'modal',
   },
-  footer: {
-    /**
-     * 不显示footer
-     */
-    enable: false,
-  },
   tabbar: {
     /**
      * 标签tab 持久化 关闭

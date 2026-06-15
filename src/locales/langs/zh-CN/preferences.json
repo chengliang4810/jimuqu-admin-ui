@@ -109,9 +109,7 @@
     "enable": "开启面包屑导航",
     "icon": "显示面包屑图标",
     "home": "显示首页按钮",
-    "style": "面包屑风格",
-    "hideOnlyOne": "仅有一个时隐藏",
-    "background": "背景"
+    "hideOnlyOne": "仅有一个时隐藏"
   },
   "animation": {
     "title": "动画",
@@ -158,25 +156,7 @@
     "modeFixed": "固定",
     "modeAuto": "自动隐藏和显示",
     "modeAutoScroll": "滚动隐藏和显示",
-    "visible": "显示顶栏",
-    "menuAlign": "菜单位置",
-    "menuAlignStart": "左侧",
-    "menuAlignEnd": "右侧",
-    "menuAlignCenter": "居中"
-  },
-  "footer": {
-    "title": "底栏",
-    "visible": "显示底栏",
-    "fixed": "固定在底部"
-  },
-  "copyright": {
-    "title": "版权",
-    "enable": "启用版权",
-    "companyName": "公司名",
-    "companySiteLink": "公司主页",
-    "date": "日期",
-    "icp": "ICP 备案号",
-    "icpLink": "ICP 网站链接"
+    "visible": "显示顶栏"
   },
   "widget": {
     "title": "小部件",

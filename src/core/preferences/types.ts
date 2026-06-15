@@ -1,9 +1,7 @@
 import type {
   AuthPageLayoutType,
-  BreadcrumbStyleType,
   ContentCompactType,
   DeepPartial,
-  LayoutHeaderMenuAlignType,
   LayoutHeaderModeType,
   LayoutType,
   LoginExpiredModeType,
@@ -170,34 +168,6 @@ interface BreadcrumbPreferences {
   showHome: boolean;
   /** 面包屑图标是否可见 */
   showIcon: boolean;
-  /** 面包屑风格 */
-  styleType: BreadcrumbStyleType;
-}
-
-interface CopyrightPreferences {
-  /** 版权公司名 */
-  companyName: string;
-  /** 版权公司名链接 */
-  companySiteLink: string;
-  /** 版权日期 */
-  date: string;
-  /** 版权是否可见 */
-  enable: boolean;
-  /** 备案号 */
-  icp: string;
-  /** 备案号链接 */
-  icpLink: string;
-  /** 设置面板是否显示*/
-  settingShow?: boolean;
-}
-
-interface FooterPreferences {
-  /** 底栏是否可见 */
-  enable: boolean;
-  /** 底栏是否固定 */
-  fixed: boolean;
-  /** 底栏高度 */
-  height: number;
 }
 
 interface HeaderPreferences {
@@ -207,8 +177,6 @@ interface HeaderPreferences {
   height: number;
   /** 顶栏是否隐藏,css-隐藏 */
   hidden: boolean;
-  /** 顶栏菜单位置 */
-  menuAlign: LayoutHeaderMenuAlignType;
   /** header显示模式 */
   mode: LayoutHeaderModeType;
 }
@@ -343,10 +311,6 @@ interface Preferences {
   app: AppPreferences;
   /** 顶栏配置 */
   breadcrumb: BreadcrumbPreferences;
-  /** 版权配置 */
-  copyright: CopyrightPreferences;
-  /** 底栏配置 */
-  footer: FooterPreferences;
   /** 面包屑配置 */
   header: HeaderPreferences;
   /** logo配置 */
@@ -387,7 +351,6 @@ export type {
   CustomPreferencesSelectField,
   CustomPreferencesSwitchField,
   CustomPreferencesValue,
-  FooterPreferences,
   HeaderPreferences,
   InitialOptions,
   LogoPreferences,

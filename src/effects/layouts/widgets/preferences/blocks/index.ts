@@ -4,8 +4,6 @@ export { default as Animation } from './general/animation.vue';
 export { default as General } from './general/general.vue';
 export { default as Breadcrumb } from './layout/breadcrumb.vue';
 export { default as Content } from './layout/content.vue';
-export { default as Copyright } from './layout/copyright.vue';
-export { default as Footer } from './layout/footer.vue';
 export { default as Header } from './layout/header.vue';
 export { default as Layout } from './layout/layout.vue';
 export { default as Navigation } from './layout/navigation.vue';

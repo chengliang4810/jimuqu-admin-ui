@@ -7,7 +7,6 @@ import { computed, ref, watch } from 'vue';
 
 import {
   SCROLL_FIXED_CLASS,
-  useLayoutFooterStyle,
   useLayoutHeaderStyle,
 } from '@/core/composables';
 import { IconifyIcon } from '@/core/icons';
@@ -17,7 +16,6 @@ import { useMouse, useScroll, useThrottleFn } from '@vueuse/core';
 
 import {
   LayoutContent,
-  LayoutFooter,
   LayoutHeader,
   LayoutSidebar,
   LayoutTabbar,
@@ -38,9 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
   contentPaddingLeft: 0,
   contentPaddingRight: 0,
   contentPaddingTop: 0,
-  footerEnable: false,
-  footerFixed: true,
-  footerHeight: 32,
   headerHeight: 50,
   headerHidden: false,
   headerMode: 'fixed',
@@ -91,7 +86,6 @@ const {
 } = useScroll(document);
 
 const { setLayoutHeaderHeight } = useLayoutHeaderStyle();
-const { setLayoutFooterHeight } = useLayoutFooterStyle();
 
 const { y: mouseY } = useMouse({ target: contentRef, type: 'client' });
 
@@ -296,7 +290,6 @@ const tabbarStyle = computed((): CSSProperties => {
 const contentStyle = computed((): CSSProperties => {
   const fixed = headerFixed.value;
 
-  const { footerEnable, footerFixed, footerHeight } = props;
   return {
     marginTop:
       fixed &&
@@ -305,7 +298,6 @@ const contentStyle = computed((): CSSProperties => {
       (!isHeaderAutoMode.value || scrollY.value < headerWrapperHeight.value)
         ? `${headerWrapperHeight.value}px`
         : 0,
-    paddingBottom: `${footerEnable && footerFixed ? footerHeight : 0}px`,
   };
 });
 
@@ -344,14 +336,6 @@ const sidebarZIndex = computed(() => {
   return zIndex + offset;
 });
 
-const footerWidth = computed(() => {
-  if (!props.footerFixed) {
-    return '100%';
-  }
-
-  return mainStyle.value.width;
-});
-
 const maskStyle = computed((): CSSProperties => {
   return { zIndex: props.zIndex };
 });
@@ -387,16 +371,6 @@ watch(
   [() => headerWrapperHeight.value, () => isFullContent.value],
   ([height]) => {
     setLayoutHeaderHeight(isFullContent.value ? 0 : height);
-  },
-  {
-    immediate: true,
-  },
-);
-
-watch(
-  () => props.footerHeight,
-  (height: number) => {
-    setLayoutFooterHeight(height);
   },
   {
     immediate: true,
@@ -597,17 +571,6 @@ const idMainContent = ELEMENT_ID_MAIN_CONTENT;
           <slot name="content-overlay"></slot>
         </template>
       </LayoutContent>
-
-      <LayoutFooter
-        v-if="footerEnable"
-        :fixed="footerFixed"
-        :height="footerHeight"
-        :show="!isFullContent"
-        :width="footerWidth"
-        :z-index="zIndex"
-      >
-        <slot name="footer"></slot>
-      </LayoutFooter>
     </div>
     <slot name="extra"></slot>
     <div

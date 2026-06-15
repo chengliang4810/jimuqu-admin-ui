@@ -22,8 +22,6 @@ import { VbenBackTop, VbenLogo } from '@/core/ui/adapter';
 
 import { Breadcrumb, Preferences } from '../widgets';
 import { LayoutContent, LayoutContentSpinner } from './content';
-import { Copyright } from './copyright';
-import { LayoutFooter } from './footer';
 import { LayoutHeader } from './header';
 import {
   LayoutExtraMenu,
@@ -221,9 +219,6 @@ const headerSlots = computed(() => {
     :content-padding-left="preferences.app.contentPaddingLeft"
     :content-padding-right="preferences.app.contentPaddingRight"
     :content-padding-top="preferences.app.contentPaddingTop"
-    :footer-enable="preferences.footer.enable"
-    :footer-fixed="preferences.footer.fixed"
-    :footer-height="preferences.footer.height"
     :header-height="preferences.header.height"
     :header-hidden="preferences.header.hidden"
     :header-mode="preferences.header.mode"
@@ -297,7 +292,6 @@ const headerSlots = computed(() => {
             :hide-when-only-one="preferences.breadcrumb.hideOnlyOne"
             :show-home="preferences.breadcrumb.showHome"
             :show-icon="preferences.breadcrumb.showIcon"
-            :type="preferences.breadcrumb.styleType"
           />
         </template>
         <template v-if="showHeaderNav" #menu>
@@ -385,16 +379,6 @@ const headerSlots = computed(() => {
 
     <template v-if="preferences.transition.loading" #content-overlay>
       <LayoutContentSpinner />
-    </template>
-
-    <!-- 页脚 -->
-    <template v-if="preferences.footer.enable" #footer>
-      <LayoutFooter>
-        <Copyright
-          v-if="preferences.copyright.enable"
-          v-bind="preferences.copyright"
-        />
-      </LayoutFooter>
     </template>
 
     <template #extra>

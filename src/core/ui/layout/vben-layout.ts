@@ -41,21 +41,6 @@ interface VbenLayoutProps {
    * @default 16
    */
   contentPaddingTop?: number;
-  /**
-   * footer 是否可见
-   * @default false
-   */
-  footerEnable?: boolean;
-  /**
-   * footer 是否固定
-   * @default true
-   */
-  footerFixed?: boolean;
-  /**
-   * footer 高度
-   * @default 32
-   */
-  footerHeight?: number;
 
   /**
    * header高度
