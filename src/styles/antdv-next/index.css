@@ -78,8 +78,15 @@ body {
   }
 }
 
-/* 折叠状态下的 item 图标居中 */
-.ant-menu-inline-collapsed .ant-menu-item {
+/* 折叠状态下菜单填满侧边栏宽度
+ * antd 默认将折叠菜单写死为 80px（collapsedWidth = controlHeightLG * 2），
+ * 与自定义侧边栏折叠宽度（默认 60px）不一致，会导致菜单溢出，
+ * 且图标居中依赖 paddingInline: calc(50% - ...) 是按 80px 计算的，
+ * 在更窄的侧边栏里就会偏移。改为 100% 跟随侧边栏，图标即可正确居中。 */
+.ant-menu-inline-collapsed {
+  width: 100%;
+
+  /* item / submenu-title 图标居中 */
   .ant-menu-item-icon {
     margin-right: 0;
   }
