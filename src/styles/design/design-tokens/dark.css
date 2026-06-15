@@ -125,6 +125,10 @@ html:not(.dark) .dark {
   --ant-color-fill-tertiary: rgb(255 255 255 / 8%);
   --ant-color-fill-secondary: rgb(255 255 255 / 12%);
 
+  /* 边框：悬浮滚动条 thumb(bg-border)与深色侧边栏内的分隔线统一用浅色半透明，
+     否则在 navy 底上仍是浅色主题的浅灰，显得突兀/不协调 */
+  --ant-color-border: rgb(255 255 255 / 15%);
+
   /* 菜单根背景桥接(.ant-menu-dark { background: hsl(var(--menu)) })，
      避免菜单根/圆角缝隙露出非对齐色 */
   --sidebar: 209 100% 8%;
