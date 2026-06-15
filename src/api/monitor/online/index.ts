@@ -1,6 +1,6 @@
-import type { OnlineUser } from './model';
-
 import type { PageQuery, PageResult } from '@/api/common';
+
+import type { OnlineUser } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

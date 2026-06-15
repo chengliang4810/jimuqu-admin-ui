@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { OnlineUser } from '@/api/monitor/online/model';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { ref } from 'vue';
 
-import { Page } from '@/effects/common-ui';
-
-import { Popconfirm } from 'antdv-next';
-import { slice } from 'lodash-es';
-
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { forceLogout, onlineList } from '@/api/monitor/online';
+import { Page } from '@/effects/common-ui';
+import { Popconfirm } from 'antdv-next';
+import { slice } from 'lodash-es';
 
 import { columns, querySchema } from './data';
 

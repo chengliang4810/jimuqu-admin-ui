@@ -1,5 +1,3 @@
-import { execSync } from 'node:child_process';
-
 import { execaCommand } from '@vben/node-utils';
 
 async function runLint({ format }) {
@@ -26,25 +24,13 @@ async function runLint({ format }) {
     }),
   ];
 
-  try {
-    await Promise.all(subprocesses);
-  } catch (error) {
-    for (const subprocess of subprocesses) {
-      try {
-        if (process.platform === 'win32' && subprocess.pid) {
-          execSync(`taskkill /F /T /PID ${subprocess.pid}`, {
-            stdio: 'ignore',
-          });
-        } else {
-          subprocess.kill('SIGKILL');
-        }
-      } catch {
-        // process may have already exited
-      }
-    }
+  // 等待全部 linter 跑完再汇总结果,避免某个 linter 先失败时
+  // Promise.all 短路并 kill 掉其它仍在运行的进程,导致它们的报错丢失。
+  const results = await Promise.allSettled(subprocesses);
+  const failed = results.some((result) => result.status === 'rejected');
 
-    await Promise.allSettled(subprocesses);
-    throw error;
+  if (failed) {
+    process.exitCode = 1;
   }
 }
 
