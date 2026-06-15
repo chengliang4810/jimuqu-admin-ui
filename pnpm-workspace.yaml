@@ -106,7 +106,6 @@ catalog:
   lodash-es: ^4.17.21
   lucide-vue-next: ^0.577.0
   motion-v: ^1.10.2
-  nitropack: ^0.0.0
   nprogress: ^0.2.0
   pinia: ^3.0.4
   pinia-plugin-persistedstate: ^4.7.1
