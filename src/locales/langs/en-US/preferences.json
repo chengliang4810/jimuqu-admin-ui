@@ -131,7 +131,7 @@
     "colorPrimary": "Theme Color",
     "colorSuccess": "Success Color",
     "colorWarning": "Warning Color",
-    "colorDestructive": "Error Color",
+    "colorError": "Error Color",
     "weakMode": "Weak Mode",
     "grayMode": "Gray Mode",
     "builtin": {

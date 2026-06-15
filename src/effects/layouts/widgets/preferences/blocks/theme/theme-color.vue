@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { $t } from '@/locales';
-import { convertToHsl, TinyColor } from '@/utils';
+import { TinyColor } from '@/utils';
 
 import { ColorPicker } from 'antdv-next';
 
@@ -19,7 +19,7 @@ const colorValue = computed(() => {
 });
 
 function handleChange(_value: unknown, css: string) {
-  modelValue.value = convertToHsl(css);
+  modelValue.value = new TinyColor(css).toHexString();
 }
 </script>
 

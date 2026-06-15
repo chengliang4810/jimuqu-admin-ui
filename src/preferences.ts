@@ -63,19 +63,18 @@ export const overridesPreferences = defineOverridesPreferences({
      */
     semiDarkSidebar: false,
     /**
-     * 圆角大小 换算比例为1.6px = 0.1radius
-     * 这里为6px 与antd保持一致
+     * 圆角大小，直接使用 px(与 antd borderRadius 一致)
      */
-    radius: '0.375',
-    // 这些颜色和antd默认颜色保持一致 即hex -> hsl
+    borderRadius: 6,
+    // 这些颜色与 antd 默认色保持一致(hex)
     // 错误色
-    colorDestructive: 'hsl(359, 100%, 65%)',
+    colorError: '#ff4d4f',
     // 主题色
-    colorPrimary: 'hsl(215, 100%, 54%)',
+    colorPrimary: '#1476ff',
     // 成功色
-    colorSuccess: 'hsl(100, 77%, 44%)',
+    colorSuccess: '#53c71a',
     // 警告色
-    colorWarning: 'hsl(40, 96%, 53%)',
+    colorWarning: '#faae14',
   },
   /**
    * !!! 更改配置后请清空浏览器缓存

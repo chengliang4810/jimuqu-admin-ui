@@ -23,10 +23,10 @@
   --font-sans: var(--font-family);
 
   /* Border Radius */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: var(--ant-border-radius-xs);
+  --radius-md: var(--ant-border-radius-sm);
+  --radius-lg: var(--ant-border-radius);
+  --radius-xl: var(--ant-border-radius-lg);
 
   /* Box Shadow */
   --shadow-float:

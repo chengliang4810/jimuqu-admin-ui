@@ -32,7 +32,7 @@ const settingList = [
 
 <template>
   <Tabs
-    class="bg-background rounded-[var(--radius)] lg:flex-1"
+    class="bg-background rounded-[var(--ant-border-radius)] lg:flex-1"
     :classes="{ header: 'px-4' }"
   >
     <TabPane v-for="item in settingList" :key="item.key" :tab="item.name">

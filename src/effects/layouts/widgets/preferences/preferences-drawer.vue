@@ -76,7 +76,7 @@ const transitionName = defineModel<string>('transitionName');
 const transitionLoading = defineModel<boolean>('transitionLoading');
 const transitionEnable = defineModel<boolean>('transitionEnable');
 
-const themeColorDestructive = defineModel<string>('themeColorDestructive');
+const themeColorError = defineModel<string>('themeColorError');
 const themeColorPrimary = defineModel<string>('themeColorPrimary');
 const themeColorSuccess = defineModel<string>('themeColorSuccess');
 const themeColorWarning = defineModel<string>('themeColorWarning');
@@ -359,8 +359,8 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 :label="$t('preferences.theme.colorWarning')"
               />
               <ThemeColor
-                v-model="themeColorDestructive"
-                :label="$t('preferences.theme.colorDestructive')"
+                v-model="themeColorError"
+                :label="$t('preferences.theme.colorError')"
               />
             </div>
             <Block :title="$t('preferences.other')">

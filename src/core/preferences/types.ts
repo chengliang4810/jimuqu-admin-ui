@@ -291,7 +291,7 @@ interface TabbarPreferences {
 
 interface ThemePreferences {
   /** 错误色 */
-  colorDestructive: string;
+  colorError: string;
   /** 主题色 */
   colorPrimary: string;
   /** 成功色 */
@@ -300,8 +300,8 @@ interface ThemePreferences {
   colorWarning: string;
   /** 当前主题 */
   mode: ThemeModeType;
-  /** 圆角 */
-  radius: string;
+  /** 圆角(px 数值，如 6) */
+  borderRadius: number;
   /** 是否开启半深色header（只在theme='light'时生效） */
   semiDarkHeader: boolean;
   /** 是否开启半深色菜单（只在theme='light'时生效） */

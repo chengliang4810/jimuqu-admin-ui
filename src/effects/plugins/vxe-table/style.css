@@ -55,7 +55,7 @@
   --vxe-ui-table-resizable-drag-line-color: var(--ant-color-primary);
 
   /* --vxe-ui-table-fixed-scrolling-box-shadow-color: rgb(0 0 0 / 80%); */
-  --vxe-ui-table-border-radius: var(--radius);
+  --vxe-ui-table-border-radius: var(--ant-border-radius);
 
   height: auto !important;
 }

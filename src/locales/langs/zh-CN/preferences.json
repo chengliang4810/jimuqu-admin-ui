@@ -131,7 +131,7 @@
     "colorPrimary": "主题色",
     "colorSuccess": "成功色",
     "colorWarning": "警告色",
-    "colorDestructive": "错误色",
+    "colorError": "错误色",
     "weakMode": "色弱模式",
     "grayMode": "灰色模式",
     "builtin": {
