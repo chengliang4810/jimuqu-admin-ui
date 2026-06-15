@@ -1,9 +1,8 @@
 import type { ApplicationPluginOptions } from '../typing';
 
 import { existsSync } from 'node:fs';
+import fs from 'node:fs/promises';
 import { join } from 'node:path';
-
-import { fs } from '@vben/node-utils';
 
 import dotenv from 'dotenv';
 

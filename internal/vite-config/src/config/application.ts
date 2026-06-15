@@ -4,7 +4,7 @@ import type { DefineApplicationOptions } from '../typing';
 
 import path, { relative } from 'node:path';
 
-import { findMonorepoRoot } from '@vben/node-utils';
+import { findMonorepoRoot } from '../utils';
 
 import { NodePackageImporter } from 'sass-embedded';
 import { defineConfig, loadEnv, mergeConfig } from 'vite';

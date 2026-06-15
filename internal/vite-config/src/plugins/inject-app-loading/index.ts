@@ -5,7 +5,7 @@ import fsp from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { readPackageJSON } from '@vben/node-utils';
+import { readPackageJSON } from '../../utils';
 
 /**
  * 用于生成将loading样式注入到项目中
