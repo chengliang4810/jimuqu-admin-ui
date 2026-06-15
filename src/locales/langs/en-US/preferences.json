@@ -125,6 +125,7 @@
     "darkSidebarTip": "It can be enabled when the theme is light, and the layout is neither 'Horizontal' nor 'Full Content'.",
     "darkSidebarSub": "Semi Dark Sidebar Sub",
     "darkSidebarSubTip": "It can be enabled when the theme is light, the semi dark sidebar is enabled, and the layout uses 'Two-Column' menu mode.",
+    "colorTitle": "Theme Colors",
     "colorPrimary": "Theme Color",
     "colorSuccess": "Success Color",
     "colorWarning": "Warning Color",

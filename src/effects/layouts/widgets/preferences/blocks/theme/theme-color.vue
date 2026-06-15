@@ -30,12 +30,17 @@ function handleChange(_value: unknown, css: string) {
     <span class="text-sm">
       {{ label }}
     </span>
-    <ColorPicker
-      :value="colorValue"
-      disabled-alpha
-      disabled-format
-      size="small"
-      @change="handleChange"
-    />
+    <div class="flex items-center gap-2">
+      <span class="text-muted-foreground font-mono text-xs uppercase">
+        {{ colorValue }}
+      </span>
+      <ColorPicker
+        :value="colorValue"
+        disabled-alpha
+        disabled-format
+        size="small"
+        @change="handleChange"
+      />
+    </div>
   </div>
 </template>

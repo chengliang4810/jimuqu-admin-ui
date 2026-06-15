@@ -321,7 +321,7 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 v-model:theme-semi-dark-sidebar-sub="themeSemiDarkSidebarSub"
               />
             </Block>
-            <div class="py-4">
+            <Block :title="$t('preferences.theme.colorTitle')">
               <ThemeColor
                 v-model="themeColorPrimary"
                 :label="$t('preferences.theme.colorPrimary')"
@@ -338,7 +338,7 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
                 v-model="themeColorError"
                 :label="$t('preferences.theme.colorError')"
               />
-            </div>
+            </Block>
             <Block :title="$t('preferences.other')">
               <ColorMode
                 v-model:app-color-gray-mode="appColorGrayMode"
