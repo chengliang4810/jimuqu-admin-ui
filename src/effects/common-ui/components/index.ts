@@ -5,7 +5,6 @@ export * from './ellipsis-text';
 export * from './icon-picker';
 export * from './json-preview';
 export * from './loading';
-export * from './markdown';
 export * from './page';
 export * from './resize';
 export { globalShareState } from '@/core/shared/global-state';
