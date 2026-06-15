@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import type { IBreadcrumb } from '@/core/ui/adapter';
 
-import { computed } from 'vue';
+import { computed, h } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { VbenBreadcrumbView } from '@/core/ui/adapter';
 import { $t } from '@/locales';
+import { HomeOutlined } from '@antdv-next/icons';
 
 interface Props {
   hideWhenOnlyOne?: boolean;
@@ -42,7 +43,7 @@ const breadcrumbs = computed((): IBreadcrumb[] => {
   }
   if (props.showHome) {
     resultBreadcrumb.unshift({
-      icon: 'mdi:home-outline',
+      icon: h(HomeOutlined),
       isHome: true,
       path: '/',
     });
