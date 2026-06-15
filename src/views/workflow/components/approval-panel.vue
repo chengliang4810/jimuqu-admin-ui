@@ -3,26 +3,23 @@ TODO: 优化项
 会先加载流程信息 再加载业务表单信息
 -->
 <script setup lang="ts">
+import type { FlowInfoResponse } from '@/api/workflow/instance/model';
+import type { TaskInfo } from '@/api/workflow/task/model';
 import type { TabsProps } from 'antdv-next';
 
 import type { ApprovalType } from './type';
 
-import type { FlowInfoResponse } from '@/api/workflow/instance/model';
-import type { TaskInfo } from '@/api/workflow/task/model';
-
 import { computed, h, ref, watch } from 'vue';
-
-import { Fallback, VbenAvatar } from '@/effects/common-ui';
-import { DictEnum } from '@/constants';
-import { cn } from '@/utils';
-
-import { CopyOutlined } from '@antdv-next/icons';
-import { useClipboard } from '@vueuse/core';
-import { Card, Divider, Tabs } from 'antdv-next';
 
 import { flowInfo } from '@/api/workflow/instance';
 import { getTaskByTaskId } from '@/api/workflow/task';
+import { DictEnum } from '@/constants';
+import { Fallback, VbenAvatar } from '@/effects/common-ui';
+import { cn } from '@/utils';
 import { renderDict } from '@/utils/render';
+import { CopyOutlined } from '@antdv-next/icons';
+import { useClipboard } from '@vueuse/core';
+import { Card, Divider, Tabs } from 'antdv-next';
 
 import { FlowActions } from './actions';
 import ApprovalDetails from './approval-details.vue';

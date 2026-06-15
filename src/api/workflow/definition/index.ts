@@ -1,6 +1,6 @@
-import type { ProcessDefinition } from './model';
-
 import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
+
+import type { ProcessDefinition } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

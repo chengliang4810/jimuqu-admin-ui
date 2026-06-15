@@ -7,7 +7,6 @@ import type { ComponentPropsMap, ComponentType } from './component';
 
 import { setupVbenForm, useVbenForm as useForm } from '@/effects/common-ui';
 import { $t } from '@/locales';
-
 import { isArray } from 'lodash-es';
 
 async function initSetupVbenForm() {

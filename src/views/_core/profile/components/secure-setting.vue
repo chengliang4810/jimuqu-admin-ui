@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { UpdatePasswordParam } from '@/api/system/profile/model';
 
-import { omit } from 'lodash-es';
-
 import { useVbenForm } from '@/adapter/form';
 import { userUpdatePassword } from '@/api/system/profile';
 import { useAuthStore } from '@/stores';
+import { omit } from 'lodash-es';
 
 const [BasicForm, formApi] = useVbenForm({
   commonConfig: {

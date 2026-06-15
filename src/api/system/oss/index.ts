@@ -1,6 +1,6 @@
-import type { OssFile } from './model';
-
 import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
+
+import type { OssFile } from './model';
 
 import { ContentTypeEnum } from '@/api/helper';
 import { alovaInstance } from '@/utils/http';

@@ -2,11 +2,9 @@
 import { ref } from 'vue';
 
 import { JsonPreview, Page } from '@/effects/common-ui';
-
+import { alovaInstance } from '@/utils/http';
 import { Alert, Card } from 'antdv-next';
 import dayjs from 'dayjs';
-
-import { alovaInstance } from '@/utils/http';
 
 const requestData = ref<any>({});
 const requestData2 = ref<any>({});

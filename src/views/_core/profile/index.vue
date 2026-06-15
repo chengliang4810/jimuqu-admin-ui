@@ -3,11 +3,9 @@ import type { UserProfile } from '@/api/system/profile/model';
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import { Page } from '@/effects/common-ui';
-import { useUserStore } from '@/stores';
-
 import { userProfile } from '@/api/system/profile';
-import { useAuthStore } from '@/stores';
+import { Page } from '@/effects/common-ui';
+import { useAuthStore , useUserStore } from '@/stores';
 
 import { emitter } from './mitt';
 import ProfilePanel from './profile-panel.vue';

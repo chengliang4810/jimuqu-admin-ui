@@ -3,9 +3,8 @@ import type { RadioChangeEvent } from 'antdv-next';
 
 import { computed } from 'vue';
 
-import { ColorPicker, RadioGroup, Select } from 'antdv-next';
-
 import { tagSelectOptions } from '@/components/dict';
+import { ColorPicker, RadioGroup, Select } from 'antdv-next';
 
 /**
  * 需要禁止透传

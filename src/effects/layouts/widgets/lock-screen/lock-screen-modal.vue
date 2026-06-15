@@ -3,11 +3,10 @@ import type { Recordable } from '@/types';
 
 import { computed, reactive } from 'vue';
 
-import { $t } from '@/locales';
-
+import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
 import { useVbenForm } from '@/core/ui/form';
 import { useVbenModal } from '@/core/ui/popup';
-import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
+import { $t } from '@/locales';
 
 interface Props {
   avatar?: string;

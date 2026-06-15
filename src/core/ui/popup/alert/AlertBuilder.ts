@@ -1,6 +1,6 @@
-import type { Component, VNode } from 'vue';
-
 import type { Recordable } from '@/core/typings';
+
+import type { Component, VNode } from 'vue';
 
 import type { AlertProps, BeforeCloseScope, PromptProps } from './alert';
 
@@ -8,7 +8,6 @@ import { h, nextTick, ref, render } from 'vue';
 
 import { useSimpleLocale } from '@/core/composables';
 import { isFunction, isString } from '@/core/shared/utils';
-
 import { Input } from 'antdv-next';
 
 import RenderContent from '../render-content';

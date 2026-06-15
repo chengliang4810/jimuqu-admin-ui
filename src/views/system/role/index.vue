@@ -1,24 +1,11 @@
 <script setup lang="ts">
-import type { SwitchProps } from 'antdv-next';
-
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Role } from '@/api/system/role/model';
+import type { VbenFormProps } from '@/effects/common-ui';
+import type { SwitchProps } from 'antdv-next';
 
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-
-import { useAccess } from '@/effects/access';
-import { Page, useVbenModal } from '@/effects/common-ui';
-import {
-  ADMIN_ROLE_KEY,
-  EnableStatus,
-  SUPERADMIN_ROLE_ID,
-  SUPERADMIN_ROLE_KEY,
-} from '@/constants';
-
-import { Popconfirm, Space } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -28,7 +15,16 @@ import {
   roleRemove,
 } from '@/api/system/role';
 import { ApiSwitch } from '@/components/global';
+import {
+  ADMIN_ROLE_KEY,
+  EnableStatus,
+  SUPERADMIN_ROLE_ID,
+  SUPERADMIN_ROLE_KEY,
+} from '@/constants';
+import { useAccess } from '@/effects/access';
+import { Page, useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
+import { Popconfirm, Space } from 'antdv-next';
 
 import { columns, querySchema } from './data';
 import roleAuthModal from './role-auth-modal.vue';

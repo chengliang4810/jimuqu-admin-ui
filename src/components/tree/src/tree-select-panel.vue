@@ -5,7 +5,6 @@ import type { DataNode } from 'antdv-next/es/tree';
 import { computed, nextTick, onMounted, ref } from 'vue';
 
 import { treeToList } from '@/utils';
-
 import { Checkbox, Tree } from 'antdv-next';
 
 /** 需要禁止透传 */

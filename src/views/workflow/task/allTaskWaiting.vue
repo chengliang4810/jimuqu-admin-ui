@@ -5,10 +5,11 @@ import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
+import { categoryTree } from '@/api/workflow/category';
+import { pageByAllTaskFinish, pageByAllTaskWait } from '@/api/workflow/task';
 import { Page } from '@/effects/common-ui';
 import { useTabs } from '@/effects/hooks';
 import { addFullName, getPopupContainer } from '@/utils';
-
 import { FilterOutlined, RedoOutlined } from '@antdv-next/icons';
 import {
   Empty,
@@ -23,9 +24,6 @@ import {
   TreeSelect,
 } from 'antdv-next';
 import { cloneDeep, debounce, uniqueId } from 'lodash-es';
-
-import { categoryTree } from '@/api/workflow/category';
-import { pageByAllTaskFinish, pageByAllTaskWait } from '@/api/workflow/task';
 
 import { ApprovalCard, ApprovalPanel, CopyComponent } from '../components';
 import { bottomOffset } from './constant';

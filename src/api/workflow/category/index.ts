@@ -1,11 +1,11 @@
+import type { ID, IDS } from '@/api/common';
+
 import type {
   CategoryForm,
   CategoryQuery,
   CategoryTree,
   CategoryVO,
 } from './model';
-
-import type { ID, IDS } from '@/api/common';
 
 import { alovaInstance } from '@/utils/http';
 

@@ -1,3 +1,5 @@
+import type { TabDefinition } from '@/core/typings';
+
 import type { ComputedRef, VNode } from 'vue';
 import type {
   RouteLocationNormalized,
@@ -6,8 +8,6 @@ import type {
   Router,
   RouteRecordNormalized,
 } from 'vue-router';
-
-import type { TabDefinition } from '@/core/typings';
 
 import { markRaw, toRaw } from 'vue';
 
@@ -19,7 +19,6 @@ import {
   startProgress,
   stopProgress,
 } from '@/core/shared/utils';
-
 import { acceptHMRUpdate, defineStore } from 'pinia';
 
 interface RouteCached {

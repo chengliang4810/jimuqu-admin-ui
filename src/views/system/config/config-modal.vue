@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
+import { useVbenForm } from '@/adapter/form';
+import { configAdd, configInfo, configUpdate } from '@/api/system/config';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
-
-import { useVbenForm } from '@/adapter/form';
-import { configAdd, configInfo, configUpdate } from '@/api/system/config';
 import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { modalSchema } from './data';

@@ -10,7 +10,6 @@ import type {
 import { h } from 'vue';
 
 import { globalShareState } from '@/core/shared/global-state';
-
 import { Button, Checkbox, Input, InputPassword, Select } from 'antdv-next';
 
 const DEFAULT_MODEL_PROP_NAME = 'modelValue';

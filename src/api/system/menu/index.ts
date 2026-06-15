@@ -1,6 +1,6 @@
-import type { Menu, MenuOption, MenuQuery, MenuResp } from './model';
-
 import type { ID, IDS } from '@/api/common';
+
+import type { Menu, MenuOption, MenuQuery, MenuResp } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

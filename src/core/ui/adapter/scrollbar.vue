@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
-
 import type { ClassType } from '@/core/typings';
+
+import type { CSSProperties } from 'vue';
 
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
@@ -194,12 +194,14 @@ function onThumbPointerDown(e: PointerEvent) {
   window.addEventListener('pointerup', onUp);
 }
 
-const thumbStyle = computed((): CSSProperties => ({
-  height: `${thumbSize.value}px`,
-  opacity: thumbActive.value ? '1' : '0',
-  pointerEvents: thumbActive.value ? 'auto' : 'none',
-  transform: `translateY(${thumbOffset.value}px)`,
-}));
+const thumbStyle = computed(
+  (): CSSProperties => ({
+    height: `${thumbSize.value}px`,
+    opacity: thumbActive.value ? '1' : '0',
+    pointerEvents: thumbActive.value ? 'auto' : 'none',
+    transform: `translateY(${thumbOffset.value}px)`,
+  }),
+);
 
 onMounted(() => {
   if (!props.overlay) {

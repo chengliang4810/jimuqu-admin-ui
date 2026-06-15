@@ -5,7 +5,6 @@ import type { Ref } from 'vue';
 import { computed, effectScope, ref, unref, watch } from 'vue';
 
 import { isFunction } from '@/utils';
-
 import { tryOnScopeDispose, useElementHover } from '@vueuse/core';
 
 interface HoverDelayOptions {

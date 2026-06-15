@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { PageQuery } from '@/api/common';
 import type { DictData } from '@/api/system/dict/dict-data-model';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-
-import { useVbenDrawer } from '@/effects/common-ui';
-
-import { Popconfirm, Space } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -17,7 +12,9 @@ import {
   dictDataList,
   dictDataRemove,
 } from '@/api/system/dict/dict-data';
+import { useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
+import { Popconfirm, Space } from 'antdv-next';
 
 import { emitter } from '../mitt';
 import { columns, querySchema } from './data';

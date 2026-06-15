@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { User } from '@/api/system/user/model';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { useRoute } from 'vue-router';
-
-import { Page, useVbenDrawer } from '@/effects/common-ui';
-
-import { Popconfirm, Space } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -16,6 +11,8 @@ import {
   roleAuthCancel,
   roleAuthCancelAll,
 } from '@/api/system/role';
+import { Page, useVbenDrawer } from '@/effects/common-ui';
+import { Popconfirm, Space } from 'antdv-next';
 
 import { columns, querySchema } from './data';
 import roleAssignDrawer from './role-assign-drawer.vue';

@@ -3,12 +3,6 @@ import type { Role } from '@/api/system/user/model';
 
 import { computed, h, onMounted, ref } from 'vue';
 
-import { useVbenDrawer } from '@/effects/common-ui';
-import { $t } from '@/locales';
-import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
-
-import { Tag } from 'antdv-next';
-
 import { useVbenForm } from '@/adapter/form';
 import { configInfoByKey } from '@/api/system/config';
 import { postOptionSelect } from '@/api/system/post';
@@ -18,8 +12,12 @@ import {
   userAdd,
   userUpdate,
 } from '@/api/system/user';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
 import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 import { authScopeOptions } from '@/views/system/role/data';
+import { Tag } from 'antdv-next';
 
 import { drawerSchema } from './data';
 

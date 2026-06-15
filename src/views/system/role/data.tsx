@@ -3,10 +3,8 @@ import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
 import { getPopupContainer } from '@/utils';
-
-import { Tag } from 'antdv-next';
-
 import { getDictOptions } from '@/utils/dict';
+import { Tag } from 'antdv-next';
 
 /**
  * authScopeOptions user也会用到

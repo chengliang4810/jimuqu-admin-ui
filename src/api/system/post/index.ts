@@ -1,7 +1,7 @@
+import type { ID, IDS, PageQuery } from '@/api/common';
+
 import type { DeptTree } from '../user/model';
 import type { Post } from './model';
-
-import type { ID, IDS, PageQuery } from '@/api/common';
 
 import { commonExport } from '@/api/helper';
 import { alovaInstance } from '@/utils/http';

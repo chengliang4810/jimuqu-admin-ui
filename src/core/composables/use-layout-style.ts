@@ -1,5 +1,8 @@
 import type { VisibleDomRect } from '@/core/shared/utils';
+
 import type { CSSProperties } from 'vue';
+
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 import {
   CSS_VARIABLE_LAYOUT_CONTENT_HEIGHT,
@@ -8,7 +11,6 @@ import {
 } from '@/core/shared/constants';
 import { getElementVisibleRect } from '@/core/shared/utils';
 import { useCssVar, useDebounceFn } from '@vueuse/core';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 /**
  * @zh_CN content style

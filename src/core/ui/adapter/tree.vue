@@ -1,14 +1,12 @@
 <script lang="ts" setup>
-import type { Arrayable } from '@vueuse/core';
-
 import type { ClassType, Recordable } from '@/core/typings';
+import type { Arrayable } from '@vueuse/core';
 
 import type { FlattenedItem, TreeProps } from './tree';
 
 import { computed, h, ref, useSlots, watchEffect } from 'vue';
 
 import { cn, get } from '@/core/shared/utils';
-
 import { Tree } from 'antdv-next';
 
 import VbenIcon from './icon.vue';

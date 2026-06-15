@@ -1,8 +1,7 @@
+import type { ClassType, MaybeComputedRef } from '@/core/typings';
 import type { Rule as AntdRule } from 'antdv-next/es/form';
 
 import type { Component, HtmlHTMLAttributes, Ref } from 'vue';
-
-import type { ClassType, MaybeComputedRef } from '@/core/typings';
 
 import type { FormApi } from './form-api';
 

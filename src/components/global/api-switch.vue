@@ -4,7 +4,6 @@ import type { SwitchProps } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { $t } from '@/locales';
-
 import { Switch } from 'antdv-next';
 import { isFunction } from 'lodash-es';
 

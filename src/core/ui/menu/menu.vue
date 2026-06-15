@@ -4,10 +4,11 @@ import type { MenuRecordRaw } from '@/core/typings';
 import type { MenuProps } from './types';
 
 import { computed, provide, ref, watch } from 'vue';
+
 import { Menu } from 'antdv-next';
 
-import SubMenu from './sub-menu.vue';
 import { useMenuScroll } from './hooks/use-menu-scroll';
+import SubMenu from './sub-menu.vue';
 import { buildMenuPathMap } from './utils/menu-path';
 
 interface Props extends MenuProps {

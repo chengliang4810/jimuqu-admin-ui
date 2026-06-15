@@ -4,9 +4,8 @@ import type { IBreadcrumb } from '@/core/ui/adapter';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { $t } from '@/locales';
-
 import { VbenBreadcrumbView } from '@/core/ui/adapter';
+import { $t } from '@/locales';
 
 interface Props {
   hideWhenOnlyOne?: boolean;

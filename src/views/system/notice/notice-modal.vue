@@ -8,18 +8,16 @@ import type { Rule } from 'antdv-next/dist/form/types';
 
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
-import { DictEnum } from '@/constants';
-import { $t } from '@/locales';
-import { cloneDeep } from '@/utils';
-
-import { Form, FormItem, Input, RadioGroup } from 'antdv-next';
-import { pick } from 'lodash-es';
-
 import { noticeAdd, noticeInfo, noticeUpdate } from '@/api/system/notice';
 import { contentWithOssIdTransform, Tiptap } from '@/components/tiptap';
+import { DictEnum } from '@/constants';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
+import { Form, FormItem, Input, RadioGroup } from 'antdv-next';
+import { pick } from 'lodash-es';
 
 const emit = defineEmits<{ reload: [] }>();
 

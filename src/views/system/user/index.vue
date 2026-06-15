@@ -1,20 +1,10 @@
 <script setup lang="ts">
-import type { MenuProps, SwitchProps } from 'antdv-next';
-
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { User } from '@/api/system/user/model';
+import type { VbenFormProps } from '@/effects/common-ui';
+import type { MenuProps, SwitchProps } from 'antdv-next';
 
 import { computed, ref } from 'vue';
-
-import { useAccess } from '@/effects/access';
-import { Page, useVbenDrawer, useVbenModal } from '@/effects/common-ui';
-import { EnableStatus, SUPERADMIN_USER_ID } from '@/constants';
-import { $t } from '@/locales';
-import { preferences } from '@/core/preferences';
-
-import { Avatar, Dropdown, Popconfirm, Space } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -24,7 +14,13 @@ import {
   userStatusChange,
 } from '@/api/system/user';
 import ApiSwitch from '@/components/global/api-switch.vue';
+import { EnableStatus, SUPERADMIN_USER_ID } from '@/constants';
+import { preferences } from '@/core/preferences';
+import { useAccess } from '@/effects/access';
+import { Page, useVbenDrawer, useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
 import { useBlobExport } from '@/utils/file/export';
+import { Avatar, Dropdown, Popconfirm, Space } from 'antdv-next';
 
 import { columns, querySchema } from './data';
 import DeptTree from './dept-tree.vue';

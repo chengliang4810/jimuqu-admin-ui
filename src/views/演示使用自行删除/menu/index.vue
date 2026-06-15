@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { MenuOption } from '@/api/system/menu/model';
 
+import { onMounted, ref, shallowRef } from 'vue';
+
 import { roleMenuTreeSelect } from '@/api/system/menu';
 import { MenuSelectTable } from '@/components/tree';
 import { Page } from '@/effects/common-ui';
-import { onMounted, ref, shallowRef } from 'vue';
 
 const checkedKeys = ref<number[]>([]);
 const menus = shallowRef<MenuOption[]>([]);

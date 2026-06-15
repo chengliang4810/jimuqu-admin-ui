@@ -1,24 +1,23 @@
 <script lang="ts" setup>
+import type { MenuRecordRaw } from '@/types';
+
 import type { SetupContext } from 'vue';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
-
-import type { MenuRecordRaw } from '@/types';
 
 import { computed, onMounted, useSlots, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useRefresh } from '@/effects/hooks';
-import { $t, i18n } from '@/locales';
 import {
   preferences,
   updatePreferences,
   usePreferences,
 } from '@/core/preferences';
+import { VbenBackTop, VbenLogo } from '@/core/ui/adapter';
+import { VbenAdminLayout } from '@/core/ui/layout';
+import { useRefresh } from '@/effects/hooks';
+import { $t, i18n } from '@/locales';
 import { useAccessStore, useTabbarStore } from '@/stores';
 import { cloneDeep, mapTree } from '@/utils';
-
-import { VbenAdminLayout } from '@/core/ui/layout';
-import { VbenBackTop, VbenLogo } from '@/core/ui/adapter';
 
 import { Breadcrumb, Preferences } from '../widgets';
 import { LayoutContent, LayoutContentSpinner } from './content';

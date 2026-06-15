@@ -1,5 +1,4 @@
 import { getScrollbarWidth, needsScrollbar } from '@/core/shared/utils';
-
 import {
   useScrollLock as _useScrollLock,
   tryOnBeforeUnmount,

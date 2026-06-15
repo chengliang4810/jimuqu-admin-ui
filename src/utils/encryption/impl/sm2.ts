@@ -1,5 +1,5 @@
-/* eslint-disable prefer-template */
-/* eslint-disable no-console */
+ 
+ 
 import { sm2 } from 'sm-crypto';
 
 import { BaseAsymmetricEncryption } from '../base';

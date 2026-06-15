@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
+import { useVbenForm } from '@/adapter/form';
+import { menuAdd, menuInfo, menuList, menuUpdate } from '@/api/system/menu';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
-
+import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 import { Skeleton } from 'antdv-next';
 import JsonEditorVue from 'json-editor-vue';
-
-import { useVbenForm } from '@/adapter/form';
-import { menuAdd, menuInfo, menuList, menuUpdate } from '@/api/system/menu';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';
 

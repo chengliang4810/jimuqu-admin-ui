@@ -1,16 +1,10 @@
 <script setup lang="ts">
+import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { VbenFormProps } from '@/effects/common-ui';
 import type { Recordable } from '@/types';
 
-import type { VxeGridProps } from '@/adapter/vxe-table';
-
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
-import { Page, useVbenModal } from '@/effects/common-ui';
-
-import { Popconfirm, Space } from 'antdv-next';
-import dayjs from 'dayjs';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -20,7 +14,10 @@ import {
   getDataSourceNames,
   syncDb,
 } from '@/api/tool/gen';
+import { Page, useVbenModal } from '@/effects/common-ui';
 import { downloadByData } from '@/utils/file/download';
+import { Popconfirm, Space } from 'antdv-next';
+import dayjs from 'dayjs';
 
 import codePreviewModal from './code-preview-modal.vue';
 import { columns, querySchema } from './data';

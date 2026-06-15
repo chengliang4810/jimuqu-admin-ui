@@ -1,6 +1,6 @@
-import type { DictData } from './dict-data-model';
-
 import type { ID, IDS, PageQuery } from '@/api/common';
+
+import type { DictData } from './dict-data-model';
 
 import { commonExport } from '@/api/helper';
 import { alovaInstance } from '@/utils/http';

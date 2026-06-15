@@ -8,7 +8,6 @@ import {
   setupVbenVxeTable,
   useVbenVxeGrid as useGrid,
 } from '@/effects/plugins/vxe-table';
-
 import { Button, Image } from 'antdv-next';
 
 import { useVbenForm } from './form';

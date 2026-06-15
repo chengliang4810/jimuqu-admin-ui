@@ -1,11 +1,9 @@
 import { onMounted } from 'vue';
 
 import { preferences } from '@/core/preferences';
-
+import { $t } from '@/locales';
 import { Button, Space } from 'antdv-next';
 import { createVersionPolling } from 'version-polling';
-
-import { $t } from '@/locales';
 
 export function useVersionUpdate() {
   onMounted(() => {

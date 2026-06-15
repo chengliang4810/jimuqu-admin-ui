@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { EchartsUIType } from '@/effects/plugins/echarts';
 
-import { EchartsUI, useEcharts } from '@/effects/plugins/echarts';
 import { onMounted, ref } from 'vue';
+
+import { EchartsUI, useEcharts } from '@/effects/plugins/echarts';
 
 const chartRef = ref<EchartsUIType>();
 const { renderEcharts } = useEcharts(chartRef);

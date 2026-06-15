@@ -1,6 +1,5 @@
 import { useAppConfig } from '@/effects/hooks';
 import { useAccessStore } from '@/stores';
-
 import { useEventSource, useWebSocket } from '@vueuse/core';
 
 const { apiURL, clientId, sseEnable, websocketEnable } = useAppConfig(

@@ -4,18 +4,16 @@ import type { UserInfo } from '@/types';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { LOGIN_PATH } from '@/constants';
-import { preferences } from '@/core/preferences';
-import { resetAllStores, useAccessStore, useUserStore } from '@/stores';
-
-import { defineStore } from 'pinia';
-
 import { doLogout, getUserInfoApi, loginApi, seeConnectionClose } from '@/api';
 import {
   ImpossibleReturn401Exception,
   UnauthorizedException,
 } from '@/api/helper';
+import { LOGIN_PATH } from '@/constants';
+import { preferences } from '@/core/preferences';
 import { $t } from '@/locales';
+import { resetAllStores, useAccessStore, useUserStore } from '@/stores';
+import { defineStore } from 'pinia';
 
 import { useDictStore } from './dict';
 import { useGlobalLoadingStore } from './loading';

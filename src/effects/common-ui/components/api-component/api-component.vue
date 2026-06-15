@@ -6,10 +6,8 @@ import type {
 
 import { computed, nextTick, ref, unref, useAttrs, watch } from 'vue';
 
-import { LoaderCircle } from '@/icons-app';
-
 import { cloneDeep, get, isEqual, isFunction } from '@/core/shared/utils';
-
+import { LoaderCircle } from '@/icons-app';
 import { objectOmit } from '@vueuse/core';
 
 defineOptions({ name: 'ApiComponent', inheritAttrs: false });

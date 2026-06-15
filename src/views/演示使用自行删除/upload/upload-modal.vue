@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { h } from 'vue';
 
-import { JsonPreview, useVbenModal } from '@/effects/common-ui';
-
-import { Space } from 'antdv-next';
-
 import { useVbenForm } from '@/adapter/form';
+import { JsonPreview, useVbenModal } from '@/effects/common-ui';
+import { Space } from 'antdv-next';
 
 const [BasicForm, formApi] = useVbenForm({
   layout: 'vertical',

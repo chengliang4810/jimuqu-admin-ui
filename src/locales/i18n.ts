@@ -1,4 +1,5 @@
 import type { Locale as AntdLocale } from 'antdv-next/dist/locale/index';
+
 import type { App } from 'vue';
 import type { Locale } from 'vue-i18n';
 
@@ -9,13 +10,14 @@ import type {
   SupportedLanguagesType,
 } from './typing';
 
+import { ref, unref } from 'vue';
+import { createI18n } from 'vue-i18n';
+
+import { useSimpleLocale } from '@/core/composables';
 import { preferences } from '@/core/preferences';
 import antdEnLocale from 'antdv-next/locale/en_US';
 import antdDefaultLocale from 'antdv-next/locale/zh_CN';
 import dayjs from 'dayjs';
-import { useSimpleLocale } from '@/core/composables';
-import { ref, unref } from 'vue';
-import { createI18n } from 'vue-i18n';
 
 const i18n = createI18n({
   globalInjection: true,

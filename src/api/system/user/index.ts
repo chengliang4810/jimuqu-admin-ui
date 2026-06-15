@@ -1,3 +1,5 @@
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
+
 import type {
   DeptTree,
   ResetPwdParam,
@@ -5,8 +7,6 @@ import type {
   UserImportParam,
   UserInfoResponse,
 } from './model';
-
-import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
 import { commonExport, ContentTypeEnum } from '@/api/helper';
 import { alovaInstance } from '@/utils/http';

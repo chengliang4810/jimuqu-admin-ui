@@ -3,10 +3,6 @@ import type { Dept } from '@/api/system/dept/model';
 
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@/effects/common-ui';
-import { $t } from '@/locales';
-import { addFullName, cloneDeep, listToTree } from '@/utils';
-
 import { useVbenForm } from '@/adapter/form';
 import {
   deptAdd,
@@ -16,6 +12,9 @@ import {
   deptUpdate,
 } from '@/api/system/dept';
 import { listUserByDeptId } from '@/api/system/user';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { addFullName, cloneDeep, listToTree } from '@/utils';
 import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';

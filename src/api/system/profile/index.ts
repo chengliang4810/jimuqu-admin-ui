@@ -1,7 +1,6 @@
 import type { FileCallBack, UpdatePasswordParam, UserProfile } from './model';
 
 import { buildUUID } from '@/utils';
-
 import { alovaInstance } from '@/utils/http';
 
 enum Api {

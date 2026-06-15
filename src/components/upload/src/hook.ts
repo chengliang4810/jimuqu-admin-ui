@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { UploadResult } from '@/api';
+import type { OssFile } from '@/api/system/oss/model';
 import type { UploadChangeParam, UploadFile, UploadProps } from 'antdv-next';
 
 import type { ModelRef } from 'vue';
@@ -10,17 +12,12 @@ import type {
   UploadType,
 } from './props';
 
-import type { UploadResult } from '@/api';
-import type { OssFile } from '@/api/system/oss/model';
-
 import { computed, onUnmounted, ref, watch } from 'vue';
 
+import { ossInfo } from '@/api/system/oss';
 import { $t } from '@/locales';
-
 import { Upload } from 'antdv-next';
 import { isFunction, isString } from 'lodash-es';
-
-import { ossInfo } from '@/api/system/oss';
 
 /**
  * 图片预览hook

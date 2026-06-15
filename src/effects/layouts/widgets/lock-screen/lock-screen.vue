@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 
+import { useScrollLock } from '@/core/composables';
+import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
+import { useVbenForm } from '@/core/ui/form';
 import { LockKeyhole } from '@/icons-app';
 import { $t, useI18n } from '@/locales';
 import { storeToRefs, useAccessStore } from '@/stores';
-
-import { useScrollLock } from '@/core/composables';
-import { useVbenForm } from '@/core/ui/form';
-import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
-
 import { useDateFormat, useNow } from '@vueuse/core';
 
 interface Props {

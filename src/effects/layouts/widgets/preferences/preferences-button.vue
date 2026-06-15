@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { Settings } from '@/icons-app';
-
 import { VbenIconButton } from '@/core/ui/adapter';
+import { Settings } from '@/icons-app';
 
 import Preferences from './preferences.vue';
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useVbenModal } from '@/effects/common-ui';
-
 import { useVbenForm } from '@/adapter/form';
+import { useVbenModal } from '@/effects/common-ui';
 
 const [Modal, modalApi] = useVbenModal({
   title: '测试上传',

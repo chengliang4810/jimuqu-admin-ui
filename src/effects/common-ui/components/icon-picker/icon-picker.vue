@@ -3,13 +3,11 @@ import type { IconPickerProps } from './types';
 
 import { computed, ref, useAttrs, watch, watchEffect } from 'vue';
 
+import { isFunction } from '@/core/shared/utils';
+import { VbenIcon, VbenIconButton, VbenPopover } from '@/core/ui/adapter';
 import { usePagination } from '@/effects/hooks';
 import { EmptyIcon, Grip, listIcons } from '@/icons-app';
 import { $t } from '@/locales';
-
-import { VbenIcon, VbenIconButton, VbenPopover } from '@/core/ui/adapter';
-import { isFunction } from '@/core/shared/utils';
-
 import { objectOmit, refDebounced, watchDebounced } from '@vueuse/core';
 import { Input, Pagination } from 'antdv-next';
 

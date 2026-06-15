@@ -1,6 +1,6 @@
-import type { ComputedRef } from 'vue';
-
 import type { MenuRecordRaw } from '@/types';
+
+import type { ComputedRef } from 'vue';
 
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';

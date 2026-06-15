@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { VbenFormProps } from '@/core/ui/form';
 import type {
   VxeGridDefines,
   VxeGridInstance,
@@ -9,8 +10,6 @@ import type {
 } from 'vxe-table';
 
 import type { SetupContext } from 'vue';
-
-import type { VbenFormProps } from '@/core/ui/form';
 
 import type { ExtendedVxeGridApi, VxeGridProps } from './types';
 
@@ -25,10 +24,11 @@ import {
   watch,
 } from 'vue';
 
+import { usePreferences } from '@/core/preferences';
+import { VbenHelpTooltip, VbenLoading } from '@/core/ui/adapter';
 import { usePriorityValues } from '@/effects/hooks';
 import { EmptyIcon } from '@/icons-app';
 import { $t } from '@/locales';
-import { usePreferences } from '@/core/preferences';
 import {
   cloneDeep,
   cn,
@@ -36,9 +36,6 @@ import {
   isEqual,
   mergeWithArrayOverride,
 } from '@/utils';
-
-import { VbenHelpTooltip, VbenLoading } from '@/core/ui/adapter';
-
 import { VxeButton } from 'vxe-pc-ui';
 import { VxeGrid, VxeUI } from 'vxe-table';
 

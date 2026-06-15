@@ -1,6 +1,6 @@
-import type { ComponentPublicInstance } from 'vue';
-
 import type { Recordable } from '@/core/typings';
+
+import type { ComponentPublicInstance } from 'vue';
 
 import type { FormActions, FormSchema, VbenFormProps } from './types';
 
@@ -627,6 +627,36 @@ export class FormApi {
     return values;
   };
 
+  private hasValueByFieldName(values: Record<string, any>, fieldName: string) {
+    const { pathSegments, rawKey } = resolveFieldNamePath(fieldName);
+    if (rawKey !== undefined) {
+      return hasOwnKey(values, rawKey);
+    }
+
+    if (hasOwnKey(values, fieldName)) {
+      return true;
+    }
+
+    if (pathSegments.length === 0) {
+      return hasOwnKey(values, fieldName);
+    }
+
+    let target: unknown = values;
+    for (const segment of pathSegments) {
+      if (!target || typeof target !== 'object') {
+        return false;
+      }
+
+      if (!hasOwnKey(target, segment)) {
+        return false;
+      }
+
+      target = (target as Record<string, any>)[segment];
+    }
+
+    return true;
+  }
+
   private processFields = (
     fields: string[],
     separator: string,
@@ -656,36 +686,6 @@ export class FormApi {
     }
 
     return get(values, fieldName);
-  }
-
-  private hasValueByFieldName(values: Record<string, any>, fieldName: string) {
-    const { pathSegments, rawKey } = resolveFieldNamePath(fieldName);
-    if (rawKey !== undefined) {
-      return hasOwnKey(values, rawKey);
-    }
-
-    if (hasOwnKey(values, fieldName)) {
-      return true;
-    }
-
-    if (pathSegments.length === 0) {
-      return hasOwnKey(values, fieldName);
-    }
-
-    let target: unknown = values;
-    for (const segment of pathSegments) {
-      if (!target || typeof target !== 'object') {
-        return false;
-      }
-
-      if (!hasOwnKey(target, segment)) {
-        return false;
-      }
-
-      target = (target as Record<string, any>)[segment];
-    }
-
-    return true;
   }
 
   private setValueByFieldName(

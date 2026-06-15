@@ -5,9 +5,16 @@ import type { DictType } from '@/api/system/dict/dict-type-model';
 
 import { h, ref, shallowRef, watch } from 'vue';
 
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import {
+  dictTypeExport,
+  dictTypeList,
+  dictTypeRemove,
+  refreshDictTypeCache,
+} from '@/api/system/dict/dict-type';
 import { useVbenModal } from '@/effects/common-ui';
 import { cn } from '@/utils';
-
+import { useBlobExport } from '@/utils/file/export';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -16,15 +23,6 @@ import {
   SyncOutlined,
 } from '@antdv-next/icons';
 import { Alert, Input, Popconfirm, Space, Tooltip } from 'antdv-next';
-
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
-import {
-  dictTypeExport,
-  dictTypeList,
-  dictTypeRemove,
-  refreshDictTypeCache,
-} from '@/api/system/dict/dict-type';
-import { useBlobExport } from '@/utils/file/export';
 
 import { emitter } from '../mitt';
 import dictTypeModal from './dict-type-modal.vue';

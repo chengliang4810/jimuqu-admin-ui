@@ -1,6 +1,6 @@
-import type { Dept } from './model';
-
 import type { ID } from '@/api/common';
+
+import type { Dept } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

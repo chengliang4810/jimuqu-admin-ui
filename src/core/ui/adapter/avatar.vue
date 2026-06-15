@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue';
-
 import type { ClassType } from '@/core/typings';
+
+import type { CSSProperties } from 'vue';
 
 import { computed } from 'vue';
 
 import { cn } from '@/core/shared/utils';
-
 import { Avatar } from 'antdv-next';
 
 interface Props {

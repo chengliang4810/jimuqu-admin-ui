@@ -1,5 +1,4 @@
 import type { Recordable } from '@/core/typings';
-
 import type { Arrayable } from '@vueuse/core';
 
 export interface FlattenedItem<T = Recordable<any>, P = number | string> {

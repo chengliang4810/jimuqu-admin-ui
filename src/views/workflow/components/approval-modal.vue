@@ -8,13 +8,11 @@ import type {
 
 import { ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
-import { cloneDeep } from '@/utils';
-
-import { omit } from 'lodash-es';
-
 import { useVbenForm } from '@/adapter/form';
 import { completeTask, getNextNodeList } from '@/api/workflow/task';
+import { useVbenModal } from '@/effects/common-ui';
+import { cloneDeep } from '@/utils';
+import { omit } from 'lodash-es';
 
 import { CopyComponent } from '.';
 

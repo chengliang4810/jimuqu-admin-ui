@@ -1,6 +1,6 @@
-import type { DemoForm, DemoQuery, DemoVO } from './model';
-
 import type { ID, IDS, PageResult } from '@/api/common';
+
+import type { DemoForm, DemoQuery, DemoVO } from './model';
 
 import { commonExport } from '@/api/helper';
 import { alovaInstance } from '@/utils/http';

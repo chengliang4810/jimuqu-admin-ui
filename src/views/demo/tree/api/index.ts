@@ -1,6 +1,6 @@
-import type { TreeForm, TreeQuery, TreeVO } from './model';
-
 import type { ID, IDS } from '@/api/common';
+
+import type { TreeForm, TreeQuery, TreeVO } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

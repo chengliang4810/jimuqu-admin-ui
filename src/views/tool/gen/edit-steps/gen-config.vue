@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Ref } from 'vue';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { GenInfo } from '@/api/tool/gen/model';
+
+import type { Ref } from 'vue';
 
 import { inject, onMounted, reactive } from 'vue';
 

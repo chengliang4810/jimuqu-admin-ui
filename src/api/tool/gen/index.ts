@@ -1,6 +1,6 @@
-import type { GenInfo } from './model';
-
 import type { ID, IDS, PageQuery } from '@/api/common';
+
+import type { GenInfo } from './model';
 
 import { ContentTypeEnum } from '@/api/helper';
 import { alovaInstance } from '@/utils/http';

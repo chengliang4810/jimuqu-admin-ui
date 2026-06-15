@@ -3,7 +3,6 @@ import type { TabsProps } from './types';
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { VbenScrollbar } from '@/core/ui/adapter';
-
 import { useDebounceFn } from '@vueuse/core';
 
 type DomElement = HTMLElement | null | undefined;

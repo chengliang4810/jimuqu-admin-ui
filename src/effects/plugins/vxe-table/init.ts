@@ -3,7 +3,6 @@ import type { SetupVxeTable } from './types';
 import { defineComponent, watch } from 'vue';
 
 import { usePreferences } from '@/core/preferences';
-
 /**
  * 该插件提供了在表格中渲染第三方组件，用于兼容 antdv-next 组件库
  *

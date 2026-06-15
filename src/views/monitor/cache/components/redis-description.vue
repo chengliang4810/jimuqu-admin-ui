@@ -1,7 +1,6 @@
 <script setup lang="tsx">
-import type { DescriptionsProps } from 'antdv-next';
-
 import type { RedisInfo } from '@/api/monitor/cache';
+import type { DescriptionsProps } from 'antdv-next';
 
 import { computed } from 'vue';
 

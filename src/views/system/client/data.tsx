@@ -3,11 +3,9 @@ import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
 import { getPopupContainer } from '@/utils';
-
-import { Tag, Tooltip } from 'antdv-next';
-
 import { getDictOptions } from '@/utils/dict';
 import { renderDict, renderDictTags } from '@/utils/render';
+import { Tag, Tooltip } from 'antdv-next';
 
 function renderList(list: string[], allText: string) {
   const accessPathList = (list as string[]) ?? [];

@@ -3,6 +3,7 @@ import type { MenuRecordRaw } from '@/types';
 
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
+import { useVbenModal } from '@/core/ui/popup';
 import {
   ArrowDown,
   ArrowUp,
@@ -12,9 +13,6 @@ import {
 } from '@/icons-app';
 import { $t } from '@/locales';
 import { isWindowsOs } from '@/utils';
-
-import { useVbenModal } from '@/core/ui/popup';
-
 import { useMagicKeys, whenever } from '@vueuse/core';
 
 import SearchPanel from './search-panel.vue';

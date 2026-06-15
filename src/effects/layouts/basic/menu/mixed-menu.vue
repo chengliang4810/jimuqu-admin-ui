@@ -1,14 +1,12 @@
 <script lang="ts" setup>
-import type { MenuRecordRaw } from '@/types';
-
 import type { NormalMenuProps } from '@/core/ui/menu';
+import type { MenuRecordRaw } from '@/types';
 
 import { onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { findMenuByPath } from '@/utils';
-
 import { NormalMenu } from '@/core/ui/menu';
+import { findMenuByPath } from '@/utils';
 
 interface Props extends NormalMenuProps {}
 

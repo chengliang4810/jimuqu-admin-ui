@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { FallbackProps } from './fallback';
 
-import { ArrowLeft, RotateCw } from '@/icons-app';
-import { $t } from '@/locales';
-import { VbenButton } from '@/core/ui/adapter';
 import { computed, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
+
+import { VbenButton } from '@/core/ui/adapter';
+import { ArrowLeft, RotateCw } from '@/icons-app';
+import { $t } from '@/locales';
 
 interface Props extends FallbackProps {}
 

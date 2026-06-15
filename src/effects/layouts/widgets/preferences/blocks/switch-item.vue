@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { useSlots } from 'vue';
 
-import { CircleHelp } from '@/icons-app';
-
 import { VbenTooltip } from '@/core/ui/adapter';
-
+import { CircleHelp } from '@/icons-app';
 import { Switch } from 'antdv-next';
 
 defineOptions({

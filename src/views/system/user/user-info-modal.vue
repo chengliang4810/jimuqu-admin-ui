@@ -1,21 +1,18 @@
 <script setup lang="tsx">
-import type { DescriptionsProps } from 'antdv-next';
-
 import type { User } from '@/api/system/user/model';
+import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, shallowRef } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
+import { findUserInfo } from '@/api/system/user';
+import { DictTag } from '@/components/dict';
 import { DictEnum } from '@/constants';
-
+import { useVbenModal } from '@/effects/common-ui';
+import { getDictOptions } from '@/utils/dict';
 import { Descriptions, Tag } from 'antdv-next';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
-
-import { findUserInfo } from '@/api/system/user';
-import { DictTag } from '@/components/dict';
-import { getDictOptions } from '@/utils/dict';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);

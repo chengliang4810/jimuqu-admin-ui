@@ -1,6 +1,6 @@
-import type { Component } from 'vue';
-
 import type { AnyPromiseFunction } from '@/types';
+
+import type { Component } from 'vue';
 
 export type ApiComponentOptionsItem = {
   [name: string]: any;

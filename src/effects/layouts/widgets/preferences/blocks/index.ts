@@ -12,5 +12,5 @@ export { default as Tabbar } from './layout/tabbar.vue';
 export { default as Widget } from './layout/widget.vue';
 export { default as SwitchItem } from './switch-item.vue';
 export { default as ColorMode } from './theme/color-mode.vue';
-export { default as Theme } from './theme/theme.vue';
 export { default as ThemeColor } from './theme/theme-color.vue';
+export { default as Theme } from './theme/theme.vue';

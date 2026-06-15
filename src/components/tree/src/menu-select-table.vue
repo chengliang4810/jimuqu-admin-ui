@@ -4,21 +4,18 @@
 比如: 按钮下放目录 按钮下放菜单 按钮下放按钮
 -->
 <script setup lang="tsx">
+import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { MenuOption } from '@/api/system/menu/model';
 import type { RadioChangeEvent } from 'antdv-next';
 
 import type { MenuPermissionOption } from './data';
 
-import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { MenuOption } from '@/api/system/menu/model';
-
 import { nextTick, onMounted, ref, shallowRef, watch } from 'vue';
 
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { cloneDeep, findGroupParentIds } from '@/utils';
-
 import { Alert, Checkbox, RadioGroup, Space } from 'antdv-next';
 import { uniq } from 'lodash-es';
-
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
 
 import { columns, nodeOptions } from './data';
 import {

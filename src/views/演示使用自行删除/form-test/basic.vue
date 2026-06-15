@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import { h, ref } from 'vue';
 
-import { Page } from '@/effects/common-ui';
-
-import { useDebounceFn } from '@vueuse/core';
-import { Button, Card } from 'antdv-next';
-
 import { useVbenForm } from '@/adapter/form';
 import { getAllMenusApi } from '@/api';
+import { Page } from '@/effects/common-ui';
+import { useDebounceFn } from '@vueuse/core';
+import { Button, Card } from 'antdv-next';
 
 /**
  * 该页面用于「校验边框样式」验证：

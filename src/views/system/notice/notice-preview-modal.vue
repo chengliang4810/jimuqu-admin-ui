@@ -3,10 +3,9 @@ import type { Notice } from '@/api/system/notice/model';
 
 import { shallowRef } from 'vue';
 
+import { contentWithOssIdTransform } from '@/components/tiptap';
 import { useAccess } from '@/effects/access';
 import { useVbenModal } from '@/effects/common-ui';
-
-import { contentWithOssIdTransform } from '@/components/tiptap';
 
 const currentNotice = shallowRef<Notice | null>(null);
 const { hasAccessByCodes } = useAccess();

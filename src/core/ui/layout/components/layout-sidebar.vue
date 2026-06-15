@@ -4,7 +4,6 @@ import type { CSSProperties } from 'vue';
 import { computed, useSlots, watchEffect } from 'vue';
 
 import { VbenScrollbar } from '@/core/ui/adapter';
-
 import { useScrollLock } from '@vueuse/core';
 
 import { SidebarCollapseButton, SidebarFixedButton } from './widgets';
@@ -335,7 +334,11 @@ function handleMouseleave() {
       >
         <slot name="extra-title"></slot>
       </div>
-      <VbenScrollbar :style="extraContentStyle" class="border-border py-2" overlay>
+      <VbenScrollbar
+        :style="extraContentStyle"
+        class="border-border py-2"
+        overlay
+      >
         <slot name="extra"></slot>
       </VbenScrollbar>
     </div>

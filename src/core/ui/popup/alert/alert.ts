@@ -1,6 +1,6 @@
-import type { Component, VNode, VNodeArrayChildren } from 'vue';
-
 import type { Recordable } from '@/core/typings';
+
+import type { Component, VNode, VNodeArrayChildren } from 'vue';
 
 import { createContext } from '../create-context';
 

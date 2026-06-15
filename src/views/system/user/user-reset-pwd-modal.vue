@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import type { DescriptionsProps } from 'antdv-next';
-
 import type { ResetPwdParam, User } from '@/api/system/user/model';
+import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
-
-import { Descriptions } from 'antdv-next';
-
 import { useVbenForm } from '@/adapter/form';
 import { userResetPassword } from '@/api/system/user';
+import { useVbenModal } from '@/effects/common-ui';
+import { Descriptions } from 'antdv-next';
 
 const emit = defineEmits<{ reload: [] }>();
 

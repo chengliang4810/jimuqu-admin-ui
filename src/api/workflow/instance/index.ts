@@ -1,7 +1,7 @@
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
+
 import type { TaskInfo } from '../task/model';
 import type { FlowInfoResponse, FlowInstanceVariableResp } from './model';
-
-import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
 import { alovaInstance } from '@/utils/http';
 

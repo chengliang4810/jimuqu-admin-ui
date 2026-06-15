@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+import { Tiptap } from '@/components/tiptap';
 import { Page } from '@/effects/common-ui';
 import { cn } from '@/utils';
-
 import { Button, RadioGroup, Switch } from 'antdv-next';
-
-import { Tiptap } from '@/components/tiptap';
 
 const disabled = ref(false);
 const showToolbar = ref(true);

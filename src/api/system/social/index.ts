@@ -1,6 +1,6 @@
-import type { SocialInfo } from './model';
-
 import type { ID } from '@/api/common';
+
+import type { SocialInfo } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

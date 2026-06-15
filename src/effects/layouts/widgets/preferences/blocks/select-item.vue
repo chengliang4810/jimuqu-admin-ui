@@ -3,10 +3,8 @@ import type { SelectOption } from '@/types';
 
 import { useSlots } from 'vue';
 
-import { CircleHelp } from '@/icons-app';
-
 import { VbenTooltip } from '@/core/ui/adapter';
-
+import { CircleHelp } from '@/icons-app';
 import { Select } from 'antdv-next';
 
 defineOptions({

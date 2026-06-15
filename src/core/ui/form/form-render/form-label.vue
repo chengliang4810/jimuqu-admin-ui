@@ -2,7 +2,6 @@
 import type { CustomRenderType } from '../types';
 
 import { cn } from '@/core/shared/utils';
-
 import { Tooltip } from 'antdv-next';
 
 import RenderContent from '../components/render-content';

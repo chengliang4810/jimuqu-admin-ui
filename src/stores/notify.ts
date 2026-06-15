@@ -1,19 +1,16 @@
-import type { NotificationItem } from '@/effects/layouts';
-
 import type { NoticeList, SystemList, WorkflowList } from '@/api';
 import type { SSEMessage } from '@/api/common';
+import type { NotificationItem } from '@/effects/layouts';
 
 import { computed, ref, watch } from 'vue';
 
+import { getNotificationList } from '@/api';
 import { SvgMessageUrl } from '@/icons-app';
 import { $t } from '@/locales';
-
+import { useSseMessage } from '@/utils/message';
 import dayjs from 'dayjs';
 import { flattenDeep } from 'lodash-es';
 import { defineStore } from 'pinia';
-
-import { getNotificationList } from '@/api';
-import { useSseMessage } from '@/utils/message';
 
 function backNotificationToVbenNotification(
   m: NoticeList | SystemList | WorkflowList,

@@ -1,16 +1,14 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { User } from '@/api';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { ref } from 'vue';
 
-import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
-
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { userList } from '@/api/system/user';
+import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
 import DeptTree from '@/views/system/user/dept-tree.vue';
 
 defineOptions({

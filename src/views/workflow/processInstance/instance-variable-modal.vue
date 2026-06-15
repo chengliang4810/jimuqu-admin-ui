@@ -1,13 +1,11 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 
-import { JsonPreview, useVbenModal } from '@/effects/common-ui';
-import { cn, getPopupContainer } from '@/utils';
-
-import { Tag } from 'antdv-next';
-
 import { useVbenForm } from '@/adapter/form';
 import { instanceVariable, updateFlowVariable } from '@/api/workflow/instance';
+import { JsonPreview, useVbenModal } from '@/effects/common-ui';
+import { cn, getPopupContainer } from '@/utils';
+import { Tag } from 'antdv-next';
 
 interface ModalData {
   /**

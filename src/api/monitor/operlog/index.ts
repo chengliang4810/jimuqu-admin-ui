@@ -1,6 +1,6 @@
-import type { OperationLog } from './model';
-
 import type { IDS, PageQuery, PageResult } from '@/api/common';
+
+import type { OperationLog } from './model';
 
 import { commonExport } from '@/api/helper';
 import { alovaInstance } from '@/utils/http';

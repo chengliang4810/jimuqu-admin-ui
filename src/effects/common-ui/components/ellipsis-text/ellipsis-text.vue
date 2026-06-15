@@ -11,7 +11,6 @@ import {
 } from 'vue';
 
 import { VbenTooltip } from '@/core/ui/adapter';
-
 import { useElementSize } from '@vueuse/core';
 
 interface Props {

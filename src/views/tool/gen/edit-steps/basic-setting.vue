@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import type { Ref } from 'vue';
-
 import type { Column, GenInfo } from '@/api/tool/gen/model';
+
+import type { Ref } from 'vue';
 
 import { inject, onMounted } from 'vue';
 
+import { menuList } from '@/api/system/menu';
 import { useVbenForm } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { addFullName, listToTree } from '@/utils';
-
 import { Col, Row } from 'antdv-next';
-
-import { menuList } from '@/api/system/menu';
 
 import { formSchema } from './basic';
 

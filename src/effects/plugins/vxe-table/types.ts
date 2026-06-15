@@ -1,3 +1,5 @@
+import type { BaseFormComponentType, VbenFormProps } from '@/core/ui/form';
+import type { ClassType } from '@/types';
 import type {
   VxeGridListeners,
   VxeGridPropTypes,
@@ -7,10 +9,6 @@ import type {
 } from 'vxe-table';
 
 import type { Ref } from 'vue';
-
-import type { ClassType } from '@/types';
-
-import type { BaseFormComponentType, VbenFormProps } from '@/core/ui/form';
 
 import type { VxeGridApi } from './api';
 

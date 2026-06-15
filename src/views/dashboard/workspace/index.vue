@@ -9,6 +9,7 @@ import type {
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { preferences } from '@/core/preferences';
 import {
   AnalysisChartCard,
   WorkbenchHeader,
@@ -17,7 +18,6 @@ import {
   WorkbenchTodo,
   WorkbenchTrends,
 } from '@/effects/common-ui';
-import { preferences } from '@/core/preferences';
 import { useUserStore } from '@/stores';
 import { openWindow } from '@/utils';
 

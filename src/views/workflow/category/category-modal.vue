@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
-import { $t } from '@/locales';
-import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
-
 import { useVbenForm } from '@/adapter/form';
 import {
   categoryAdd,
@@ -12,6 +8,9 @@ import {
   categoryList,
   categoryUpdate,
 } from '@/api/workflow/category';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { modalSchema } from './data';

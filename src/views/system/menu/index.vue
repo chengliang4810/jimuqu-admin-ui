@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Menu } from '@/api/system/menu/model';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { computed, ref } from 'vue';
 
+import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { menuCascadeRemove, menuList, menuRemove } from '@/api/system/menu';
 import { useAccess } from '@/effects/access';
 import { Fallback, Page, useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { eachTree, listToTree, treeToList } from '@/utils';
-
 import { Popconfirm, Space, Switch, Tooltip } from 'antdv-next';
-
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
-import { menuCascadeRemove, menuList, menuRemove } from '@/api/system/menu';
 
 import { columns, querySchema } from './data';
 import menuDrawer from './menu-drawer.vue';

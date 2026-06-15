@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Post } from '@/api/system/post/model';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { ref } from 'vue';
-
-import { Page, useVbenDrawer } from '@/effects/common-ui';
-
-import { Popconfirm, Space } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -17,8 +12,10 @@ import {
   postList,
   postRemove,
 } from '@/api/system/post';
+import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import DeptTree from '@/views/system/user/dept-tree.vue';
+import { Popconfirm, Space } from 'antdv-next';
 
 import { columns, querySchema } from './data';
 import postDrawer from './post-drawer.vue';

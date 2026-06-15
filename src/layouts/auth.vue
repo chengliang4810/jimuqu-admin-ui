@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { AuthPageLayout } from '@/effects/layouts';
 import { preferences } from '@/core/preferences';
-
+import { AuthPageLayout } from '@/effects/layouts';
 import { $t } from '@/locales';
 
 const appName = computed(() => preferences.app.name);

@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import type { AuthPageLayoutType } from '@/types';
-
 import type { VbenDropdownMenuItem } from '@/core/ui/adapter';
+import type { AuthPageLayoutType } from '@/types';
 
 import { computed } from 'vue';
 
-import { InspectionPanel, PanelLeft, PanelRight } from '@/icons-app';
-import { $t } from '@/locales';
 import {
   preferences,
   updatePreferences,
   usePreferences,
 } from '@/core/preferences';
-
 import { VbenDropdownRadioMenu, VbenIconButton } from '@/core/ui/adapter';
+import { InspectionPanel, PanelLeft, PanelRight } from '@/icons-app';
+import { $t } from '@/locales';
 
 defineOptions({
   name: 'AuthenticationLayoutToggle',

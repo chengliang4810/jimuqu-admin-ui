@@ -1,8 +1,7 @@
+import type { BaseFormComponentType } from '@/core/ui/form';
 import type { VxeGridSlots, VxeGridSlotTypes } from 'vxe-table';
 
 import type { SlotsType } from 'vue';
-
-import type { BaseFormComponentType } from '@/core/ui/form';
 
 import type { ExtendedVxeGridApi, VxeGridProps } from './types';
 

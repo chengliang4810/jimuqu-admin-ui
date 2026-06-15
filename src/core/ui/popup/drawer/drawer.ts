@@ -1,8 +1,7 @@
-import type { Component, Ref, StyleValue } from 'vue';
-
 import type { ClassType, MaybePromise } from '@/core/typings';
-
 import type { DrawerProps as AntdDrawerProps } from 'antdv-next';
+
+import type { Component, Ref, StyleValue } from 'vue';
 
 import type { DrawerApi } from './drawer-api';
 

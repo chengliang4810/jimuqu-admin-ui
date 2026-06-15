@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { DictType } from '@/api/system/dict/dict-type-model';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { ref } from 'vue';
-
-import { useVbenModal } from '@/effects/common-ui';
-
-import { Popconfirm, Space } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -17,7 +12,9 @@ import {
   dictTypeRemove,
   refreshDictTypeCache,
 } from '@/api/system/dict/dict-type';
+import { useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
+import { Popconfirm, Space } from 'antdv-next';
 
 import { emitter } from '../mitt';
 import { columns, querySchema } from './data';

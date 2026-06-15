@@ -1,6 +1,6 @@
-import type { Spel } from './model';
-
 import type { ID, PageQuery, PageResult } from '@/api/common';
+
+import type { Spel } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

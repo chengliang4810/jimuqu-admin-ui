@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@/effects/common-ui';
-import { $t } from '@/locales';
-import { cloneDeep } from '@/utils';
-
 import { useVbenForm } from '@/adapter/form';
 import {
   dictDataAdd,
@@ -12,6 +8,9 @@ import {
   dictDetailInfo,
 } from '@/api/system/dict/dict-data';
 import { tagTypes } from '@/components/dict';
+import { useVbenDrawer } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { drawerSchema } from './data';

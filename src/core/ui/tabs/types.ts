@@ -1,5 +1,5 @@
-import type { IContextMenuItem } from '@/core/ui/adapter';
 import type { TabDefinition, TabsStyleType } from '@/core/typings';
+import type { IContextMenuItem } from '@/core/ui/adapter';
 
 export type TabsEmits = {
   close: [string];

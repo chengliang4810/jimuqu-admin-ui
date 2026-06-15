@@ -1,16 +1,13 @@
 <script setup lang="tsx">
-import type { DescriptionsProps } from 'antdv-next';
-
 import type { LoginLog } from '@/api/monitor/logininfo/model';
+import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
 import { DictEnum } from '@/constants';
-
-import { Descriptions } from 'antdv-next';
-
+import { useVbenModal } from '@/effects/common-ui';
 import { renderBrowserIcon, renderDict, renderOsIcon } from '@/utils/render';
+import { Descriptions } from 'antdv-next';
 
 const loginInfo = ref<LoginLog>();
 const [BasicModal, modalApi] = useVbenModal({

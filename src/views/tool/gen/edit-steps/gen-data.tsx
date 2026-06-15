@@ -1,6 +1,5 @@
-import type { Recordable } from '@/types';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { Recordable } from '@/types';
 
 import { Checkbox, Input, Select } from 'antdv-next';
 

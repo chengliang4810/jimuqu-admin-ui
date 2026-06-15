@@ -4,7 +4,6 @@ import { onMounted, onUnmounted, ref } from 'vue';
 
 import { useVbenModal } from '@/effects/common-ui';
 import { mitt } from '@/utils';
-
 import noticePreviewModal from '@/views/system/notice/notice-preview-modal.vue';
 
 type NotificationEvent = {

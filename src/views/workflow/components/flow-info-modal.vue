@@ -4,11 +4,9 @@ import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
-
-import { Spin } from 'antdv-next';
-
 import { getTaskByBusinessId } from '@/api/workflow/instance';
+import { useVbenModal } from '@/effects/common-ui';
+import { Spin } from 'antdv-next';
 
 import { ApprovalPanel } from '.';
 

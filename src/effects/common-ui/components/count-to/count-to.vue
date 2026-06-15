@@ -4,7 +4,6 @@ import type { CountToProps } from './types';
 import { computed, onMounted, ref, watch } from 'vue';
 
 import { isString } from '@/core/shared/utils';
-
 import { TransitionPresets, useTransition } from '@vueuse/core';
 
 const props = withDefaults(defineProps<CountToProps>(), {

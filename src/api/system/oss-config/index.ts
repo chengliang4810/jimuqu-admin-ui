@@ -1,6 +1,6 @@
-import type { OssConfig } from './model';
-
 import type { ID, IDS, PageQuery } from '@/api/common';
+
+import type { OssConfig } from './model';
 
 import { alovaInstance } from '@/utils/http';
 

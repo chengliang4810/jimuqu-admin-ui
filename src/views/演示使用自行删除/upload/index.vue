@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import type { UploadFile } from 'antdv-next/es/upload/interface';
-
 import type { CustomGetter } from '@/components/upload/src/props';
+import type { UploadFile } from 'antdv-next/es/upload/interface';
 
 import { h, ref } from 'vue';
 
+import { FileUpload, ImageUpload } from '@/components/upload';
 import { CodeMirror, Page, useVbenModal } from '@/effects/common-ui';
-
 import { useClipboard } from '@vueuse/core';
 import { Alert, Card, RadioGroup, Switch } from 'antdv-next';
-
-import { FileUpload, ImageUpload } from '@/components/upload';
 
 import { useFileType, useImageType } from './hook';
 import sql from './insert.sql?raw';

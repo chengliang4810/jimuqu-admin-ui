@@ -1,8 +1,7 @@
+import type { Nullable } from '@/types';
 import type { EChartsOption } from 'echarts';
 
 import type { Ref } from 'vue';
-
-import type { Nullable } from '@/types';
 
 import type EchartsUI from './echarts-ui.vue';
 
@@ -19,7 +18,6 @@ import {
 } from 'vue';
 
 import { usePreferences } from '@/core/preferences';
-
 import {
   tryOnUnmounted,
   useDebounceFn,

@@ -3,11 +3,9 @@ import type { RedisInfo } from '@/api/monitor/cache';
 
 import { onMounted, reactive, ref } from 'vue';
 
-import { Page } from '@/effects/common-ui';
-
-import { Button, Card } from 'antdv-next';
-
 import { redisCacheInfo } from '@/api/monitor/cache';
+import { Page } from '@/effects/common-ui';
+import { Button, Card } from 'antdv-next';
 
 import { CommandChart, MemoryChart, RedisDescription } from './components';
 

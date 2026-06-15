@@ -3,15 +3,13 @@ import type { Flow } from '@/api/workflow/instance/model';
 
 import { computed, h, onMounted, ref } from 'vue';
 
-import { DictEnum } from '@/constants';
-import { cn } from '@/utils';
-
-import { MessageOutlined, UserOutlined } from '@antdv-next/icons';
-import { Avatar } from 'antdv-next';
-
 import { ossInfo } from '@/api/system/oss';
 import { DictTag } from '@/components/dict';
+import { DictEnum } from '@/constants';
+import { cn } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
+import { MessageOutlined, UserOutlined } from '@antdv-next/icons';
+import { Avatar } from 'antdv-next';
 
 defineOptions({
   name: 'ApprovalTimelineItem',

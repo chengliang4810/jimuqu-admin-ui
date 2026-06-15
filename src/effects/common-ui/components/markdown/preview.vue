@@ -8,7 +8,6 @@ import {
 } from 'vue';
 
 import { usePreferences } from '@/core/preferences';
-
 import Vditor from 'vditor';
 
 import 'vditor/dist/index.css';

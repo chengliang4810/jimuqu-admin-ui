@@ -3,8 +3,9 @@ import type { EmitType } from '@/core/typings';
 
 import type { TabsProps } from './types';
 
-import { useIsMobile, useSortable } from '@/core/composables';
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+
+import { useIsMobile, useSortable } from '@/core/composables';
 
 // 可能会找到拖拽的子元素，这里需要确保拖拽的dom时tab元素
 function findParentElement(element: HTMLElement) {

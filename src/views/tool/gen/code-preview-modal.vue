@@ -1,19 +1,16 @@
 <script setup lang="ts">
+import type { LanguageSupport } from '@/effects/common-ui';
+import type { Recordable } from '@/types';
 import type { Key } from 'antdv-next/dist/table/interface';
 
 import type { Component } from 'vue';
 
-import type { LanguageSupport } from '@/effects/common-ui';
-import type { Recordable } from '@/types';
-
 import { ref } from 'vue';
 
+import { previewCode } from '@/api/tool/gen';
 import { CodeMirror, useVbenModal } from '@/effects/common-ui';
-
 import { useClipboard } from '@vueuse/core';
 import { Alert, Skeleton, Tree } from 'antdv-next';
-
-import { previewCode } from '@/api/tool/gen';
 
 import { defaultFileIcon, defaultFolderIcon, iconMap } from './data';
 

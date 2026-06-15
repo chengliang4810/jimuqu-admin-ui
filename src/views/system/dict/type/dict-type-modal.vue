@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
-import { $t } from '@/locales';
-import { cloneDeep } from '@/utils';
-
 import { useVbenForm } from '@/adapter/form';
 import {
   dictTypeAdd,
   dictTypeInfo,
   dictTypeUpdate,
 } from '@/api/system/dict/dict-type';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep } from '@/utils';
 import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
 
 import { modalSchema } from './data';

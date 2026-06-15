@@ -5,9 +5,8 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { preferences } from '@/core/preferences';
-import { useTabbarStore } from '@/stores';
-
 import { VbenSpinner } from '@/core/ui/adapter';
+import { useTabbarStore } from '@/stores';
 
 defineOptions({ name: 'IFrameRouterView' });
 

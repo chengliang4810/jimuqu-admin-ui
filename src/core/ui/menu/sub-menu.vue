@@ -2,9 +2,9 @@
 import type { MenuRecordRaw } from '@/core/typings';
 
 import { computed, inject } from 'vue';
-import { MenuItem, SubMenu } from 'antdv-next';
 
 import { VbenIcon } from '@/core/ui/adapter';
+import { MenuItem, SubMenu } from 'antdv-next';
 
 import { MenuBadge } from './components';
 

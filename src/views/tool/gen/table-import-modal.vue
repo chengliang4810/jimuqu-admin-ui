@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
-
-import { useVbenModal } from '@/effects/common-ui';
+import type { VbenFormProps } from '@/effects/common-ui';
 
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import {
@@ -11,6 +8,7 @@ import {
   importTable,
   readyToGenList,
 } from '@/api/tool/gen';
+import { useVbenModal } from '@/effects/common-ui';
 
 const emit = defineEmits<{ reload: [] }>();
 

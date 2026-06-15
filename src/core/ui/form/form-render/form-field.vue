@@ -19,7 +19,6 @@ import {
   isString,
   set,
 } from '@/core/shared/utils';
-
 import { Button, FormItem, Tooltip } from 'antdv-next';
 
 import RenderContent from '../components/render-content';

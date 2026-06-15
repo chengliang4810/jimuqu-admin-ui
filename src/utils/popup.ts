@@ -4,7 +4,6 @@ import type { MaybePromise } from '@/types';
 import { ref } from 'vue';
 
 import { $t } from '@/locales';
-
 import { isFunction } from 'lodash-es';
 
 interface BeforeCloseDiffProps {

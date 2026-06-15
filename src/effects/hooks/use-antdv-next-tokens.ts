@@ -14,8 +14,13 @@ import { preferences } from '@/core/preferences';
  */
 export function useAntdvNextTokens() {
   const tokens = computed(() => {
-    const { borderRadius, colorError, colorPrimary, colorSuccess, colorWarning } =
-      preferences.theme;
+    const {
+      borderRadius,
+      colorError,
+      colorPrimary,
+      colorSuccess,
+      colorWarning,
+    } = preferences.theme;
 
     return {
       borderRadius, // px，与 antd borderRadius 一致

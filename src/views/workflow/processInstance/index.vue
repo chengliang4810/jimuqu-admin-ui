@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import type { RadioChangeEvent } from 'antdv-next';
-
+import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { VbenFormProps } from '@/effects/common-ui';
 import type { Recordable } from '@/types';
-
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { RadioChangeEvent } from 'antdv-next';
 
 import { ref } from 'vue';
-
-import { Page, useVbenModal } from '@/effects/common-ui';
-import { $t } from '@/locales';
-
-import { Popconfirm, RadioGroup, Space } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -19,7 +12,10 @@ import {
   pageByFinish,
   pageByRunning,
 } from '@/api/workflow/instance';
+import { Page, useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
 import CategoryTree from '@/views/workflow/processDefinition/category-tree.vue';
+import { Popconfirm, RadioGroup, Space } from 'antdv-next';
 
 import { flowInfoModal } from '../components';
 import { columns, querySchema } from './data';

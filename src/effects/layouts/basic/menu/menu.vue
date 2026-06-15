@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import type { MenuRecordRaw } from '@/types';
-
 import type { MenuProps } from '@/core/ui/menu';
+import type { MenuRecordRaw } from '@/types';
 
 import { Menu } from '@/core/ui/menu';
 

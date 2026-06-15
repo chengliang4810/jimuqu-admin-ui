@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import type {LanguageSupport} from './data';
+
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import CodeMirror from 'vue-codemirror6';
 
 import { usePreferences } from '@/core/preferences';
-
 import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
 
-import { type LanguageSupport, languageSupportMap } from './data';
+import {  languageSupportMap } from './data';
 
 const props = withDefaults(
   defineProps<{

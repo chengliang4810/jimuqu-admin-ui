@@ -5,7 +5,6 @@ import { DictEnum } from '@/constants';
 import { VbenIcon } from '@/icons-app';
 import { $t } from '@/locales';
 import { getPopupContainer } from '@/utils';
-
 import { getDictOptions } from '@/utils/dict';
 import { renderDict } from '@/utils/render';
 

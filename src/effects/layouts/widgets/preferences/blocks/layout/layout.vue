@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import type { Component } from 'vue';
-
 import type { LayoutType } from '@/types';
+
+import type { Component } from 'vue';
 
 import { computed } from 'vue';
 
+import { VbenTooltip } from '@/core/ui/adapter';
 import { CircleHelp } from '@/icons-app';
 import { $t } from '@/locales';
-
-import { VbenTooltip } from '@/core/ui/adapter';
 
 import {
   FullContent,

@@ -4,10 +4,10 @@ import type { TaskInfo } from '@/api/workflow/task/model';
 
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
+import { pageByCurrent } from '@/api/workflow/instance';
 import { Page } from '@/effects/common-ui';
 import { useTabs } from '@/effects/hooks';
 import { getPopupContainer } from '@/utils';
-
 import { FilterOutlined, RedoOutlined } from '@antdv-next/icons';
 import {
   Empty,
@@ -20,8 +20,6 @@ import {
   Tooltip,
 } from 'antdv-next';
 import { cloneDeep, debounce } from 'lodash-es';
-
-import { pageByCurrent } from '@/api/workflow/instance';
 
 import { ApprovalCard, ApprovalPanel } from '../components';
 import { bottomOffset } from './constant';

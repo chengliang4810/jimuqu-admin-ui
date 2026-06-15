@@ -1,16 +1,14 @@
 <script setup lang="ts">
+import type { CategoryTree } from '@/api/workflow/category/model';
 import type { Key } from 'antdv-next/dist/table/interface';
 
 import type { PropType } from 'vue';
 
-import type { CategoryTree } from '@/api/workflow/category/model';
-
 import { onMounted, ref } from 'vue';
 
+import { categoryTree } from '@/api/workflow/category';
 import { SyncOutlined } from '@antdv-next/icons';
 import { InputSearch, Skeleton, Tree } from 'antdv-next';
-
-import { categoryTree } from '@/api/workflow/category';
 
 defineOptions({ inheritAttrs: false });
 

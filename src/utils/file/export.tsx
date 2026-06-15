@@ -2,11 +2,10 @@ import type { loginInfoExport } from '@/api/monitor/logininfo';
 
 import { ref } from 'vue';
 
+import { $t } from '@/locales';
 import { useRequest } from 'alova/client';
 import { Button } from 'antdv-next';
 import dayjs from 'dayjs';
-
-import { $t } from '@/locales';
 
 import { downloadByData } from './download';
 

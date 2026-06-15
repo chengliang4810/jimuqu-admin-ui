@@ -1,14 +1,13 @@
 <script setup lang="tsx">
-import type { BindItem } from '../../oauth-common';
-
 import type { SocialInfo } from '@/api/system/social/model';
+
+import type { BindItem } from '../../oauth-common';
 
 import { onMounted, ref } from 'vue';
 
-import { Alert, Avatar, Card, Empty, Tooltip } from 'antdv-next';
-
 import { authUnbinding } from '@/api';
 import { socialList } from '@/api/system/social';
+import { Alert, Avatar, Card, Empty, Tooltip } from 'antdv-next';
 
 import { accountBindList, handleAuthBinding } from '../../oauth-common';
 

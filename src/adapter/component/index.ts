@@ -3,6 +3,14 @@
  * 可用于 vben-form、vben-modal、vben-drawer 等组件使用,
  */
 
+import type { TiptapProps } from '@/components/tiptap/index';
+import type { BaseUploadProps } from '@/components/upload/src/props';
+import type {
+  ApiComponentSharedProps,
+  BaseFormComponentType,
+  IconPickerProps,
+} from '@/effects/common-ui';
+import type { Recordable } from '@/types';
 import type {
   AutoCompleteProps,
   ButtonProps,
@@ -29,16 +37,6 @@ import type {
 } from 'antdv-next';
 
 import type { Component } from 'vue';
-
-import type {
-  ApiComponentSharedProps,
-  BaseFormComponentType,
-  IconPickerProps,
-} from '@/effects/common-ui';
-import type { Recordable } from '@/types';
-
-import type { TiptapProps } from '@/components/tiptap/index';
-import type { BaseUploadProps } from '@/components/upload/src/props';
 
 import { computed, defineAsyncComponent, defineComponent, h, ref } from 'vue';
 

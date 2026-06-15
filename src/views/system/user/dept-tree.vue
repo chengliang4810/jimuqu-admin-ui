@@ -1,18 +1,15 @@
 <script setup lang="ts">
+import type { DeptTree } from '@/api/system/user/model';
 import type { Key } from 'antdv-next/dist/table/interface';
 
 import type { PropType } from 'vue';
 
-import type { DeptTree } from '@/api/system/user/model';
-
 import { computed, onMounted, ref } from 'vue';
 
+import { getDeptTree } from '@/api/system/user';
 import { cloneDeep, listToTree, treeToList } from '@/utils';
-
 import { SyncOutlined } from '@antdv-next/icons';
 import { Empty, Input, Skeleton, SpaceCompact, Tree } from 'antdv-next';
-
-import { getDeptTree } from '@/api/system/user';
 
 defineOptions({ inheritAttrs: false });
 

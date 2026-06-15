@@ -2,7 +2,6 @@
 import type { BreadcrumbProps } from './types';
 
 import { ChevronDown } from '@/core/icons';
-
 import {
   Breadcrumb,
   BreadcrumbItem,

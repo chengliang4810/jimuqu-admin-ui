@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { $t } from '@/locales';
-
 import { Col, Row, Tooltip } from 'antdv-next';
 
 import { accountBindList, handleAuthBinding } from '../oauth-common';

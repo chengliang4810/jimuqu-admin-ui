@@ -4,16 +4,14 @@ import type { DeptOption } from '@/api/system/role/model';
 
 import { nextTick, ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
-import { $t } from '@/locales';
-import { cloneDeep, eachTree, findGroupParentIds } from '@/utils';
-
-import { Descriptions, DescriptionsItem, Segmented, Select } from 'antdv-next';
-import { uniq } from 'lodash-es';
-
 import { roleMenuTreeSelect } from '@/api/system/menu';
 import { roleDeptTree, roleInfo, roleSetPermissions } from '@/api/system/role';
 import { MenuSelectTable, TreeSelectPanel } from '@/components/tree';
+import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { cloneDeep, eachTree, findGroupParentIds } from '@/utils';
+import { Descriptions, DescriptionsItem, Segmented, Select } from 'antdv-next';
+import { uniq } from 'lodash-es';
 
 import { authScopeOptions } from './data';
 

@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type { Recordable } from '@/types';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
-
-import { Popconfirm } from 'antdv-next';
+import type { Recordable } from '@/types';
 
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { forceLogout2, onlineDeviceList } from '@/api/monitor/online';
 import { columns } from '@/views/monitor/online/data';
+import { Popconfirm } from 'antdv-next';
 
 const onlineDeviceColumns: VxeGridProps['columns'] = [
   {

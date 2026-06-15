@@ -2,11 +2,10 @@
 import type { SupportedLanguagesType } from '@/locales';
 
 import { SUPPORT_LANGUAGES } from '@/constants';
+import { preferences, updatePreferences } from '@/core/preferences';
+import { VbenDropdownRadioMenu, VbenIconButton } from '@/core/ui/adapter';
 import { Languages } from '@/icons-app';
 import { loadLocaleMessages } from '@/locales';
-import { preferences, updatePreferences } from '@/core/preferences';
-
-import { VbenDropdownRadioMenu, VbenIconButton } from '@/core/ui/adapter';
 
 defineOptions({
   name: 'LanguageToggle',

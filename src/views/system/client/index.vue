@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import type { SwitchProps } from 'antdv-next';
-
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Client } from '@/api/system/client/model';
-
-import { useAccess } from '@/effects/access';
-import { Page, useVbenDrawer } from '@/effects/common-ui';
-import { DEFAULT_CLIENT_ID, EnableStatus } from '@/constants';
-
-import { Popconfirm, Space } from 'antdv-next';
+import type { VbenFormProps } from '@/effects/common-ui';
+import type { SwitchProps } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -20,7 +12,11 @@ import {
   clientRemove,
 } from '@/api/system/client';
 import { ApiSwitch } from '@/components/global';
+import { DEFAULT_CLIENT_ID, EnableStatus } from '@/constants';
+import { useAccess } from '@/effects/access';
+import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
+import { Popconfirm, Space } from 'antdv-next';
 
 import clientDrawer from './client-drawer.vue';
 import { columns, querySchema } from './data';

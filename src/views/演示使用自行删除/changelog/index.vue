@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { MarkdownPreviewer, Page } from '@/effects/common-ui';
-
-import { Spin } from 'antdv-next';
-
 import changelog from '@/../CHANGELOG.md?raw';
+import { MarkdownPreviewer, Page } from '@/effects/common-ui';
+import { Spin } from 'antdv-next';
 
 const content = ref(changelog);
 

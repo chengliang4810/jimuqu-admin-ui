@@ -3,12 +3,10 @@
 <script setup lang="ts">
 import type { CompleteTaskReqData } from '@/api/workflow/task/model';
 
-import { useVbenModal } from '@/effects/common-ui';
-
-import { cloneDeep } from 'lodash-es';
-
 import { useVbenForm } from '@/adapter/form';
 import { completeTask, getTaskByTaskId } from '@/api/workflow/task';
+import { useVbenModal } from '@/effects/common-ui';
+import { cloneDeep } from 'lodash-es';
 
 import { CopyComponent } from '.';
 

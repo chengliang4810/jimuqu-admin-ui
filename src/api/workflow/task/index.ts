@@ -1,3 +1,5 @@
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
+
 import type {
   CompleteTaskReqData,
   NextNodeInfo,
@@ -6,8 +8,6 @@ import type {
   TaskOperationData,
   TaskOperationType,
 } from './model';
-
-import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
 import { alovaInstance } from '@/utils/http';
 

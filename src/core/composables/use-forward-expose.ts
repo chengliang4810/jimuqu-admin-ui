@@ -1,8 +1,10 @@
 import type { MaybeElement } from '@vueuse/core';
+
 import type { ComponentPublicInstance } from 'vue';
 
-import { unrefElement } from '@vueuse/core';
 import { computed, getCurrentInstance, onUpdated, ref, triggerRef } from 'vue';
+
+import { unrefElement } from '@vueuse/core';
 
 /**
  * 转发组件 ref 和 expose
@@ -11,7 +13,7 @@ import { computed, getCurrentInstance, onUpdated, ref, triggerRef } from 'vue';
 export function useForwardExpose<T extends ComponentPublicInstance>() {
   const instance = getCurrentInstance()!;
 
-  const currentRef = ref<Element | T | null>();
+  const currentRef = ref<Element | null | T>();
   const currentElement = computed(() => resolveCurrentElement());
 
   onUpdated(() => {
@@ -23,12 +25,12 @@ export function useForwardExpose<T extends ComponentPublicInstance>() {
   function resolveCurrentElement() {
     return currentRef.value &&
       '$el' in currentRef.value &&
-      ['#text', '#comment'].includes(currentRef.value.$el.nodeName)
+      ['#comment', '#text'].includes(currentRef.value.$el.nodeName)
       ? (currentRef.value.$el.nextElementSibling as HTMLElement)
       : (unrefElement(currentRef as unknown as MaybeElement) as HTMLElement);
   }
 
-  const localExpose: Record<string, any> | null = Object.assign(
+  const localExpose: null | Record<string, any> = Object.assign(
     {},
     instance.exposed,
   );
@@ -59,7 +61,7 @@ export function useForwardExpose<T extends ComponentPublicInstance>() {
   });
   instance.exposed = ret;
 
-  function forwardRef(ref: Element | T | null) {
+  function forwardRef(ref: Element | null | T) {
     currentRef.value = ref;
     if (!ref) return;
 

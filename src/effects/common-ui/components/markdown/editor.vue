@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import type {PropType} from 'vue';
+
 import {
   onBeforeUnmount,
   onMounted,
-  type PropType,
+  
   shallowRef,
   useTemplateRef,
-  watch,
+  watch
 } from 'vue';
 
 import { usePreferences } from '@/core/preferences';
-
 import Vditor from 'vditor';
 
 import 'vditor/dist/index.css';

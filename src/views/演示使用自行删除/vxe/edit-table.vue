@@ -3,11 +3,9 @@ import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { nextTick, onMounted } from 'vue';
 
-import { JsonPreview } from '@/effects/common-ui';
-
-import { Button, Input, InputNumber, Select, Space } from 'antdv-next';
-
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { JsonPreview } from '@/effects/common-ui';
+import { Button, Input, InputNumber, Select, Space } from 'antdv-next';
 
 /**
  * 与antdv集成 可以参考这里使用自定义插槽

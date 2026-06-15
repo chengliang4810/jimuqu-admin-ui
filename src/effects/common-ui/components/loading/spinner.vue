@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { VbenSpinner } from '@/core/ui/adapter';
 import { cn } from '@/core/shared/utils';
+import { VbenSpinner } from '@/core/ui/adapter';
 
 interface SpinnerProps {
   class?: string;

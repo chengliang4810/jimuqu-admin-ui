@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { VbenIconButton } from '@/core/ui/adapter';
 import { GiteeIcon, MdiGithub, MdiQqchat, MdiWechat } from '@/icons-app';
 import { $t } from '@/locales';
-
-import { VbenIconButton } from '@/core/ui/adapter';
 
 defineOptions({
   name: 'ThirdPartyLogin',

@@ -17,7 +17,6 @@ import {
 import { usePreferences } from '@/core/preferences';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/core/shared/utils';
-
 import { Button, Modal, Spin } from 'antdv-next';
 
 import RenderContent from '../render-content';
