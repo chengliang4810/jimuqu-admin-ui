@@ -5,7 +5,7 @@ import { computed, h, ref } from 'vue';
 
 import { DictTag } from '@/components/dict';
 import { DictEnum } from '@/constants';
-import { CodeMirror, Page } from '@/effects/common-ui';
+import { Page } from '@/effects/common-ui';
 import { getDictOptions } from '@/utils/dict';
 import {
   Alert,
@@ -108,8 +108,12 @@ const items: DescriptionsProps['items'] = [
         你可以简单理解为getDictOptions是以下代码的快捷方式(还包括对并发和缓存的处理)
       </p>
       <div class="grid grid-cols-2 gap-4">
-        <CodeMirror readonly :model-value="getOptionsCode" language="js" />
-        <CodeMirror readonly :model-value="mountCode" language="js" />
+        <code>
+          {{ getOptionsCode }}
+        </code>
+        <code>
+          {{ mountCode }}
+        </code>
       </div>
     </Card>
 

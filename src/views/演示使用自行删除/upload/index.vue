@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { CustomGetter } from '@/components/upload/src/props';
-import type { UploadFile } from 'antdv-next/es/upload/interface';
+import type { UploadFile } from 'antdv-next';
 
 import { h, ref } from 'vue';
 
 import { FileUpload, ImageUpload } from '@/components/upload';
-import { CodeMirror, Page, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenModal } from '@/effects/common-ui';
 import { useClipboard } from '@vueuse/core';
 import { Alert, Card, RadioGroup, Switch } from 'antdv-next';
 
@@ -15,8 +15,8 @@ import uploadModal from './upload-modal.vue';
 
 const singleImageId = ref('1905537674682916865');
 const singleFileId = ref('1905191167882518529');
-const multipleImageId = ref<string[]>(['1905537674682916865']);
-const multipleFileId = ref<string[]>(['1905191167882518529']);
+const multipleImageId = ref<string>('1905537674682916865');
+const multipleFileId = ref<string>('1905191167882518529');
 
 function handlePreview(file: UploadFile) {
   window.modal.info({
@@ -62,7 +62,9 @@ const [UploadModal, uploadModalApi] = useVbenModal({
     <Card class="mb-2" title="提示" size="small">
       本地想体验可以导入这个sql(mysql的 其他的自行处理或者手动从菜单添加)
       <a-button size="small" @click="copy(sql)">复制</a-button>
-      <CodeMirror class="mt-2" v-model="sql" language="sql" readonly />
+      <code>
+        {{ sql }}
+      </code>
     </Card>
     <div class="grid grid-cols-2 gap-4">
       <Card title="表单上传">

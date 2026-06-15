@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { LanguageSupport } from '@/effects/common-ui';
 import type { Recordable } from '@/types';
 import type { Key } from 'antdv-next/dist/table/interface';
 
@@ -8,7 +7,7 @@ import type { Component } from 'vue';
 import { ref } from 'vue';
 
 import { previewCode } from '@/api/tool/gen';
-import { CodeMirror, useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/effects/common-ui';
 import { useClipboard } from '@vueuse/core';
 import { Alert, Skeleton, Tree } from 'antdv-next';
 
@@ -101,19 +100,6 @@ function findIcon(path: string) {
   return defaultFolderIcon;
 }
 
-const language = ref<LanguageSupport>('html');
-function changeLanguageType(filename: string) {
-  const typeList: { language: LanguageSupport; type: string }[] = [
-    { language: 'ts', type: '.ts' },
-    { language: 'java', type: '.java' },
-    { language: 'xml', type: '.xml' },
-    { language: 'sql', type: 'sql' },
-    { language: 'vue', type: '.vue' },
-  ];
-  const type = typeList.find((item) => filename.includes(item.type));
-  language.value = type ? type.language : 'html';
-}
-
 function handleSelect(selectedKeys: Key[]) {
   const [currentFile = ''] = selectedKeys as string[];
   if (!currentCodeData.value) {
@@ -122,8 +108,6 @@ function handleSelect(selectedKeys: Key[]) {
   const currentCode =
     currentCodeData.value[currentFile as keyof typeof currentCodeData.value];
   if (currentCode) {
-    // 设置代码type
-    changeLanguageType(currentFile);
     // 内容
     codeContent.value = currentCode;
     // 修改标题
@@ -135,7 +119,6 @@ function handleClose() {
   currentCodeData.value = null;
   codeContent.value = '点击左侧树节点查看代码';
   modalTitle.value = '代码预览';
-  language.value = 'html';
 }
 
 const { copy } = useClipboard({ legacy: true });
@@ -171,12 +154,9 @@ const { copy } = useClipboard({ legacy: true });
           message="👆显示的名称为模板的文件名，非最终下载文件名..."
         />
       </div>
-      <CodeMirror
-        v-model="codeContent"
-        :language="language"
-        class="h-[calc(100vh-80px)] w-full overflow-y-scroll text-[16px]"
-        readonly
-      />
+      <code class="h-[calc(100vh-80px)] w-full overflow-y-scroll text-[16px]">
+        {{ codeContent }}
+      </code>
       <div class="fixed top-20 right-20">
         <a-button @click="copy(codeContent)">复制</a-button>
       </div>
