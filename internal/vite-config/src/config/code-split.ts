@@ -127,6 +127,30 @@ const matchAntdvNextChunk = createChunkMatcher(['antdv-next']);
 const matchFrameworkChunk = createChunkMatcher(
   fromPnpm('@vue', '@vueuse', 'pinia', 'vue-router', 'vue'),
 );
+// 重型第三方库 vendor 分组。注意优先级分两档(见下方 groups):
+// - crypto/utils 等首屏依赖 → 高优先级,先 claim 独占 chunk;
+// - editor/chart/vxe/codemirror/jsoneditor/motion 仅懒加载路由用 → 低优先级,
+//   让首屏共享依赖先被高优先级组占走,避免其借递归把首屏依赖顺进重型 chunk。
+const matchVxeVendorChunk = createChunkMatcher(
+  fromPnpm('vxe-table', 'vxe-pc-ui', '@vxe-ui', 'xe-utils', 'dom-zindex'),
+);
+const matchChartVendorChunk = createChunkMatcher(fromPnpm('echarts', 'zrender'));
+const matchEditorVendorChunk = createChunkMatcher([
+  'prosemirror-',
+  '@tiptap/',
+  'linkifyjs',
+  '/src/components/tiptap/',
+]);
+const matchCodemirrorVendorChunk = createChunkMatcher(
+  fromPnpm('@codemirror', '@lezer'),
+);
+const matchJsoneditorVendorChunk = createChunkMatcher(
+  fromPnpm('vanilla-jsoneditor', 'json-editor-vue', 'jsonpath-plus', 'jmespath'),
+);
+const matchCryptoVendorChunk = createChunkMatcher(
+  fromPnpm('crypto-js', 'jsencrypt', 'sm-crypto'),
+);
+const matchMotionVendorChunk = createChunkMatcher(fromPnpm('motion-v'));
 const matchVbenCoreChunk = createChunkMatcher([
   '/src/core/shared/',
   '/src/core/typings/',
@@ -177,15 +201,23 @@ const matchVbenStateChunk = createChunkMatcher([
 const matchVbenRequestChunk = createChunkMatcher(['/src/effects/request/']);
 const matchUtilsVendorChunk = createChunkMatcher(
   fromPnpm(
+    '@alova/adapter-axios',
+    '@ctrl/tinycolor',
+    '@iconify/vue',
     '@intlify',
+    'alova',
     'async-validator',
     'axios',
+    'cropperjs',
     'dayjs',
     'lodash-es',
+    'lz-string',
     'mitt',
     'nprogress',
     'qs',
+    'secure-ls',
     'uuid',
+    'vue-json-pretty',
     'zod',
   ),
 );
@@ -258,6 +290,13 @@ function createApplicationCodeSplitting() {
         test: matchFrameworkChunk,
       },
       {
+        // crypto 登录即用,属首屏;高优先级确保其独占 chunk,
+        // 不被下方懒加载 vendor 组(递归)顺走或污染
+        name: 'crypto-vendor',
+        priority: 34,
+        test: matchCryptoVendorChunk,
+      },
+      {
         name: 'vben-core',
         priority: 24,
         test: matchVbenCoreChunk,
@@ -319,8 +358,43 @@ function createApplicationCodeSplitting() {
       },
       {
         name: 'utils-vendor',
-        priority: 5,
+        priority: 31,
         test: matchUtilsVendorChunk,
+      },
+      // 以下为"仅懒加载路由使用"的重型 vendor: 优先级必须低于上方所有
+      // 首屏组(framework/utils-vendor/crypto-vendor/vben-*),这样首屏共享依赖
+      // (core/ui、icons、crypto、axios、lodash、vue-router 等)先被各自高优先级组 claim,
+      // 这些组就无法借递归顺走首屏依赖 → 整个重型 chunk 保持懒加载、不进首屏。
+      // 同时高于 app-*(2/1),避免被按路由拆分的 app-views/app-core 吸收。
+      {
+        name: 'editor-vendor',
+        priority: 12,
+        test: matchEditorVendorChunk,
+      },
+      {
+        name: 'jsoneditor-vendor',
+        priority: 11,
+        test: matchJsoneditorVendorChunk,
+      },
+      {
+        name: 'codemirror-vendor',
+        priority: 10,
+        test: matchCodemirrorVendorChunk,
+      },
+      {
+        name: 'chart-vendor',
+        priority: 9,
+        test: matchChartVendorChunk,
+      },
+      {
+        name: 'vxe-vendor',
+        priority: 8,
+        test: matchVxeVendorChunk,
+      },
+      {
+        name: 'motion-vendor',
+        priority: 7,
+        test: matchMotionVendorChunk,
       },
       {
         name: 'app-auth',
@@ -333,11 +407,15 @@ function createApplicationCodeSplitting() {
         test: matchAppLocaleChunk,
       },
       {
+        // entriesAware: 按"被哪些路由 entry 使用"拆分共享代码,
+        // 避免所有页面合并成单个巨型 chunk
+        entriesAware: true,
         name: 'app-core',
         priority: 2,
         test: matchAppCoreChunk,
       },
       {
+        entriesAware: true,
         name: 'app-views',
         priority: 1,
         test: matchAppViewsChunk,
