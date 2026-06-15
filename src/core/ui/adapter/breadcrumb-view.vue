@@ -30,7 +30,7 @@ function handleClick(path?: string) {
 </script>
 
 <template>
-  <Breadcrumb class="vben-breadcrumb">
+  <Breadcrumb class="vben-breadcrumb [&_ol]:items-center">
     <BreadcrumbItem
       v-for="(item, index) in breadcrumbs"
       :key="`${item.path}-${item.title}-${index}`"
@@ -74,7 +74,7 @@ function handleClick(path?: string) {
           :icon="item.icon"
           class="size-4"
         />
-        {{ item.title }}
+        <span>{{ item.title }}</span>
       </span>
     </BreadcrumbItem>
   </Breadcrumb>

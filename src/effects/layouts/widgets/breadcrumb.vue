@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import type { IBreadcrumb } from '@/core/ui/adapter';
 
-import { computed, h } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { VbenBreadcrumbView } from '@/core/ui/adapter';
+import { VbenBreadcrumbView, VbenIconButton } from '@/core/ui/adapter';
 import { $t } from '@/locales';
 import { HomeOutlined } from '@antdv-next/icons';
 
@@ -41,13 +41,6 @@ const breadcrumbs = computed((): IBreadcrumb[] => {
       title: title ? $t((title || name) as string) : '',
     });
   }
-  if (props.showHome) {
-    resultBreadcrumb.unshift({
-      icon: h(HomeOutlined),
-      isHome: true,
-      path: '/',
-    });
-  }
   if (props.hideWhenOnlyOne && resultBreadcrumb.length === 1) {
     return [];
   }
@@ -60,10 +53,20 @@ function handleSelect(path: string) {
 }
 </script>
 <template>
-  <VbenBreadcrumbView
-    :breadcrumbs="breadcrumbs"
-    :show-icon="showIcon"
-    class="ml-2"
-    @select="handleSelect"
-  />
+  <div class="flex items-center gap-2">
+    <VbenIconButton
+      v-if="showHome"
+      class="my-0 rounded-md"
+      :tooltip="$t('common.backToHome')"
+      @click="handleSelect('/')"
+    >
+      <HomeOutlined class="size-4" />
+    </VbenIconButton>
+    <VbenBreadcrumbView
+      v-if="breadcrumbs.length > 0"
+      :breadcrumbs="breadcrumbs"
+      :show-icon="showIcon"
+      @select="handleSelect"
+    />
+  </div>
 </template>

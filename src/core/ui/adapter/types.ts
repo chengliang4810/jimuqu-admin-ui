@@ -32,7 +32,6 @@ export interface SegmentedItem {
 
 export interface IBreadcrumb {
   icon?: Component | string;
-  isHome?: boolean;
   items?: IBreadcrumb[];
   path?: string;
   title?: string;
