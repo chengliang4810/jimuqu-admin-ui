@@ -1,3 +1,5 @@
+import type { AliasToken } from 'antdv-next/dist/theme/internal';
+
 import { computed } from 'vue';
 
 import { preferences } from '@/core/preferences';
@@ -13,7 +15,7 @@ import { preferences } from '@/core/preferences';
  * 无需再做格式转换;又因 preferences.theme 是 reactive,这里用 computed 即可。
  */
 export function useAntdvNextTokens() {
-  const tokens = computed(() => {
+  const tokens = computed<Partial<AliasToken>>(() => {
     const {
       borderRadius,
       colorError,
