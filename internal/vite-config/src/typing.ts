@@ -10,32 +10,6 @@ import type {
 import type { Options as PwaPluginOptions } from 'vite-plugin-pwa';
 
 /**
- * ImportMap 配置接口
- * @description 用于配置模块导入映射，支持自定义导入路径和范围
- * @example
- * ```typescript
- * {
- *   imports: {
- *     'vue': 'https://unpkg.com/vue@3.2.47/dist/vue.esm-browser.js'
- *   },
- *   scopes: {
- *     'https://site.com/': {
- *       'vue': 'https://unpkg.com/vue@3.2.47/dist/vue.esm-browser.js'
- *     }
- *   }
- * }
- * ```
- */
-interface IImportMap {
-  /** 模块导入映射 */
-  imports?: Record<string, string>;
-  /** 作用域特定的导入映射 */
-  scopes?: {
-    [scope: string]: Record<string, string>;
-  };
-}
-
-/**
  * 打印插件配置选项
  * @description 用于配置控制台打印信息
  */
@@ -76,36 +50,6 @@ interface ArchiverPluginOptions {
  * @description 用于配置基于 transformIndexHtml 的 HTML 压缩行为
  */
 type HtmlPluginOptions = HtmlMinifierOptions;
-
-/**
- * ImportMap 插件配置
- * @description 用于配置模块的 CDN 导入
- */
-interface ImportmapPluginOptions {
-  /**
-   * CDN 供应商
-   * @default 'jspm.io'
-   * @description 支持 esm.sh 和 jspm.io 两种 CDN 供应商
-   */
-  defaultProvider?: 'esm.sh' | 'jspm.io';
-  /**
-   * ImportMap 配置数组
-   * @description 配置需要从 CDN 导入的包
-   * @example
-   * ```typescript
-   * [
-   *   { name: 'vue' },
-   *   { name: 'pinia', range: '^2.0.0' }
-   * ]
-   * ```
-   */
-  importmap?: Array<{ name: string; range?: string }>;
-  /**
-   * 手动配置 ImportMap
-   * @description 自定义 ImportMap 配置
-   */
-  inputMap?: IImportMap;
-}
 
 /**
  * 条件插件配置
@@ -212,15 +156,6 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
    */
   i18n?: boolean;
   /**
-   * 是否开启 ImportMap CDN
-   * @default false
-   */
-  importmap?: boolean;
-  /**
-   * ImportMap 插件配置
-   */
-  importmapOptions?: ImportmapPluginOptions;
-  /**
    * 是否注入应用加载动画
    * @default true
    */
@@ -322,8 +257,6 @@ export type {
   DefineConfig,
   DefineLibraryOptions,
   HtmlPluginOptions,
-  IImportMap,
-  ImportmapPluginOptions,
   LibraryPluginOptions,
   PrintPluginOptions,
   VbenViteConfig,

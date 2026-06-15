@@ -21,7 +21,6 @@ import { viteArchiverPlugin } from './archiver';
 import { viteDayjsPlugin } from './dayjs';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
 import { viteHtmlPlugin } from './html';
-import { viteImportMapPlugin } from './importmap';
 import { viteInjectAppLoadingPlugin } from './inject-app-loading';
 import { viteMetadataPlugin } from './inject-metadata';
 import { viteLicensePlugin } from './license';
@@ -107,8 +106,6 @@ async function loadApplicationPlugins(
     html,
     dayjs,
     i18n,
-    importmap,
-    importmapOptions,
     injectAppLoading,
     license,
     print,
@@ -192,12 +189,6 @@ async function loadApplicationPlugins(
     {
       condition: !!html,
       plugins: () => [viteHtmlPlugin(typeof html === 'object' ? html : {})],
-    },
-    {
-      condition: isBuild && importmap,
-      plugins: () => {
-        return [viteImportMapPlugin(importmapOptions)];
-      },
     },
     {
       condition: isBuild && extraAppConfig,

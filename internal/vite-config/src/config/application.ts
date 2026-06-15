@@ -7,7 +7,7 @@ import path, { relative } from 'node:path';
 import { NodePackageImporter } from 'sass-embedded';
 import { defineConfig, loadEnv, mergeConfig } from 'vite';
 
-import { defaultImportmapOptions, getDefaultPwaOptions } from '../options';
+import { getDefaultPwaOptions } from '../options';
 import { loadApplicationPlugins } from '../plugins';
 import { findMonorepoRoot } from '../utils';
 import { loadAndConvertEnv } from '../utils/env';
@@ -34,7 +34,6 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       extraAppConfig: true,
       html: true,
       i18n: true,
-      importmapOptions: defaultImportmapOptions,
       injectAppLoading: true,
       injectMetadata: true,
       isBuild,

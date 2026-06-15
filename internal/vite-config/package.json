@@ -28,12 +28,10 @@
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "catalog:",
-    "@jspm/generator": "catalog:",
     "@manypkg/get-packages": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "archiver": "catalog:",
     "chalk": "catalog:",
-    "cheerio": "catalog:",
     "consola": "catalog:",
     "dayjs": "catalog:",
     "get-port": "catalog:",

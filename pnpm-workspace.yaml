@@ -38,7 +38,6 @@ catalog:
   '@iconify/tailwind4': ^1.2.3
   '@iconify/vue': ^5.0.1
   '@intlify/unplugin-vue-i18n': ^11.2.3
-  '@jspm/generator': ^2.15.0
   '@manypkg/get-packages': ^3.1.0
   '@pnpm/workspace.read-manifest': ^1000.3.1
   '@stylistic/stylelint-plugin': ^5.2.0
@@ -77,7 +76,6 @@ catalog:
   archiver: ^7.0.1
   axios: ^1.16.1
   chalk: ^5.6.2
-  cheerio: ^1.2.0
   clsx: ^2.1.1
   consola: ^3.4.2
   cropperjs: ^1.6.2
