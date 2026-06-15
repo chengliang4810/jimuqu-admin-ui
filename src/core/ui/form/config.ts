@@ -57,7 +57,6 @@ export const COMPONENT_MAP: Record<BaseFormComponentType, Component> = {
   PrimaryButton: h(Button, { size: 'small', type: 'primary' }),
   VbenCheckbox: Checkbox,
   VbenInput: Input,
-  VbenInputCaptcha: Input,
   VbenInputPassword: InputPassword,
   VbenPinInput: Input,
   VbenSelect: Select,
