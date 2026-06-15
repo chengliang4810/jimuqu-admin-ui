@@ -116,26 +116,9 @@ watch(
     content: preferences.app.watermarkContent,
     isDark: isDark.value,
   }),
-  async ({ enable, content, isDark: isDarkValue }) => {
+  async ({ enable, content }) => {
     if (enable) {
-      const watermarkColor = isDarkValue
-        ? 'rgba(255, 255, 255, 0.12)'
-        : 'rgba(0, 0, 0, 0.12)';
-
       await updateWatermark({
-        advancedStyle: {
-          colorStops: [
-            {
-              color: watermarkColor,
-              offset: 0,
-            },
-            {
-              color: watermarkColor,
-              offset: 1,
-            },
-          ],
-          type: 'linear',
-        },
         content:
           content ||
           `${userStore.userInfo?.username} - ${userStore.userInfo?.realName}`,
