@@ -35,7 +35,7 @@ const [Form, { resetForm, validate, getValues, getFieldComponentRef }] =
       },
       schema: computed(() => [
         {
-          component: 'VbenInputPassword' as const,
+          component: 'InputPassword' as const,
           componentProps: {
             placeholder: $t('ui.widgets.lockScreen.placeholder'),
           },

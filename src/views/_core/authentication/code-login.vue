@@ -17,7 +17,7 @@ const CODE_LENGTH = 4;
 const formSchema = computed((): VbenFormSchema[] => {
   return [
     {
-      component: 'VbenInput',
+      component: 'Input',
       componentProps: {
         placeholder: $t('authentication.mobile'),
       },
@@ -29,7 +29,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       ],
     },
     {
-      component: 'VbenPinInput',
+      component: 'Input',
       componentProps(_, form) {
         return {
           createText: (countdown: number) => {

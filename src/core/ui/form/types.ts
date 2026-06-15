@@ -1,5 +1,5 @@
 import type { ClassType, MaybeComputedRef } from '@/core/typings';
-import type { Rule as AntdRule } from 'antdv-next/es/form';
+import type { Rule as AntdRule } from 'antdv-next/dist/form/types';
 
 import type { Component, HtmlHTMLAttributes, Ref } from 'vue';
 
@@ -55,11 +55,6 @@ export interface FormActions {
 export type BaseFormComponentType =
   | 'DefaultButton'
   | 'PrimaryButton'
-  | 'VbenCheckbox'
-  | 'VbenInput'
-  | 'VbenInputPassword'
-  | 'VbenPinInput'
-  | 'VbenSelect'
   | (Record<never, never> & string);
 
 type Breakpoints = '2xl:' | '3xl:' | '' | 'lg:' | 'md:' | 'sm:' | 'xl:';

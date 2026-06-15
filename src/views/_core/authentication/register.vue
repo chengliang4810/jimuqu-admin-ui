@@ -14,7 +14,7 @@ const loading = ref(false);
 const formSchema = computed((): VbenFormSchema[] => {
   return [
     {
-      component: 'VbenInput',
+      component: 'Input',
       componentProps: {
         placeholder: $t('authentication.usernameTip'),
       },
@@ -23,7 +23,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       rules: { message: $t('authentication.usernameTip'), required: true },
     },
     {
-      component: 'VbenInputPassword',
+      component: 'InputPassword',
       componentProps: {
         passwordStrength: true,
         placeholder: $t('authentication.password'),
@@ -38,7 +38,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       rules: { message: $t('authentication.passwordTip'), required: true },
     },
     {
-      component: 'VbenInputPassword',
+      component: 'InputPassword',
       componentProps: {
         placeholder: $t('authentication.confirmPassword'),
       },
@@ -63,7 +63,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       label: $t('authentication.confirmPassword'),
     },
     {
-      component: 'VbenCheckbox',
+      component: 'Checkbox',
       fieldName: 'agreePolicy',
       renderComponentContent: () => ({
         default: () =>

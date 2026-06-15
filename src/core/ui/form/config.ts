@@ -10,7 +10,7 @@ import type {
 import { h } from 'vue';
 
 import { globalShareState } from '@/core/shared/global-state';
-import { Button, Checkbox, Input, InputPassword, Select } from 'antdv-next';
+import { Button } from 'antdv-next';
 
 const DEFAULT_MODEL_PROP_NAME = 'modelValue';
 
@@ -55,18 +55,11 @@ export function getNamedRule(
 export const COMPONENT_MAP: Record<BaseFormComponentType, Component> = {
   DefaultButton: h(Button, { size: 'small' }),
   PrimaryButton: h(Button, { size: 'small', type: 'primary' }),
-  VbenCheckbox: Checkbox,
-  VbenInput: Input,
-  VbenInputPassword: InputPassword,
-  VbenPinInput: Input,
-  VbenSelect: Select,
 };
 
 export const COMPONENT_BIND_EVENT_MAP: Partial<
   Record<BaseFormComponentType, string>
-> = {
-  VbenCheckbox: 'checked',
-};
+> = {};
 
 export function setupVbenForm<
   T extends BaseFormComponentType = BaseFormComponentType,
