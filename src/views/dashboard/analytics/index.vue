@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { TabOption } from '@/types';
 
-import type { AnalysisOverviewItem } from '../typing';
+import type { AnalysisOverviewItem } from './typing';
 
 import {
   SvgBellIcon,
@@ -10,11 +10,9 @@ import {
   SvgDownloadIcon,
 } from '@/icons-app';
 
-import {
-  AnalysisChartCard,
-  AnalysisChartsTabs,
-  AnalysisOverview,
-} from '../analysis';
+import AnalysisChartCard from './analysis-chart-card.vue';
+import AnalysisChartsTabs from './analysis-charts-tabs.vue';
+import AnalysisOverview from './analysis-overview.vue';
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';

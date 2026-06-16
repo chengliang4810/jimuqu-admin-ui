@@ -4,7 +4,7 @@ import type {
   WorkbenchQuickNavItem,
   WorkbenchTodoItem,
   WorkbenchTrendItem,
-} from '../typing';
+} from './typing';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -13,15 +13,13 @@ import { preferences } from '@/core/preferences';
 import { useUserStore } from '@/stores';
 import { openWindow } from '@/utils';
 
-import { AnalysisChartCard } from '../analysis';
+import AnalysisChartCard from '../analytics/analysis-chart-card.vue';
 import AnalyticsVisitsSource from '../analytics/analytics-visits-source.vue';
-import {
-  WorkbenchHeader,
-  WorkbenchProject,
-  WorkbenchQuickNav,
-  WorkbenchTodo,
-  WorkbenchTrends,
-} from '../workbench';
+import WorkbenchHeader from './workbench-header.vue';
+import WorkbenchProject from './workbench-project.vue';
+import WorkbenchQuickNav from './workbench-quick-nav.vue';
+import WorkbenchTodo from './workbench-todo.vue';
+import WorkbenchTrends from './workbench-trends.vue';
 
 const userStore = useUserStore();
 

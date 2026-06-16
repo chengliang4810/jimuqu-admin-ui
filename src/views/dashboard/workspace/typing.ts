@@ -1,13 +1,5 @@
 import type { Component } from 'vue';
 
-interface AnalysisOverviewItem {
-  icon: Component | string;
-  title: string;
-  totalTitle: string;
-  totalValue: number;
-  value: number;
-}
-
 interface WorkbenchProjectItem {
   color?: string;
   content: string;
@@ -40,7 +32,6 @@ interface WorkbenchQuickNavItem {
 }
 
 export type {
-  AnalysisOverviewItem,
   WorkbenchProjectItem,
   WorkbenchQuickNavItem,
   WorkbenchTodoItem,

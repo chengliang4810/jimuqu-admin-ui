@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WorkbenchQuickNavItem } from '../typing';
+import type { WorkbenchQuickNavItem } from './typing';
 
 import {
   Card,

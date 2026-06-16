@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AnalysisOverviewItem } from '../typing';
+import type { AnalysisOverviewItem } from './typing';
 
 import {
   Card,

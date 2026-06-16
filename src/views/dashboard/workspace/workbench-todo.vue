@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import type { WorkbenchTrendItem } from '../typing';
+import type { WorkbenchTodoItem } from './typing';
 
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  VbenIcon,
+  VbenCheckbox,
 } from '@/core/ui/adapter';
 
 interface Props {
-  items?: WorkbenchTrendItem[];
+  items?: WorkbenchTodoItem[];
   title: string;
 }
 
 defineOptions({
-  name: 'WorkbenchTrends',
+  name: 'WorkbenchTodo',
 });
 
 withDefaults(defineProps<Props>(), {
@@ -33,14 +33,13 @@ withDefaults(defineProps<Props>(), {
         <li
           v-for="item in items"
           :key="item.title"
-          class="flex justify-between gap-x-6 py-5"
+          :class="{
+            'line-through opacity-60 select-none': item.completed,
+          }"
+          class="flex cursor-pointer justify-between gap-x-6 py-5"
         >
           <div class="flex min-w-0 items-center gap-x-4">
-            <VbenIcon
-              :icon="item.avatar"
-              alt=""
-              class="size-10 flex-none rounded-full"
-            />
+            <VbenCheckbox v-model="item.completed" name="completed" />
             <div class="min-w-0 flex-auto">
               <p class="text-foreground text-sm/6 font-semibold">
                 {{ item.title }}
