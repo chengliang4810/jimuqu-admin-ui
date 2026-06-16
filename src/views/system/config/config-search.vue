@@ -10,7 +10,7 @@ import { tableSeachClass } from '@/components/vxe-table';
 import { DictEnum } from '@/constants';
 import { formatDateTime } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
-import { Card, DateRangePicker, Form, FormItem } from 'antdv-next';
+import { Card, DateRangePicker, Form, FormItem, Space } from 'antdv-next';
 
 const emit = defineEmits<{
   reset: [];
@@ -32,6 +32,11 @@ const model = ref<ConfigSearchFormParams>({
 });
 
 const formInstance = ref<FormInstance>();
+const searchCollapsed = ref(false);
+
+function toggleCollapse() {
+  searchCollapsed.value = !searchCollapsed.value;
+}
 
 function buildSearchParams(values: ConfigSearchFormParams) {
   const params: Record<string, any> = { ...values };
@@ -72,25 +77,32 @@ defineExpose({
       :label-col="{ style: { width: '100px' } }"
     >
       <div :class="tableSeachClass">
-        <FormItem label="参数名称" name="configName">
-          <FormInput v-model:value="model.configName" allow-clear />
-        </FormItem>
-        <FormItem label="参数键名" name="configKey">
-          <FormInput v-model:value="model.configKey" allow-clear />
-        </FormItem>
-        <FormItem label="系统内置" name="configType">
-          <FormSelect
-            allow-clear
-            v-model:value="model.configType"
-            :options="getDictOptions(DictEnum.SYS_YES_NO)"
-          />
-        </FormItem>
-        <FormItem label="创建时间" name="time">
-          <DateRangePicker v-model:value="model.time" allow-clear />
-        </FormItem>
+        <template v-if="!searchCollapsed">
+          <FormItem label="参数名称" name="configName">
+            <FormInput v-model:value="model.configName" allow-clear />
+          </FormItem>
+          <FormItem label="参数键名" name="configKey">
+            <FormInput v-model:value="model.configKey" allow-clear />
+          </FormItem>
+          <FormItem label="系统内置" name="configType">
+            <FormSelect
+              allow-clear
+              v-model:value="model.configType"
+              :options="getDictOptions(DictEnum.SYS_YES_NO)"
+            />
+          </FormItem>
+          <FormItem label="创建时间" name="time">
+            <DateRangePicker v-model:value="model.time" allow-clear />
+          </FormItem>
+        </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] justify-self-end">
-          <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
+          <Space>
+            <a-button @click="toggleCollapse">
+              {{ searchCollapsed ? $t('pages.common.expand') : $t('pages.common.collapse') }}
+            </a-button>
+            <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
+          </Space>
         </div>
       </div>
     </Form>

@@ -172,8 +172,8 @@ async function reload(params: Record<string, any> = {}) {
           @reset="handleSearchReset"
         />
 
-        <!-- 这里占满剩余高度 -->
-        <div class="bg-card flex-1 rounded-lg">
+        <!-- 这里占满剩余高度 overflow-hidden保证搜索/展开导致高度变化 这里能正常 -->
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
           <VxeGrid
             ref="tableRef"
             class="p-2 pt-0"
