@@ -11,10 +11,6 @@ export function providePluginsOptions(options: VbenPluginsOptions) {
   globalPluginsOptions = {
     ...globalPluginsOptions,
     ...options,
-    form:
-      globalPluginsOptions.form && options.form
-        ? { ...globalPluginsOptions.form, ...options.form }
-        : globalPluginsOptions.form || options.form,
     modal:
       globalPluginsOptions.modal && options.modal
         ? { ...globalPluginsOptions.modal, ...options.modal }

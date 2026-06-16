@@ -1,4 +1,3 @@
-import type { BaseFormComponentType, ExtendedFormApi } from '@/core/ui/form';
 import type { VxeGridInstance } from 'vxe-table';
 
 import type { VxeGridProps } from './types';
@@ -9,7 +8,6 @@ import { toRaw } from 'vue';
 import { Store } from '@/core/shared/store';
 import {
   bindMethods,
-  isBoolean,
   isFunction,
   mergeWithArrayOverride,
   StateHandler,
@@ -21,43 +19,26 @@ function getDefaultState(): VxeGridProps {
     gridClass: '',
     gridOptions: {},
     gridEvents: {},
-    formOptions: undefined,
-    showSearchForm: true,
   };
 }
 
-export class VxeGridApi<
-  T extends Record<string, any> = any,
-  D extends BaseFormComponentType = BaseFormComponentType,
-  P extends Record<string, any> = Record<never, never>,
-> {
-  public formApi = {} as ExtendedFormApi;
-
-  // private prevState: null | VxeGridProps = null;
+export class VxeGridApi<T extends Record<string, any> = any> {
   public grid = {} as VxeGridInstance<T>;
-  public state: null | VxeGridProps<T, D, P> = null;
-
-  public store: Store<VxeGridProps<T, D, P>>;
-
-  /**
-   * 已读行 helper（在 mount 中初始化，业务能力全部封装在 useViewedRow 中）
-   */
+  public state: null | VxeGridProps<T> = null;
+  public store: Store<VxeGridProps<T>>;
   public viewedRowHelper: null | ViewedRowHelper<T> = null;
 
   private isMounted = false;
-
   private stateHandler: StateHandler;
 
-  constructor(options: VxeGridProps<T, D, P> = {} as VxeGridProps<T, D, P>) {
+  constructor(options: VxeGridProps<T> = {} as VxeGridProps<T>) {
     const storeState = { ...options };
-
     const defaultState = getDefaultState();
-    this.store = new Store<VxeGridProps<T, D, P>>(
-      mergeWithArrayOverride(storeState, defaultState) as VxeGridProps<T, D, P>,
+    this.store = new Store<VxeGridProps<T>>(
+      mergeWithArrayOverride(storeState, defaultState) as VxeGridProps<T>,
     );
 
     this.store.subscribe((state) => {
-      // this.prevState = this.state;
       this.state = state;
     });
 
@@ -66,46 +47,30 @@ export class VxeGridApi<
     bindMethods(this);
   }
 
-  /**
-   * 清除所有已读状态
-   */
   clearViewedRows() {
     this.viewedRowHelper?.clearViewed();
   }
 
-  /**
-   * 获取所有已读的 key 集合（返回副本，避免外部修改内部状态）
-   */
   getViewedKeys(): Set<number | string> {
     const raw = this.viewedRowHelper?.viewedSet.value;
     return raw ? new Set(raw) : new Set();
   }
 
-  /**
-   * 判断某行是否已读
-   */
   isRowViewed(record: T): boolean {
     return this.viewedRowHelper?.isViewed(record) ?? false;
   }
 
-  /**
-   * 批量标记行为已读
-   */
   markKeysAsViewed(keys: Array<number | string>) {
     this.viewedRowHelper?.markKeysAsViewed(keys);
   }
 
-  /**
-   * 标记某行为已读
-   */
   markRowAsViewed(record: T) {
     this.viewedRowHelper?.markAsViewed(record);
   }
 
-  mount(instance: null | VxeGridInstance, formApi: ExtendedFormApi) {
+  mount(instance: null | VxeGridInstance) {
     if (!this.isMounted && instance) {
       this.grid = instance;
-      this.formApi = formApi;
       this.stateHandler.setConditionTrue();
       this.isMounted = true;
     }
@@ -127,31 +92,22 @@ export class VxeGridApi<
     }
   }
 
-  /**
-   * 移除指定 key 的已读状态
-   */
   removeViewedKeys(keys: Array<number | string>) {
     this.viewedRowHelper?.removeKeys(keys);
   }
 
-  setGridOptions(options: Partial<VxeGridProps<T, D, P>['gridOptions']>) {
-    this.setState({
-      gridOptions: options,
-    });
+  setGridOptions(options: Partial<VxeGridProps<T>['gridOptions']>) {
+    this.setState({ gridOptions: options });
   }
 
   setLoading(isLoading: boolean) {
-    this.setState({
-      gridOptions: {
-        loading: isLoading,
-      },
-    });
+    this.setState({ gridOptions: { loading: isLoading } });
   }
 
   setState(
     stateOrFn:
-      | ((prev: VxeGridProps<T, D, P>) => Partial<VxeGridProps<T, D, P>>)
-      | Partial<VxeGridProps<T, D, P>>,
+      | ((prev: VxeGridProps<T>) => Partial<VxeGridProps<T>>)
+      | Partial<VxeGridProps<T>>,
   ) {
     if (isFunction(stateOrFn)) {
       this.store.setState((prev) => {
@@ -160,16 +116,6 @@ export class VxeGridApi<
     } else {
       this.store.setState((prev) => mergeWithArrayOverride(stateOrFn, prev));
     }
-  }
-
-  toggleSearchForm(show?: boolean) {
-    this.setState({
-      showSearchForm: isBoolean(show) ? show : !this.state?.showSearchForm,
-    });
-    // nextTick(() => {
-    //   this.grid.recalculate();
-    // });
-    return this.state?.showSearchForm;
   }
 
   unmount() {

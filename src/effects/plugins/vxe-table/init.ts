@@ -12,6 +12,7 @@ import { usePreferences } from '@/core/preferences';
  * @see https://vxetable.cn/other4/#/table/other/antd
  */
 import VxeUIPluginRenderAntd from '@vxe-ui/plugin-render-antd';
+
 import {
   VxeButton,
   VxeCheckbox,
@@ -37,15 +38,12 @@ import {
   VxeToolbar,
 } from 'vxe-table';
 
-import { injectPluginsOptions } from '../plugins-context';
 import { extendsDefaultFormatter } from './extends'; // 是否加载过
 
 import '@vxe-ui/plugin-render-antd/dist/style.css';
 
 // 是否加载过
 let isInit = false;
-
-let tableFormFactory: ((...args: any[]) => any) | undefined;
 
 function normalizeVxeLocale<T extends Record<string, any>>(localeModule: T) {
   return (
@@ -55,20 +53,6 @@ function normalizeVxeLocale<T extends Record<string, any>>(localeModule: T) {
       ? localeModule.default
       : localeModule
   ) as T;
-}
-
-export function useTableForm(...args: any[]) {
-  const pluginsOptions = injectPluginsOptions();
-  const contextFormFactory = pluginsOptions?.form?.useVbenForm;
-
-  const factory = tableFormFactory || contextFormFactory;
-  if (!factory) {
-    throw new Error(
-      'useTableForm is not initialized. Please provide useVbenForm via setupVbenVxeTable() or providePluginsOptions()',
-    );
-  }
-
-  return factory(...args);
 }
 
 // 部分组件，如果没注册，vxe-table 会报错，这里实际没用组件，只是为了不报错，同时可以减少打包体积
@@ -120,14 +104,10 @@ export function initVxeTable() {
 }
 
 export function setupVbenVxeTable(setupOptions: SetupVxeTable) {
-  const { configVxeTable, useVbenForm: useVbenFormFromParam } = setupOptions;
+  const { configVxeTable } = setupOptions;
 
   initVxeTable();
 
-  // 优先使用参数传入的 useVbenForm，否则清空让 context 注入生效
-  if (useVbenFormFromParam) {
-    tableFormFactory = useVbenFormFromParam;
-  }
   const { isDark, locale } = usePreferences();
 
   const localMap = {

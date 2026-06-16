@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { Recordable } from '@/types';
 
 import { nextTick } from 'vue';
@@ -11,16 +10,8 @@ import { getPopupContainer, listToTree } from '@/utils';
 import { Popconfirm, Space } from 'antdv-next';
 
 import { treeList, treeRemove } from './api';
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import treeModal from './tree-modal.vue';
-
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
 
 const gridOptions: VxeGridProps = {
   columns,
@@ -61,7 +52,7 @@ const gridOptions: VxeGridProps = {
   },
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
 const [TreeModal, modalApi] = useVbenModal({
   connectedComponent: treeModal,
 });
