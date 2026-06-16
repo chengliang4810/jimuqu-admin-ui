@@ -1,18 +1,21 @@
 <script lang="ts" setup>
 import type { CaptchaResponse } from '@/api/core/captcha';
-import type {
-  LoginAndRegisterParams,
-  VbenFormSchema,
-} from '@/effects/common-ui';
 
-import { computed, markRaw, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { captchaImage } from '@/api/core/captcha';
-import { AuthenticationLogin } from '@/effects/common-ui';
+import { cn } from '@/core/shared/utils';
 import { $t } from '@/locales';
 import { useAuthStore } from '@/stores';
-import { Input, InputPassword } from 'antdv-next';
-import { omit } from 'lodash-es';
+import {
+  Button,
+  Checkbox,
+  Form,
+  FormItem,
+  Input,
+  InputPassword,
+} from 'antdv-next';
 
 import InputCaptcha from './input-captcha.vue';
 import OAuthLogin from './oauth-login.vue';
@@ -20,8 +23,17 @@ import OAuthLogin from './oauth-login.vue';
 defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
+const router = useRouter();
 
-const loginFormRef = useTemplateRef('loginFormRef');
+const REMEMBER_ME_KEY = `REMEMBER_ME_USERNAME_${location.hostname}`;
+const localUsername = localStorage.getItem(REMEMBER_ME_KEY) || '';
+const rememberMe = ref(!!localUsername);
+
+const formState = reactive({
+  username: localUsername || 'admin',
+  password: 'admin123',
+  code: '',
+});
 
 const captchaInfo = ref<CaptchaResponse>({
   captchaEnabled: false,
@@ -30,6 +42,37 @@ const captchaInfo = ref<CaptchaResponse>({
 });
 // 验证码loading
 const captchaLoading = ref(false);
+
+const rules = computed(() => {
+  const result: Record<string, any[]> = {
+    username: [
+      {
+        required: true,
+        message: $t('authentication.usernameTip'),
+        trigger: 'blur',
+      },
+    ],
+    password: [
+      {
+        required: true,
+        message: $t('authentication.passwordTip'),
+        trigger: 'blur',
+      },
+      { min: 5, message: $t('authentication.passwordTip'), trigger: 'blur' },
+    ],
+  };
+  // 仅在开启验证码时校验
+  if (captchaInfo.value.captchaEnabled) {
+    result.code = [
+      {
+        required: true,
+        message: $t('authentication.verifyRequiredTip'),
+        trigger: 'blur',
+      },
+    ];
+  }
+  return result;
+});
 
 async function loadCaptcha() {
   // 防止请求过快产生闪烁问题
@@ -50,70 +93,21 @@ async function loadCaptcha() {
   }
 }
 
-onMounted(async () => {
-  await loadCaptcha();
-});
-
-const formSchema = computed((): VbenFormSchema[] => {
-  return [
-    {
-      component: markRaw(Input),
-      modelPropName: 'value',
-      componentProps: {
-        size: 'large',
-        placeholder: $t('authentication.usernameTip'),
-        allowClear: true,
-      },
-      defaultValue: 'admin',
-      fieldName: 'username',
-      label: $t('authentication.username'),
-      rules: { message: $t('authentication.usernameTip'), required: true },
-    },
-    {
-      component: markRaw(InputPassword),
-      modelPropName: 'value',
-      componentProps: {
-        size: 'large',
-        placeholder: $t('authentication.passwordTip'),
-      },
-      defaultValue: 'admin123',
-      fieldName: 'password',
-      label: $t('authentication.password'),
-      rules: {
-        message: $t('authentication.passwordTip'),
-        min: 5,
-        required: true,
-      },
-    },
-    {
-      component: markRaw(InputCaptcha),
-      componentProps: {
-        captcha: captchaInfo.value.img,
-        class: 'focus:border-primary',
-        onCaptchaClick: loadCaptcha,
-        placeholder: $t('authentication.code'),
-        loading: captchaLoading.value,
-      },
-      dependencies: {
-        if: () => captchaInfo.value.captchaEnabled,
-        triggerFields: [''],
-      },
-      fieldName: 'code',
-      label: $t('authentication.code'),
-      rules: {
-        message: $t('authentication.verifyRequiredTip'),
-        required: true,
-      },
-    },
-  ];
-});
-
-async function handleAccountLogin(values: LoginAndRegisterParams) {
+// 校验通过后(原生 Form 的 finish 仅在校验成功时触发)
+async function handleSubmit() {
+  localStorage.setItem(
+    REMEMBER_ME_KEY,
+    rememberMe.value ? formState.username : '',
+  );
   try {
-    const requestParam: any = omit(values, ['code']);
+    const requestParam: any = {
+      username: formState.username,
+      password: formState.password,
+      grantType: 'password',
+    };
     // 验证码
     if (captchaInfo.value.captchaEnabled) {
-      requestParam.code = values.code;
+      requestParam.code = formState.code;
       requestParam.uuid = captchaInfo.value.uuid;
     }
     // 登录
@@ -123,26 +117,97 @@ async function handleAccountLogin(values: LoginAndRegisterParams) {
     // 处理验证码错误
     if (error instanceof Error) {
       // 刷新验证码
-      loginFormRef.value?.getFormApi().setFieldValue('code', '');
+      formState.code = '';
       await loadCaptcha();
     }
   }
 }
+
+function handleGo(path: string) {
+  router.push(path);
+}
+
+onMounted(async () => {
+  await loadCaptcha();
+});
 </script>
 
 <template>
-  <AuthenticationLogin
-    ref="loginFormRef"
-    :form-schema="formSchema"
-    :loading="authStore.loginLoading"
-    :show-register="false"
-    :show-third-party-login="true"
-    :submit-disabled="captchaLoading"
-    @submit="handleAccountLogin"
-  >
-    <!-- 可通过show-third-party-login控制是否显示第三方登录 -->
-    <template #third-party-login>
-      <OAuthLogin />
-    </template>
-  </AuthenticationLogin>
+  <div>
+    <!-- 标题 -->
+    <div class="mb-7 sm:mx-auto sm:w-full sm:max-w-md">
+      <h2
+        class="text-foreground mb-3 text-3xl/9 font-bold tracking-tight lg:text-4xl"
+      >
+        {{ $t('authentication.welcomeBack') }} 👋🏻
+      </h2>
+      <p class="lg:text-md text-muted-foreground text-sm">
+        {{ $t('authentication.loginSubtitle') }}
+      </p>
+    </div>
+
+    <Form
+      :model="formState"
+      :rules="rules"
+      class="mb-2"
+      layout="vertical"
+      @finish="handleSubmit"
+    >
+      <FormItem name="username">
+        <Input
+          v-model:value="formState.username"
+          allow-clear
+          :placeholder="$t('authentication.usernameTip')"
+          size="large"
+        />
+      </FormItem>
+
+      <FormItem name="password">
+        <InputPassword
+          v-model:value="formState.password"
+          :placeholder="$t('authentication.passwordTip')"
+          size="large"
+        />
+      </FormItem>
+
+      <FormItem v-if="captchaInfo.captchaEnabled" name="code">
+        <InputCaptcha
+          v-model="formState.code"
+          :captcha="captchaInfo.img"
+          :loading="captchaLoading"
+          :placeholder="$t('authentication.code')"
+          class="focus:border-primary"
+          @captcha-click="loadCaptcha"
+        />
+      </FormItem>
+
+      <div class="mb-6 flex justify-between">
+        <Checkbox v-model:checked="rememberMe" name="rememberMe">
+          {{ $t('authentication.rememberMe') }}
+        </Checkbox>
+        <span
+          class="vben-link text-sm font-normal"
+          @click="handleGo('/auth/forget-password')"
+        >
+          {{ $t('authentication.forgetPassword') }}
+        </span>
+      </div>
+
+      <Button
+        :class="cn({ 'cursor-wait': authStore.loginLoading }, 'h-10')"
+        :disabled="captchaLoading"
+        :loading="authStore.loginLoading"
+        aria-label="login"
+        class="w-full"
+        html-type="submit"
+        size="large"
+        type="primary"
+      >
+        {{ $t('common.login') }}
+      </Button>
+    </Form>
+
+    <!-- 第三方登录 -->
+    <OAuthLogin />
+  </div>
 </template>
