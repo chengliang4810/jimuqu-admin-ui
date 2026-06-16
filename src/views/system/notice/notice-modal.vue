@@ -1,6 +1,6 @@
 <!--
 2025年03月08日重构为原生表单(反向重构??)
-该文件作为例子 使用原生表单而非useVbenForm
+该文件作为例子 使用原生表单
 -->
 <script setup lang="ts">
 import type { AntdFormRules } from '@/types/form';

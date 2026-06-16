@@ -3,16 +3,26 @@
 -->
 
 <script setup lang="ts">
+import type { LeaveForm } from './api/model';
 import type { StartWorkFlowReqData } from '@/api/workflow/task/model';
+import type { AntdFormRules } from '@/types/form';
+import type { Dayjs } from 'dayjs';
+import type { FormInstance } from 'antdv-next';
 
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useVbenForm } from '@/adapter/form';
 import { startWorkFlow } from '@/api/workflow/task';
+import {
+  FormInputNumber as InputNumber,
+  FormSelect as Select,
+  FormTextArea as Textarea,
+} from '@/components/global/form';
 import { useVbenModal } from '@/effects/common-ui';
 import { useTabs } from '@/effects/hooks';
-import { Card, Spin } from 'antdv-next';
+import { $t } from '@/locales';
+import { getPopupContainer } from '@/utils';
+import { Card, DateRangePicker, Form, FormItem, Spin } from 'antdv-next';
 import dayjs from 'dayjs';
 import { cloneDeep, omit } from 'lodash-es';
 
@@ -23,26 +33,48 @@ import {
   leaveUpdate,
   submitAndStartWorkflow,
 } from './api';
-import { formSchema } from './data';
+import { leaveFlowOptions, leaveTypeOptions } from './data';
 
 const route = useRoute();
 const id = route.query?.id as string;
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    // 默认占满两列
-    formItemClass: 'col-span-2',
-    // 默认label宽度 px
-    labelWidth: 100,
-    // 通用配置项 会影响到所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: formSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+interface FormData extends LeaveForm {
+  dateRange?: [Dayjs, Dayjs];
+  flowType?: string;
+  type?: string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    dateRange: undefined,
+    flowType: 'leave1',
+    id: undefined,
+    leaveDays: undefined,
+    leaveType: undefined,
+    remark: '',
+    type: 'frontend',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+
+const formRules = ref<AntdFormRules<FormData>>({
+  dateRange: [{ required: true, message: $t('ui.formRules.required') }],
+  flowType: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  leaveType: [{ required: true, message: $t('ui.formRules.selectRequired') }],
 });
+
+const startTypeOptions = [
+  {
+    label: '前端发起 (可选审批人, 选抄送人, 上传附件)',
+    value: 'frontend',
+  },
+  {
+    label: '后端发起 (自行编写后端逻辑, 由后端发起流程)',
+    value: 'backend',
+  },
+];
 
 const loading = ref(false);
 onMounted(async () => {
@@ -51,9 +83,11 @@ onMounted(async () => {
     loading.value = true;
 
     const resp = await leaveInfo(id);
-    await formApi.setValues(resp);
-    const dateRange = [dayjs(resp.startDate), dayjs(resp.endDate)];
-    await formApi.setFieldValue('dateRange', dateRange);
+    formData.value = {
+      ...getDefaultValues(),
+      ...resp,
+      dateRange: [dayjs(resp.startDate), dayjs(resp.endDate)],
+    };
 
     loading.value = false;
   }
@@ -61,11 +95,21 @@ onMounted(async () => {
 
 const router = useRouter();
 
+function handleDateRangeChange(dates: Dayjs[] | null) {
+  if (!dates || dates.length < 2) {
+    formData.value.leaveDays = undefined;
+    return;
+  }
+  const [start, end] = dates;
+  formData.value.leaveDays = dayjs(end).diff(dayjs(start), 'day') + 1;
+}
+
 /**
  * 获取已经处理好的表单参数
  */
 async function getFormData() {
-  let data = cloneDeep(await formApi.getValues()) as any;
+  await formInstance.value?.validate();
+  let data = cloneDeep(formData.value) as any;
   data = omit(data, 'flowType', 'type');
   // 处理日期
   data.startDate = dayjs(data.dateRange[0]).format('YYYY-MM-DD HH:mm:ss');
@@ -107,12 +151,9 @@ async function handleTempSave() {
 async function handleStartWorkFlow() {
   loading.value = true;
   try {
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
+    await formInstance.value?.validate();
     // 获取发起类型
-    const { type } = await formApi.getValues();
+    const { type } = formData.value;
     /**
      * 这里只是demo 实际只会用到一种
      */
@@ -133,8 +174,7 @@ async function handleStartWorkFlow() {
           leaveDays: leaveResp!.leaveDays,
           userList: ['1', '3', '4'],
         };
-        const formValues = await formApi.getValues();
-        const flowCode = formValues?.flowType ?? 'leave1';
+        const flowCode = formData.value.flowType ?? 'leave1';
         const startWorkFlowData: StartWorkFlowReqData = {
           businessId: leaveResp!.id,
           flowCode,
@@ -171,7 +211,8 @@ const { closeCurrentTab } = useTabs();
  * 每次点击都会生成新记录 直接跳转回列表
  */
 async function handleCompleteOrCancel() {
-  formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
   await closeCurrentTab();
   router.push('/demo/leave');
 }
@@ -180,7 +221,54 @@ async function handleCompleteOrCancel() {
 <template>
   <Spin :spinning="loading">
     <Card>
-      <BasicForm />
+      <Form layout="vertical" ref="formInstance" :model="formData">
+        <FormItem label="流程类型" name="flowType" :rules="formRules.flowType">
+          <Select
+            class="w-full"
+            :get-popup-container="getPopupContainer"
+            :options="leaveFlowOptions"
+            v-model:value="formData.flowType"
+          />
+        </FormItem>
+        <FormItem label="发起类型" name="type">
+          <Select
+            class="w-full"
+            :get-popup-container="getPopupContainer"
+            :options="startTypeOptions"
+            v-model:value="formData.type"
+          />
+        </FormItem>
+        <FormItem
+          label="请假类型"
+          name="leaveType"
+          :rules="formRules.leaveType"
+        >
+          <Select
+            class="w-full"
+            :get-popup-container="getPopupContainer"
+            :options="leaveTypeOptions"
+            v-model:value="formData.leaveType"
+          />
+        </FormItem>
+        <FormItem label="开始时间" name="dateRange" :rules="formRules.dateRange">
+          <DateRangePicker
+            class="w-full"
+            format="YYYY-MM-DD"
+            v-model:value="formData.dateRange"
+            @change="handleDateRangeChange"
+          />
+        </FormItem>
+        <FormItem label="请假天数" name="leaveDays">
+          <InputNumber
+            disabled
+            class="w-full"
+            v-model:value="formData.leaveDays"
+          />
+        </FormItem>
+        <FormItem label="请假原因" name="remark">
+          <Textarea class="w-full" v-model:value="formData.remark" />
+        </FormItem>
+      </Form>
       <div class="flex justify-end gap-2">
         <a-button @click="handleTempSave">暂存</a-button>
         <a-button type="primary" @click="handleStartWorkFlow">提交</a-button>

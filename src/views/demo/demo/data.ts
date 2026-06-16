@@ -55,39 +55,3 @@ export const columns: VxeGridProps['columns'] = [
     width: 'auto',
   },
 ];
-
-export const modalSchema: FormSchemaGetter = () => [
-  {
-    label: '主键',
-    fieldName: 'id',
-    component: 'Input',
-    dependencies: {
-      show: () => false,
-      triggerFields: [''],
-    },
-  },
-  {
-    label: '排序号',
-    fieldName: 'orderNum',
-    component: 'Input',
-    rules: 'required',
-  },
-  {
-    label: 'key键',
-    fieldName: 'testKey',
-    component: 'Input',
-    rules: 'required',
-  },
-  {
-    label: '值',
-    fieldName: 'value',
-    component: 'Input',
-    rules: 'required',
-  },
-  {
-    label: '版本',
-    fieldName: 'version',
-    component: 'Input',
-    rules: 'required',
-  },
-];

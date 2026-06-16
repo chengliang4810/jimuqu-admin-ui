@@ -1,19 +1,25 @@
 <script setup lang="ts">
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import {
   categoryAdd,
   categoryInfo,
   categoryList,
   categoryUpdate,
 } from '@/api/workflow/category';
+import {
+  FormInput as Input,
+  FormInputNumber as InputNumber,
+  FormTreeSelect as TreeSelect,
+} from '@/components/global/form';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
-
-import { modalSchema } from './data';
+import { useBeforeCloseDiff } from '@/utils/popup';
+import { Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -22,48 +28,48 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    // 默认占满两列
-    formItemClass: 'col-span-2',
-    // 默认label宽度 px
-    labelWidth: 80,
-    // 通用配置项 会影响到所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: modalSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+interface FormData {
+  categoryId?: number | string;
+  categoryName?: string;
+  orderNum?: number;
+  parentId?: number | string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    categoryId: undefined,
+    categoryName: '',
+    orderNum: undefined,
+    parentId: 100,
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const treeData = ref<any[]>([]);
+
+const formRules = ref<AntdFormRules<FormData>>({
+  categoryName: [{ required: true, message: $t('ui.formRules.required') }],
+  parentId: [{ required: true, message: $t('ui.formRules.selectRequired') }],
 });
+
+function formValueGetter() {
+  return JSON.stringify(formData.value);
+}
 
 async function setupCategorySelect() {
   const listData = await categoryList();
-  const treeData = listToTree(listData, {
+  treeData.value = listToTree(listData, {
     id: 'categoryId',
     pid: 'parentId',
   });
-  addFullName(treeData, 'categoryName', ' / ');
-  formApi.updateSchema([
-    {
-      fieldName: 'parentId',
-      componentProps: {
-        treeData,
-        treeLine: { showLeafIcon: false },
-        fieldNames: { label: 'categoryName', value: 'categoryId' },
-        treeDefaultExpandAll: true,
-        treeNodeLabelProp: 'fullName',
-        getPopupContainer,
-      },
-    },
-  ]);
+  addFullName(treeData.value, 'categoryName', ' / ');
 }
 
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   {
-    initializedGetter: defaultFormValueGetter(formApi),
-    currentGetter: defaultFormValueGetter(formApi),
+    initializedGetter: formValueGetter,
+    currentGetter: formValueGetter,
   },
 );
 
@@ -86,10 +92,13 @@ const [BasicModal, modalApi] = useVbenModal({
 
     if (isUpdate.value && id) {
       const record = await categoryInfo(id);
-      await formApi.setValues(record);
+      formData.value = {
+        ...getDefaultValues(),
+        ...record,
+      };
     }
     if (parentId) {
-      await formApi.setValues({ parentId });
+      formData.value.parentId = parentId;
     }
     await setupCategorySelect();
     await markInitialized();
@@ -101,12 +110,8 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleConfirm() {
   try {
     modalApi.lock(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    // getValues获取为一个readonly的对象 需要修改必须先深拷贝一次
-    const data = cloneDeep(await formApi.getValues());
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
     await (isUpdate.value ? categoryUpdate(data) : categoryAdd(data));
     resetInitialized();
     emit('reload');
@@ -119,13 +124,41 @@ async function handleConfirm() {
 }
 
 async function handleClosed() {
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
   resetInitialized();
 }
 </script>
 
 <template>
   <BasicModal :title="title" class="min-h-[500px]">
-    <BasicForm />
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '80px' } }"
+    >
+      <FormItem label="父级分类" name="parentId" :rules="formRules.parentId">
+        <TreeSelect
+          class="w-full"
+          :field-names="{ label: 'categoryName', value: 'categoryId' }"
+          :get-popup-container="getPopupContainer"
+          :tree-data="treeData"
+          tree-default-expand-all
+          :tree-line="{ showLeafIcon: false }"
+          tree-node-label-prop="fullName"
+          v-model:value="formData.parentId"
+        />
+      </FormItem>
+      <FormItem
+        label="分类名称"
+        name="categoryName"
+        :rules="formRules.categoryName"
+      >
+        <Input allow-clear class="w-full" v-model:value="formData.categoryName" />
+      </FormItem>
+      <FormItem label="排序" name="orderNum">
+        <InputNumber class="w-full" v-model:value="formData.orderNum" />
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>

@@ -1,10 +1,35 @@
 <script setup lang="ts">
-import { useVbenForm } from '@/adapter/form';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { workflowInstanceInvalid } from '@/api/workflow/instance';
+import { FormTextArea as Textarea } from '@/components/global/form';
 import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
+import { Form, FormItem } from 'antdv-next';
 import { cloneDeep } from 'lodash-es';
+import { ref } from 'vue';
 
 const emit = defineEmits<{ reload: [] }>();
+
+interface FormData {
+  comment?: string;
+  id?: number | string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    comment: '',
+    id: undefined,
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+
+const formRules = ref<AntdFormRules<FormData>>({
+  comment: [{ required: true, message: $t('ui.formRules.required') }],
+});
 
 const [BasicModal, modalApi] = useVbenModal({
   onConfirm: handleSubmit,
@@ -13,39 +38,17 @@ const [BasicModal, modalApi] = useVbenModal({
   title: '作废原因',
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    formItemClass: 'col-span-2',
-    componentProps: {
-      class: 'w-full',
-    },
-    labelWidth: 80,
-  },
-  layout: 'vertical',
-  schema: [
-    {
-      fieldName: 'comment',
-      label: '作废原因',
-      component: 'Textarea',
-    },
-  ],
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
-});
-
 async function handleCancel() {
   modalApi.close();
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
 }
 
 async function handleSubmit() {
   try {
     modalApi.modalLoading(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = cloneDeep(await formApi.getValues());
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
     data.id = modalApi.getData().id;
     await workflowInstanceInvalid(data as any);
     emit('reload');
@@ -60,6 +63,10 @@ async function handleSubmit() {
 
 <template>
   <BasicModal>
-    <BasicForm />
+    <Form layout="vertical" ref="formInstance" :model="formData">
+      <FormItem label="作废原因" name="comment" :rules="formRules.comment">
+        <Textarea class="w-full" v-model:value="formData.comment" />
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>

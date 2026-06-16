@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import type { FormInstance } from 'antdv-next';
+
+import { computed, nextTick, ref } from 'vue';
 
 import { useScrollLock } from '@/core/composables';
 import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
-import { useVbenForm } from '@/core/ui/form';
 import { LockKeyhole } from '@/icons-app';
 import { $t, useI18n } from '@/locales';
 import { storeToRefs, useAccessStore } from '@/stores';
+import { Form, FormItem, InputPassword } from 'antdv-next';
 import { useDateFormat, useNow } from '@vueuse/core';
 
 interface Props {
@@ -35,49 +37,44 @@ const date = useDateFormat(now, 'YYYY-MM-DD dddd', { locales: locale.value });
 const showUnlockForm = ref(false);
 const { lockScreenPassword } = storeToRefs(accessStore);
 
-const [Form, { form, validate, getFieldComponentRef }] = useVbenForm(
-  reactive({
-    commonConfig: {
-      hideLabel: true,
-      hideRequiredMark: true,
+const formData = ref({
+  password: '',
+});
+const formInstance = ref<FormInstance>();
+const passwordInput = ref();
+
+const formRules = computed(() => ({
+  password: [
+    {
+      message: $t('authentication.passwordTip'),
+      required: true,
     },
-    schema: computed(() => [
-      {
-        component: 'InputPassword' as const,
-        componentProps: {
-          placeholder: $t('ui.widgets.lockScreen.placeholder'),
-        },
-        fieldName: 'password',
-        label: $t('authentication.password'),
-        rules: { message: $t('authentication.passwordTip'), required: true },
-      },
-    ]),
-    showDefaultActions: false,
-  }),
-);
+  ],
+}));
 
 const validPass = computed(
-  () => lockScreenPassword?.value === form?.values?.password,
+  () => lockScreenPassword?.value === formData.value.password,
 );
 
 async function handleSubmit() {
-  const { valid } = await validate();
-  if (valid) {
-    if (validPass.value) {
-      accessStore.unlockScreen();
-    } else {
-      form.setFieldError('password', $t('authentication.passwordErrorTip'));
-    }
+  await formInstance.value?.validate();
+  if (validPass.value) {
+    accessStore.unlockScreen();
+  } else {
+    formInstance.value?.setFields([
+      {
+        errors: [$t('authentication.passwordErrorTip')],
+        name: 'password',
+      },
+    ]);
   }
 }
 
 function toggleUnlockForm() {
   showUnlockForm.value = !showUnlockForm.value;
   if (showUnlockForm.value) {
-    requestAnimationFrame(() => {
-      getFieldComponentRef('password')
-        ?.$el?.querySelector('[name="password"]')
-        ?.focus();
+    nextTick(() => {
+      passwordInput.value?.focus?.();
     });
   }
 }
@@ -129,7 +126,16 @@ useScrollLock();
         <div class="flex-col-center mb-10 w-[90%] max-w-75 px-4">
           <VbenAvatar :src="avatar" class="enter-x mb-6 size-20" />
           <div class="enter-x mb-2 w-full items-center">
-            <Form />
+            <Form ref="formInstance" :model="formData">
+              <FormItem name="password" :rules="formRules.password">
+                <InputPassword
+                  ref="passwordInput"
+                  name="password"
+                  :placeholder="$t('ui.widgets.lockScreen.placeholder')"
+                  v-model:value="formData.password"
+                />
+              </FormItem>
+            </Form>
           </div>
           <VbenButton class="enter-x w-full" @click="handleSubmit">
             {{ $t('ui.widgets.lockScreen.entry') }}

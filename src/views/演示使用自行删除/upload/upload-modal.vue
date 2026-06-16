@@ -1,36 +1,19 @@
 <script setup lang="ts">
 import { h } from 'vue';
+import { ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
+import { ImageUpload } from '@/components/upload';
 import { JsonPreview, useVbenModal } from '@/effects/common-ui';
-import { Space } from 'antdv-next';
+import { Form, FormItem, Space } from 'antdv-next';
 
-const [BasicForm, formApi] = useVbenForm({
-  layout: 'vertical',
-  schema: [
-    {
-      label: '图片上传多图',
-      component: 'ImageUpload',
-      fieldName: 'ossIds',
-      componentProps: {
-        maxCount: 3,
-      },
-    },
-    {
-      label: '图片上传单图',
-      component: 'ImageUpload',
-      fieldName: 'ossId',
-      componentProps: {
-        maxCount: 1,
-      },
-    },
-  ],
-  showDefaultActions: false,
+const formData = ref({
+  ossId: '',
+  ossIds: '',
 });
 
 async function getValues() {
   try {
-    const v = await formApi.getValues();
+    const v = { ...formData.value };
     console.log(v);
 
     window.modal.info({
@@ -43,10 +26,10 @@ async function getValues() {
 
 async function handleAssign() {
   const ids = ['1908761290673315841', '1907738568539332610'];
-  await formApi.setValues({
-    ossIds: ids,
-    ossId: ids[0],
-  });
+  formData.value = {
+    ossIds: ids.join(','),
+    ossId: ids[0] ?? '',
+  };
 }
 
 const [BasicModal] = useVbenModal({
@@ -62,7 +45,14 @@ const [BasicModal] = useVbenModal({
         <a-button @click="handleAssign">赋值</a-button>
         <a-button @click="getValues">获取值</a-button>
       </Space>
-      <BasicForm />
+      <Form layout="vertical" :model="formData">
+        <FormItem label="图片上传多图" name="ossIds">
+          <ImageUpload v-model:value="formData.ossIds" :max-count="3" />
+        </FormItem>
+        <FormItem label="图片上传单图" name="ossId">
+          <ImageUpload v-model:value="formData.ossId" :max-count="1" />
+        </FormItem>
+      </Form>
     </div>
   </BasicModal>
 </template>

@@ -26,7 +26,7 @@ body {
   }
 }
 
-/** note: 由于useVbenForm底层已经使用antdv-next的Form 这里不需要做对边框颜色的兼容了  */
+/** note: 表格搜索表单底层已经使用antdv-next的Form 这里不需要做对边框颜色的兼容了  */
 
 /** 前后置小圆点样式 */
 .dot-before-common {

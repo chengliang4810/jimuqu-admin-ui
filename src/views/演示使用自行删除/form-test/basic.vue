@@ -1,37 +1,44 @@
 <script lang="ts" setup>
-import { h, ref } from 'vue';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
 
-import { useVbenForm } from '@/adapter/form';
-import { getAllMenusApi } from '@/api';
-import { Page } from '@/effects/common-ui';
-import { useDebounceFn } from '@vueuse/core';
-import { Button, Card } from 'antdv-next';
+import { ref } from 'vue';
+
+import { Tiptap } from '@/components/tiptap';
+import { FileUpload, ImageUpload } from '@/components/upload';
+import { IconPicker, Page } from '@/effects/common-ui';
+import {
+  AutoComplete,
+  Button,
+  Card,
+  Cascader,
+  Checkbox,
+  CheckboxGroup,
+  DatePicker,
+  DateRangePicker,
+  Form,
+  FormItem,
+  Input,
+  InputNumber,
+  InputPassword,
+  Mentions,
+  Radio,
+  RadioGroup,
+  Rate,
+  Select,
+  Switch,
+  TextArea,
+  TimePicker,
+  TimeRangePicker,
+  TreeSelect,
+  Upload,
+} from 'antdv-next';
 
 /**
  * 该页面用于「校验边框样式」验证：
- * schema 覆盖 adapter/component/index.ts 中 StrictComponentType 的全部组件，
- * 其中所有 outlined 输入类组件均加上校验规则，
- * 点击顶部「校验全部」即可让未填写的字段统一飘红，直观比对边框/聚焦阴影效果。
+ * 使用原生 antdv-next 表单覆盖常用输入组件。
  */
 
-const keyword = ref('');
-const fetching = ref(false);
-// 模拟远程获取数据
-function fetchRemoteOptions({ keyword = '选项' }: Record<string, any>) {
-  fetching.value = true;
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const options = Array.from({ length: 10 }).map((_, index) => ({
-        label: `${keyword}-${index}`,
-        value: `${keyword}-${index}`,
-      }));
-      resolve(options);
-      fetching.value = false;
-    }, 1000);
-  });
-}
-
-// Cascader / TreeSelect 静态数据
 const treeData = [
   {
     label: '浙江',
@@ -66,275 +73,88 @@ const simpleOptions = [
   { label: '选项三', value: '3' },
 ];
 
-const [BaseForm, baseFormApi] = useVbenForm({
-  commonConfig: {
-    colon: true,
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  layout: 'horizontal',
-  // 全部字段默认 required，方便一键飘红验证边框
-  schema: [
+function getDefaultValues() {
+  return {
+    autoComplete: undefined,
+    cascader: undefined,
+    checkbox: false,
+    checkboxGroup: [],
+    datePicker: undefined,
+    fileUpload: '',
+    iconPicker: '',
+    imageUpload: '',
+    input: '',
+    inputNumber: undefined,
+    inputPassword: '',
+    mentions: '',
+    radio: false,
+    radioGroup: undefined,
+    rangePicker: undefined,
+    rate: undefined,
+    richTextarea: '',
+    select: undefined,
+    switch: false,
+    textarea: '',
+    timePicker: undefined,
+    timeRangePicker: undefined,
+    treeSelect: undefined,
+    upload: [],
+  };
+}
+
+type FormData = Record<string, any>;
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+
+const requiredRule = { message: '请填写', required: true };
+const selectRule = { message: '请选择', required: true };
+
+const formRules = ref<AntdFormRules<FormData>>({
+  autoComplete: [requiredRule],
+  cascader: [selectRule],
+  checkbox: [
     {
-      component: 'Input',
-      componentProps: { placeholder: '请输入' },
-      fieldName: 'input',
-      label: 'Input',
-    },
-    {
-      component: 'InputPassword',
-      componentProps: { placeholder: '请输入密码' },
-      fieldName: 'inputPassword',
-      label: 'InputPassword',
-    },
-    {
-      component: 'InputNumber',
-      componentProps: { placeholder: '请输入', suffix: () => '¥' },
-      fieldName: 'inputNumber',
-      label: 'InputNumber',
-    },
-    {
-      component: 'Textarea',
-      componentProps: { placeholder: '请输入', rows: 2 },
-      fieldName: 'textarea',
-      label: 'Textarea',
-    },
-    {
-      component: 'Mentions',
-      componentProps: {
-        options: [
-          { label: 'afc163', value: 'afc163' },
-          { label: 'zombieJ', value: 'zombieJ' },
-        ],
-        placeholder: '输入 @ 触发提及',
-      },
-      fieldName: 'mentions',
-      label: 'Mentions',
-    },
-    {
-      component: 'AutoComplete',
-      componentProps: {
-        options: simpleOptions,
-        placeholder: '请输入',
-      },
-      fieldName: 'autoComplete',
-      label: 'AutoComplete',
-    },
-    {
-      component: 'Select',
-      componentProps: {
-        allowClear: true,
-        options: simpleOptions,
-        placeholder: '请选择',
-        showSearch: true,
-      },
-      fieldName: 'select',
-      label: 'Select',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        afterFetch: (data: { name: string; path: string }[]) =>
-          data.map((item: any) => ({ label: item.name, value: item.path })),
-        api: getAllMenusApi,
-      },
-      fieldName: 'apiSelect',
-      label: 'ApiSelect',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: () => ({
-        api: fetchRemoteOptions,
-        filterOption: false,
-        notFoundContent: fetching.value ? undefined : null,
-        onSearch: useDebounceFn((value: string) => {
-          keyword.value = value;
-        }, 300),
-        params: { keyword: keyword.value || undefined },
-        shouldFetch: (params: any) => !!params?.keyword,
-        showSearch: true,
-      }),
-      fieldName: 'remoteSearch',
-      label: '远程搜索',
-      help: '远程查询，仅有输入时方进行查询',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'Cascader',
-      componentProps: {
-        allowClear: true,
-        options: treeData,
-        placeholder: '请选择',
-        showSearch: true,
-      },
-      fieldName: 'cascader',
-      label: 'Cascader',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'ApiCascader',
-      componentProps: {
-        api: getAllMenusApi,
-        afterFetch: (data: { name: string; path: string }[]) =>
-          data.map((item: any) => ({
-            label: item.name,
-            value: item.path,
-            children: [],
-          })),
-      },
-      fieldName: 'apiCascader',
-      label: 'ApiCascader',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'TreeSelect',
-      componentProps: {
-        allowClear: true,
-        placeholder: '请选择',
-        showSearch: true,
-        treeData,
-        treeNodeFilterProp: 'label',
-      },
-      fieldName: 'treeSelect',
-      label: 'TreeSelect',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'ApiTreeSelect',
-      componentProps: {
-        api: getAllMenusApi,
-        labelField: 'name',
-        valueField: 'path',
-        childrenField: 'children',
-      },
-      fieldName: 'apiTreeSelect',
-      label: 'ApiTreeSelect',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'DatePicker',
-      fieldName: 'datePicker',
-      label: 'DatePicker',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'RangePicker',
-      fieldName: 'rangePicker',
-      label: 'RangePicker',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'TimePicker',
-      fieldName: 'timePicker',
-      label: 'TimePicker',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'TimeRangePicker',
-      fieldName: 'timeRangePicker',
-      label: 'TimeRangePicker',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'IconPicker',
-      fieldName: 'iconPicker',
-      label: 'IconPicker',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'Rate',
-      fieldName: 'rate',
-      label: 'Rate',
-    },
-    {
-      component: 'Switch',
-      componentProps: { class: 'w-auto' },
-      fieldName: 'switch',
-      label: 'Switch',
-    },
-    {
-      component: 'Radio',
-      fieldName: 'radio',
-      label: 'Radio',
-      renderComponentContent: () => ({ default: () => ['单个 Radio'] }),
-    },
-    {
-      component: 'RadioGroup',
-      componentProps: { options: simpleOptions },
-      fieldName: 'radioGroup',
-      label: 'RadioGroup',
-    },
-    {
-      component: 'Checkbox',
-      fieldName: 'checkbox',
-      label: 'Checkbox',
-      renderComponentContent: () => ({ default: () => ['我已阅读并同意'] }),
-      rules: {
-        validator: async (_rule: any, value: any) =>
-          value ? Promise.resolve() : Promise.reject(new Error('请勾选')),
+      validator: async (_rule: any, value: any) => {
+        if (value) {
+          return Promise.resolve();
+        }
+        return Promise.reject(new Error('请勾选'));
       },
     },
-    {
-      component: 'CheckboxGroup',
-      componentProps: { options: simpleOptions },
-      fieldName: 'checkboxGroup',
-      label: 'CheckboxGroup',
-    },
-    {
-      component: 'ImageUpload',
-      fieldName: 'imageUpload',
-      label: 'ImageUpload',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'FileUpload',
-      fieldName: 'fileUpload',
-      label: 'FileUpload',
-      rules: 'selectRequired',
-    },
-    {
-      component: 'Upload',
-      fieldName: 'upload',
-      label: 'Upload',
-      renderComponentContent: () => ({
-        default: () => [h(Button, () => '点击上传')],
-      }),
-    },
-    {
-      component: 'RichTextarea',
-      fieldName: 'richTextarea',
-      label: 'RichTextarea',
-      formItemClass: 'col-span-1 items-baseline md:col-span-2 lg:col-span-3',
-    },
-  ].map((item) => {
-    // 纯展示型组件(无值)不参与校验
-    const displayOnly = ['Divider', 'DefaultButton', 'PrimaryButton'];
-    if (displayOnly.includes(item.component)) {
-      return item;
-    }
-    // 其余统一补 required，已显式声明 rules 的不覆盖
-    return { rules: 'required', ...item };
-  }),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  ],
+  checkboxGroup: [selectRule],
+  datePicker: [selectRule],
+  fileUpload: [selectRule],
+  iconPicker: [selectRule],
+  imageUpload: [selectRule],
+  input: [requiredRule],
+  inputNumber: [requiredRule],
+  inputPassword: [requiredRule],
+  mentions: [requiredRule],
+  radioGroup: [selectRule],
+  rangePicker: [selectRule],
+  select: [selectRule],
+  textarea: [requiredRule],
+  timePicker: [selectRule],
+  timeRangePicker: [selectRule],
+  treeSelect: [selectRule],
 });
 
 async function handleValidate() {
-  await baseFormApi.validate();
+  await formInstance.value?.validate();
 }
 
 function handleReset() {
-  baseFormApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
 }
 </script>
 
 <template>
   <Page
     content-class="flex flex-col gap-4"
-    description="覆盖 StrictComponentType 全部组件，用于验证表单校验失败时的边框/聚焦阴影样式。测试使用"
+    description="覆盖常用原生表单组件，用于验证表单校验失败时的边框/聚焦阴影样式。测试使用"
     title="表单组件 - 边框校验验证"
   >
     <Card title="全部组件">
@@ -344,7 +164,183 @@ function handleReset() {
           <Button @click="handleReset">重置</Button>
         </div>
       </template>
-      <BaseForm />
+      <Form
+        ref="formInstance"
+        :model="formData"
+        class="grid grid-cols-1 gap-x-4 md:grid-cols-2 lg:grid-cols-3"
+      >
+        <FormItem label="Input" name="input" :rules="formRules.input">
+          <Input class="w-full" v-model:value="formData.input" />
+        </FormItem>
+        <FormItem
+          label="InputPassword"
+          name="inputPassword"
+          :rules="formRules.inputPassword"
+        >
+          <InputPassword class="w-full" v-model:value="formData.inputPassword" />
+        </FormItem>
+        <FormItem
+          label="InputNumber"
+          name="inputNumber"
+          :rules="formRules.inputNumber"
+        >
+          <InputNumber
+            class="w-full"
+            suffix="¥"
+            v-model:value="formData.inputNumber"
+          />
+        </FormItem>
+        <FormItem label="Textarea" name="textarea" :rules="formRules.textarea">
+          <TextArea class="w-full" :rows="2" v-model:value="formData.textarea" />
+        </FormItem>
+        <FormItem label="Mentions" name="mentions" :rules="formRules.mentions">
+          <Mentions
+            class="w-full"
+            :options="[
+              { label: 'afc163', value: 'afc163' },
+              { label: 'zombieJ', value: 'zombieJ' },
+            ]"
+            placeholder="输入 @ 触发提及"
+            v-model:value="formData.mentions"
+          />
+        </FormItem>
+        <FormItem
+          label="AutoComplete"
+          name="autoComplete"
+          :rules="formRules.autoComplete"
+        >
+          <AutoComplete
+            class="w-full"
+            :options="simpleOptions"
+            v-model:value="formData.autoComplete"
+          />
+        </FormItem>
+        <FormItem label="Select" name="select" :rules="formRules.select">
+          <Select
+            allow-clear
+            class="w-full"
+            show-search
+            :options="simpleOptions"
+            v-model:value="formData.select"
+          />
+        </FormItem>
+        <FormItem label="Cascader" name="cascader" :rules="formRules.cascader">
+          <Cascader
+            allow-clear
+            class="w-full"
+            show-search
+            :options="treeData"
+            v-model:value="formData.cascader"
+          />
+        </FormItem>
+        <FormItem
+          label="TreeSelect"
+          name="treeSelect"
+          :rules="formRules.treeSelect"
+        >
+          <TreeSelect
+            allow-clear
+            class="w-full"
+            show-search
+            tree-node-filter-prop="label"
+            :tree-data="treeData"
+            v-model:value="formData.treeSelect"
+          />
+        </FormItem>
+        <FormItem
+          label="DatePicker"
+          name="datePicker"
+          :rules="formRules.datePicker"
+        >
+          <DatePicker class="w-full" v-model:value="formData.datePicker" />
+        </FormItem>
+        <FormItem
+          label="RangePicker"
+          name="rangePicker"
+          :rules="formRules.rangePicker"
+        >
+          <DateRangePicker class="w-full" v-model:value="formData.rangePicker" />
+        </FormItem>
+        <FormItem
+          label="TimePicker"
+          name="timePicker"
+          :rules="formRules.timePicker"
+        >
+          <TimePicker class="w-full" v-model:value="formData.timePicker" />
+        </FormItem>
+        <FormItem
+          label="TimeRangePicker"
+          name="timeRangePicker"
+          :rules="formRules.timeRangePicker"
+        >
+          <TimeRangePicker
+            class="w-full"
+            v-model:value="formData.timeRangePicker"
+          />
+        </FormItem>
+        <FormItem
+          label="IconPicker"
+          name="iconPicker"
+          :rules="formRules.iconPicker"
+        >
+          <IconPicker v-model="formData.iconPicker" />
+        </FormItem>
+        <FormItem label="Rate" name="rate">
+          <Rate v-model:value="formData.rate" />
+        </FormItem>
+        <FormItem label="Switch" name="switch">
+          <Switch class="w-auto" v-model:checked="formData.switch" />
+        </FormItem>
+        <FormItem label="Radio" name="radio">
+          <Radio v-model:checked="formData.radio">单个 Radio</Radio>
+        </FormItem>
+        <FormItem
+          label="RadioGroup"
+          name="radioGroup"
+          :rules="formRules.radioGroup"
+        >
+          <RadioGroup :options="simpleOptions" v-model:value="formData.radioGroup" />
+        </FormItem>
+        <FormItem label="Checkbox" name="checkbox" :rules="formRules.checkbox">
+          <Checkbox v-model:checked="formData.checkbox">我已阅读并同意</Checkbox>
+        </FormItem>
+        <FormItem
+          label="CheckboxGroup"
+          name="checkboxGroup"
+          :rules="formRules.checkboxGroup"
+        >
+          <CheckboxGroup
+            :options="simpleOptions"
+            v-model:value="formData.checkboxGroup"
+          />
+        </FormItem>
+        <FormItem
+          label="ImageUpload"
+          name="imageUpload"
+          :rules="formRules.imageUpload"
+        >
+          <ImageUpload v-model:value="formData.imageUpload" />
+        </FormItem>
+        <FormItem
+          label="FileUpload"
+          name="fileUpload"
+          :rules="formRules.fileUpload"
+        >
+          <FileUpload v-model:value="formData.fileUpload" />
+        </FormItem>
+        <FormItem label="Upload" name="upload">
+          <Upload v-model:file-list="formData.upload">
+            <Button>点击上传</Button>
+          </Upload>
+        </FormItem>
+        <FormItem
+          label="RichTextarea"
+          name="richTextarea"
+          class="md:col-span-2 lg:col-span-3"
+        >
+          <Tiptap v-model="formData.richTextarea" />
+        </FormItem>
+      </Form>
     </Card>
   </Page>
 </template>

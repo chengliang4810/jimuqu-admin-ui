@@ -90,7 +90,7 @@ public class VelocityUtils {
         }
         // 判断是原生antd表单还是useForm表单
         // native 原生antd表单
-        // useForm useVbenForm
+        // native antd form
         if (ObjectUtil.isNotNull(paramsObj)) {
             String formComponent = Optional
                 .ofNullable(paramsObj.getStr("formComponent"))

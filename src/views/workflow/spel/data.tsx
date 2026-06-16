@@ -2,7 +2,6 @@ import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
-import { getDictOptions } from '@/utils/dict';
 import { renderDict } from '@/utils/render';
 
 export const querySchema: FormSchemaGetter = () => [
@@ -63,59 +62,5 @@ export const columns: VxeGridProps['columns'] = [
     title: '操作',
     resizable: false,
     width: 'auto',
-  },
-];
-
-export const drawerSchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    dependencies: {
-      show: () => false,
-      triggerFields: [''],
-    },
-    fieldName: 'id',
-    label: 'id',
-  },
-  {
-    component: 'Input',
-    fieldName: 'componentName',
-    label: '组件名称',
-    rules: 'required',
-  },
-  {
-    component: 'Input',
-    fieldName: 'methodName',
-    label: '方法名称',
-    rules: 'required',
-  },
-  {
-    component: 'Input',
-    fieldName: 'methodParams',
-    label: '参数名称',
-    // rules: 'required',
-  },
-  {
-    component: 'Input',
-    fieldName: 'viewSpel',
-    label: 'Spel表达式',
-    // rules: 'required',
-  },
-  {
-    component: 'RadioGroup',
-    componentProps: {
-      buttonStyle: 'solid',
-      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      optionType: 'button',
-    },
-    defaultValue: '0',
-    fieldName: 'status',
-    label: '状态',
-    rules: 'required',
-  },
-  {
-    component: 'Textarea',
-    fieldName: 'remark',
-    formItemClass: 'items-start',
-    label: '备注',
   },
 ];

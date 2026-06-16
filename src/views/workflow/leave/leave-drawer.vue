@@ -1,14 +1,23 @@
 <script setup lang="ts">
+import type { LeaveForm } from './api/model';
 import type { StartWorkFlowReqData } from '@/api/workflow/task/model';
 import type { ExtendedModalApi } from '@/effects/common-ui';
+import type { AntdFormRules } from '@/types/form';
+import type { Dayjs } from 'dayjs';
+import type { FormInstance } from 'antdv-next';
 
 import { computed, ref, shallowRef } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { startWorkFlow } from '@/api/workflow/task';
+import {
+  FormInputNumber as InputNumber,
+  FormSelect as Select,
+  FormTextArea as Textarea,
+} from '@/components/global/form';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
-import { cloneDeep } from '@/utils';
+import { cloneDeep, getPopupContainer } from '@/utils';
+import { DateRangePicker, Form, FormItem } from 'antdv-next';
 import dayjs from 'dayjs';
 import { omit } from 'lodash-es';
 
@@ -18,7 +27,7 @@ import {
   leaveUpdate,
   submitAndStartWorkflow,
 } from './api';
-import { formSchema } from './data';
+import { leaveFlowOptions, leaveTypeOptions } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -27,19 +36,43 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  layout: 'vertical',
-  commonConfig: {
-    formItemClass: 'col-span-2',
-    componentProps: {
-      class: 'w-full',
-    },
-    labelWidth: 100,
-  },
-  schema: formSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+interface FormData extends LeaveForm {
+  dateRange?: [Dayjs, Dayjs];
+  flowType?: string;
+  type?: string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    dateRange: undefined,
+    flowType: 'leave1',
+    id: undefined,
+    leaveDays: undefined,
+    leaveType: undefined,
+    remark: '',
+    type: 'frontend',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+
+const formRules = ref<AntdFormRules<FormData>>({
+  dateRange: [{ required: true, message: $t('ui.formRules.required') }],
+  flowType: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  leaveType: [{ required: true, message: $t('ui.formRules.selectRequired') }],
 });
+
+const startTypeOptions = [
+  {
+    label: '前端发起 (可选审批人, 选抄送人, 上传附件)',
+    value: 'frontend',
+  },
+  {
+    label: '后端发起 (自行编写后端逻辑, 由后端发起流程)',
+    value: 'backend',
+  },
+];
 
 const modalApi = shallowRef<ExtendedModalApi | null>(null);
 
@@ -62,9 +95,11 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     // 赋值
     if (isUpdate.value && id) {
       const resp = await leaveInfo(id);
-      await formApi.setValues(resp);
-      const dateRange = [dayjs(resp.startDate), dayjs(resp.endDate)];
-      await formApi.setFieldValue('dateRange', dateRange);
+      formData.value = {
+        ...getDefaultValues(),
+        ...resp,
+        dateRange: [dayjs(resp.startDate), dayjs(resp.endDate)],
+      };
     }
 
     drawerApi.drawerLoading(false);
@@ -72,18 +107,25 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 });
 
 async function handleClosed() {
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
+}
+
+function handleDateRangeChange(dates: Dayjs[] | null) {
+  if (!dates || dates.length < 2) {
+    formData.value.leaveDays = undefined;
+    return;
+  }
+  const [start, end] = dates;
+  formData.value.leaveDays = dayjs(end).diff(dayjs(start), 'day') + 1;
 }
 
 /**
  * 获取已经处理好的表单参数
  */
 async function getFormData() {
-  const { valid } = await formApi.validate();
-  if (!valid) {
-    throw new Error('表单验证失败');
-  }
-  let data = cloneDeep(await formApi.getValues()) as any;
+  await formInstance.value?.validate();
+  let data = cloneDeep(formData.value) as any;
   data = omit(data, 'flowType', 'type');
   // 处理日期
   data.startDate = dayjs(data.dateRange[0]).format('YYYY-MM-DD HH:mm:ss');
@@ -118,12 +160,9 @@ async function handleTempSave() {
 async function handleStartWorkFlow() {
   drawerApi.lock(true);
   try {
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
+    await formInstance.value?.validate();
     // 获取发起类型
-    const { type } = await formApi.getValues();
+    const { type } = formData.value;
     /**
      * 这里只是demo 实际只会用到一种
      */
@@ -145,8 +184,7 @@ async function handleStartWorkFlow() {
           leaveDays: leaveResp!.leaveDays,
           userList: ['1', '3', '4'],
         };
-        const formValues = await formApi.getValues();
-        const flowCode = formValues?.flowType ?? 'leave1';
+        const flowCode = formData.value.flowType ?? 'leave1';
         const startWorkFlowData: StartWorkFlowReqData = {
           businessId: leaveResp!.id,
           flowCode,
@@ -179,7 +217,50 @@ async function handleStartWorkFlow() {
 
 <template>
   <BasicDrawer :title="title" :size="600">
-    <BasicForm />
+    <Form layout="vertical" ref="formInstance" :model="formData">
+      <FormItem label="流程类型" name="flowType" :rules="formRules.flowType">
+        <Select
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          :options="leaveFlowOptions"
+          v-model:value="formData.flowType"
+        />
+      </FormItem>
+      <FormItem label="发起类型" name="type">
+        <Select
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          :options="startTypeOptions"
+          v-model:value="formData.type"
+        />
+      </FormItem>
+      <FormItem label="请假类型" name="leaveType" :rules="formRules.leaveType">
+        <Select
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          :options="leaveTypeOptions"
+          v-model:value="formData.leaveType"
+        />
+      </FormItem>
+      <FormItem label="开始时间" name="dateRange" :rules="formRules.dateRange">
+        <DateRangePicker
+          class="w-full"
+          format="YYYY-MM-DD"
+          v-model:value="formData.dateRange"
+          @change="handleDateRangeChange"
+        />
+      </FormItem>
+      <FormItem label="请假天数" name="leaveDays">
+        <InputNumber
+          disabled
+          class="w-full"
+          v-model:value="formData.leaveDays"
+        />
+      </FormItem>
+      <FormItem label="请假原因" name="remark">
+        <Textarea class="w-full" v-model:value="formData.remark" />
+      </FormItem>
+    </Form>
     <template #center-footer>
       <a-button @click="handleTempSave">暂存</a-button>
     </template>

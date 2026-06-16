@@ -1,19 +1,26 @@
 <script setup lang="ts">
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { categoryTree } from '@/api/workflow/category';
 import {
   workflowDefinitionAdd,
   workflowDefinitionInfo,
   workflowDefinitionUpdate,
 } from '@/api/workflow/definition';
+import {
+  FormInput as Input,
+  FormTreeSelect as TreeSelect,
+} from '@/components/global/form';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
+import { useBeforeCloseDiff } from '@/utils/popup';
+import { Form, FormItem, RadioGroup } from 'antdv-next';
 
-import { modalSchema } from './data';
+import { designerModeOptions } from './data';
 
 const emit = defineEmits<{ reload: [type: 'add' | 'update'] }>();
 
@@ -22,53 +29,52 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    componentProps: {
-      class: 'w-full',
-    },
-    formItemClass: 'col-span-2',
-    labelWidth: 90,
-  },
-  schema: modalSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+interface FormData {
+  category?: string;
+  flowCode?: string;
+  flowName?: string;
+  formPath?: string;
+  id?: number | string;
+  modelValue?: string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    category: undefined,
+    flowCode: '',
+    flowName: '',
+    formPath: '',
+    id: undefined,
+    modelValue: 'CLASSICS',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const categoryTreeData = ref<any[]>([]);
+
+const formRules = ref<AntdFormRules<FormData>>({
+  category: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  flowCode: [{ required: true, message: $t('ui.formRules.required') }],
+  flowName: [{ required: true, message: $t('ui.formRules.required') }],
+  formPath: [{ required: true, message: $t('ui.formRules.required') }],
+  modelValue: [{ required: true, message: $t('ui.formRules.selectRequired') }],
 });
+
+function formValueGetter() {
+  return JSON.stringify(formData.value);
+}
 
 async function setupCategorySelect() {
   // menu
-  const tree = await categoryTree();
-  addFullName(tree, 'label', ' / ');
-
-  formApi.updateSchema([
-    {
-      componentProps: {
-        fieldNames: {
-          label: 'label',
-          value: 'id',
-        },
-        getPopupContainer,
-        // 设置弹窗滚动高度 默认256
-        listHeight: 300,
-        showSearch: true,
-        treeData: tree,
-        treeDefaultExpandAll: true,
-        // 默认展开的树节点
-        // treeDefaultExpandedKeys: [0],
-        treeLine: { showLeafIcon: false },
-        // 筛选的字段
-        treeNodeFilterProp: 'label',
-        treeNodeLabelProp: 'fullName',
-      },
-      fieldName: 'category',
-    },
-  ]);
+  categoryTreeData.value = await categoryTree();
+  addFullName(categoryTreeData.value, 'label', ' / ');
 }
 
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   {
-    initializedGetter: defaultFormValueGetter(formApi),
-    currentGetter: defaultFormValueGetter(formApi),
+    initializedGetter: formValueGetter,
+    currentGetter: formValueGetter,
   },
 );
 
@@ -89,7 +95,10 @@ const [BasicDrawer, modalApi] = useVbenModal({
     await setupCategorySelect();
     if (isUpdate.value && id) {
       const record = await workflowDefinitionInfo(id);
-      await formApi.setValues(record);
+      formData.value = {
+        ...getDefaultValues(),
+        ...record,
+      };
     }
     await markInitialized();
 
@@ -100,11 +109,8 @@ const [BasicDrawer, modalApi] = useVbenModal({
 async function handleConfirm() {
   try {
     modalApi.lock(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = cloneDeep(await formApi.getValues());
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
     if (isUpdate.value) {
       await workflowDefinitionUpdate(data);
       emit('reload', 'update');
@@ -122,7 +128,8 @@ async function handleConfirm() {
 }
 
 async function handleClosed() {
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
   resetInitialized();
 }
 </script>
@@ -130,7 +137,48 @@ async function handleClosed() {
 <template>
   <BasicDrawer :fullscreen-button="false" :title="title" :size="550">
     <div class="min-h-[400px]">
-      <BasicForm />
+      <Form
+        ref="formInstance"
+        :model="formData"
+        :label-col="{ style: { width: '90px' } }"
+      >
+        <FormItem label="流程分类" name="category" :rules="formRules.category">
+          <TreeSelect
+            class="w-full"
+            :field-names="{ label: 'label', value: 'id' }"
+            :get-popup-container="getPopupContainer"
+            :list-height="300"
+            show-search
+            :tree-data="categoryTreeData"
+            tree-default-expand-all
+            :tree-line="{ showLeafIcon: false }"
+            tree-node-filter-prop="label"
+            tree-node-label-prop="fullName"
+            v-model:value="formData.category"
+          />
+        </FormItem>
+        <FormItem label="流程code" name="flowCode" :rules="formRules.flowCode">
+          <Input allow-clear class="w-full" v-model:value="formData.flowCode" />
+        </FormItem>
+        <FormItem label="流程名称" name="flowName" :rules="formRules.flowName">
+          <Input allow-clear class="w-full" v-model:value="formData.flowName" />
+        </FormItem>
+        <FormItem
+          label="设计器模式"
+          name="modelValue"
+          :rules="formRules.modelValue"
+        >
+          <RadioGroup
+            button-style="solid"
+            option-type="button"
+            :options="designerModeOptions"
+            v-model:value="formData.modelValue"
+          />
+        </FormItem>
+        <FormItem label="表单路径" name="formPath" :rules="formRules.formPath">
+          <Input allow-clear class="w-full" v-model:value="formData.formPath" />
+        </FormItem>
+      </Form>
     </div>
   </BasicDrawer>
 </template>

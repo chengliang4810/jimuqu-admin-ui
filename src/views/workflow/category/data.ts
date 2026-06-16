@@ -37,33 +37,3 @@ export const columns: VxeGridProps['columns'] = [
     width: 'auto',
   },
 ];
-
-export const modalSchema: FormSchemaGetter = () => [
-  {
-    label: 'categoryId',
-    fieldName: 'categoryId',
-    component: 'Input',
-    dependencies: {
-      show: () => false,
-      triggerFields: [''],
-    },
-  },
-  {
-    fieldName: 'parentId',
-    label: '父级分类',
-    rules: 'required',
-    defaultValue: 100,
-    component: 'TreeSelect',
-  },
-  {
-    fieldName: 'categoryName',
-    label: '分类名称',
-    component: 'Input',
-    rules: 'required',
-  },
-  {
-    fieldName: 'orderNum',
-    label: '排序',
-    component: 'InputNumber',
-  },
-];

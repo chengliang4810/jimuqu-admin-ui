@@ -1,4 +1,3 @@
-import type { ExtendedFormApi } from '@/effects/common-ui';
 import type { MaybePromise } from '@/types';
 
 import { ref } from 'vue';
@@ -60,7 +59,7 @@ export function useBeforeCloseDiff(props: BeforeCloseDiffProps) {
   }
 
   /**
-   * 提供给useVbenForm/useVbenDrawer使用
+   * 提供给弹窗/抽屉关闭前使用
    * @returns 是否允许关闭
    */
   async function onBeforeClose(): Promise<boolean> {
@@ -109,17 +108,5 @@ export function useBeforeCloseDiff(props: BeforeCloseDiffProps) {
     onBeforeClose,
     markInitialized,
     resetInitialized,
-  };
-}
-
-/**
- * 给useVbenForm使用的 封装函数
- * @param formApi 表单实例
- * @returns getter
- */
-export function defaultFormValueGetter(formApi: ExtendedFormApi) {
-  return async () => {
-    const v = await formApi.getValues();
-    return JSON.stringify(v);
   };
 }

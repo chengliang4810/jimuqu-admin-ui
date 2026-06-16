@@ -1,9 +1,8 @@
-import type { FormSchemaGetter, VbenFormSchema } from '@/adapter/form';
+import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { OptionsTag } from '@/components/table';
 import { DictEnum } from '@/constants';
-import { getPopupContainer } from '@/utils';
 import { renderDict } from '@/utils/render';
 import dayjs from 'dayjs';
 
@@ -91,97 +90,5 @@ export const columns: VxeGridProps['columns'] = [
     title: '操作',
     resizable: false,
     width: 'auto',
-  },
-];
-
-export const formSchema: () => VbenFormSchema[] = () => [
-  {
-    label: '主键',
-    fieldName: 'id',
-    component: 'Input',
-    dependencies: {
-      show: () => false,
-      triggerFields: [''],
-    },
-  },
-  {
-    label: '流程类型',
-    fieldName: 'flowType',
-    component: 'Select',
-    help: '这里仅仅为了发起流程方便, 实际不应该包含此字段',
-    componentProps: {
-      options: leaveFlowOptions,
-      getPopupContainer,
-    },
-    defaultValue: 'leave1',
-    rules: 'selectRequired',
-    dependencies: {
-      triggerFields: [''],
-    },
-  },
-  {
-    label: '发起类型',
-    fieldName: 'type',
-    component: 'Select',
-    help: '这里仅仅为了测试, 实际不应该包含此字段',
-    componentProps: {
-      options: [
-        {
-          label: '前端发起 (可选审批人, 选抄送人, 上传附件)',
-          value: 'frontend',
-        },
-        {
-          label: '后端发起 (自行编写后端逻辑, 由后端发起流程)',
-          value: 'backend',
-        },
-      ],
-      getPopupContainer,
-    },
-    defaultValue: 'frontend',
-  },
-  {
-    label: '请假类型',
-    fieldName: 'leaveType',
-    component: 'Select',
-    componentProps: {
-      options: leaveTypeOptions,
-      getPopupContainer,
-    },
-    rules: 'selectRequired',
-  },
-  {
-    label: '开始时间',
-    fieldName: 'dateRange',
-    component: 'RangePicker',
-    componentProps(model) {
-      return {
-        format: 'YYYY-MM-DD',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        onChange: (dates: [string, string]) => {
-          if (!dates) {
-            model.leaveDays = null;
-            return;
-          }
-          const [start, end] = dates;
-          const leaveDays = dayjs(end).diff(dayjs(start), 'day') + 1;
-          model.leaveDays = leaveDays;
-        },
-      };
-    },
-    rules: 'required',
-  },
-  {
-    label: '请假天数',
-    fieldName: 'leaveDays',
-    component: 'Input',
-    componentProps: {
-      disabled: true,
-    },
-    // rules: 'required',
-  },
-  {
-    label: '请假原因',
-    fieldName: 'remark',
-    component: 'Textarea',
   },
 ];

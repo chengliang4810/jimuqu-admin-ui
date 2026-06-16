@@ -1,11 +1,17 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { instanceVariable, updateFlowVariable } from '@/api/workflow/instance';
+import {
+  FormInput as Input,
+  FormSelect as Select,
+} from '@/components/global/form';
 import { JsonPreview, useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
 import { cn, getPopupContainer } from '@/utils';
-import { Tag } from 'antdv-next';
+import { Button, Form, FormItem, Tag } from 'antdv-next';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance, SelectProps } from 'antdv-next';
 
 interface ModalData {
   /**
@@ -16,6 +22,8 @@ interface ModalData {
 }
 
 const data = ref({});
+const submitLoading = ref(false);
+const formInstance = ref<FormInstance>();
 const [BasicModal, modalApi] = useVbenModal({
   title: '流程变量',
   fullscreenButton: false,
@@ -45,6 +53,44 @@ function getFieldTypeColor(fieldType: string) {
   );
 }
 
+type VariableOption = NonNullable<SelectProps['options']>[number] & {
+  fieldType: string;
+};
+
+interface FormData {
+  key?: string;
+  value?: string;
+  valueType?: string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    key: undefined,
+    value: '',
+    valueType: undefined,
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const variableOptions = ref<VariableOption[]>([]);
+
+const valueTypeOptions = [
+  {
+    label: 'string',
+    value: 'string',
+  },
+  {
+    label: 'boolean | number | object (使用JSON.parse)',
+    value: 'object',
+  },
+];
+
+const formRules = ref<AntdFormRules<FormData>>({
+  key: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  value: [{ required: true, message: $t('ui.formRules.required') }],
+  valueType: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+});
+
 async function loadData() {
   const { instanceId } = modalApi.getData() as ModalData;
   const resp = await instanceVariable(instanceId);
@@ -54,108 +100,33 @@ async function loadData() {
   // 表单
   const objEntry = Object.entries(jsonObj);
 
-  interface OptionsType {
-    label: string;
-    value: string;
-    fieldType: string;
-  }
-
-  formApi.updateSchema([
-    {
-      fieldName: 'key',
-      componentProps: {
-        options: objEntry.map(
-          ([key, value]) =>
-            ({
-              label: key,
-              value: key,
-              fieldType: typeof value,
-            }) as OptionsType,
-        ),
-      },
-      renderComponentContent: () => ({
-        option: (option: OptionsType) => (
-          <div>
-            {option.label}
-            <Tag class="ml-1" color={getFieldTypeColor(option.fieldType)}>
-              {option.fieldType}
-            </Tag>
-          </div>
-        ),
-      }),
-    },
-  ]);
+  variableOptions.value = objEntry.map(([key, value]) => ({
+    label: key,
+    value: key,
+    fieldType: typeof value,
+  }));
 }
 
-const [Form, formApi] = useVbenForm({
-  commonConfig: {
-    componentProps: {
-      class: 'w-full',
-      allowClear: true,
+async function handleConfirmUpdate() {
+  await formInstance.value?.validate();
+  const values = { ...formData.value };
+  window.modal.confirm({
+    title: '修改流程变量',
+    content: '确认修改流程变量吗？',
+    centered: true,
+    okButtonProps: {
+      danger: true,
     },
-    labelWidth: 80,
-  },
-  schema: [
-    {
-      fieldName: 'key',
-      component: 'Select',
-      label: '变量名称',
-      rules: 'selectRequired',
-      componentProps: {
-        getPopupContainer,
-      },
+    onOk: async () => {
+      await handleSubmit(values);
     },
-    {
-      fieldName: 'valueType',
-      component: 'Select',
-      label: '变量类型',
-      rules: 'selectRequired',
-      componentProps: {
-        getPopupContainer,
-        options: [
-          {
-            label: 'string',
-            value: 'string',
-          },
-          {
-            label: 'boolean | number | object (使用JSON.parse)',
-            value: 'object',
-          },
-        ],
-      },
-    },
-    {
-      fieldName: 'value',
-      component: 'Input',
-      label: '变量值',
-      rules: 'required',
-    },
-  ],
-  resetButtonOptions: {
-    show: false,
-  },
-  submitButtonOptions: {
-    content: '修改',
-  },
-  handleSubmit: async (values) => {
-    console.log(values);
-    window.modal.confirm({
-      title: '修改流程变量',
-      content: '确认修改流程变量吗？',
-      centered: true,
-      okButtonProps: {
-        danger: true,
-      },
-      onOk: async () => {
-        await handleSubmit(values);
-      },
-    });
-  },
-});
+  });
+}
 
 async function handleSubmit(values: any) {
   try {
     modalApi.lock(true);
+    submitLoading.value = true;
 
     const { instanceId } = modalApi.getData() as ModalData;
 
@@ -179,7 +150,8 @@ async function handleSubmit(values: any) {
       value: transformValue,
     };
     await updateFlowVariable(requestData);
-    await formApi.resetForm();
+    formData.value = getDefaultValues();
+    formInstance.value?.resetFields();
 
     // 查询修改后的
     const resp = await instanceVariable(instanceId);
@@ -188,6 +160,7 @@ async function handleSubmit(values: any) {
   } catch (error) {
     console.error(error);
   } finally {
+    submitLoading.value = false;
     modalApi.lock(false);
   }
 }
@@ -207,6 +180,47 @@ async function handleSubmit(values: any) {
       </div>
       将value的类型改为Object才能使用
     </div>
-    <Form class="mt-2" />
+    <Form
+      ref="formInstance"
+      class="mt-2"
+      :model="formData"
+      :label-col="{ style: { width: '80px' } }"
+    >
+      <FormItem label="变量名称" name="key" :rules="formRules.key">
+        <Select
+          allow-clear
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          :options="variableOptions"
+          v-model:value="formData.key"
+        >
+          <template #optionRender="{ option }">
+            <div>
+              {{ option.label }}
+              <Tag class="ml-1" :color="getFieldTypeColor(option.data.fieldType)">
+                {{ option.data.fieldType }}
+              </Tag>
+            </div>
+          </template>
+        </Select>
+      </FormItem>
+      <FormItem label="变量类型" name="valueType" :rules="formRules.valueType">
+        <Select
+          allow-clear
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          :options="valueTypeOptions"
+          v-model:value="formData.valueType"
+        />
+      </FormItem>
+      <FormItem label="变量值" name="value" :rules="formRules.value">
+        <Input allow-clear class="w-full" v-model:value="formData.value" />
+      </FormItem>
+      <FormItem :wrapper-col="{ offset: 0 }">
+        <Button type="primary" :loading="submitLoading" @click="handleConfirmUpdate">
+          修改
+        </Button>
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>

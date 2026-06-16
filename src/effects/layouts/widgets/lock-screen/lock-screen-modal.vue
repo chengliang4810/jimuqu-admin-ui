@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Recordable } from '@/types';
+import type { FormInstance } from 'antdv-next';
 
-import { computed, reactive } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
-import { useVbenForm } from '@/core/ui/form';
 import { useVbenModal } from '@/core/ui/popup';
 import { $t } from '@/locales';
+import { Form, FormItem, InputPassword } from 'antdv-next';
 
 interface Props {
   avatar?: string;
@@ -23,34 +23,23 @@ withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  submit: [Recordable<any>];
+  submit: [password?: string];
 }>();
 
-const [Form, { resetForm, validate, getValues, getFieldComponentRef }] =
-  useVbenForm(
-    reactive({
-      commonConfig: {
-        hideLabel: true,
-        hideRequiredMark: true,
-      },
-      schema: computed(() => [
-        {
-          component: 'InputPassword' as const,
-          componentProps: {
-            placeholder: $t('ui.widgets.lockScreen.placeholder'),
-          },
-          fieldName: 'lockScreenPassword',
-          formFieldProps: { validateOnBlur: false },
-          label: $t('authentication.password'),
-          rules: {
-            message: $t('ui.widgets.lockScreen.placeholder'),
-            required: true,
-          },
-        },
-      ]),
-      showDefaultActions: false,
-    }),
-  );
+const formData = ref({
+  lockScreenPassword: '',
+});
+const formInstance = ref<FormInstance>();
+const passwordInput = ref();
+
+const formRules = computed(() => ({
+  lockScreenPassword: [
+    {
+      message: $t('ui.widgets.lockScreen.placeholder'),
+      required: true,
+    },
+  ],
+}));
 
 const [Modal] = useVbenModal({
   onConfirm() {
@@ -58,24 +47,20 @@ const [Modal] = useVbenModal({
   },
   onOpenChange(isOpen) {
     if (isOpen) {
-      resetForm();
+      formData.value.lockScreenPassword = '';
+      formInstance.value?.resetFields();
     }
   },
   onOpened() {
-    requestAnimationFrame(() => {
-      getFieldComponentRef('lockScreenPassword')
-        ?.$el?.querySelector('[name="lockScreenPassword"]')
-        ?.focus();
+    nextTick(() => {
+      passwordInput.value?.focus?.();
     });
   },
 });
 
 async function handleSubmit() {
-  const { valid } = await validate();
-  const values = await getValues();
-  if (valid) {
-    emit('submit', values?.lockScreenPassword);
-  }
+  await formInstance.value?.validate();
+  emit('submit', formData.value.lockScreenPassword);
 }
 </script>
 
@@ -100,7 +85,19 @@ async function handleSubmit() {
             {{ text }}
           </div>
         </div>
-        <Form />
+        <Form ref="formInstance" :model="formData">
+          <FormItem
+            name="lockScreenPassword"
+            :rules="formRules.lockScreenPassword"
+          >
+            <InputPassword
+              ref="passwordInput"
+              name="lockScreenPassword"
+              :placeholder="$t('ui.widgets.lockScreen.placeholder')"
+              v-model:value="formData.lockScreenPassword"
+            />
+          </FormItem>
+        </Form>
         <VbenButton class="mt-1 w-full" @click="handleSubmit">
           {{ $t('ui.widgets.lockScreen.screenButton') }}
         </VbenButton>
