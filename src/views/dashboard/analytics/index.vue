@@ -1,12 +1,8 @@
 <script lang="ts" setup>
-import type { AnalysisOverviewItem } from '@/effects/common-ui';
 import type { TabOption } from '@/types';
 
-import {
-  AnalysisChartCard,
-  AnalysisChartsTabs,
-  AnalysisOverview,
-} from '@/effects/common-ui';
+import type { AnalysisOverviewItem } from '../typing';
+
 import {
   SvgBellIcon,
   SvgCakeIcon,
@@ -14,6 +10,11 @@ import {
   SvgDownloadIcon,
 } from '@/icons-app';
 
+import {
+  AnalysisChartCard,
+  AnalysisChartsTabs,
+  AnalysisOverview,
+} from '../analysis';
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';

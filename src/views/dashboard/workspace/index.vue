@@ -4,24 +4,24 @@ import type {
   WorkbenchQuickNavItem,
   WorkbenchTodoItem,
   WorkbenchTrendItem,
-} from '@/effects/common-ui';
+} from '../typing';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { preferences } from '@/core/preferences';
+import { useUserStore } from '@/stores';
+import { openWindow } from '@/utils';
+
+import { AnalysisChartCard } from '../analysis';
+import AnalyticsVisitsSource from '../analytics/analytics-visits-source.vue';
 import {
-  AnalysisChartCard,
   WorkbenchHeader,
   WorkbenchProject,
   WorkbenchQuickNav,
   WorkbenchTodo,
   WorkbenchTrends,
-} from '@/effects/common-ui';
-import { useUserStore } from '@/stores';
-import { openWindow } from '@/utils';
-
-import AnalyticsVisitsSource from '../analytics/analytics-visits-source.vue';
+} from '../workbench';
 
 const userStore = useUserStore();
 
