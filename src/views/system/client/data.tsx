@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
@@ -28,26 +27,6 @@ function renderList(list: string[], allText: string) {
   );
 }
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'clientKey',
-    label: '客户端key',
-  },
-  {
-    component: 'Input',
-    fieldName: 'clientSecret',
-    label: '客户端密钥',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-    },
-    fieldName: 'status',
-    label: '状态',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

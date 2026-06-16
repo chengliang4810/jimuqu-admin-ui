@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { OptionsTag } from '@/components/table';
@@ -7,23 +6,6 @@ import { renderDict } from '@/utils/render';
 
 import { activityStatusOptions } from '../processDefinition/constant';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    label: '任务名称',
-    fieldName: 'nodeName',
-  },
-  {
-    component: 'Input',
-    label: '流程名称',
-    fieldName: 'flowName',
-  },
-  {
-    component: 'Input',
-    label: '流程编码',
-    fieldName: 'flowCode',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

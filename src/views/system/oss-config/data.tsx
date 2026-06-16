@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
@@ -11,26 +10,6 @@ const accessPolicyOptions = [
   { color: 'blue', label: '自定义', value: '2' },
 ];
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'configKey',
-    label: '配置名称',
-  },
-  {
-    component: 'Input',
-    fieldName: 'bucketName',
-    label: '桶名称',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      options: getDictOptions(DictEnum.SYS_YES_NO),
-    },
-    fieldName: 'status',
-    label: '是否默认',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

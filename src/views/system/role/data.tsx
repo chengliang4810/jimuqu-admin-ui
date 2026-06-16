@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
@@ -17,31 +16,6 @@ export const authScopeOptions = [
   { color: 'default', label: '部门及以下或本人数据权限', value: '6' },
 ];
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'roleName',
-    label: '角色名称',
-  },
-  {
-    component: 'Input',
-    fieldName: 'roleKey',
-    label: '权限字符',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-    },
-    fieldName: 'status',
-    label: '状态',
-  },
-  {
-    component: 'RangePicker',
-    fieldName: 'createTime',
-    label: '创建时间',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

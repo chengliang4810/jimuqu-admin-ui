@@ -1,16 +1,8 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { DictData } from '@/api/system/dict/dict-data-model';
 
 import { renderDictTag } from '@/utils/render';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'dictLabel',
-    label: '字典标签',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

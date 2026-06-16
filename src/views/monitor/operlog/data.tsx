@@ -1,51 +1,9 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
 import { getDictOptions } from '@/utils/dict';
 import { renderDict } from '@/utils/render';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'title',
-    label: '系统模块',
-  },
-  {
-    component: 'Input',
-    fieldName: 'operName',
-    label: '操作人员',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      options: getDictOptions(DictEnum.SYS_OPER_TYPE),
-    },
-    fieldName: 'businessType',
-    label: '操作类型',
-  },
-  {
-    component: 'Input',
-    fieldName: 'operIp',
-    label: '操作IP',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      options: getDictOptions(DictEnum.SYS_COMMON_STATUS),
-    },
-    fieldName: 'status',
-    label: '状态',
-  },
-  {
-    component: 'RangePicker',
-    fieldName: 'createTime',
-    label: '操作时间',
-    componentProps: {
-      valueFormat: 'YYYY-MM-DD HH:mm:ss',
-    },
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

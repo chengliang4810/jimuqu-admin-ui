@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
@@ -6,27 +5,6 @@ import { getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { renderDict } from '@/utils/render';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'postCode',
-    label: '岗位编码',
-  },
-  {
-    component: 'Input',
-    fieldName: 'postName',
-    label: '岗位名称',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      getPopupContainer,
-      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-    },
-    fieldName: 'status',
-    label: '状态',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

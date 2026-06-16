@@ -1,21 +1,8 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { renderBrowserIcon, renderOsIcon } from '@/utils/render';
 import dayjs from 'dayjs';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'ipaddr',
-    label: 'IP地址',
-  },
-  {
-    component: 'Input',
-    fieldName: 'userName',
-    label: '用户账号',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   {

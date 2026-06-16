@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
@@ -8,31 +7,6 @@ import { getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { renderDict } from '@/utils/render';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'menuName',
-    label: '菜单名称 ',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      getPopupContainer,
-      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-    },
-    fieldName: 'status',
-    label: '菜单状态 ',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      getPopupContainer,
-      options: getDictOptions(DictEnum.SYS_SHOW_HIDE),
-    },
-    fieldName: 'visible',
-    label: '显示状态',
-  },
-];
 
 // 菜单类型（M目录 C菜单 F按钮）
 export const menuTypeOptions = [

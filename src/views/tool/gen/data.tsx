@@ -1,32 +1,5 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Select',
-    fieldName: 'dataName',
-    label: '数据源',
-    defaultValue: '',
-    componentProps: {
-      allowClear: false,
-    },
-  },
-  {
-    component: 'Input',
-    fieldName: 'tableName',
-    label: '表名称',
-  },
-  {
-    component: 'Input',
-    fieldName: 'tableComment',
-    label: '表描述',
-  },
-  {
-    component: 'RangePicker',
-    fieldName: 'createTime',
-    label: '创建时间',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

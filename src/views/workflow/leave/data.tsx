@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { OptionsTag } from '@/components/table';
@@ -24,25 +23,6 @@ export const leaveFlowOptions = [
   { label: '请假申请-排他并行网关', value: 'leave6' },
 ];
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'InputNumber',
-    componentProps: {
-      min: 1,
-    },
-    fieldName: 'startLeaveDays',
-    label: '请假天数',
-  },
-  {
-    component: 'InputNumber',
-    componentProps: {
-      min: 1,
-    },
-    fieldName: 'endLeaveDays',
-    label: '至',
-    labelClass: 'justify-center',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

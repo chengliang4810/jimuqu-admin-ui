@@ -10,4 +10,3 @@ export type {
 
 // export { default as VbenForm } from './vben-form.vue';
 export type { FormActions, FormRuleObject } from './types';
-export * from './use-vben-form';

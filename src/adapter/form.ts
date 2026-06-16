@@ -5,7 +5,7 @@ import type {
 
 import type { ComponentPropsMap, ComponentType } from './component';
 
-import { setupVbenForm, useVbenForm as useForm } from '@/effects/common-ui';
+import { setupVbenForm } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { isArray } from 'lodash-es';
 
@@ -46,10 +46,7 @@ async function initSetupVbenForm() {
   });
 }
 
-const useVbenForm = useForm<ComponentType, ComponentPropsMap>;
-export type FormSchemaGetter = () => VbenFormSchema[];
-
-export { initSetupVbenForm, useVbenForm };
+export { initSetupVbenForm };
 
 export type VbenFormSchema = FormSchema<ComponentType, ComponentPropsMap>;
 export type VbenFormProps = FormProps<ComponentType, ComponentPropsMap>;

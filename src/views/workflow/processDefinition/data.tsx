@@ -1,4 +1,3 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { OptionsTag } from '@/components/table';
@@ -16,18 +15,6 @@ export const designerModeOptions = [
   },
 ];
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'flowName',
-    label: '流程名称',
-  },
-  {
-    component: 'Input',
-    fieldName: 'flowCode',
-    label: '流程code',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

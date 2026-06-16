@@ -1,35 +1,9 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
 import { getDictOptions } from '@/utils/dict';
 import { renderBrowserIcon, renderDict, renderOsIcon } from '@/utils/render';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'ipaddr',
-    label: 'IP地址',
-  },
-  {
-    component: 'Input',
-    fieldName: 'userName',
-    label: '用户账号',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      options: getDictOptions(DictEnum.SYS_COMMON_STATUS),
-    },
-    fieldName: 'status',
-    label: '登录状态',
-  },
-  {
-    component: 'RangePicker',
-    fieldName: 'dateTime',
-    label: '登录日期',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

@@ -1,18 +1,5 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
-export const querySchema: FormSchemaGetter = () => [
-  {
-    fieldName: 'categoryName',
-    label: '分类名称',
-    component: 'Input',
-  },
-  {
-    fieldName: 'categoryCode',
-    label: '分类编码',
-    component: 'Input',
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   {
