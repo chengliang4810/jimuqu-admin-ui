@@ -3,8 +3,8 @@
 该文件作为例子 使用原生表单而非useVbenForm
 -->
 <script setup lang="ts">
+import type { AntdFormRules } from '@/types/form';
 import type { FormInstance } from 'antdv-next';
-import type { Rule } from 'antdv-next/dist/form/types';
 
 import { computed, ref } from 'vue';
 
@@ -13,11 +13,10 @@ import { contentWithOssIdTransform, Tiptap } from '@/components/tiptap';
 import { DictEnum } from '@/constants';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
-import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
 import { Form, FormItem, Input, RadioGroup } from 'antdv-next';
-import { pick } from 'lodash-es';
+import { cloneDeep, pick } from 'lodash-es';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -51,11 +50,8 @@ const defaultValues: FormData = {
 /**
  * 表单数据ref
  */
-const formData = ref(defaultValues);
+const formData = ref({ ...defaultValues });
 
-type AntdFormRules<T> = Partial<Record<keyof T, Rule[]>> & {
-  [key: string]: Rule[];
-};
 /**
  * 表单校验规则
  */
@@ -131,7 +127,7 @@ async function handleConfirm() {
 }
 
 async function handleClosed() {
-  formData.value = defaultValues;
+  formData.value = { ...defaultValues };
   formInstance.value?.resetFields();
   resetInitialized();
 }
