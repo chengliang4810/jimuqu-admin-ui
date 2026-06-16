@@ -31,6 +31,7 @@
     "@antdv-next/auto-import-resolver": "catalog:",
     "@antdv-next/happy-work-theme": "catalog:",
     "@antdv-next/icons": "catalog:",
+    "@antdv-next/x-markdown": "catalog:",
     "@ctrl/tinycolor": "catalog:",
     "@iconify/json": "catalog:",
     "@iconify/vue": "catalog:",

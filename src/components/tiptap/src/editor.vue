@@ -298,11 +298,3 @@ defineExpose({
     </Spin>
   </div>
 </template>
-
-<style lang="scss">
-.form-valid-error .tiptap-root {
-  div.ant-select:not(.valid-success) {
-    border-color: var(--ant-color-border-secondary) !important;
-  }
-}
-</style>

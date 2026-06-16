@@ -123,6 +123,9 @@ const matchAntdvNextSharedChunk = createChunkMatcher([
   '/node_modules/.pnpm/antdv-next@',
   ...fromPnpm('@v-c'),
 ]);
+const matchAntdvNextMarkdownChunk = createChunkMatcher(
+  fromPnpm('@antdv-next/x-markdown'),
+);
 const matchAntdvNextChunk = createChunkMatcher(['antdv-next']);
 const matchFrameworkChunk = createChunkMatcher(
   fromPnpm('@vue', '@vueuse', 'pinia', 'vue-router', 'vue'),
@@ -244,6 +247,11 @@ const matchAppViewsChunk = createChunkMatcher(['/src/views/']);
 function createApplicationCodeSplitting() {
   return {
     groups: [
+      {
+        name: 'antdv-x-markdown',
+        priority: 48,
+        test: matchAntdvNextMarkdownChunk,
+      },
       {
         name: 'antdv-icons',
         priority: 47,

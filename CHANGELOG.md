@@ -1,64 +1,18 @@
-## 兼容后端v6更新
+# 基于vben5.7版本(被一万行改坏的提交记录前)开发
 
-- 已经全局移除`租户`相关功能 包括但不限于租户菜单/切换及租户相关的接口和字段
-- `登录页` 去除租户选择
-- `客户端管理`支持`路径白名单` `ip白名单`
-- `通知公告` 增加预览 q:`v-html`实际有影响??
-- `登录日志` 接口路径替换
-- `字典管理` 性别字典名称替换
-- `sse消息` 通用返回体兼容及跳转页面
-- `角色管理` 分配菜单权限和分配部门权限放在一起了
-- `菜单管理` 支持存储ext(即前端路由meta)
-- 已经移除`tinymce`富文本 改为`tiptap`
+## 重构部分
 
-## 2.0.1
+- 由`monorepo`改为单仓(其实还是包含了一个vite的子包) 注意安装依赖需要`-w`参数
+- 原`packages`已经拆分到src下 其他只保留`vite-config`包
+- 移除`shadcn`等headless组件库  使用`antdv-next`/适配器重构
+- 重构原`designToken`生成逻辑 改为由`antdv-next`派生
+- 偏好设置功能做精简 主题只保留一个(light dark支持)
+- 原oxc部分改回来`eslint+prettier` oxc还不稳定
+- 移除`vaditor`(markdown编辑) 会加载到首屏资源占用
+- 移除`codemirror`(代码块着色) 只是代码生成预览会用到 同样占用资源
 
-**FEATURE**:
+## 提升
 
-- useVbenForm支持compoennt类型推断 (官方更新)
-
-**FIX**:
-
-- Tinymce的上传进度兼容alova
-- UseForm的help不能正常显示tooltip
-
-## 2.0.0
-
-## 环境
-
-最低需要使用`node版本>22.16.0` 否则会影响编辑器的格式化(需要安装oxc插件)
-
-## 变化(跟ant-design-vue对比)
-
-从ant design (react) v6移植过来 详细也可以看[antd的文档](https://ant.design/changelog-cn#600)
-
-- 支持css变量 不用再写**deep**或者加权重来覆盖样式
-- 支持`组件语义化结构` [组件语义化结构](https://ant.design/docs/blog/semantic-beauty-cn)
-- notification的新样式 (这个从antd5都已经有了 vue一直没有)
-- RadioGroup支持波纹效果
-- modal/drawer支持blur效果
-- 支持颜色与变体 需要绿色按钮？不用再写css了[Button 组件](https://ant.design/components/button-cn#button-demo-color-variant)
-- 支持颜色选择器[ColorPicker 组件](https://ant.design/components/color-picker-cn) 这个也是从antd5就开始有了 vue一直没有
-- 一些xxxItem组件 如`DescriotionsItem` `MenuItem` `TimeLineItem` 已经移除 使用对应父组件的`items`属性代替
-- DatePicker等必须绑定为`Dayjs`类型 不再支持`string`格式的绑定 相应需要提交自己转为string提交
-
-## 框架级别的变化
-
-- v1版本的`requestClient`已经被`alovaInstance`替代 已经做了兼容(99%) 可直接替换
-- 表格的操作列`ghost-button`替换名称为`action-button` 现在你可以修改来默认样式
-- message/modal/notification直接导入使用(静态方法)无法获取context 即主题/国际化无效 需要通过`window.xxx`进行调用
-- 使用`version-polling`替代自带的版本检测更新 样式更新 在worker执行 不会阻塞主线程
-- 字典常量enum从`packages/@core/base/shared/src/constants`移动到`@vben/constants`下 需要移动文件位置(导入不需要更改)
-- ~~Switch的value只能是boolean值 之前可以为 string/number/boolean (antd组件变化)~~ 后续rc版本又加上了
-- Popconfirm不再需要 `:get-popup-container="getVxePopupContainer"` antd已经支持滚动跟随 故`getVxePopupContainer`已经移除
-- 离线(菜单)图标方案重构 在`scripts/generate-offline-icons.js`添加图标名称 在根目录执行`pnpm generate-offline-icons`即可生成离线图标
-- ~~表格上方搜索表单(或者需要调用formReset的场景) -> 时间相关组件必须设置`defaultValue`为`null`(区间时间组件需要设置为[null, null]的元组) **否则不会正常重置**~~ 后续版本已经修复
-- 移除`commonDownloadExcel`方法 使用`useBlobExport`代替
-- 路由模式由`backend`改为`mix`模式 即前后端混合路由 路由放在`apps/web-antd/src/router/routes/modules`下 移除原先的`local.ts`
-
-## vben基础框架的变化
-
-- 使用`oxc`替代`eslint` & `prettier`
-- tailwind3 -> tailwind4
-- vite升级到v8(基于rust)
-- core包`unbuild`升级到`tsdown`(基于rust)
+- 安装依赖(pnpm i)速度提升  由于移除很多依赖+只需要构建vite-config包 现在安装依赖部分只需要原来50%时间
+- 构建速度提升 移除了之前的turbo 改为纯vite构建 自测原24S 现8S内
+- 首屏加载速度提升 在gzip场景下 首屏只需要加载1.6M资源 目前8M带宽服务器 首屏1.5S

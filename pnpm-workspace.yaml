@@ -29,6 +29,7 @@ catalog:
   '@antdv-next/auto-import-resolver': 1.0.7
   '@antdv-next/happy-work-theme': ^1.0.0
   '@antdv-next/icons': 1.0.5
+  '@antdv-next/x-markdown': ^0.1.0
   '@ast-grep/napi': ^0.42.0
   '@ctrl/tinycolor': ^4.2.0
   '@eslint/js': ^10.0.1

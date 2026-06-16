@@ -3,6 +3,11 @@ import type { RouteRecordRaw } from 'vue-router';
 import { IFrameView } from '@/effects/layouts';
 import { $t } from '@/locales';
 
+const {
+  version,
+  // vite inject-metadata 插件注入的全局变量
+} = __VBEN_ADMIN_METADATA__ || {};
+
 const routes: RouteRecordRaw[] = [
   {
     meta: {
@@ -39,6 +44,18 @@ const routes: RouteRecordRaw[] = [
           iframeSrc: 'https://dapdap.top',
           keepAlive: true,
           title: $t('demos.vben.document'),
+        },
+      },
+      {
+        name: 'ChangeLog',
+        path: '/changelog',
+        component: () => import('@/views/_core/changelog/index.vue'),
+        meta: {
+          icon: 'lucide:book-open-text',
+          keepAlive: true,
+          title: '更新日志',
+          badge: `当前: ${version}`,
+          badgeVariants: 'bg-primary',
         },
       },
     ],
