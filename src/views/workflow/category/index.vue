@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { Recordable } from '@/types';
 
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { categoryList, categoryRemove } from '@/api/workflow/category';
@@ -11,18 +10,10 @@ import { Page, useVbenModal } from '@/effects/common-ui';
 import { Popconfirm, Space } from 'antdv-next';
 
 import categoryModal from './category-modal.vue';
-import { columns, querySchema } from './data';
+import CategorySearchForm from './category-search.vue';
+import { columns } from './data';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof CategorySearchForm>>();
 
 const gridOptions: VxeGridProps = {
   columns,
@@ -66,7 +57,7 @@ const gridOptions: VxeGridProps = {
   id: 'workflow-category-index',
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
 const [CategoryModal, modalApi] = useVbenModal({
   connectedComponent: categoryModal,
 });
@@ -93,11 +84,26 @@ function expandAll() {
 function collapseAll() {
   tableApi.grid?.setAllTreeExpand(false);
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="流程分类列表">
+    <div class="flex h-full flex-col gap-4">
+      <CategorySearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="流程分类列表">
       <template #toolbar-tools>
         <Space>
           <a-button @click="collapseAll">
@@ -147,6 +153,8 @@ function collapseAll() {
         </Space>
       </template>
     </BasicTable>
+      </div>
+    </div>
     <CategoryModal @reload="tableApi.query()" />
   </Page>
 </template>

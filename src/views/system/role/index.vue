@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Role } from '@/api/system/role/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { SwitchProps } from 'antdv-next';
 
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
@@ -26,28 +25,12 @@ import { Page, useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import roleAuthModal from './role-auth-modal.vue';
 import roleModal from './role-modal.vue';
+import RoleSearchForm from './role-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  // 日期选择格式化
-  fieldMappingTime: [
-    [
-      'createTime',
-      ['params[beginTime]', 'params[endTime]'],
-      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
-    ],
-  ],
-};
+const searchFormRef = ref<InstanceType<typeof RoleSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -81,7 +64,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 const [RoleModal, roleModalApi] = useVbenModal({
@@ -121,7 +103,7 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(roleExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
   // 文件名
   const fileName = buildExportFileName('角色数据');
   exportBlob({ data: formValues, fileName });
@@ -151,11 +133,26 @@ async function handleChangeStatus(checked: SwitchProps['checked'], row: Role) {
     status: checked ? EnableStatus.Enable : EnableStatus.Disable,
   });
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="角色列表">
+    <div class="flex h-full flex-col gap-4">
+      <RoleSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="角色列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -240,6 +237,8 @@ async function handleChangeStatus(checked: SwitchProps['checked'], row: Role) {
         </template>
       </template>
     </BasicTable>
+        </div>
+      </div>
     <RoleModal @reload="tableApi.query()" />
     <RoleAuthModal @reload="tableApi.query()" />
   </Page>

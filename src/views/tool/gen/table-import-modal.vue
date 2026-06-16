@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { VbenFormProps } from '@/effects/common-ui';
+
+import { ref } from 'vue';
 
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import {
@@ -9,34 +10,12 @@ import {
   readyToGenList,
 } from '@/api/tool/gen';
 import { useVbenModal } from '@/effects/common-ui';
+import TableImportSearchForm from './table-import-search.vue';
 
 const emit = defineEmits<{ reload: [] }>();
 
-const formOptions: VbenFormProps = {
-  schema: [
-    {
-      label: '数据源',
-      fieldName: 'dataName',
-      component: 'Select',
-      defaultValue: 'master',
-    },
-    {
-      label: '表名称',
-      fieldName: 'tableName',
-      component: 'Input',
-    },
-    {
-      label: '表描述',
-      fieldName: 'tableComment',
-      component: 'Input',
-    },
-  ],
-  commonConfig: {
-    labelWidth: 60,
-  },
-  showCollapseButton: false,
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-};
+const searchFormRef = ref<InstanceType<typeof TableImportSearchForm>>();
+const dataSourceOptions = ref<{ label: string; value: string }[]>([]);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -93,7 +72,7 @@ const gridOptions: VxeGridProps = {
   cellClassName: 'cursor-pointer',
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
 
 const [BasicModal, modalApi] = useVbenModal({
   onOpenChange: async (isOpen) => {
@@ -102,18 +81,19 @@ const [BasicModal, modalApi] = useVbenModal({
       return null;
     }
     const ret = await getDataSourceNames();
-    const dataSourceOptions = ret.map((item) => ({ label: item, value: item }));
-    tableApi.formApi.updateSchema([
-      {
-        fieldName: 'dataName',
-        componentProps: {
-          options: dataSourceOptions,
-        },
-      },
-    ]);
+    const options = ret.map((item) => ({ label: item, value: item }));
+    dataSourceOptions.value = options;
   },
   onConfirm: handleSubmit,
 });
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 
 async function handleSubmit() {
   try {
@@ -124,7 +104,8 @@ async function handleSubmit() {
       return;
     }
     modalApi.modalLoading(true);
-    const { dataName } = await tableApi.formApi.getValues();
+    const formValues = (await searchFormRef.value?.getValues()) ?? {};
+    const dataName = formValues.dataName || 'master';
     await importTable(tables.join(','), dataName);
     emit('reload');
     modalApi.close();
@@ -138,6 +119,16 @@ async function handleSubmit() {
 
 <template>
   <BasicModal :width="800" title="导入表">
-    <BasicTable />
+    <div class="flex h-full flex-col gap-4">
+      <TableImportSearchForm
+        ref="searchFormRef"
+        :data-source-options="dataSourceOptions"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable />
+      </div>
+    </div>
   </BasicModal>
 </template>

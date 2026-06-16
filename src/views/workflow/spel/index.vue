@@ -1,26 +1,19 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Spel } from '@/api/workflow/spel/model';
-import type { VbenFormProps } from '@/effects/common-ui';
+
+import { ref } from 'vue';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import { spelDelete, spelList } from '@/api/workflow/spel';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import spelDrawer from './spel-drawer.vue';
+import SpelSearchForm from './spel-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof SpelSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -52,7 +45,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 const [SpelDrawer, drawerApi] = useVbenDrawer({
@@ -87,55 +79,71 @@ function handleMultiDelete() {
     },
   });
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="流程表达式列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['system:config:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:config:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:config:edit']"
-            @click.stop="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
-              danger
-              v-access:code="['system:config:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-    </BasicTable>
-    <SpelDrawer @reload="tableApi.query()" />
+    <div class="flex h-full flex-col gap-4">
+      <SpelSearchForm
+        @reset="handleSearchReset"
+        @submit="handleSearchSubmit"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="流程表达式列表">
+          <template #toolbar-tools>
+            <Space>
+              <a-button
+                :disabled="!vxeCheckboxChecked(tableApi)"
+                danger
+                type="primary"
+                v-access:code="['system:config:remove']"
+                @click="handleMultiDelete"
+              >
+                {{ $t('pages.common.delete') }}
+              </a-button>
+              <a-button
+                type="primary"
+                v-access:code="['system:config:add']"
+                @click="handleAdd"
+              >
+                {{ $t('pages.common.add') }}
+              </a-button>
+            </Space>
+          </template>
+          <template #action="{ row }">
+            <Space>
+              <action-button
+                v-access:code="['system:config:edit']"
+                @click.stop="handleEdit(row)"
+              >
+                {{ $t('pages.common.edit') }}
+              </action-button>
+              <Popconfirm
+                placement="left"
+                title="确认删除？"
+                @confirm="handleDelete(row)"
+              >
+                <action-button
+                  danger
+                  v-access:code="['system:config:remove']"
+                  @click.stop=""
+                >
+                  {{ $t('pages.common.delete') }}
+                </action-button>
+              </Popconfirm>
+            </Space>
+          </template>
+        </BasicTable>
+      </div>
+      <SpelDrawer @reload="tableApi.query()" />
+    </div>
   </Page>
 </template>

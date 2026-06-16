@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { VbenFormProps } from '@/effects/common-ui';
 
 import type { LeaveForm } from './api/model';
+
+import { ref } from 'vue';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import { cancelProcessApply } from '@/api/workflow/instance';
@@ -12,20 +13,12 @@ import { Popconfirm, Space } from 'antdv-next';
 
 import { applyModal, flowInfoModal } from '../components';
 import { leaveExport, leaveList, leaveRemove } from './api';
-import { columns, querySchema } from './data';
+import { columns } from './data';
+import LeaveSearchForm from './leave-search.vue';
 import { useRouteIdEdit } from './hook';
 import leaveDrawer from './leave-drawer.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof LeaveSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -65,7 +58,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
   gridEvents: {
     cellClick: ({ row, column }) => {
@@ -136,7 +128,7 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(leaveExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = searchFormRef.value?.getValues() ?? {};
   // 文件名
   const fileName = buildExportFileName('请假申请数据');
   exportBlob({ data: formValues, fileName });
@@ -150,86 +142,101 @@ function handleInfo(row: Required<LeaveForm>) {
   flowInfoModalApi.setData({ businessId: row.id });
   flowInfoModalApi.open();
 }
+
+async function handleSearch() {
+  const values = searchFormRef.value?.getValues() ?? {};
+  await tableApi.query(values);
+}
+
+function handleReset() {
+  searchFormRef.value?.reset?.();
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="请假申请列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            v-access:code="['workflow:leave:export']"
-            :loading="exportLoading"
-            :disabled="exportLoading"
-            @click="handleExport"
-          >
-            {{ $t('pages.common.export') }}
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['workflow:leave:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['workflow:leave:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          :disabled="!['draft', 'cancel', 'back'].includes(row.status)"
-          v-access:code="['workflow:leave:edit']"
-          @click.stop="handleEdit(row)"
-        >
-          {{ $t('pages.common.edit') }}
-        </a-button>
-        <Popconfirm
-          placement="left"
-          title="确认撤销？"
-          :disabled="!['waiting'].includes(row.status)"
-          @confirm.stop="handleRevoke(row)"
-          @cancel.stop=""
-        >
-          <a-button
-            size="small"
-            type="link"
-            :disabled="!['waiting'].includes(row.status)"
-            v-access:code="['workflow:leave:edit']"
-            @click.stop=""
-          >
-            撤销
-          </a-button>
-        </Popconfirm>
-        <Popconfirm
-          placement="left"
-          title="确认删除？"
-          :disabled="!['draft', 'cancel', 'back'].includes(row.status)"
-          @confirm.stop="handleDelete(row)"
-          @cancel.stop=""
-        >
-          <a-button
-            size="small"
-            type="link"
-            :disabled="!['draft', 'cancel', 'back'].includes(row.status)"
-            danger
-            v-access:code="['workflow:leave:remove']"
-            @click.stop=""
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
-      </template>
-    </BasicTable>
+    <div class="flex h-full flex-col gap-4">
+      <LeaveSearchForm ref="searchFormRef" @search="handleSearch" @reset="handleReset" />
+      <div class="flex-1">
+        <BasicTable table-title="请假申请列表">
+          <template #toolbar-tools>
+            <Space>
+              <a-button
+                v-access:code="['workflow:leave:export']"
+                :loading="exportLoading"
+                :disabled="exportLoading"
+                @click="handleExport"
+              >
+                {{ $t('pages.common.export') }}
+              </a-button>
+              <a-button
+                :disabled="!vxeCheckboxChecked(tableApi)"
+                danger
+                type="primary"
+                v-access:code="['workflow:leave:remove']"
+                @click="handleMultiDelete"
+              >
+                {{ $t('pages.common.delete') }}
+              </a-button>
+              <a-button
+                type="primary"
+                v-access:code="['workflow:leave:add']"
+                @click="handleAdd"
+              >
+                {{ $t('pages.common.add') }}
+              </a-button>
+            </Space>
+          </template>
+          <template #action="{ row }">
+            <a-button
+              size="small"
+              type="link"
+              :disabled="!['draft', 'cancel', 'back'].includes(row.status)"
+              v-access:code="['workflow:leave:edit']"
+              @click.stop="handleEdit(row)"
+            >
+              {{ $t('pages.common.edit') }}
+            </a-button>
+            <Popconfirm
+              placement="left"
+              title="确认撤销？"
+              :disabled="!['waiting'].includes(row.status)"
+              @confirm.stop="handleRevoke(row)"
+              @cancel.stop=""
+            >
+              <a-button
+                size="small"
+                type="link"
+                :disabled="!['waiting'].includes(row.status)"
+                v-access:code="['workflow:leave:edit']"
+                @click.stop=""
+              >
+                撤销
+              </a-button>
+            </Popconfirm>
+            <Popconfirm
+              placement="left"
+              title="确认删除？"
+              :disabled="!['draft', 'cancel', 'back'].includes(row.status)"
+              @confirm.stop="handleDelete(row)"
+              @cancel.stop=""
+            >
+              <a-button
+                size="small"
+                type="link"
+                :disabled="!['draft', 'cancel', 'back'].includes(row.status)"
+                danger
+                v-access:code="['workflow:leave:remove']"
+                @click.stop=""
+              >
+                {{ $t('pages.common.delete') }}
+              </a-button>
+            </Popconfirm>
+          </template>
+        </BasicTable>
+      </div>
+    </div>
     <FlowInfoModal />
     <ApplyModal
       @complete="handleCompleteOrCancel"

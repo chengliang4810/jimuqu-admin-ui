@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Post } from '@/api/system/post/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 
 import { ref } from 'vue';
 
@@ -17,29 +16,16 @@ import { useBlobExport } from '@/utils/file/export';
 import DeptTree from '@/views/system/user/dept-tree.vue';
 import { Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import postDrawer from './post-drawer.vue';
+import PostSearchForm from './post-search.vue';
 
 // 左边部门用
 const selectDeptId = ref<string[]>([]);
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  handleReset: async () => {
-    selectDeptId.value = [];
-    const { formApi, reload } = tableApi;
-    await formApi.resetForm();
-    const formValues = formApi.form.values;
-    formApi.setLatestSubmissionValues(formValues);
-    await reload(formValues);
-  },
-};
+
+const searchFormRef = ref<InstanceType<typeof PostSearchForm>>();
+// 缓存最近一次搜索参数，部门树切换时重新查询用
+const currentSearchParams = ref<Record<string, any>>({});
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -78,7 +64,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -119,15 +104,26 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(postExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
   // 文件名
   const fileName = buildExportFileName('岗位数据');
   exportBlob({ data: formValues, fileName });
 }
 
+function handleSearchSubmit(data: Record<string, any>) {
+  currentSearchParams.value = data;
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  currentSearchParams.value = {};
+  selectDeptId.value = [];
+  tableApi.reload();
+}
+
 function handleDeptSelect(keys: string[]) {
   selectDeptId.value = keys;
-  tableApi.reload();
+  tableApi.reload(currentSearchParams.value);
 }
 </script>
 
@@ -140,7 +136,14 @@ function handleDeptSelect(keys: string[]) {
       @reload="() => tableApi.reload()"
       @select="handleDeptSelect"
     />
-    <BasicTable class="flex-1 overflow-hidden" table-title="岗位列表">
+    <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+      <PostSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable class="overflow-hidden" table-title="岗位列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -193,6 +196,8 @@ function handleDeptSelect(keys: string[]) {
         </Space>
       </template>
     </BasicTable>
+      </div>
+    </div>
     <PostDrawer @reload="tableApi.query()" />
   </Page>
 </template>

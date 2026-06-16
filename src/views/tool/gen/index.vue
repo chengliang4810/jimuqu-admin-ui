@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { Recordable } from '@/types';
 
 import { onMounted } from 'vue';
@@ -20,28 +19,13 @@ import { Popconfirm, Space } from 'antdv-next';
 import dayjs from 'dayjs';
 
 import codePreviewModal from './code-preview-modal.vue';
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import howToUseModal from './md/how-to-use-modal.vue';
 import tableImportModal from './table-import-modal.vue';
+import GenSearchForm from './gen-search.vue';
 
-const formOptions: VbenFormProps = {
-  schema: querySchema(),
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  // 日期选择格式化
-  fieldMappingTime: [
-    [
-      'createTime',
-      ['params[beginTime]', 'params[endTime]'],
-      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
-    ],
-  ],
-};
+const searchFormRef = ref<InstanceType<typeof GenSearchForm>>();
+const dataSourceOptions = ref<{ label: string; value: string }[]>([]);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -74,25 +58,16 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
 onMounted(async () => {
   // 获取数据源
   const ret = await getDataSourceNames();
-  const dataSourceOptions = [{ label: '全部', value: '' }];
+  const options = [{ label: '全部', value: '' }];
   const transOptions = ret.map((item) => ({ label: item, value: item }));
-  dataSourceOptions.push(...transOptions);
-  // 更新selectOptions
-  tableApi.formApi.updateSchema([
-    {
-      fieldName: 'dataName',
-      componentProps: {
-        options: dataSourceOptions,
-      },
-    },
-  ]);
+  options.push(...transOptions);
+  dataSourceOptions.value = options;
 });
 
 const [CodePreviewModal, previewModalApi] = useVbenModal({
@@ -179,6 +154,14 @@ function handleImport() {
   tableImportModalApi.open();
 }
 
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
+
 const [HowToUseModal, howToUseModalApi] = useVbenModal({
   connectedComponent: howToUseModal,
 });
@@ -186,7 +169,15 @@ const [HowToUseModal, howToUseModalApi] = useVbenModal({
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="代码生成列表">
+    <div class="flex h-full flex-col gap-4">
+      <GenSearchForm
+        ref="searchFormRef"
+        :data-source-options="dataSourceOptions"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="代码生成列表">
       <template #toolbar-tools>
         <Space>
           <a-button type="link" @click="howToUseModalApi.open()">
@@ -273,6 +264,8 @@ const [HowToUseModal, howToUseModalApi] = useVbenModal({
         </Popconfirm>
       </template>
     </BasicTable>
+      </div>
+    </div>
     <CodePreviewModal />
     <TableImportModal @reload="tableApi.query()" />
     <HowToUseModal />

@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Dept } from '@/api/system/dept/model';
-import type { VbenFormProps } from '@/effects/common-ui';
-
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { deptList, deptRemove } from '@/api/system/dept';
@@ -11,19 +9,11 @@ import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { eachTree } from '@/utils';
 import { Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import deptDrawer from './dept-drawer.vue';
+import DeptSearchForm from './dept-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof DeptSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   columns,
@@ -69,7 +59,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
   gridEvents: {
     cellDblclick: (e) => {
@@ -121,60 +110,77 @@ function setExpandOrCollapse(expand: boolean) {
   eachTree(tableApi.grid.getData(), (item) => (item.expand = expand));
   tableApi.grid?.setAllTreeExpand(expand);
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="部门列表" table-title-help="双击展开/收起子菜单">
-      <template #toolbar-tools>
-        <Space>
-          <a-button @click="setExpandOrCollapse(false)">
-            {{ $t('pages.common.collapse') }}
-          </a-button>
-          <a-button @click="setExpandOrCollapse(true)">
-            {{ $t('pages.common.expand') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:dept:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:dept:edit']"
-            @click="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <action-button
-            variant="link"
-            color="green"
-            v-access:code="['system:dept:add']"
-            @click="handleSubAdd(row)"
-          >
-            {{ $t('pages.common.add') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
-              danger
-              v-access:code="['system:dept:remove']"
-              @click.stop=""
+    <div class="flex h-full flex-col gap-4">
+      <DeptSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="部门列表" table-title-help="双击展开/收起子菜单">
+        <template #toolbar-tools>
+          <Space>
+            <a-button @click="setExpandOrCollapse(false)">
+              {{ $t('pages.common.collapse') }}
+            </a-button>
+            <a-button @click="setExpandOrCollapse(true)">
+              {{ $t('pages.common.expand') }}
+            </a-button>
+            <a-button
+              type="primary"
+              v-access:code="['system:dept:add']"
+              @click="handleAdd"
             >
-              {{ $t('pages.common.delete') }}
+              {{ $t('pages.common.add') }}
+            </a-button>
+          </Space>
+        </template>
+        <template #action="{ row }">
+          <Space>
+            <action-button
+              v-access:code="['system:dept:edit']"
+              @click="handleEdit(row)"
+            >
+              {{ $t('pages.common.edit') }}
             </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-    </BasicTable>
+            <action-button
+              variant="link"
+              color="green"
+              v-access:code="['system:dept:add']"
+              @click="handleSubAdd(row)"
+            >
+              {{ $t('pages.common.add') }}
+            </action-button>
+            <Popconfirm
+              placement="left"
+              title="确认删除？"
+              @confirm="handleDelete(row)"
+            >
+              <action-button
+                danger
+                v-access:code="['system:dept:remove']"
+                @click.stop=""
+              >
+                {{ $t('pages.common.delete') }}
+              </action-button>
+            </Popconfirm>
+          </Space>
+        </template>
+      </BasicTable>
+      </div>
+    </div>
     <DeptDrawer @reload="tableApi.query()" />
   </Page>
 </template>

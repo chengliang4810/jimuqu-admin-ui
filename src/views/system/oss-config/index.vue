@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { OssConfig } from '@/api/system/oss-config/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { SwitchProps } from 'antdv-next';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
@@ -16,19 +15,11 @@ import { useAccess } from '@/effects/access';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import ossConfigDrawer from './oss-config-drawer.vue';
+import OssConfigSearchForm from './oss-config-search.vue';
 
-const formOptions: VbenFormProps = {
-  schema: querySchema(),
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof OssConfigSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -61,7 +52,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -109,11 +99,26 @@ async function handleChangeStatus(
     status: checked ? YesNo.Yes : YesNo.No,
   });
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="oss配置列表">
+    <div class="flex h-full flex-col gap-4">
+      <OssConfigSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="oss配置列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -168,6 +173,8 @@ async function handleChangeStatus(
         </Space>
       </template>
     </BasicTable>
+      </div>
+    </div>
     <OssConfigDrawer @reload="tableApi.query()" />
   </Page>
 </template>

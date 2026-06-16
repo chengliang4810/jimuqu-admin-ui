@@ -1,27 +1,18 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Notice } from '@/api/system/notice/model';
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import { noticeList, noticeRemove } from '@/api/system/notice';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { notificationMitt } from '@/utils/mitt/notification';
 import { Popconfirm, Space } from 'antdv-next';
+import { ref } from 'vue';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import noticeModal from './notice-modal.vue';
+import NoticeSearchForm from './notice-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof NoticeSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -54,7 +45,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -94,58 +84,75 @@ function handleMultiDelete() {
     },
   });
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="通知公告列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['system:notice:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:notice:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button @click="handlePreview(row)">
-            {{ $t('pages.common.preview') }}
-          </action-button>
-          <action-button
-            v-access:code="['system:notice:edit']"
-            @click="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
+    <div class="flex h-full flex-col gap-4">
+      <NoticeSearchForm
+        ref="searchFormRef"
+        @reset="handleSearchReset"
+        @submit="handleSearchSubmit"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="通知公告列表">
+        <template #toolbar-tools>
+          <Space>
+            <a-button
+              :disabled="!vxeCheckboxChecked(tableApi)"
               danger
+              type="primary"
               v-access:code="['system:notice:remove']"
-              @click.stop=""
+              @click="handleMultiDelete"
             >
               {{ $t('pages.common.delete') }}
+            </a-button>
+            <a-button
+              type="primary"
+              v-access:code="['system:notice:add']"
+              @click="handleAdd"
+            >
+              {{ $t('pages.common.add') }}
+            </a-button>
+          </Space>
+        </template>
+        <template #action="{ row }">
+          <Space>
+            <action-button @click="handlePreview(row)">
+              {{ $t('pages.common.preview') }}
             </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-    </BasicTable>
+            <action-button
+              v-access:code="['system:notice:edit']"
+              @click="handleEdit(row)"
+            >
+              {{ $t('pages.common.edit') }}
+            </action-button>
+            <Popconfirm
+              placement="left"
+              title="确认删除？"
+              @confirm="handleDelete(row)"
+            >
+              <action-button
+                danger
+                v-access:code="['system:notice:remove']"
+                @click.stop=""
+              >
+                {{ $t('pages.common.delete') }}
+              </action-button>
+            </Popconfirm>
+          </Space>
+        </template>
+      </BasicTable>
+      </div>
+    </div>
     <NoticeModal @reload="tableApi.query()" />
   </Page>
 </template>

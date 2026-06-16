@@ -2,7 +2,8 @@
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { PageQuery } from '@/api/common';
 import type { OperationLog } from '@/api/monitor/operlog/model';
-import type { VbenFormProps } from '@/effects/common-ui';
+
+import { ref } from 'vue';
 
 import {
   addSortParams,
@@ -21,27 +22,11 @@ import { useBlobExport } from '@/utils/file/export';
 import { confirmDeleteModal } from '@/utils/modal';
 import { Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import operationPreviewDrawer from './operation-preview-drawer.vue';
+import OperlogSearchForm from './operlog-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  // 日期选择格式化
-  fieldMappingTime: [
-    [
-      'createTime',
-      ['params[beginTime]', 'params[endTime]'],
-      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
-    ],
-  ],
-};
+const searchFormRef = ref<InstanceType<typeof OperlogSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -83,7 +68,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
   gridEvents: {
     // 排序 重新请求接口
@@ -136,16 +120,31 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(operLogExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
   // 文件名
   const fileName = buildExportFileName('操作日志');
   exportBlob({ data: formValues, fileName });
+}
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
 }
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="操作日志列表">
+    <div class="flex h-full flex-col gap-4">
+      <OperlogSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="操作日志列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -182,6 +181,8 @@ async function handleExport() {
         </action-button>
       </template>
     </BasicTable>
+      </div>
+    </div>
     <OperationPreviewDrawer />
   </Page>
 </template>

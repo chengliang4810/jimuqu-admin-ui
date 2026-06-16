@@ -2,7 +2,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { User } from '@/api';
-import type { VbenFormProps } from '@/effects/common-ui';
 
 import { ref } from 'vue';
 
@@ -10,6 +9,7 @@ import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { userList } from '@/api/system/user';
 import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
 import DeptTree from '@/views/system/user/dept-tree.vue';
+import UserSelectSearchForm from './user-select-search.vue';
 
 defineOptions({
   name: 'UserSelectModal',
@@ -58,34 +58,10 @@ const [BasicModal, modalApi] = useVbenModal({
 
 // 左边部门用
 const selectDeptId = ref<string[]>([]);
-const formOptions: VbenFormProps = {
-  schema: [
-    {
-      component: 'Input',
-      fieldName: 'userName',
-      label: '用户账号',
-      hideLabel: true,
-      componentProps: {
-        placeholder: '请输入账号',
-      },
-    },
-  ],
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  wrapperClass: 'grid-cols-2',
-  handleReset: async () => {
-    selectDeptId.value = [];
-    const { formApi, reload } = tableApi;
-    await formApi.resetForm();
-    const formValues = formApi.form.values;
-    formApi.setLatestSubmissionValues(formValues);
-    await reload(formValues);
-  },
-};
+
+const searchFormRef = ref<InstanceType<typeof UserSelectSearchForm>>();
+// 缓存最近一次搜索参数，部门树切换时重新查询用
+const currentSearchParams = ref<Record<string, any>>({});
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -165,7 +141,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
   gridEvents: {
     // 需要控制不同的事件 radio也会触发checkbox事件
@@ -263,8 +238,19 @@ function handleRemoveAll() {
   rightTableApi.grid.loadData([]);
 }
 
+function handleSearchSubmit(data: Record<string, any>) {
+  currentSearchParams.value = data;
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  currentSearchParams.value = {};
+  selectDeptId.value = [];
+  tableApi.reload();
+}
+
 async function handleDeptQuery() {
-  await tableApi.reload();
+  tableApi.reload(currentSearchParams.value);
   // 重置后恢复 保存勾选的数据
   const records = rightTableApi.grid.getData();
   if (props.mode === 'multiple') {
@@ -293,8 +279,14 @@ function handleSubmit() {
         @reload="() => tableApi.reload()"
         @select="handleDeptQuery"
       />
-      <div class="h-[600px] w-[450px]">
-        <BasicTable>
+      <div class="flex h-[600px] w-[450px] flex-col">
+        <UserSelectSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable>
           <template #user="{ row }">
             <div class="flex items-center gap-2">
               <VbenAvatar
@@ -312,6 +304,7 @@ function handleSubmit() {
             </div>
           </template>
         </BasicTable>
+        </div>
       </div>
       <div class="flex h-[600px] flex-col">
         <div class="flex w-full px-4">

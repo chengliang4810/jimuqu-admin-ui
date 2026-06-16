@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { VbenFormProps } from '@/effects/common-ui';
 
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { roleSelectAll, roleUnallocatedList } from '@/api/system/role';
 import { useVbenDrawer } from '@/effects/common-ui';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
+import RoleAssignSearchForm from './role-assign-search.vue';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -21,13 +22,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 const route = useRoute();
 const roleId = route.params.roleId as string;
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-};
+const searchFormRef = ref<InstanceType<typeof RoleAssignSearchForm>>();
+const searchParams = ref<Record<string, any>>({});
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -44,12 +40,12 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }) => {
         return await roleUnallocatedList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           roleId,
-          ...formValues,
+          ...searchParams.value,
         });
       },
     },
@@ -60,7 +56,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -74,6 +69,17 @@ async function handleSubmit() {
   emit('reload');
 }
 
+function handleSearch(values: Record<string, any>) {
+  searchParams.value = values;
+  tableApi.grid.reload();
+}
+
+function handleSearchReset() {
+  searchFormRef.value?.resetFields();
+  searchParams.value = {};
+  tableApi.grid.reload();
+}
+
 function handleReset() {
   drawerApi.close();
 }
@@ -81,6 +87,15 @@ function handleReset() {
 
 <template>
   <BasicDrawer :size="800" title="选择用户">
-    <BasicTable />
+    <div class="flex h-full flex-col gap-4">
+      <RoleAssignSearchForm
+        ref="searchFormRef"
+        @submit="handleSearch"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable />
+      </div>
+    </div>
   </BasicDrawer>
 </template>

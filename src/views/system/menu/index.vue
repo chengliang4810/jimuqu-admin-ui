@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Menu } from '@/api/system/menu/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 
 import { computed, ref } from 'vue';
 
@@ -13,23 +12,9 @@ import { $t } from '@/locales';
 import { eachTree, listToTree, treeToList } from '@/utils';
 import { Popconfirm, Space, Switch, Tooltip } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import menuDrawer from './menu-drawer.vue';
-
-/**
- * 不要问为什么有两个根节点 v-if会控制只会渲染一个
- */
-
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+import MenuSearchForm from './menu-search.vue';
 
 const gridOptions: VxeGridProps = {
   columns,
@@ -90,7 +75,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
   gridEvents: {
     cellDblclick: (e) => {
@@ -184,75 +168,86 @@ const { hasAccessByRoles } = useAccess();
 const isAdmin = computed(() => {
   return hasAccessByRoles(['admin', 'superadmin']);
 });
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page v-if="isAdmin" :auto-content-height="true">
-    <BasicTable table-title="菜单列表" table-title-help="双击展开/收起子菜单">
-      <template #toolbar-tools>
-        <Space>
-          <Tooltip title="删除菜单以及子菜单">
-            <div
+    <div class="flex h-full flex-col gap-4">
+      <MenuSearchForm @submit="handleSearchSubmit" @reset="handleSearchReset" />
+      <BasicTable table-title="菜单列表" table-title-help="双击展开/收起子菜单">
+        <template #toolbar-tools>
+          <Space>
+            <Tooltip title="删除菜单以及子菜单">
+              <div
+                v-access:role="['superadmin']"
+                v-access:code="['system:menu:remove']"
+                class="mr-2 flex items-center"
+              >
+                <span class="mr-2 text-sm text-[#666666]">级联删除</span>
+                <Switch v-model:checked="cascadingDeletion" />
+              </div>
+            </Tooltip>
+
+            <a-button @click="setExpandOrCollapse(false)">
+              {{ $t('pages.common.collapse') }}
+            </a-button>
+
+            <a-button
+              type="primary"
+              v-access:code="['system:menu:add']"
               v-access:role="['superadmin']"
-              v-access:code="['system:menu:remove']"
-              class="mr-2 flex items-center"
+              @click="handleAdd"
             >
-              <span class="mr-2 text-sm text-[#666666]">级联删除</span>
-              <Switch v-model:checked="cascadingDeletion" />
-            </div>
-          </Tooltip>
-
-          <a-button @click="setExpandOrCollapse(false)">
-            {{ $t('pages.common.collapse') }}
-          </a-button>
-
-          <a-button
-            type="primary"
-            v-access:code="['system:menu:add']"
-            v-access:role="['superadmin']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:menu:edit']"
-            v-access:role="['superadmin']"
-            @click="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <!-- '按钮类型'无法再添加子菜单 -->
-          <action-button
-            v-if="row.menuType !== 'F'"
-            variant="link"
-            color="green"
-            v-access:code="['system:menu:add']"
-            v-access:role="['superadmin']"
-            @click="handleSubAdd(row)"
-          >
-            {{ $t('pages.common.add') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            :title="removeConfirmTitle(row)"
-            @confirm="handleDelete(row)"
-          >
+              {{ $t('pages.common.add') }}
+            </a-button>
+          </Space>
+        </template>
+        <template #action="{ row }">
+          <Space>
             <action-button
-              danger
-              v-access:code="['system:menu:remove']"
+              v-access:code="['system:menu:edit']"
               v-access:role="['superadmin']"
-              @click.stop=""
+              @click="handleEdit(row)"
             >
-              {{ $t('pages.common.delete') }}
+              {{ $t('pages.common.edit') }}
             </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-    </BasicTable>
+            <!-- '按钮类型'无法再添加子菜单 -->
+            <action-button
+              v-if="row.menuType !== 'F'"
+              variant="link"
+              color="green"
+              v-access:code="['system:menu:add']"
+              v-access:role="['superadmin']"
+              @click="handleSubAdd(row)"
+            >
+              {{ $t('pages.common.add') }}
+            </action-button>
+            <Popconfirm
+              placement="left"
+              :title="removeConfirmTitle(row)"
+              @confirm="handleDelete(row)"
+            >
+              <action-button
+                danger
+                v-access:code="['system:menu:remove']"
+                v-access:role="['superadmin']"
+                @click.stop=""
+              >
+                {{ $t('pages.common.delete') }}
+              </action-button>
+            </Popconfirm>
+          </Space>
+        </template>
+      </BasicTable>
+    </div>
     <MenuDrawer @reload="afterEditOrAdd" />
   </Page>
   <Fallback v-else description="您没有菜单管理的访问权限" status="403" />

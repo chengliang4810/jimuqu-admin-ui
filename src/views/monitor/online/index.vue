@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { OnlineUser } from '@/api/monitor/online/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 
 import { ref } from 'vue';
 
@@ -11,18 +10,10 @@ import { Page } from '@/effects/common-ui';
 import { Popconfirm } from 'antdv-next';
 import { slice } from 'lodash-es';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
+import OnlineSearchForm from './online-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof OnlineSearchForm>>();
 
 const onlineCount = ref(0);
 const gridOptions: VxeGridProps = {
@@ -63,35 +54,52 @@ const gridOptions: VxeGridProps = {
   id: 'monitor-online-index',
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ formOptions, gridOptions });
+const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
 
 async function handleForceOffline(row: OnlineUser) {
   await forceLogout(row.tokenId);
   await tableApi.query();
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
-        <div class="mr-1 pl-1 text-[1rem]">
-          <div>
-            在线用户列表 (共
-            <span class="text-primary font-bold">{{ onlineCount }}</span>
-            人在线)
+    <div class="flex h-full flex-col gap-4">
+      <OnlineSearchForm
+        ref="searchFormRef"
+        @reset="handleSearchReset"
+        @submit="handleSearchSubmit"
+      />
+      <div class="flex-1">
+        <BasicTable>
+        <template #toolbar-actions>
+          <div class="mr-1 pl-1 text-[1rem]">
+            <div>
+              在线用户列表 (共
+              <span class="text-primary font-bold">{{ onlineCount }}</span>
+              人在线)
+            </div>
           </div>
-        </div>
-      </template>
-      <template #action="{ row }">
-        <Popconfirm
-          :title="`确认强制下线[${row.userName}]?`"
-          placement="left"
-          @confirm="handleForceOffline(row)"
-        >
-          <action-button danger>强制下线</action-button>
-        </Popconfirm>
-      </template>
-    </BasicTable>
+        </template>
+        <template #action="{ row }">
+          <Popconfirm
+            :title="`确认强制下线[${row.userName}]?`"
+            placement="left"
+            @confirm="handleForceOffline(row)"
+          >
+            <action-button danger>强制下线</action-button>
+          </Popconfirm>
+        </template>
+      </BasicTable>
+      </div>
+    </div>
   </Page>
 </template>

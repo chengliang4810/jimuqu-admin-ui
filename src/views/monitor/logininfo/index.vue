@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { LoginLog } from '@/api/monitor/logininfo/model';
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import { ref } from 'vue';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
@@ -18,27 +16,11 @@ import { useBlobExport } from '@/utils/file/export';
 import { confirmDeleteModal } from '@/utils/modal';
 import { Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
+import LogininfoSearchForm from './logininfo-search.vue';
 import loginInfoModal from './login-info-modal.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  // 日期选择格式化
-  fieldMappingTime: [
-    [
-      'dateTime',
-      ['params[beginTime]', 'params[endTime]'],
-      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
-    ],
-  ],
-};
+const searchFormRef = ref<InstanceType<typeof LogininfoSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -72,7 +54,6 @@ const gridOptions: VxeGridProps = {
 
 const canUnlock = ref(false);
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
   gridEvents: {
     checkboxChange: (e) => {
@@ -135,16 +116,31 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(loginInfoExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = searchFormRef.value?.getValues() ?? {};
   // 文件名
   const fileName = buildExportFileName('登录日志');
   exportBlob({ data: formValues, fileName });
+}
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
 }
 </script>
 
 <template>
   <Page auto-content-height>
-    <BasicTable table-title="登录日志列表">
+    <div class="flex h-full flex-col gap-4">
+      <LogininfoSearchForm
+        ref="searchFormRef"
+        @reset="handleSearchReset"
+        @submit="handleSearchSubmit"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="登录日志列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -201,6 +197,8 @@ async function handleExport() {
         </Space>
       </template>
     </BasicTable>
+      </div>
+    </div>
     <LoginInfoModal />
   </Page>
 </template>

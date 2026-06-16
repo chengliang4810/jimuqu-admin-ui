@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { User } from '@/api/system/user/model';
-import type { VbenFormProps } from '@/effects/common-ui';
-
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
@@ -14,22 +13,14 @@ import {
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import roleAssignDrawer from './role-assign-drawer.vue';
+import RoleAssignSearchForm from './role-assign-search.vue';
 
 const route = useRoute();
 const roleId = route.params.roleId as string;
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof RoleAssignSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -63,7 +54,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -101,47 +91,64 @@ function handleMultipleAuthCancel() {
     },
   });
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="已分配的用户列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['system:role:remove']"
-            @click="handleMultipleAuthCancel"
-          >
-            取消授权
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:role:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Popconfirm
-          :title="`是否取消授权用户[${row.userName} - ${row.nickName}]?`"
-          placement="left"
-          @confirm="handleAuthCancel(row)"
-        >
-          <action-button
-            danger
-            v-access:code="['system:role:remove']"
-            @click.stop=""
-          >
-            取消授权
-          </action-button>
-        </Popconfirm>
-      </template>
-    </BasicTable>
+    <div class="flex h-full flex-col gap-4">
+      <RoleAssignSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="已分配的用户列表">
+          <template #toolbar-tools>
+            <Space>
+              <a-button
+                :disabled="!vxeCheckboxChecked(tableApi)"
+                danger
+                type="primary"
+                v-access:code="['system:role:remove']"
+                @click="handleMultipleAuthCancel"
+              >
+                取消授权
+              </a-button>
+              <a-button
+                type="primary"
+                v-access:code="['system:role:add']"
+                @click="handleAdd"
+              >
+                {{ $t('pages.common.add') }}
+              </a-button>
+            </Space>
+          </template>
+          <template #action="{ row }">
+            <Popconfirm
+              :title="`是否取消授权用户[${row.userName} - ${row.nickName}]?`"
+              placement="left"
+              @confirm="handleAuthCancel(row)"
+            >
+              <action-button
+                danger
+                v-access:code="['system:role:remove']"
+                @click.stop=""
+              >
+                取消授权
+              </action-button>
+            </Popconfirm>
+          </template>
+        </BasicTable>
+      </div>
+    </div>
     <RoleAssignDrawer @reload="tableApi.query()" />
   </Page>
 </template>

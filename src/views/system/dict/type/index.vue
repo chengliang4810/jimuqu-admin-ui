@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { DictType } from '@/api/system/dict/dict-type-model';
-import type { VbenFormProps } from '@/effects/common-ui';
-
 import { ref } from 'vue';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
@@ -17,24 +15,12 @@ import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space } from 'antdv-next';
 
 import { emitter } from '../mitt';
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import dictTypeModal from './dict-type-modal.vue';
+import DictTypeSearchForm from './dict-type-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 70,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-  handleReset: () => {
-    tableApi.formApi.resetForm();
-    tableApi.reload();
-    emitter.emit('reset');
-  },
-};
+const searchFormRef = ref<InstanceType<typeof DictTypeSearchForm>>();
+const searchParams = ref<Record<string, unknown>>({});
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -51,11 +37,11 @@ const gridOptions: VxeGridProps = {
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }) => {
         return await dictTypeList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
-          ...formValues,
+          ...searchParams.value,
         });
       },
     },
@@ -72,7 +58,6 @@ const gridOptions: VxeGridProps = {
 const lastDictType = ref('');
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
   gridEvents: {
     cellClick: (e) => {
@@ -118,6 +103,15 @@ function handleMultiDelete() {
   });
 }
 
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  emitter.emit('reset');
+  tableApi.reload();
+}
+
 async function handleRefreshCache() {
   await refreshDictTypeCache();
   await tableApi.query();
@@ -127,7 +121,7 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(dictTypeExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = searchFormRef.value?.getValues() ?? {};
   // 文件名
   const fileName = buildExportFileName('字典类型数据');
   exportBlob({ data: formValues, fileName });
@@ -135,8 +129,14 @@ async function handleExport() {
 </script>
 
 <template>
-  <div>
-    <BasicTable table-title="字典类型列表">
+  <div class="flex h-full flex-col gap-4">
+    <DictTypeSearchForm
+      ref="searchFormRef"
+      @submit="handleSearchSubmit"
+      @reset="handleSearchReset"
+    />
+    <div class="flex-1">
+      <BasicTable table-title="字典类型列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -194,7 +194,9 @@ async function handleExport() {
           </Popconfirm>
         </Space>
       </template>
-    </BasicTable>
+      </BasicTable>
+      </div>
+    </div>
     <DictTypeModal @reload="tableApi.query()" />
   </div>
 </template>

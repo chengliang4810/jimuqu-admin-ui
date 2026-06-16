@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Client } from '@/api/system/client/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { SwitchProps } from 'antdv-next';
+
+import { ref } from 'vue';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -19,18 +20,10 @@ import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space } from 'antdv-next';
 
 import clientDrawer from './client-drawer.vue';
-import { columns, querySchema } from './data';
+import { columns } from './data';
+import ClientSearchForm from './client-search.vue';
 
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-};
+const searchFormRef = ref<InstanceType<typeof ClientSearchForm>>();
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -65,7 +58,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -106,7 +98,7 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(clientExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
   // 文件名
   const fileName = buildExportFileName('客户端数据');
   exportBlob({ data: formValues, fileName });
@@ -122,11 +114,26 @@ async function handleChangeStatus(
     status: checked ? EnableStatus.Enable : EnableStatus.Disable,
   });
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="客户端列表">
+    <div class="flex h-full flex-col gap-4">
+      <ClientSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="客户端列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -193,7 +200,9 @@ async function handleChangeStatus(
           </Popconfirm>
         </Space>
       </template>
-    </BasicTable>
+      </BasicTable>
+      </div>
+    </div>
     <ClientDrawer @reload="tableApi.query()" />
   </Page>
 </template>

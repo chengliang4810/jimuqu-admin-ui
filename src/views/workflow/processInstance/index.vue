@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { Recordable } from '@/types';
 import type { RadioChangeEvent } from 'antdv-next';
 
@@ -18,32 +17,17 @@ import CategoryTree from '@/views/workflow/processDefinition/category-tree.vue';
 import { Popconfirm, RadioGroup, Space } from 'antdv-next';
 
 import { flowInfoModal } from '../components';
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import instanceInvalidModal from './instance-invalid-modal.vue';
 import instanceVariableModal from './instance-variable-modal.vue';
+import ProcessInstanceSearchForm from './process-instance-search.vue';
 
 // 左边分类用
 const selectedCode = ref<number[] | string[]>([]);
 
-const formOptions: VbenFormProps = {
-  schema: querySchema(),
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  handleReset: async () => {
-    selectedCode.value = [];
-
-    const { formApi, reload } = tableApi;
-    await formApi.resetForm();
-    const formValues = formApi.form.values;
-    formApi.setLatestSubmissionValues(formValues);
-    await reload(formValues);
-  },
-};
+const searchFormRef = ref<InstanceType<typeof ProcessInstanceSearchForm>>();
+// 缓存最近一次搜索参数，分类树切换时重新查询用
+const currentSearchParams = ref<Record<string, any>>({});
 
 const typeOptions = [
   { label: '运行中', value: 'process_running' },
@@ -111,7 +95,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -158,9 +141,20 @@ function handleInfo(row: any) {
   flowInfoModalApi.open();
 }
 
+function handleSearchSubmit(data: Record<string, any>) {
+  currentSearchParams.value = data;
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  currentSearchParams.value = {};
+  selectedCode.value = [];
+  tableApi.reload();
+}
+
 function handleCategorySelect(keys: string[]) {
   selectedCode.value = keys;
-  tableApi.reload();
+  tableApi.reload(currentSearchParams.value);
 }
 </script>
 
@@ -173,7 +167,14 @@ function handleCategorySelect(keys: string[]) {
         @reload="() => tableApi.reload()"
         @select="handleCategorySelect"
       />
-      <BasicTable class="flex-1 overflow-hidden">
+      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+        <ProcessInstanceSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable class="overflow-hidden">
         <template #toolbar-actions>
           <RadioGroup
             v-model:value="currentType"
@@ -232,6 +233,8 @@ function handleCategorySelect(keys: string[]) {
           </div>
         </template>
       </BasicTable>
+        </div>
+      </div>
     </div>
     <InstanceInvalidModal @reload="() => tableApi.reload()" />
     <InstanceVariableModal />
