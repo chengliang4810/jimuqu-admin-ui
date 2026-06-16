@@ -137,7 +137,9 @@ const matchFrameworkChunk = createChunkMatcher(
 const matchVxeVendorChunk = createChunkMatcher(
   fromPnpm('vxe-table', 'vxe-pc-ui', '@vxe-ui', 'xe-utils', 'dom-zindex'),
 );
-const matchChartVendorChunk = createChunkMatcher(fromPnpm('echarts', 'zrender'));
+const matchChartVendorChunk = createChunkMatcher(
+  fromPnpm('echarts', 'zrender'),
+);
 const matchEditorVendorChunk = createChunkMatcher([
   'prosemirror-',
   '@tiptap/',
@@ -148,7 +150,12 @@ const matchCodemirrorVendorChunk = createChunkMatcher(
   fromPnpm('@codemirror', '@lezer'),
 );
 const matchJsoneditorVendorChunk = createChunkMatcher(
-  fromPnpm('vanilla-jsoneditor', 'json-editor-vue', 'jsonpath-plus', 'jmespath'),
+  fromPnpm(
+    'vanilla-jsoneditor',
+    'json-editor-vue',
+    'jsonpath-plus',
+    'jmespath',
+  ),
 );
 const matchCryptoVendorChunk = createChunkMatcher(
   fromPnpm('crypto-js', 'jsencrypt', 'sm-crypto'),
@@ -211,7 +218,6 @@ const matchUtilsVendorChunk = createChunkMatcher(
     'alova',
     'async-validator',
     'axios',
-    'cropperjs',
     'dayjs',
     'lodash-es',
     'lz-string',
@@ -220,8 +226,18 @@ const matchUtilsVendorChunk = createChunkMatcher(
     'qs',
     'secure-ls',
     'uuid',
-    'vue-json-pretty',
     'zod',
+  ),
+);
+// 仅在懒加载页面使用的工具库，独立拆包避免污染首屏 utils-vendor
+const matchLazyUtilsVendorChunk = createChunkMatcher(
+  fromPnpm(
+    'cropperjs',
+    'vue-json-pretty',
+    'vanilla-jsoneditor',
+    'json-editor-vue',
+    'jsonpath-plus',
+    'jmespath',
   ),
 );
 const matchAppAuthChunk = createChunkMatcher([
@@ -231,17 +247,6 @@ const matchAppAuthChunk = createChunkMatcher([
   '/src/views/_core/social-callback/',
 ]);
 const matchAppLocaleChunk = createChunkMatcher(['/src/locales/']);
-const matchAppCoreChunk = createChunkMatcher([
-  '/src/adapter/',
-  '/src/api/core/',
-  '/src/bootstrap.ts',
-  '/src/components/global/',
-  '/src/layouts/',
-  '/src/router/',
-  '/src/stores/',
-  '/src/utils/',
-  '/src/views/_core/',
-]);
 const matchAppViewsChunk = createChunkMatcher(['/src/views/']);
 
 function createApplicationCodeSplitting() {
@@ -369,6 +374,11 @@ function createApplicationCodeSplitting() {
         priority: 31,
         test: matchUtilsVendorChunk,
       },
+      {
+        name: 'lazy-utils-vendor',
+        priority: 6,
+        test: matchLazyUtilsVendorChunk,
+      },
       // 以下为"仅懒加载路由使用"的重型 vendor: 优先级必须低于上方所有
       // 首屏组(framework/utils-vendor/crypto-vendor/vben-*),这样首屏共享依赖
       // (core/ui、icons、crypto、axios、lodash、vue-router 等)先被各自高优先级组 claim,
@@ -413,14 +423,6 @@ function createApplicationCodeSplitting() {
         name: 'app-locales',
         priority: 3,
         test: matchAppLocaleChunk,
-      },
-      {
-        // entriesAware: 按"被哪些路由 entry 使用"拆分共享代码,
-        // 避免所有页面合并成单个巨型 chunk
-        entriesAware: true,
-        name: 'app-core',
-        priority: 2,
-        test: matchAppCoreChunk,
       },
       {
         entriesAware: true,
