@@ -1,38 +1,7 @@
-import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
-import { getPopupContainer } from '@/utils';
-import { getDictOptions } from '@/utils/dict';
 import { renderDict } from '@/utils/render';
-
-export const querySchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    fieldName: 'configName',
-    label: '参数名称',
-  },
-  {
-    component: 'Input',
-    fieldName: 'configKey',
-    label: '参数键名',
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      getPopupContainer,
-      options: getDictOptions(DictEnum.SYS_YES_NO),
-    },
-    fieldName: 'configType',
-    label: '系统内置',
-  },
-  {
-    component: 'RangePicker',
-    fieldName: 'createTime',
-    label: '创建时间',
-    defaultValue: [null, null],
-  },
-];
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { SysConfig } from '@/api/system/config/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
@@ -16,26 +15,8 @@ import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space } from 'antdv-next';
 
 import configModal from './config-modal.vue';
-import { columns, querySchema } from './data';
-
-const formOptions: VbenFormProps = {
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  schema: querySchema(),
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  // 日期选择格式化
-  fieldMappingTime: [
-    [
-      'createTime',
-      ['params[beginTime]', 'params[endTime]'],
-      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
-    ],
-  ],
-};
+import ConfigSearchForm from './config-search.vue';
+import { columns } from './data';
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -67,7 +48,6 @@ const gridOptions: VxeGridProps = {
 };
 
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 const [ConfigModal, modalApi] = useVbenModal({
@@ -117,64 +97,85 @@ async function handleRefreshCache() {
   await configRefreshCache();
   await tableApi.query();
 }
+
+function handleSearchSubmit(data: Record<string, any>) {
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  tableApi.reload();
+}
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable table-title="参数列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
-          <a-button
-            v-access:code="['system:config:export']"
-            :loading="exportLoading"
-            :disabled="exportLoading"
-            @click="handleExport"
-          >
-            {{ $t('pages.common.export') }}
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['system:config:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:config:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:config:edit']"
-            @click.stop="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
-              danger
-              v-access:code="['system:config:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-    </BasicTable>
+    <!-- 外层auto-content-height已经占满了内容高度 -->
+    <div class="flex h-full flex-col gap-4">
+      <ConfigSearchForm
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+
+      <!-- 这里占满剩余高度 -->
+      <div class="flex-1">
+        <!-- 这里拿到的就是最终的剩余高度 -->
+        <BasicTable table-title="参数列表">
+          <template #toolbar-tools>
+            <Space>
+              <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
+              <a-button
+                v-access:code="['system:config:export']"
+                :loading="exportLoading"
+                :disabled="exportLoading"
+                @click="handleExport"
+              >
+                {{ $t('pages.common.export') }}
+              </a-button>
+              <a-button
+                :disabled="!vxeCheckboxChecked(tableApi)"
+                danger
+                type="primary"
+                v-access:code="['system:config:remove']"
+                @click="handleMultiDelete"
+              >
+                {{ $t('pages.common.delete') }}
+              </a-button>
+              <a-button
+                type="primary"
+                v-access:code="['system:config:add']"
+                @click="handleAdd"
+              >
+                {{ $t('pages.common.add') }}
+              </a-button>
+            </Space>
+          </template>
+          <template #action="{ row }">
+            <Space>
+              <action-button
+                v-access:code="['system:config:edit']"
+                @click.stop="handleEdit(row)"
+              >
+                {{ $t('pages.common.edit') }}
+              </action-button>
+              <Popconfirm
+                placement="left"
+                title="确认删除？"
+                @confirm="handleDelete(row)"
+              >
+                <action-button
+                  danger
+                  v-access:code="['system:config:remove']"
+                  @click.stop=""
+                >
+                  {{ $t('pages.common.delete') }}
+                </action-button>
+              </Popconfirm>
+            </Space>
+          </template>
+        </BasicTable>
+      </div>
+    </div>
+
     <ConfigModal @reload="tableApi.query()" />
   </Page>
 </template>
