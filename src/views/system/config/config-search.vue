@@ -5,10 +5,11 @@ import type { Dayjs } from 'dayjs';
 import { ref } from 'vue';
 
 import { FormInput, FormSelect } from '@/components/global/form';
+import { SearchButtonGroup } from '@/components/table';
 import { DictEnum } from '@/constants';
 import { formatDateTime } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
-import { Card, DateRangePicker, Form, FormItem, Space } from 'antdv-next';
+import { Card, DateRangePicker, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
   reset: [];
@@ -90,10 +91,7 @@ defineExpose({
     </Form>
 
     <div class="flex items-center justify-end">
-      <Space>
-        <a-button @click="handleReset">重置</a-button>
-        <a-button type="primary" @click="handleSubmit">提交</a-button>
-      </Space>
+      <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
     </div>
   </Card>
 </template>
