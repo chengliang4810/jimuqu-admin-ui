@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { DictType } from '@/api/system/dict/dict-type-model';
+
 import { ref } from 'vue';
 
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
@@ -137,65 +138,64 @@ async function handleExport() {
     />
     <div class="flex-1">
       <BasicTable table-title="字典类型列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            v-access:code="['system:dict:edit']"
-            @click="handleRefreshCache"
-          >
-            刷新缓存
-          </a-button>
-          <a-button
-            v-access:code="['system:dict:export']"
-            :loading="exportLoading"
-            :disabled="exportLoading"
-            @click="handleExport"
-          >
-            {{ $t('pages.common.export') }}
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['system:dict:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:dict:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:dict:edit']"
-            @click.stop="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
+        <template #toolbar-tools>
+          <Space>
+            <a-button
+              v-access:code="['system:dict:edit']"
+              @click="handleRefreshCache"
+            >
+              刷新缓存
+            </a-button>
+            <a-button
+              v-access:code="['system:dict:export']"
+              :loading="exportLoading"
+              :disabled="exportLoading"
+              @click="handleExport"
+            >
+              {{ $t('pages.common.export') }}
+            </a-button>
+            <a-button
+              :disabled="!vxeCheckboxChecked(tableApi)"
               danger
+              type="primary"
               v-access:code="['system:dict:remove']"
-              @click.stop=""
+              @click="handleMultiDelete"
             >
               {{ $t('pages.common.delete') }}
+            </a-button>
+            <a-button
+              type="primary"
+              v-access:code="['system:dict:add']"
+              @click="handleAdd"
+            >
+              {{ $t('pages.common.add') }}
+            </a-button>
+          </Space>
+        </template>
+        <template #action="{ row }">
+          <Space>
+            <action-button
+              v-access:code="['system:dict:edit']"
+              @click.stop="handleEdit(row)"
+            >
+              {{ $t('pages.common.edit') }}
             </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
+            <Popconfirm
+              placement="left"
+              title="确认删除？"
+              @confirm="handleDelete(row)"
+            >
+              <action-button
+                danger
+                v-access:code="['system:dict:remove']"
+                @click.stop=""
+              >
+                {{ $t('pages.common.delete') }}
+              </action-button>
+            </Popconfirm>
+          </Space>
+        </template>
       </BasicTable>
-      </div>
     </div>
     <DictTypeModal @reload="tableApi.query()" />
   </div>

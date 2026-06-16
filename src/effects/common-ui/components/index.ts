@@ -24,5 +24,4 @@ export {
 
 export type { FlattenedItem } from '@/core/ui/adapter';
 
-export * from '@/core/ui/form';
 export * from '@/core/ui/popup';
