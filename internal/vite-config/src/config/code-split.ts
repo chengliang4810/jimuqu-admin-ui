@@ -223,7 +223,6 @@ const matchUtilsVendorChunk = createChunkMatcher(
     'alova',
     'async-validator',
     'axios',
-    'dayjs',
     'lodash-es',
     'lz-string',
     'mitt',
@@ -234,6 +233,10 @@ const matchUtilsVendorChunk = createChunkMatcher(
     'zod',
   ),
 );
+// dayjs 必须独立成首屏 vendor:i18n/notify 等首屏模块静态依赖它,
+// 但 date-picker/picker(form-ext)也大量 import dayjs。若不单独高优先级 claim,
+// rolldown 会按"消费方聚类"把 dayjs 拉进 form-ext,反过来把整个 form-ext 钉进首屏。
+const matchDayjsVendorChunk = createChunkMatcher(fromPnpm('dayjs'));
 // 仅在懒加载页面使用的工具库，独立拆包避免污染首屏 utils-vendor
 const matchLazyUtilsVendorChunk = createChunkMatcher(
   fromPnpm(
@@ -258,6 +261,13 @@ function createApplicationCodeSplitting() {
   return {
     groups: [
       {
+        // 优先级压过所有 antdv 组件组(markdown 48 ~ next 39),
+        // 确保 dayjs 被独立 claim 而非被 form-ext 等消费方聚走
+        name: 'dayjs-vendor',
+        priority: 50,
+        test: matchDayjsVendorChunk,
+      },
+      {
         name: 'antdv-x-markdown',
         priority: 48,
         test: matchAntdvNextMarkdownChunk,
@@ -278,24 +288,28 @@ function createApplicationCodeSplitting() {
         test: matchAntdvNextFormChunk,
       },
       {
-        name: 'antdv-form-ext',
-        priority: 44,
-        test: matchAntdvNextFormExtChunk,
-      },
-      {
         name: 'antdv-overlay',
-        priority: 43,
+        priority: 44,
         test: matchAntdvNextOverlayChunk,
       },
       {
         name: 'antdv-data',
-        priority: 42,
+        priority: 43,
         test: matchAntdvNextDataChunk,
       },
       {
         name: 'antdv-layout',
-        priority: 41,
+        priority: 42,
         test: matchAntdvNextLayoutChunk,
+      },
+      {
+        // form-ext 必须低于 overlay/data/layout:这样 @v-c/menu、@v-c/tree、
+        // 壳子组件(progress/spin/tree 等)被各自壳子组优先 claim,只有 ext 独占的
+        // @v-c(picker/cascader/tree-select/mentions/rate/upload)及 ext 组件留在此 chunk。
+        // 仍需高于 antdv-shared(40),让 @v-c/picker 等随 date-picker 留在 form-ext 而非被 shared 吸走。
+        name: 'antdv-form-ext',
+        priority: 41,
+        test: matchAntdvNextFormExtChunk,
       },
       {
         name: 'antdv-shared',
