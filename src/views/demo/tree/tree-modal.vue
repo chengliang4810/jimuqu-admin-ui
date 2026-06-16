@@ -1,13 +1,21 @@
 <script setup lang="ts">
+import type { TreeForm, TreeVO } from './api/model';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
+import {
+  FormInput as Input,
+  FormInputNumber as InputNumber,
+  FormTreeSelect as TreeSelect,
+} from '@/components/global/form';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
-import { cloneDeep, listToTree } from '@/utils';
+import { cloneDeep, getPopupContainer, listToTree } from '@/utils';
+import { Form, FormItem } from 'antdv-next';
 
 import { treeAdd, treeInfo, treeList, treeUpdate } from './api';
-import { modalSchema } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -16,36 +24,32 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    // 默认占满两列
-    formItemClass: 'col-span-2',
-    // 默认label宽度 px
-    labelWidth: 80,
-    // 通用配置项 会影响到所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: modalSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+function getDefaultValues(): TreeForm {
+  return {
+    deptId: undefined,
+    id: undefined,
+    parentId: undefined,
+    treeName: '',
+    userId: undefined,
+    version: undefined,
+  };
+}
+
+const formData = ref<TreeForm>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const treeData = ref<TreeVO[]>([]);
+
+const formRules = ref<AntdFormRules<TreeForm>>({
+  deptId: [{ required: true, message: $t('ui.formRules.required') }],
+  parentId: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  treeName: [{ required: true, message: $t('ui.formRules.required') }],
+  userId: [{ required: true, message: $t('ui.formRules.required') }],
+  version: [{ required: true, message: $t('ui.formRules.required') }],
 });
 
 async function setupTreeSelect() {
   const listData = await treeList();
-  const treeData = listToTree(listData, { id: 'id', pid: 'parentId' });
-  formApi.updateSchema([
-    {
-      fieldName: 'parentId',
-      componentProps: {
-        treeData,
-        treeLine: { showLeafIcon: false },
-        fieldNames: { label: 'treeName', value: 'id' },
-        treeDefaultExpandAll: true,
-      },
-    },
-  ]);
+  treeData.value = listToTree(listData, { id: 'id', pid: 'parentId' });
 }
 
 const [BasicModal, modalApi] = useVbenModal({
@@ -63,7 +67,10 @@ const [BasicModal, modalApi] = useVbenModal({
 
     if (isUpdate.value && id) {
       const record = await treeInfo(id);
-      await formApi.setValues(record);
+      formData.value = {
+        ...getDefaultValues(),
+        ...record,
+      };
     }
     await setupTreeSelect();
 
@@ -74,12 +81,8 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleConfirm() {
   try {
     modalApi.modalLoading(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    // getValues获取为一个readonly的对象 需要修改必须先深拷贝一次
-    const data = cloneDeep(await formApi.getValues());
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
     await (isUpdate.value ? treeUpdate(data) : treeAdd(data));
     emit('reload');
     await handleCancel();
@@ -92,12 +95,41 @@ async function handleConfirm() {
 
 async function handleCancel() {
   modalApi.close();
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
 }
 </script>
 
 <template>
   <BasicModal :close-on-click-modal="false" :title="title" :width="550">
-    <BasicForm />
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '80px' } }"
+    >
+      <FormItem label="父id" name="parentId" :rules="formRules.parentId">
+        <TreeSelect
+          class="w-full"
+          :field-names="{ label: 'treeName', value: 'id' }"
+          :get-popup-container="getPopupContainer"
+          :tree-data="treeData"
+          tree-default-expand-all
+          :tree-line="{ showLeafIcon: false }"
+          v-model:value="formData.parentId"
+        />
+      </FormItem>
+      <FormItem label="部门id" name="deptId" :rules="formRules.deptId">
+        <Input allow-clear class="w-full" v-model:value="formData.deptId" />
+      </FormItem>
+      <FormItem label="用户id" name="userId" :rules="formRules.userId">
+        <Input allow-clear class="w-full" v-model:value="formData.userId" />
+      </FormItem>
+      <FormItem label="值" name="treeName" :rules="formRules.treeName">
+        <Input allow-clear class="w-full" v-model:value="formData.treeName" />
+      </FormItem>
+      <FormItem label="版本" name="version" :rules="formRules.version">
+        <InputNumber class="w-full" v-model:value="formData.version" />
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>

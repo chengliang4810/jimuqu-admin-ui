@@ -5,85 +5,21 @@ import type {
   CompleteTaskReqData,
   NextNodeInfo,
 } from '@/api/workflow/task/model';
+import type { FormInstance } from 'antdv-next';
 
 import { ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { completeTask, getNextNodeList } from '@/api/workflow/task';
+import { FormTextArea as TextArea } from '@/components/global/form';
+import { FileUpload } from '@/components/upload';
 import { useVbenModal } from '@/effects/common-ui';
 import { cloneDeep } from '@/utils';
+import { CheckboxGroup, Form, FormItem } from 'antdv-next';
 import { omit } from 'lodash-es';
 
 import { CopyComponent } from '.';
 
 const emit = defineEmits<{ complete: [] }>();
-
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    // 默认占满两列
-    formItemClass: 'col-span-2',
-    // 默认label宽度 px
-    labelWidth: 100,
-    // 通用配置项 会影响到所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: [
-    {
-      fieldName: 'taskId',
-      component: 'Input',
-      label: '任务ID',
-      dependencies: {
-        show: false,
-        triggerFields: [''],
-      },
-    },
-    {
-      fieldName: 'messageType',
-      component: 'CheckboxGroup',
-      componentProps: {
-        options: [
-          { label: '站内信', value: '1', disabled: true },
-          { label: '邮件', value: '2' },
-          { label: '短信', value: '3' },
-        ],
-      },
-      label: '通知方式',
-      defaultValue: ['1'],
-    },
-    {
-      fieldName: 'attachment',
-      component: 'FileUpload',
-      componentProps: {
-        maxCount: 10,
-        maxSize: 20,
-        accept: 'png, jpg, jpeg, doc, docx, xlsx, xls, ppt, pdf',
-      },
-      label: '附件上传',
-      formItemClass: 'items-start',
-    },
-    {
-      fieldName: 'flowCopyList',
-      component: 'Input',
-      defaultValue: [],
-      label: '抄送人',
-    },
-    {
-      fieldName: 'assigneeMap',
-      component: 'Input',
-      label: '下一步审批人',
-    },
-    {
-      fieldName: 'message',
-      component: 'Textarea',
-      label: '审批意见',
-      formItemClass: 'items-start',
-    },
-  ],
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
-});
 
 interface ModalProps {
   taskId: string;
@@ -92,6 +28,39 @@ interface ModalProps {
   // 是有具有选人权限
   assignPermission: boolean;
 }
+
+interface FormData {
+  assigneeMap?: Record<string, string>;
+  attachment?: string;
+  flowCopyList: User[];
+  message?: string;
+  messageType: string[];
+  taskId: string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    assigneeMap: undefined,
+    attachment: '',
+    flowCopyList: [],
+    message: '',
+    messageType: ['1'],
+    taskId: '',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const copyPermission = ref(false);
+const assignPermission = ref(false);
+
+const messageTypeOptions = [
+  { disabled: true, label: '站内信', value: '1' },
+  { label: '邮件', value: '2' },
+  { label: '短信', value: '3' },
+];
+
+const uploadAccept = 'png, jpg, jpeg, doc, docx, xlsx, xls, ppt, pdf';
 
 // 自定义添加选人属性 给组件v-for绑定
 const nextNodeInfo = ref<(NextNodeInfo & { selectUserList: User[] })[]>([]);
@@ -102,42 +71,25 @@ const [BasicModal, modalApi] = useVbenModal({
   onConfirm: handleSubmit,
   async onOpenChange(isOpen) {
     if (!isOpen) {
-      await formApi.resetForm();
+      handleReset();
       return null;
     }
     modalApi.modalLoading(true);
 
-    const { taskId, copyPermission, assignPermission } =
-      modalApi.getData() as ModalProps;
-    // 是否显示抄送选择
-    formApi.updateSchema([
-      {
-        fieldName: 'flowCopyList',
-        dependencies: {
-          if: copyPermission,
-          triggerFields: [''],
-        },
-      },
-      {
-        fieldName: 'assigneeMap',
-        dependencies: {
-          if: assignPermission,
-          triggerFields: [''],
-        },
-      },
-    ]);
+    const data = modalApi.getData() as ModalProps;
+    const { taskId } = data;
+    copyPermission.value = data.copyPermission;
+    assignPermission.value = data.assignPermission;
 
-    // 获取下一节点名称
-    if (assignPermission) {
+    if (assignPermission.value) {
       const resp = await getNextNodeList({ taskId });
       nextNodeInfo.value = resp.map((item) => ({
         ...item,
-        // 用于给组件绑定
         selectUserList: [],
       }));
     }
 
-    await formApi.setFieldValue('taskId', taskId);
+    formData.value.taskId = taskId;
 
     modalApi.modalLoading(false);
   },
@@ -146,13 +98,9 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleSubmit() {
   try {
     modalApi.modalLoading(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = cloneDeep(await formApi.getValues());
-    // 需要转换数据 抄送人员
-    const flowCopyList = (data.flowCopyList as Array<any>).map((item) => ({
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
+    const flowCopyList = data.flowCopyList.map((item) => ({
       userId: item.userId,
       userName: item.nickName,
     }));
@@ -164,9 +112,7 @@ async function handleSubmit() {
       flowCopyList,
     } as CompleteTaskReqData;
 
-    // 选人
-    if (modalApi.getData()?.assignPermission) {
-      // 判断是否选中
+    if (assignPermission.value) {
       for (const item of nextNodeInfo.value) {
         if (item.selectUserList.length === 0) {
           window.message.warning(`未选择节点[${item.nodeName}]审批人`);
@@ -192,32 +138,63 @@ async function handleSubmit() {
     modalApi.modalLoading(false);
   }
 }
+
+function handleReset() {
+  formData.value = getDefaultValues();
+  copyPermission.value = false;
+  assignPermission.value = false;
+  nextNodeInfo.value = [];
+  formInstance.value?.resetFields();
+}
 </script>
 
 <template>
   <BasicModal>
-    <BasicForm>
-      <template #flowCopyList="slotProps">
-        <CopyComponent v-model:user-list="slotProps.modelValue" />
-      </template>
-      <template #assigneeMap>
-        <div
-          v-for="item in nextNodeInfo"
-          :key="item.nodeCode"
-          class="flex items-center gap-2"
-        >
-          <template v-if="item.permissionFlag">
-            <span class="opacity-70">{{ item.nodeName }}</span>
-            <CopyComponent
-              :allow-user-ids="item.permissionFlag"
-              v-model:user-list="item.selectUserList"
-            />
-          </template>
-          <template v-else>
-            <span class="text-red-500">没有权限, 请联系管理员</span>
-          </template>
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '100px' } }"
+    >
+      <FormItem label="通知方式" name="messageType">
+        <CheckboxGroup
+          :options="messageTypeOptions"
+          v-model:value="formData.messageType"
+        />
+      </FormItem>
+      <FormItem label="附件上传" name="attachment" class="items-start">
+        <FileUpload
+          :accept="uploadAccept"
+          :max-count="10"
+          :max-size="20"
+          v-model:value="formData.attachment"
+        />
+      </FormItem>
+      <FormItem v-if="copyPermission" label="抄送人" name="flowCopyList">
+        <CopyComponent v-model:user-list="formData.flowCopyList" />
+      </FormItem>
+      <FormItem v-if="assignPermission" label="下一步审批人" name="assigneeMap">
+        <div class="flex flex-col gap-2">
+          <div
+            v-for="item in nextNodeInfo"
+            :key="item.nodeCode"
+            class="flex items-center gap-2"
+          >
+            <template v-if="item.permissionFlag">
+              <span class="opacity-70">{{ item.nodeName }}</span>
+              <CopyComponent
+                :allow-user-ids="item.permissionFlag"
+                v-model:user-list="item.selectUserList"
+              />
+            </template>
+            <template v-else>
+              <span class="text-red-500">没有权限, 请联系管理员</span>
+            </template>
+          </div>
         </div>
-      </template>
-    </BasicForm>
+      </FormItem>
+      <FormItem label="审批意见" name="message" class="items-start">
+        <TextArea allow-clear class="w-full" v-model:value="formData.message" />
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>

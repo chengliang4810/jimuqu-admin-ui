@@ -1,81 +1,59 @@
 <!-- 审批驳回窗口 -->
 <script setup lang="ts">
-import { useVbenForm } from '@/adapter/form';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
+import { ref } from 'vue';
+
 import { backProcess, getBackTaskNode } from '@/api/workflow/task';
+import { FormSelect as Select, FormTextArea as TextArea } from '@/components/global/form';
+import { FileUpload } from '@/components/upload';
 import { useVbenModal } from '@/effects/common-ui';
+import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
+import { CheckboxGroup, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{ complete: [] }>();
-
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    // 默认占满两列
-    formItemClass: 'col-span-2',
-    // 默认label宽度 px
-    labelWidth: 100,
-    // 通用配置项 会影响到所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: [
-    {
-      fieldName: 'taskId',
-      component: 'Input',
-      label: '任务ID',
-      dependencies: {
-        show: false,
-        triggerFields: [''],
-      },
-    },
-    {
-      fieldName: 'messageType',
-      component: 'CheckboxGroup',
-      componentProps: {
-        options: [
-          { label: '站内信', value: '1', disabled: true },
-          { label: '邮件', value: '2' },
-          { label: '短信', value: '3' },
-        ],
-      },
-      label: '通知方式',
-      defaultValue: ['1'],
-    },
-    {
-      fieldName: 'nodeCode',
-      component: 'Select',
-      componentProps: {
-        getPopupContainer,
-      },
-      label: '驳回节点',
-    },
-    {
-      fieldName: 'attachment',
-      component: 'FileUpload',
-      componentProps: {
-        maxCount: 10,
-        maxSize: 20,
-        accept: 'png, jpg, jpeg, doc, docx, xlsx, xls, ppt, pdf',
-      },
-      label: '附件上传',
-      formItemClass: 'items-start',
-    },
-    {
-      fieldName: 'message',
-      component: 'Textarea',
-      label: '审批意见',
-      formItemClass: 'items-start',
-    },
-  ],
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
-});
 
 interface ModalProps {
   taskId: string;
   definitionId: string;
   nodeCode: string;
 }
+
+interface FormData {
+  attachment?: string;
+  message?: string;
+  messageType: string[];
+  nodeCode?: string;
+  taskId: string;
+}
+
+function getDefaultValues(): FormData {
+  return {
+    attachment: '',
+    message: '',
+    messageType: ['1'],
+    nodeCode: undefined,
+    taskId: '',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const nodeOptions = ref<{ label: string; value: string }[]>([]);
+
+const messageTypeOptions = [
+  { disabled: true, label: '站内信', value: '1' },
+  { label: '邮件', value: '2' },
+  { label: '短信', value: '3' },
+];
+
+const uploadAccept = 'png, jpg, jpeg, doc, docx, xlsx, xls, ppt, pdf';
+
+const formRules = ref<AntdFormRules<FormData>>({
+  nodeCode: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+});
 
 const [BasicModal, modalApi] = useVbenModal({
   title: '审批驳回',
@@ -84,30 +62,21 @@ const [BasicModal, modalApi] = useVbenModal({
   onConfirm: handleSubmit,
   async onOpenChange(isOpen) {
     if (!isOpen) {
-      await formApi.resetForm();
+      handleReset();
       return null;
     }
     modalApi.modalLoading(true);
 
     const { taskId, nodeCode } = modalApi.getData() as ModalProps;
-    await formApi.setFieldValue('taskId', taskId);
+    formData.value.taskId = taskId;
 
     const resp = await getBackTaskNode(taskId, nodeCode);
-    const options = resp.map((item) => ({
+    nodeOptions.value = resp.map((item) => ({
       label: item.nodeName,
       value: item.nodeCode,
     }));
-    formApi.updateSchema([
-      {
-        fieldName: 'nodeCode',
-        componentProps: {
-          options,
-        },
-      },
-    ]);
-    // 默认选中第一个节点
-    if (options.length > 0) {
-      formApi.setFieldValue('nodeCode', options[0]?.value);
+    if (nodeOptions.value.length > 0) {
+      formData.value.nodeCode = nodeOptions.value[0]?.value;
     }
 
     modalApi.modalLoading(false);
@@ -117,14 +86,12 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleSubmit() {
   try {
     modalApi.modalLoading(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = cloneDeep(await formApi.getValues());
-    // 附件join
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value) as FormData & {
+      attachment?: undefined | string;
+      fileId?: string;
+    };
     data.fileId = data.attachment;
-    // 取消attachment参数的传递
     data.attachment = undefined;
     await backProcess(data);
     modalApi.close();
@@ -135,10 +102,46 @@ async function handleSubmit() {
     modalApi.modalLoading(false);
   }
 }
+
+function handleReset() {
+  formData.value = getDefaultValues();
+  nodeOptions.value = [];
+  formInstance.value?.resetFields();
+}
 </script>
 
 <template>
   <BasicModal>
-    <BasicForm />
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '100px' } }"
+    >
+      <FormItem label="通知方式" name="messageType">
+        <CheckboxGroup
+          :options="messageTypeOptions"
+          v-model:value="formData.messageType"
+        />
+      </FormItem>
+      <FormItem label="驳回节点" name="nodeCode" :rules="formRules.nodeCode">
+        <Select
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          :options="nodeOptions"
+          v-model:value="formData.nodeCode"
+        />
+      </FormItem>
+      <FormItem label="附件上传" name="attachment" class="items-start">
+        <FileUpload
+          :accept="uploadAccept"
+          :max-count="10"
+          :max-size="20"
+          v-model:value="formData.attachment"
+        />
+      </FormItem>
+      <FormItem label="审批意见" name="message" class="items-start">
+        <TextArea allow-clear class="w-full" v-model:value="formData.message" />
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>

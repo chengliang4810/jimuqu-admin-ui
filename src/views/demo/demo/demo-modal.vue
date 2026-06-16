@@ -1,13 +1,20 @@
 <script setup lang="ts">
+import type { DemoForm } from './api/model';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
+import {
+  FormInput as Input,
+  FormInputNumber as InputNumber,
+} from '@/components/global/form';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
+import { Form, FormItem } from 'antdv-next';
 
 import { demoAdd, demoInfo, demoUpdate } from './api';
-import { modalSchema } from './data';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -16,20 +23,24 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    // 默认占满两列
-    formItemClass: 'col-span-2',
-    // 默认label宽度 px
-    labelWidth: 80,
-    // 通用配置项 会影响到所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: modalSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+function getDefaultValues(): DemoForm {
+  return {
+    id: undefined,
+    orderNum: undefined,
+    testKey: '',
+    value: '',
+    version: undefined,
+  };
+}
+
+const formData = ref<DemoForm>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+
+const formRules = ref<AntdFormRules<DemoForm>>({
+  orderNum: [{ required: true, message: $t('ui.formRules.required') }],
+  testKey: [{ required: true, message: $t('ui.formRules.required') }],
+  value: [{ required: true, message: $t('ui.formRules.required') }],
+  version: [{ required: true, message: $t('ui.formRules.required') }],
 });
 
 const [BasicModal, modalApi] = useVbenModal({
@@ -47,7 +58,10 @@ const [BasicModal, modalApi] = useVbenModal({
 
     if (isUpdate.value && id) {
       const record = await demoInfo(id);
-      await formApi.setValues(record);
+      formData.value = {
+        ...getDefaultValues(),
+        ...record,
+      };
     }
 
     modalApi.modalLoading(false);
@@ -57,12 +71,8 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleConfirm() {
   try {
     modalApi.modalLoading(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    // getValues获取为一个readonly的对象 需要修改必须先深拷贝一次
-    const data = cloneDeep(await formApi.getValues());
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
     await (isUpdate.value ? demoUpdate(data) : demoAdd(data));
     emit('reload');
     await handleCancel();
@@ -75,12 +85,30 @@ async function handleConfirm() {
 
 async function handleCancel() {
   modalApi.close();
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
 }
 </script>
 
 <template>
   <BasicModal :close-on-click-modal="false" :title="title" :width="550">
-    <BasicForm />
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '80px' } }"
+    >
+      <FormItem label="排序号" name="orderNum" :rules="formRules.orderNum">
+        <InputNumber class="w-full" v-model:value="formData.orderNum" />
+      </FormItem>
+      <FormItem label="key键" name="testKey" :rules="formRules.testKey">
+        <Input allow-clear class="w-full" v-model:value="formData.testKey" />
+      </FormItem>
+      <FormItem label="值" name="value" :rules="formRules.value">
+        <Input allow-clear class="w-full" v-model:value="formData.value" />
+      </FormItem>
+      <FormItem label="版本" name="version" :rules="formRules.version">
+        <InputNumber class="w-full" v-model:value="formData.version" />
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>

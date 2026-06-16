@@ -1,11 +1,16 @@
 <!-- 流程发起(启动)的弹窗 -->
 
 <script setup lang="ts">
+import type { User } from '@/api/system/user/model';
 import type { CompleteTaskReqData } from '@/api/workflow/task/model';
+import type { FormInstance } from 'antdv-next';
 
-import { useVbenForm } from '@/adapter/form';
+import { ref } from 'vue';
+
 import { completeTask, getTaskByTaskId } from '@/api/workflow/task';
+import { FileUpload } from '@/components/upload';
 import { useVbenModal } from '@/effects/common-ui';
+import { CheckboxGroup, Form, FormItem } from 'antdv-next';
 import { cloneDeep } from 'lodash-es';
 
 import { CopyComponent } from '.';
@@ -29,6 +34,32 @@ interface ModalProps {
   variables?: any; // 这个干啥的
 }
 
+interface FormData {
+  attachment?: string;
+  flowCopyList: User[];
+  messageType: string[];
+}
+
+function getDefaultValues(): FormData {
+  return {
+    attachment: '',
+    flowCopyList: [],
+    messageType: ['1'],
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const copyPermission = ref(false);
+
+const messageTypeOptions = [
+  { disabled: true, label: '站内信', value: '1' },
+  { label: '邮件', value: '2' },
+  { label: '短信', value: '3' },
+];
+
+const uploadAccept = 'png, jpg, jpeg, doc, docx, xlsx, xls, ppt, pdf';
+
 const [BasicModal, modalApi] = useVbenModal({
   title: '流程发起',
   fullscreenButton: false,
@@ -36,100 +67,38 @@ const [BasicModal, modalApi] = useVbenModal({
   onCancel: () => {
     emit('cancel');
     modalApi.close();
+    handleReset();
   },
   async onOpenChange(isOpen) {
     if (!isOpen) {
+      handleReset();
       return null;
     }
     modalApi.modalLoading(true);
 
     const { taskId } = modalApi.getData() as ModalProps;
 
-    // 查询是否有按钮权限
     const resp = await getTaskByTaskId(taskId);
     const buttonPermissions: Record<string, boolean> = {};
     resp.buttonList.forEach((item) => {
       buttonPermissions[item.code] = item.show;
     });
 
-    // 是否具有抄送权限
-    const copyPermission = buttonPermissions?.copy ?? false;
-    formApi.updateSchema([
-      {
-        fieldName: 'flowCopyList',
-        dependencies: {
-          if: copyPermission,
-          triggerFields: [''],
-        },
-      },
-    ]);
+    copyPermission.value = buttonPermissions?.copy ?? false;
 
     modalApi.modalLoading(false);
   },
-});
-
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    // 默认占满两列
-    formItemClass: 'col-span-2',
-    // 默认label宽度 px
-    labelWidth: 100,
-    // 通用配置项 会影响到所有表单项
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  schema: [
-    {
-      fieldName: 'messageType',
-      component: 'CheckboxGroup',
-      componentProps: {
-        options: [
-          { label: '站内信', value: '1', disabled: true },
-          { label: '邮件', value: '2' },
-          { label: '短信', value: '3' },
-        ],
-      },
-      label: '通知方式',
-      defaultValue: ['1'],
-    },
-    {
-      fieldName: 'attachment',
-      component: 'FileUpload',
-      componentProps: {
-        maxCount: 10,
-        maxSize: 20,
-        accept: 'png, jpg, jpeg, doc, docx, xlsx, xls, ppt, pdf',
-      },
-      label: '附件上传',
-      formItemClass: 'items-start',
-    },
-    {
-      fieldName: 'flowCopyList',
-      component: 'Input',
-      defaultValue: [],
-      label: '抄送人',
-      // 默认不显示
-      dependencies: {
-        if: false,
-        triggerFields: [''],
-      },
-    },
-  ],
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
 });
 
 async function handleSubmit() {
   try {
     modalApi.modalLoading(true);
     const { messageType, flowCopyList, attachment } = cloneDeep(
-      await formApi.getValues(),
+      formData.value,
     );
     const { taskId, taskVariables, variables } =
       modalApi.getData() as ModalProps;
-    // 需要转换数据 抄送人员
-    const flowCCList = (flowCopyList as Array<any>).map((item) => ({
+    const flowCCList = flowCopyList.map((item) => ({
       userId: item.userId,
       userName: item.nickName,
     }));
@@ -150,14 +119,38 @@ async function handleSubmit() {
     modalApi.modalLoading(false);
   }
 }
+
+function handleReset() {
+  formData.value = getDefaultValues();
+  copyPermission.value = false;
+  formInstance.value?.resetFields();
+}
 </script>
 
 <template>
   <BasicModal>
-    <BasicForm>
-      <template #flowCopyList="slotProps">
-        <CopyComponent v-model:user-list="slotProps.modelValue" />
-      </template>
-    </BasicForm>
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '100px' } }"
+    >
+      <FormItem label="通知方式" name="messageType">
+        <CheckboxGroup
+          :options="messageTypeOptions"
+          v-model:value="formData.messageType"
+        />
+      </FormItem>
+      <FormItem label="附件上传" name="attachment" class="items-start">
+        <FileUpload
+          :accept="uploadAccept"
+          :max-count="10"
+          :max-size="20"
+          v-model:value="formData.attachment"
+        />
+      </FormItem>
+      <FormItem v-if="copyPermission" label="抄送人" name="flowCopyList">
+        <CopyComponent v-model:user-list="formData.flowCopyList" />
+      </FormItem>
+    </Form>
   </BasicModal>
 </template>
