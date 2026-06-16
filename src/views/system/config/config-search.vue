@@ -88,11 +88,11 @@ defineExpose({
         <FormItem label="创建时间" name="time">
           <DateRangePicker v-model:value="model.time" allow-clear />
         </FormItem>
+        <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
+        <div class="[grid-column-end:-1] justify-self-end">
+          <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
+        </div>
       </div>
     </Form>
-
-    <div class="flex items-center justify-end">
-      <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
-    </div>
   </Card>
 </template>
