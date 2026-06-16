@@ -9,13 +9,14 @@ import type { FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { noticeAdd, noticeInfo, noticeUpdate } from '@/api/system/notice';
+import { FormInput } from '@/components/global/form';
 import { contentWithOssIdTransform, Tiptap } from '@/components/tiptap';
 import { DictEnum } from '@/constants';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
-import { Form, FormItem, Input, RadioGroup } from 'antdv-next';
+import { Form, FormItem, RadioGroup } from 'antdv-next';
 import { cloneDeep, pick } from 'lodash-es';
 
 const emit = defineEmits<{ reload: [] }>();
@@ -141,7 +142,7 @@ async function handleClosed() {
         name="noticeTitle"
         :rules="formRules.noticeTitle"
       >
-        <Input
+        <FormInput
           :placeholder="$t('ui.formRules.required')"
           v-model:value="formData.noticeTitle"
         />
