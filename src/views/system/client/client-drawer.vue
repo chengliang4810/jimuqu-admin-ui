@@ -1,15 +1,24 @@
 <script setup lang="ts">
+import type { Client } from '@/api/system/client/model';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { clientAdd, clientInfo, clientUpdate } from '@/api/system/client';
-import { DEFAULT_CLIENT_ID } from '@/constants';
+import {
+  FormInput as Input,
+  FormInputNumber as InputNumber,
+  FormSelect as Select,
+} from '@/components/global/form';
+import { DEFAULT_CLIENT_ID, DictEnum } from '@/constants';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
-import { cloneDeep } from '@/utils';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
+import { cloneDeep, getPopupContainer } from '@/utils';
+import { getDictOptions } from '@/utils/dict';
+import { useBeforeCloseDiff } from '@/utils/popup';
+import { Form, FormItem, RadioGroup } from 'antdv-next';
 
-import { drawerSchema } from './data';
 import SecretInput from './secret-input.vue';
 
 const emit = defineEmits<{ reload: [] }>();
@@ -19,57 +28,67 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    formItemClass: 'col-span-2',
-    componentProps: {
-      class: 'w-full',
+type FormData = Omit<Partial<Client>, 'accessPath' | 'ipWhitelist'> & {
+  accessPath?: string[];
+  ipWhitelist?: string[];
+};
+
+function getDefaultValues(): FormData {
+  return {
+    activeTimeout: 1800,
+    accessPath: [],
+    clientId: '',
+    clientKey: '',
+    clientSecret: '',
+    deviceType: undefined,
+    grantTypeList: [],
+    id: undefined,
+    ipWhitelist: [],
+    status: '0',
+    timeout: 604_800,
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const statusDisabled = ref(false);
+
+const tokenSeparators = [',', ';', ' ', '\n'];
+
+const formTooltips = {
+  accessPath:
+    '输入后回车确认，可粘贴多个自动拆分；为空表示允许访问所有接口路径',
+  activeTimeout: '指定时间无操作则过期(单位：秒), 默认30分钟(1800秒)',
+  ipWhitelist:
+    '支持精确IP、通配符和CIDR；输入后回车确认，可粘贴多个自动拆分；为空表示允许所有IP',
+  timeout: '指定时间必定过期(单位：秒)，默认七天(604800秒)',
+};
+
+const formRules = ref<AntdFormRules<FormData>>({
+  activeTimeout: [{ required: true, message: $t('ui.formRules.required') }],
+  clientKey: [{ required: true, message: $t('ui.formRules.required') }],
+  clientSecret: [{ required: true, message: $t('ui.formRules.required') }],
+  deviceType: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  grantTypeList: [
+    {
+      message: $t('ui.formRules.selectRequired'),
+      required: true,
+      type: 'array',
     },
-  },
-  layout: 'vertical',
-  schema: drawerSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2 gap-x-4',
+  ],
+  timeout: [{ required: true, message: $t('ui.formRules.required') }],
 });
 
-function setupForm(update: boolean) {
-  formApi.updateSchema([
-    {
-      dependencies: {
-        show: () => update,
-        triggerFields: [''],
-      },
-      fieldName: 'clientId',
-    },
-    {
-      componentProps: {
-        disabled: update,
-      },
-      fieldName: 'clientKey',
-    },
-    {
-      componentProps: {
-        disabled: update,
-      },
-      fieldName: 'clientSecret',
-    },
-  ]);
+function customFormValueGetter() {
+  return JSON.stringify(formData.value);
 }
 
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   {
-    initializedGetter: defaultFormValueGetter(formApi),
-    currentGetter: defaultFormValueGetter(formApi),
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
   },
 );
-
-// 提取生成状态字段Schema的函数
-const getStatusSchema = (disabled: boolean) => [
-  {
-    componentProps: { disabled },
-    fieldName: 'status',
-  },
-];
 
 const [BasicDrawer, drawerApi] = useVbenDrawer({
   onBeforeClose,
@@ -83,21 +102,17 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 
     const { id } = drawerApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
-    // 初始化
-    setupForm(isUpdate.value);
+    statusDisabled.value = false;
+
     if (isUpdate.value && id) {
       const record = await clientInfo(id);
-      // 不能禁用默认客户端的记录
-      formApi.updateSchema(getStatusSchema(record.id === DEFAULT_CLIENT_ID));
-      // accessPath/ipWhitelist 在表单中以 tags 形式编辑, 回显时使用后端返回的数组
-      await formApi.setValues({
+      statusDisabled.value = record.id === DEFAULT_CLIENT_ID;
+      formData.value = {
+        ...getDefaultValues(),
         ...record,
         accessPath: record.accessPathList ?? [],
         ipWhitelist: record.ipWhitelistList ?? [],
-      });
-    } else {
-      // 新增模式: 确保状态字段可用
-      formApi.updateSchema(getStatusSchema(false));
+      };
     }
     await markInitialized();
 
@@ -108,12 +123,11 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 async function handleConfirm() {
   try {
     drawerApi.lock(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = cloneDeep(await formApi.getValues());
-    // tags 形式的数组转回字符串提交给后端
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value) as Partial<Client> & {
+      accessPath?: string | string[];
+      ipWhitelist?: string | string[];
+    };
     if (Array.isArray(data.accessPath)) {
       data.accessPath = data.accessPath.join('\n');
     }
@@ -132,27 +146,152 @@ async function handleConfirm() {
 }
 
 async function handleClosed() {
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  statusDisabled.value = false;
+  formInstance.value?.resetFields();
   resetInitialized();
 }
 </script>
 
 <template>
   <BasicDrawer :title="title" :size="600">
-    <BasicForm>
-      <template #clientSecret="slotProps">
-        <SecretInput v-bind="slotProps" :disabled="isUpdate" />
-      </template>
-    </BasicForm>
+    <Form
+      ref="formInstance"
+      :model="formData"
+      class="grid grid-cols-1 gap-x-4 lg:grid-cols-2"
+      layout="vertical"
+    >
+      <FormItem
+        v-if="isUpdate"
+        label="客户端ID"
+        name="clientId"
+        class="col-span-1 lg:col-span-2"
+      >
+        <Input disabled class="w-full" v-model:value="formData.clientId" />
+      </FormItem>
+      <FormItem
+        label="客户端key"
+        name="clientKey"
+        :rules="formRules.clientKey"
+        class="col-span-1 lg:col-span-2"
+      >
+        <Input
+          allow-clear
+          class="w-full"
+          :disabled="isUpdate"
+          v-model:value="formData.clientKey"
+        />
+      </FormItem>
+      <FormItem
+        label="客户端密钥"
+        name="clientSecret"
+        :rules="formRules.clientSecret"
+        class="col-span-1 lg:col-span-2"
+      >
+        <SecretInput
+          :disabled="isUpdate"
+          v-model:value="formData.clientSecret"
+        />
+      </FormItem>
+      <FormItem
+        label="授权类型"
+        name="grantTypeList"
+        :rules="formRules.grantTypeList"
+        class="col-span-1 lg:col-span-2"
+      >
+        <Select
+          class="w-full"
+          mode="multiple"
+          option-filter-prop="label"
+          :get-popup-container="getPopupContainer"
+          :options="getDictOptions(DictEnum.SYS_GRANT_TYPE)"
+          v-model:value="formData.grantTypeList"
+        />
+      </FormItem>
+      <FormItem
+        label="设备类型"
+        name="deviceType"
+        :rules="formRules.deviceType"
+        class="col-span-1 lg:col-span-2"
+      >
+        <Select
+          :allow-clear="false"
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          :options="getDictOptions(DictEnum.SYS_DEVICE_TYPE)"
+          v-model:value="formData.deviceType"
+        />
+      </FormItem>
+      <FormItem
+        label="允许访问路径"
+        name="accessPath"
+        :tooltip="formTooltips.accessPath"
+        class="col-span-1 lg:col-span-2"
+      >
+        <Select
+          class="w-full"
+          mode="tags"
+          :open="false"
+          placeholder="/app/**"
+          :get-popup-container="getPopupContainer"
+          :token-separators="tokenSeparators"
+          v-model:value="formData.accessPath"
+        />
+      </FormItem>
+      <FormItem
+        label="IP白名单"
+        name="ipWhitelist"
+        :tooltip="formTooltips.ipWhitelist"
+        class="col-span-1 lg:col-span-2"
+      >
+        <Select
+          class="w-full"
+          mode="tags"
+          :open="false"
+          placeholder="127.0.0.1"
+          :get-popup-container="getPopupContainer"
+          :token-separators="tokenSeparators"
+          v-model:value="formData.ipWhitelist"
+        />
+      </FormItem>
+      <FormItem
+        label="Token活跃超时时间"
+        name="activeTimeout"
+        :rules="formRules.activeTimeout"
+        :tooltip="formTooltips.activeTimeout"
+        class="col-span-1"
+      >
+        <InputNumber
+          addon-after="秒"
+          class="w-full"
+          placeholder="请输入"
+          :style="{ '--ant-border-radius': 'var(--radius) 0 0 var(--radius)' }"
+          v-model:value="formData.activeTimeout"
+        />
+      </FormItem>
+      <FormItem
+        label="Token固定超时时间"
+        name="timeout"
+        :rules="formRules.timeout"
+        :tooltip="formTooltips.timeout"
+        class="col-span-1"
+      >
+        <InputNumber
+          addon-after="秒"
+          class="w-full"
+          :style="{ '--ant-border-radius': 'var(--radius) 0 0 var(--radius)' }"
+          v-model:value="formData.timeout"
+        />
+      </FormItem>
+      <FormItem label="状态" name="status" class="col-span-1 lg:col-span-2">
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :disabled="statusDisabled"
+          :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
+          v-model:value="formData.status"
+        />
+      </FormItem>
+    </Form>
   </BasicDrawer>
 </template>
-
-<style lang="scss" scoped>
-/**
-自定义组件校验失败样式
-*/
-:deep(.form-valid-error .ant-input[name='clientSecret']) {
-  border-color: var(--ant-color-error);
-  box-shadow: 0 0 0 2px rgb(255 38 5 / 6%);
-}
-</style>
