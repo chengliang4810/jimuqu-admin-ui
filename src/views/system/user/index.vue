@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { User } from '@/api/system/user/model';
-import type { VbenFormProps } from '@/effects/common-ui';
 import type { MenuProps, SwitchProps } from 'antdv-next';
 
 import { computed, ref } from 'vue';
@@ -22,12 +21,13 @@ import { $t } from '@/locales';
 import { useBlobExport } from '@/utils/file/export';
 import { Avatar, Dropdown, Popconfirm, Space } from 'antdv-next';
 
-import { columns, querySchema } from './data';
+import { columns } from './data';
 import DeptTree from './dept-tree.vue';
 import userDrawer from './user-drawer.vue';
 import userImportModal from './user-import-modal.vue';
 import userInfoModal from './user-info-modal.vue';
 import userResetPwdModal from './user-reset-pwd-modal.vue';
+import UserSearchForm from './user-search.vue';
 
 /**
  * 导入
@@ -43,33 +43,9 @@ function handleImport() {
 // 左边部门用
 const selectDeptId = ref<string[]>([]);
 
-const formOptions: VbenFormProps = {
-  schema: querySchema(),
-  commonConfig: {
-    labelWidth: 80,
-    componentProps: {
-      allowClear: true,
-    },
-  },
-  wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-  handleReset: async () => {
-    selectDeptId.value = [];
-
-    const { formApi, reload } = tableApi;
-    await formApi.resetForm();
-    const formValues = formApi.form.values;
-    formApi.setLatestSubmissionValues(formValues);
-    await reload(formValues);
-  },
-  // 日期选择格式化
-  fieldMappingTime: [
-    [
-      'createTime',
-      ['params[beginTime]', 'params[endTime]'],
-      ['YYYY-MM-DD 00:00:00', 'YYYY-MM-DD 23:59:59'],
-    ],
-  ],
-};
+const searchFormRef = ref<InstanceType<typeof UserSearchForm>>();
+// 缓存最近一次搜索参数，部门树切换时重新查询用
+const currentSearchParams = ref<Record<string, any>>({});
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -115,7 +91,6 @@ const gridOptions: VxeGridProps = {
   id: 'system-user-index',
 };
 const [BasicTable, tableApi] = useVbenVxeGrid({
-  formOptions,
   gridOptions,
 });
 
@@ -156,7 +131,11 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(userExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
+  // 部门树选择
+  if (selectDeptId.value.length === 1) {
+    formValues.deptId = selectDeptId.value[0];
+  }
   // 文件名
   const fileName = buildExportFileName('用户信息');
   exportBlob({ data: formValues, fileName });
@@ -208,13 +187,26 @@ async function handleChangeStatus(checked: SwitchProps['checked'], row: User) {
   });
 }
 
+function handleSearchSubmit(data: Record<string, any>) {
+  currentSearchParams.value = data;
+  tableApi.reload(data);
+}
+
+function handleSearchReset() {
+  currentSearchParams.value = {};
+  selectDeptId.value = [];
+  tableApi.reload();
+}
+
 function handleDeptSelect(keys: string[]) {
   selectDeptId.value = keys;
-  tableApi.formApi.submitForm();
+  tableApi.reload(currentSearchParams.value);
 }
 
 function handleDeptReload() {
-  tableApi.formApi.resetForm();
+  selectDeptId.value = [];
+  searchFormRef.value?.resetFields();
+  currentSearchParams.value = {};
   tableApi.reload();
 }
 </script>
@@ -228,94 +220,103 @@ function handleDeptReload() {
         @reload="handleDeptReload"
         @select="handleDeptSelect"
       />
-      <BasicTable class="flex-1 overflow-hidden" table-title="用户列表">
-        <template #toolbar-tools>
-          <Space>
-            <a-button
-              v-access:code="['system:user:export']"
-              :loading="exportLoading"
-              :disabled="exportLoading"
-              @click="handleExport"
-            >
-              {{ $t('pages.common.export') }}
-            </a-button>
-            <a-button
-              v-access:code="['system:user:import']"
-              @click="handleImport"
-            >
-              {{ $t('pages.common.import') }}
-            </a-button>
-            <a-button
-              :disabled="!vxeCheckboxChecked(tableApi)"
-              danger
-              type="primary"
-              v-access:code="['system:user:remove']"
-              @click="handleMultiDelete"
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-            <a-button
-              type="primary"
-              v-access:code="['system:user:add']"
-              @click="handleAdd"
-            >
-              {{ $t('pages.common.add') }}
-            </a-button>
-          </Space>
-        </template>
-        <template #avatar="{ row }">
-          <!-- 可能要判断空字符串情况 所以没有使用?? -->
-          <Avatar :src="row.avatar || preferences.app.defaultAvatar" />
-        </template>
-        <template #status="{ row }">
-          <!-- value只能接收boolean值 -->
-          <ApiSwitch
-            :value="row.status === EnableStatus.Enable"
-            :api="(checked) => handleChangeStatus(checked, row)"
-            :disabled="
-              row.userId === SUPERADMIN_USER_ID ||
-              !hasAccessByCodes(['system:user:edit'])
-            "
-            @reload="() => tableApi.query()"
-          />
-        </template>
-        <template #action="{ row }">
-          <template v-if="row.userId !== SUPERADMIN_USER_ID">
-            <Space>
-              <action-button
-                v-access:code="['system:user:edit']"
-                @click.stop="handleEdit(row)"
-              >
-                {{ $t('pages.common.edit') }}
-              </action-button>
-              <Popconfirm
-                placement="left"
-                title="确认删除？"
-                @confirm="handleDelete(row)"
-              >
-                <action-button
+      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+        <UserSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable class="overflow-hidden" table-title="用户列表">
+            <template #toolbar-tools>
+              <Space>
+                <a-button
+                  v-access:code="['system:user:export']"
+                  :loading="exportLoading"
+                  :disabled="exportLoading"
+                  @click="handleExport"
+                >
+                  {{ $t('pages.common.export') }}
+                </a-button>
+                <a-button
+                  v-access:code="['system:user:import']"
+                  @click="handleImport"
+                >
+                  {{ $t('pages.common.import') }}
+                </a-button>
+                <a-button
+                  :disabled="!vxeCheckboxChecked(tableApi)"
                   danger
+                  type="primary"
                   v-access:code="['system:user:remove']"
-                  @click.stop=""
+                  @click="handleMultiDelete"
                 >
                   {{ $t('pages.common.delete') }}
-                </action-button>
-              </Popconfirm>
-            </Space>
-            <Dropdown
-              placement="bottomRight"
-              :menu="{
-                items: menuItems,
-                onClick: (info) => handleMenuClick(info.key, row),
-              }"
-            >
-              <a-button size="small" type="link">
-                {{ $t('pages.common.more') }}
-              </a-button>
-            </Dropdown>
-          </template>
-        </template>
-      </BasicTable>
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['system:user:add']"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #avatar="{ row }">
+              <!-- 可能要判断空字符串情况 所以没有使用?? -->
+              <Avatar :src="row.avatar || preferences.app.defaultAvatar" />
+            </template>
+            <template #status="{ row }">
+              <!-- value只能接收boolean值 -->
+              <ApiSwitch
+                :value="row.status === EnableStatus.Enable"
+                :api="(checked) => handleChangeStatus(checked, row)"
+                :disabled="
+                  row.userId === SUPERADMIN_USER_ID ||
+                  !hasAccessByCodes(['system:user:edit'])
+                "
+                @reload="() => tableApi.query()"
+              />
+            </template>
+            <template #action="{ row }">
+              <template v-if="row.userId !== SUPERADMIN_USER_ID">
+                <Space>
+                  <action-button
+                    v-access:code="['system:user:edit']"
+                    @click.stop="handleEdit(row)"
+                  >
+                    {{ $t('pages.common.edit') }}
+                  </action-button>
+                  <Popconfirm
+                    placement="left"
+                    title="确认删除？"
+                    @confirm="handleDelete(row)"
+                  >
+                    <action-button
+                      danger
+                      v-access:code="['system:user:remove']"
+                      @click.stop=""
+                    >
+                      {{ $t('pages.common.delete') }}
+                    </action-button>
+                  </Popconfirm>
+                </Space>
+                <Dropdown
+                  placement="bottomRight"
+                  :menu="{
+                    items: menuItems,
+                    onClick: (info) => handleMenuClick(info.key, row),
+                  }"
+                >
+                  <a-button size="small" type="link">
+                    {{ $t('pages.common.more') }}
+                  </a-button>
+                </Dropdown>
+              </template>
+            </template>
+          </BasicTable>
+        </div>
+      </div>
     </div>
     <UserImpotModal @reload="tableApi.query()" />
     <UserDrawer @reload="tableApi.query()" />
