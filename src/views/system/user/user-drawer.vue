@@ -349,7 +349,7 @@ function handleClosed() {
           v-model:value="formData.roleIds"
         />
       </FormItem>
-      <FormItem class="col-span-2 items-start" label="备注" name="remark">
+      <FormItem label="备注" name="remark">
         <TextArea allow-clear class="w-full" v-model:value="formData.remark" />
       </FormItem>
     </Form>
