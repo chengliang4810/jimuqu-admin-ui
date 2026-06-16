@@ -13,6 +13,13 @@ import {
   userAdd,
   userUpdate,
 } from '@/api/system/user';
+import {
+  FormInput as Input,
+  FormInputPassword as InputPassword,
+  FormSelect as Select,
+  FormTextArea as TextArea,
+  FormTreeSelect as TreeSelect,
+} from '@/components/global/form';
 import { DictEnum } from '@/constants';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
@@ -20,17 +27,7 @@ import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
 import { authScopeOptions } from '@/views/system/role/data';
-import {
-  Form,
-  FormItem,
-  Input,
-  InputPassword,
-  RadioGroup,
-  Select,
-  Tag,
-  TextArea,
-  TreeSelect,
-} from 'antdv-next';
+import { Form, FormItem, RadioGroup, Tag } from 'antdv-next';
 
 const emit = defineEmits<{ reload: [] }>();
 
