@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { Role } from '@/api/system/user/model';
+import type { DeptTree, Role, User } from '@/api/system/user/model';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance, SelectProps } from 'antdv-next';
 
 import { computed, h, onMounted, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { configInfoByKey } from '@/api/system/config';
 import { postOptionSelect } from '@/api/system/post';
 import {
@@ -12,14 +13,24 @@ import {
   userAdd,
   userUpdate,
 } from '@/api/system/user';
+import { DictEnum } from '@/constants';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
+import { getDictOptions } from '@/utils/dict';
+import { useBeforeCloseDiff } from '@/utils/popup';
 import { authScopeOptions } from '@/views/system/role/data';
-import { Tag } from 'antdv-next';
-
-import { drawerSchema } from './data';
+import {
+  Form,
+  FormItem,
+  Input,
+  InputPassword,
+  RadioGroup,
+  Select,
+  Tag,
+  TextArea,
+  TreeSelect,
+} from 'antdv-next';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -28,18 +39,53 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    formItemClass: 'col-span-2',
-    componentProps: {
-      class: 'w-full',
+type FormData = Partial<User> & {
+  password?: string;
+  postIds?: number[];
+  roleIds?: string[];
+};
+type SelectOptions = NonNullable<SelectProps['options']>;
+
+function getDefaultValues(): FormData {
+  return {
+    deptId: undefined,
+    email: undefined,
+    nickName: '',
+    password: '',
+    phoneNumber: undefined,
+    postIds: [],
+    remark: '',
+    roleIds: [],
+    sex: '0',
+    status: '0',
+    userId: undefined,
+    userName: '',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const deptTreeData = ref<DeptTree[]>([]);
+const postOptions = ref<SelectOptions>([]);
+const roleOptions = ref<SelectOptions>([]);
+const postPlaceholder = ref('请先选择部门');
+const formRules = computed<AntdFormRules<FormData>>(() => ({
+  deptId: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  email: [{ message: '请输入正确的邮箱', type: 'email' }],
+  nickName: [{ required: true, message: $t('ui.formRules.required') }],
+  password: [
+    { required: !isUpdate.value, message: $t('ui.formRules.required') },
+  ],
+  phoneNumber: [{ message: '请输入正确的手机号码', pattern: /^1[3-9]\d{9}$/ }],
+  roleIds: [
+    {
+      required: !!formData.value.userId,
+      message: $t('ui.formRules.selectRequired'),
+      type: 'array',
     },
-    labelWidth: 80,
-  },
-  schema: drawerSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
-});
+  ],
+  userName: [{ required: true, message: $t('ui.formRules.required') }],
+}));
 
 /**
  * 生成角色的自定义label
@@ -64,56 +110,29 @@ function genRoleOptionlabel(role: Role) {
  */
 async function setupPostOptions(deptId: number | string) {
   const postListResp = await postOptionSelect(deptId);
-  const options = postListResp.map((item) => ({
+  postOptions.value = postListResp.map((item) => ({
     label: item.postName,
     value: item.postId,
   }));
-  const placeholder = options.length > 0 ? '请选择' : '该部门下暂无岗位';
-  formApi.updateSchema([
-    {
-      componentProps: { options, placeholder },
-      fieldName: 'postIds',
-    },
-  ]);
+  postPlaceholder.value =
+    postOptions.value.length > 0 ? '请选择' : '该部门下暂无岗位';
 }
 
 /**
  * 初始化部门选择
  */
 async function setupDeptSelect() {
-  // updateSchema
   const deptTree = await getDeptTree();
   // 选中后显示在输入框的值 即父节点 / 子节点
   addFullName(deptTree, 'label', ' / ');
-  formApi.updateSchema([
-    {
-      componentProps: (formModel) => ({
-        class: 'w-full',
-        fieldNames: {
-          key: 'id',
-          value: 'id',
-          children: 'children',
-        },
-        getPopupContainer,
-        async onSelect(deptId: number | string) {
-          /** 根据部门ID加载岗位 */
-          await setupPostOptions(deptId);
-          /** 变化后需要重新选择岗位 */
-          formModel.postIds = [];
-        },
-        placeholder: '请选择',
-        showSearch: true,
-        treeData: deptTree,
-        treeDefaultExpandAll: true,
-        treeLine: { showLeafIcon: false },
-        // 筛选的字段
-        treeNodeFilterProp: 'label',
-        // 选中后显示在输入框的值
-        treeNodeLabelProp: 'fullName',
-      }),
-      fieldName: 'deptId',
-    },
-  ]);
+  deptTreeData.value = deptTree;
+}
+
+async function handleDeptSelect(deptId: number | string) {
+  /** 根据部门ID加载岗位 */
+  await setupPostOptions(deptId);
+  /** 变化后需要重新选择岗位 */
+  formData.value.postIds = [];
 }
 
 const defaultPassword = ref('');
@@ -129,14 +148,18 @@ onMounted(async () => {
  */
 async function loadDefaultPassword(update: boolean) {
   if (!update && defaultPassword.value) {
-    formApi.setFieldValue('password', defaultPassword.value);
+    formData.value.password = defaultPassword.value;
   }
+}
+
+function customFormValueGetter() {
+  return JSON.stringify(formData.value);
 }
 
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   {
-    initializedGetter: defaultFormValueGetter(formApi),
-    currentGetter: defaultFormValueGetter(formApi),
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
   },
 );
 
@@ -147,66 +170,38 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
   async onOpenChange(isOpen) {
     if (!isOpen) {
       // 需要重置岗位选择
-      formApi.updateSchema([
-        {
-          componentProps: { options: [], placeholder: '请先选择部门' },
-          fieldName: 'postIds',
-        },
-      ]);
+      postOptions.value = [];
+      postPlaceholder.value = '请先选择部门';
       return null;
     }
     drawerApi.drawerLoading(true);
 
     const { id } = drawerApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
-    /** update时 禁用用户名修改 不显示密码框 */
-    formApi.updateSchema([
-      { componentProps: { disabled: isUpdate.value }, fieldName: 'userName' },
-      {
-        dependencies: { if: () => !isUpdate.value, triggerFields: ['id'] },
-        fieldName: 'password',
-      },
-    ]);
     // 更新 && 赋值
     const { postIds, posts, roleIds, roles, user } = await findUserInfo(id);
-    const postOptions = (posts ?? []).map((item) => ({
+    postOptions.value = (posts ?? []).map((item) => ({
       label: item.postName,
       value: item.postId,
     }));
-    formApi.updateSchema([
-      {
-        componentProps: {
-          // title用于选中后回填到输入框 默认为label
-          optionLabelProp: 'title',
-          options: roles.map((item) => ({
-            label: genRoleOptionlabel(item),
-            // title用于选中后回填到输入框 默认为label
-            title: item.roleName,
-            value: item.roleId,
-          })),
-        },
-        fieldName: 'roleIds',
-      },
-      {
-        componentProps: {
-          options: postOptions,
-        },
-        fieldName: 'postIds',
-      },
-    ]);
+    roleOptions.value = roles.map((item) => ({
+      label: genRoleOptionlabel(item),
+      // title用于选中后回填到输入框 默认为label
+      title: item.roleName,
+      value: item.roleId,
+    }));
 
     // 部门选择、初始密码及用户相关操作并行处理
     const promises = [setupDeptSelect(), loadDefaultPassword(isUpdate.value)];
     if (user) {
-      promises.push(
-        // 添加基础信息
-        formApi.setValues(user),
-        // 添加角色和岗位
-        formApi.setFieldValue('postIds', postIds),
-        formApi.setFieldValue('roleIds', roleIds),
-        // 更新时不会触发onSelect 需要手动调用
-        setupPostOptions(user.deptId),
-      );
+      formData.value = {
+        ...getDefaultValues(),
+        ...user,
+        postIds: postIds ?? [],
+        roleIds: roleIds ?? [],
+      };
+      // 更新时不会触发onSelect 需要手动调用
+      promises.push(setupPostOptions(user.deptId));
     }
     // 并行处理 重构后会带来10-50ms的优化
     await Promise.all(promises);
@@ -219,11 +214,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 async function handleConfirm() {
   try {
     drawerApi.lock(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = cloneDeep(await formApi.getValues());
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
     await (isUpdate.value ? userUpdate(data) : userAdd(data));
     resetInitialized();
     emit('reload');
@@ -235,14 +227,131 @@ async function handleConfirm() {
   }
 }
 
-async function handleClosed() {
-  formApi.resetForm();
+function handleClosed() {
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
+  postOptions.value = [];
+  roleOptions.value = [];
+  postPlaceholder.value = '请先选择部门';
   resetInitialized();
 }
 </script>
 
 <template>
   <BasicDrawer :title="title" :size="600">
-    <BasicForm />
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '80px' } }"
+    >
+      <FormItem name="userId" hidden>
+        <Input v-model:value="formData.userId" />
+      </FormItem>
+      <FormItem label="用户账号" name="userName" :rules="formRules.userName">
+        <Input
+          allow-clear
+          class="w-full"
+          :disabled="isUpdate"
+          v-model:value="formData.userName"
+        />
+      </FormItem>
+      <FormItem
+        v-if="!isUpdate"
+        label="用户密码"
+        name="password"
+        :rules="formRules.password"
+      >
+        <InputPassword
+          allow-clear
+          class="w-full"
+          v-model:value="formData.password"
+        />
+      </FormItem>
+      <FormItem label="用户昵称" name="nickName" :rules="formRules.nickName">
+        <Input allow-clear class="w-full" v-model:value="formData.nickName" />
+      </FormItem>
+      <FormItem label="所属部门" name="deptId" :rules="formRules.deptId">
+        <TreeSelect
+          allow-clear
+          class="w-full"
+          :field-names="{ value: 'id', children: 'children' }"
+          :get-popup-container="getPopupContainer"
+          placeholder="请选择"
+          show-search
+          :tree-data="deptTreeData"
+          tree-default-expand-all
+          :tree-line="{ showLeafIcon: false }"
+          tree-node-filter-prop="label"
+          tree-node-label-prop="fullName"
+          v-model:value="formData.deptId"
+          @select="handleDeptSelect"
+        />
+      </FormItem>
+      <FormItem
+        label="手机号码"
+        name="phoneNumber"
+        :rules="formRules.phoneNumber"
+      >
+        <Input
+          allow-clear
+          class="w-full"
+          v-model:value="formData.phoneNumber"
+        />
+      </FormItem>
+      <FormItem label="邮箱" name="email" :rules="formRules.email">
+        <Input allow-clear class="w-full" v-model:value="formData.email" />
+      </FormItem>
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <FormItem label="性别" name="sex">
+          <RadioGroup
+            button-style="solid"
+            option-type="button"
+            :options="getDictOptions(DictEnum.SYS_USER_GENDER)"
+            v-model:value="formData.sex"
+          />
+        </FormItem>
+        <FormItem label="状态" name="status">
+          <RadioGroup
+            button-style="solid"
+            option-type="button"
+            :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
+            v-model:value="formData.status"
+          />
+        </FormItem>
+      </div>
+      <FormItem
+        extra="选择部门后, 将自动加载该部门下所有的岗位"
+        label="岗位"
+        name="postIds"
+      >
+        <Select
+          allow-clear
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          mode="multiple"
+          option-filter-prop="label"
+          option-label-prop="label"
+          :options="postOptions"
+          :placeholder="postPlaceholder"
+          v-model:value="formData.postIds"
+        />
+      </FormItem>
+      <FormItem label="角色" name="roleIds" :rules="formRules.roleIds">
+        <Select
+          allow-clear
+          class="w-full"
+          :get-popup-container="getPopupContainer"
+          mode="multiple"
+          option-filter-prop="title"
+          option-label-prop="title"
+          :options="roleOptions"
+          placeholder="请选择"
+          v-model:value="formData.roleIds"
+        />
+      </FormItem>
+      <FormItem class="col-span-2 items-start" label="备注" name="remark">
+        <TextArea allow-clear class="w-full" v-model:value="formData.remark" />
+      </FormItem>
+    </Form>
   </BasicDrawer>
 </template>
