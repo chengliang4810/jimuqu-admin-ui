@@ -1,4 +1,4 @@
-import type { LoginAndRegisterParams } from '@/effects/common-ui';
+import type { LoginAndRegisterParams } from '@/api';
 import type { UserInfo } from '@/types';
 
 import { ref } from 'vue';

@@ -1,5 +1,3 @@
-import type { GrantType } from '@/effects/common-ui';
-
 import { useAppConfig } from '@/effects/hooks';
 import { alovaInstance } from '@/utils/http';
 
@@ -7,6 +5,23 @@ const { clientId, sseEnable } = useAppConfig(
   import.meta.env,
   import.meta.env.PROD,
 );
+
+/**
+ * 登录类型
+ * password 密码 | sms 短信 | social 第三方oauth | email 邮箱 | xcx 小程序
+ */
+export type GrantType = 'email' | 'password' | 'sms' | 'social' | 'xcx';
+
+/**
+ * 账号密码登录表单参数
+ */
+export interface LoginAndRegisterParams {
+  code?: string;
+  grantType: GrantType;
+  password: string;
+  username: string;
+  uuid?: string;
+}
 
 export namespace AuthApi {
   /**
