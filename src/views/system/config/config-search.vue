@@ -71,19 +71,20 @@ defineExpose({
     >
       <div class="grid grid-cols-1 lg:grid-cols-4">
         <FormItem label="参数名称" name="configName">
-          <FormInput v-model:value="model.configName" />
+          <FormInput v-model:value="model.configName" allow-clear />
         </FormItem>
         <FormItem label="参数键名" name="configKey">
-          <FormInput v-model:value="model.configKey" />
+          <FormInput v-model:value="model.configKey" allow-clear />
         </FormItem>
         <FormItem label="系统内置" name="configType">
           <FormSelect
+            allow-clear
             v-model:value="model.configType"
             :options="getDictOptions(DictEnum.SYS_YES_NO)"
           />
         </FormItem>
         <FormItem label="创建时间" name="time">
-          <DateRangePicker v-model:value="model.time" />
+          <DateRangePicker v-model:value="model.time" allow-clear />
         </FormItem>
       </div>
     </Form>
