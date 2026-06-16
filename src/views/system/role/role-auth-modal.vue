@@ -10,6 +10,7 @@ import { MenuSelectTable, TreeSelectPanel } from '@/components/tree';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { cloneDeep, eachTree, findGroupParentIds } from '@/utils';
+import { useBeforeCloseDiff } from '@/utils/popup';
 import { Descriptions, DescriptionsItem, Segmented, Select } from 'antdv-next';
 import { uniq } from 'lodash-es';
 
@@ -35,11 +36,15 @@ interface RolePermissionData {
   deptIds: (number | string)[];
 }
 
-const formData = ref<RolePermissionData>({
-  menuCheckStrictly: true,
-  deptCheckStrictly: true,
-  deptIds: [],
-});
+function getDefaultValues(): RolePermissionData {
+  return {
+    menuCheckStrictly: true,
+    deptCheckStrictly: true,
+    deptIds: [],
+  };
+}
+
+const formData = ref<RolePermissionData>(getDefaultValues());
 
 // 菜单权限
 const menuTree = ref<MenuOption[]>([]);
@@ -50,9 +55,24 @@ const menuSelectRef = ref<InstanceType<typeof MenuSelectTable>>();
 let deptTreeData: DeptOption[] = [];
 const deptTree = ref<DeptOption[]>([]);
 
+function customFormValueGetter() {
+  return JSON.stringify({
+    formData: formData.value,
+    menuIds: menuSelectRef.value?.getCheckedKeys?.() ?? menuCheckedKeys.value,
+  });
+}
+
+const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
+  {
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
+  },
+);
+
 const [BasicModal, modalApi] = useVbenModal({
   width: 800,
   fullscreenButton: true,
+  onBeforeClose,
   onConfirm: handleConfirm,
   onClosed: handleClosed,
   onOpenChange: async (isOpen) => {
@@ -87,11 +107,13 @@ const [BasicModal, modalApi] = useVbenModal({
     menuTree.value = menuResp.menus;
     await nextTick();
     menuCheckedKeys.value = menuResp.checkedKeys;
+    await nextTick();
 
     // 部门树
     deptTreeData = deptResp.depts;
     deptTree.value = deptResp.depts;
 
+    await markInitialized();
     modalApi.modalLoading(false);
   },
 });
@@ -124,6 +146,7 @@ async function handleConfirm() {
 
     await roleSetPermissions(data);
     emit('reload');
+    resetInitialized();
     modalApi.close();
   } catch (error) {
     console.error(error);
@@ -133,15 +156,12 @@ async function handleConfirm() {
 }
 
 function handleClosed() {
-  formData.value = {
-    menuCheckStrictly: true,
-    deptCheckStrictly: true,
-    deptIds: [],
-  };
+  formData.value = getDefaultValues();
   menuTree.value = [];
   menuCheckedKeys.value = [];
   deptTree.value = [];
   deptTreeData = [];
+  resetInitialized();
 }
 
 function handleMenuCheckStrictlyChange(value: boolean) {

@@ -2,7 +2,6 @@ import type { FormSchemaGetter } from '@/adapter/form';
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
-import { getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { Tag } from 'antdv-next';
 
@@ -94,78 +93,5 @@ export const columns: VxeGridProps['columns'] = [
     title: '操作',
     resizable: false,
     width: 'auto',
-  },
-];
-
-export const drawerSchema: FormSchemaGetter = () => [
-  {
-    component: 'Input',
-    dependencies: {
-      show: () => false,
-      triggerFields: [''],
-    },
-    fieldName: 'roleId',
-    label: '角色ID',
-  },
-  {
-    component: 'Input',
-    fieldName: 'roleName',
-    label: '角色名称',
-    rules: 'required',
-  },
-  {
-    component: 'Input',
-    fieldName: 'roleKey',
-    help: '如: test simpleUser等',
-    label: '权限标识',
-    rules: 'required',
-  },
-  {
-    component: 'InputNumber',
-    fieldName: 'roleSort',
-    label: '角色排序',
-    rules: 'required',
-    defaultValue: 1,
-    componentProps: {
-      rootClass: 'flex-1',
-    },
-  },
-  {
-    component: 'Select',
-    componentProps: {
-      allowClear: false,
-      options: getDictOptions(DictEnum.SYS_NORMAL_DISABLE),
-      getPopupContainer,
-    },
-    defaultValue: '0',
-    fieldName: 'status',
-    help: '修改后, 拥有该角色的用户将自动下线.',
-    label: '角色状态',
-    rules: 'required',
-  },
-  {
-    component: 'Textarea',
-    defaultValue: '',
-    fieldName: 'remark',
-    formItemClass: 'col-span-2',
-    label: '备注',
-  },
-  {
-    component: 'Input',
-    defaultValue: [],
-    fieldName: 'menuIds',
-    dependencies: {
-      show: () => false,
-      triggerFields: [''],
-    },
-  },
-  {
-    component: 'Input',
-    defaultValue: [],
-    fieldName: 'deptIds',
-    dependencies: {
-      show: () => false,
-      triggerFields: [''],
-    },
   },
 ];
