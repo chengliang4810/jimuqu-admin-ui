@@ -36,21 +36,26 @@ const matchAntdvNextThemeChunk = createChunkMatcher([
 ]);
 const matchAntdvNextFormChunk = createChunkMatcher(
   fromAntdvDist(
-    'auto-complete',
-    'calendar',
-    'cascader',
     'checkbox',
     'color-picker',
-    'date-picker',
     'form',
     'input-number',
     'input',
-    'mentions',
-    'radio',
-    'rate',
     'select',
     'slider',
     'switch',
+  ),
+);
+// 仅业务页面使用的表单组件，不进首屏
+const matchAntdvNextFormExtChunk = createChunkMatcher(
+  fromAntdvDist(
+    'auto-complete',
+    'calendar',
+    'cascader',
+    'date-picker',
+    'mentions',
+    'radio',
+    'rate',
     'time-picker',
     'transfer',
     'tree-select',
@@ -273,28 +278,33 @@ function createApplicationCodeSplitting() {
         test: matchAntdvNextFormChunk,
       },
       {
-        name: 'antdv-overlay',
+        name: 'antdv-form-ext',
         priority: 44,
+        test: matchAntdvNextFormExtChunk,
+      },
+      {
+        name: 'antdv-overlay',
+        priority: 43,
         test: matchAntdvNextOverlayChunk,
       },
       {
         name: 'antdv-data',
-        priority: 43,
+        priority: 42,
         test: matchAntdvNextDataChunk,
       },
       {
         name: 'antdv-layout',
-        priority: 42,
+        priority: 41,
         test: matchAntdvNextLayoutChunk,
       },
       {
         name: 'antdv-shared',
-        priority: 41,
+        priority: 40,
         test: matchAntdvNextSharedChunk,
       },
       {
         name: 'antdv-next',
-        priority: 40,
+        priority: 39,
         test: matchAntdvNextChunk,
       },
       {
