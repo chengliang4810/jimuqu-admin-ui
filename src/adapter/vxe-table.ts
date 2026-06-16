@@ -35,8 +35,22 @@ setupVbenVxeTable({
         pagerConfig: {
           // 默认条数
           pageSize: 10,
+          background: true,
+          className: 'mt-2 w-full',
+          layouts: [
+            'Total',
+            'Sizes',
+            'Home',
+            'PrevJump',
+            'PrevPage',
+            'Number',
+            'NextPage',
+            'NextJump',
+            'End',
+          ],
           // 分页可选条数
-          pageSizes: [10, 20, 30, 40, 50],
+          pageSizes: [10, 20, 30],
+          size: 'mini',
         },
         rowConfig: {
           // 鼠标移入行显示 hover 样式

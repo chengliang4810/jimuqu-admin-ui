@@ -6,6 +6,7 @@ import { ref } from 'vue';
 
 import { FormInput, FormSelect } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
+import { tableSeachClass } from '@/components/vxe-table';
 import { DictEnum } from '@/constants';
 import { formatDateTime } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
@@ -68,9 +69,9 @@ defineExpose({
     <Form
       ref="formInstance"
       :model="model"
-      :label-col="{ style: { width: '80px' } }"
+      :label-col="{ style: { width: '100px' } }"
     >
-      <div class="grid grid-cols-1 lg:grid-cols-4">
+      <div :class="tableSeachClass">
         <FormItem label="参数名称" name="configName">
           <FormInput v-model:value="model.configName" allow-clear />
         </FormItem>

@@ -1,26 +1,27 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { SysConfig } from '@/api/system/config/model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   configExport,
   configList,
   configRefreshCache,
   configRemove,
 } from '@/api/system/config';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import configModal from './config-modal.vue';
 import ConfigSearchForm from './config-search.vue';
 import { columns } from './data';
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<SysConfig>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -35,10 +36,11 @@ const gridOptions: VxeGridProps = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues = {}) => {
+        const values = formValues instanceof PointerEvent ? {} : formValues;
         return await configList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
-          ...formValues,
+          ...values,
         });
       },
     },
@@ -46,12 +48,23 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'configId',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-config-index',
+});
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-});
+const tableRef = useTemplateRef<VxeGridInstance<SysConfig>>('tableRef');
+const checkedRows = ref<SysConfig[]>([]);
+
 const [ConfigModal, modalApi] = useVbenModal({
   connectedComponent: configModal,
 });
@@ -70,11 +83,11 @@ async function handleEdit(record: SysConfig) {
 
 async function handleDelete(row: SysConfig) {
   await configRemove([row.configId]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: SysConfig) => row.configId);
   window.modal.confirm({
     title: '提示',
@@ -82,7 +95,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await configRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -99,15 +112,40 @@ async function handleExport() {
 
 async function handleRefreshCache() {
   await configRefreshCache();
-  await tableApi.query();
+  await query();
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as SysConfig[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -122,10 +160,17 @@ function handleSearchReset() {
       />
 
       <!-- 这里占满剩余高度 -->
-      <div class="flex-1">
-        <!-- 这里拿到的就是最终的剩余高度 -->
-        <BasicTable table-title="参数列表">
-          <template #toolbar-tools>
+      <div class="bg-card h-full min-h-0 flex-1 rounded-md">
+        <VxeGrid
+          ref="tableRef"
+          class="p-2 pt-0"
+          v-bind="gridOptions"
+          v-on="gridEvents"
+        >
+          <template #toolbar-left>
+            <div class="text-[16px] font-medium">参数列表</div>
+          </template>
+          <template #toolbar-right>
             <Space>
               <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
               <a-button
@@ -137,23 +182,24 @@ function handleSearchReset() {
                 {{ $t('pages.common.export') }}
               </a-button>
               <a-button
-                :disabled="!vxeCheckboxChecked(tableApi)"
+                v-access:code="['system:config:remove']"
+                :disabled="checkedRows.length === 0"
                 danger
                 type="primary"
-                v-access:code="['system:config:remove']"
                 @click="handleMultiDelete"
               >
                 {{ $t('pages.common.delete') }}
               </a-button>
               <a-button
-                type="primary"
                 v-access:code="['system:config:add']"
+                type="primary"
                 @click="handleAdd"
               >
                 {{ $t('pages.common.add') }}
               </a-button>
             </Space>
           </template>
+
           <template #action="{ row }">
             <Space>
               <action-button
@@ -168,8 +214,8 @@ function handleSearchReset() {
                 @confirm="handleDelete(row)"
               >
                 <action-button
-                  danger
                   v-access:code="['system:config:remove']"
+                  danger
                   @click.stop=""
                 >
                   {{ $t('pages.common.delete') }}
@@ -177,10 +223,14 @@ function handleSearchReset() {
               </Popconfirm>
             </Space>
           </template>
-        </BasicTable>
+
+          <template #loading>
+            <Spin :spinning="true" size="large" />
+          </template>
+        </VxeGrid>
       </div>
     </div>
 
-    <ConfigModal @reload="tableApi.query()" />
+    <ConfigModal @reload="() => query()" />
   </Page>
 </template>
