@@ -1,51 +1,34 @@
 <script setup lang="ts">
 import type { ResetPwdParam, User } from '@/api/system/user/model';
-import type { DescriptionsProps } from 'antdv-next';
+import type { AntdFormRules } from '@/types/form';
+import type { DescriptionsProps, FormInstance } from 'antdv-next';
 
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { userResetPassword } from '@/api/system/user';
 import { useVbenModal } from '@/effects/common-ui';
-import { Descriptions } from 'antdv-next';
+import { Descriptions, Form, FormItem, InputPassword } from 'antdv-next';
 
 const emit = defineEmits<{ reload: [] }>();
+
+const defaultValues: ResetPwdParam = {
+  userId: '',
+  password: '',
+};
+
+const formData = ref<ResetPwdParam>({ ...defaultValues });
+const formInstance = ref<FormInstance>();
+const formRules = ref<AntdFormRules<ResetPwdParam>>({
+  password: [
+    { message: '密码长度为5 - 20', required: true },
+    { max: 20, message: '密码长度为5 - 20', min: 5 },
+  ],
+});
 
 const [BasicModal, modalApi] = useVbenModal({
   onClosed: handleClosed,
   onConfirm: handleSubmit,
   onOpenChange: handleOpenChange,
-});
-
-const [BasicForm, formApi] = useVbenForm({
-  schema: [
-    {
-      component: 'Input',
-      dependencies: {
-        show: () => false,
-        triggerFields: [''],
-      },
-      fieldName: 'userId',
-      label: '用户ID',
-      rules: 'required',
-    },
-    {
-      component: 'InputPassword',
-      componentProps: {
-        placeholder: '请输入新的密码, 密码长度为5 - 20',
-      },
-      fieldName: 'password',
-      label: '新的密码',
-      rules: [
-        { message: '密码长度为5 - 20', required: true },
-        { max: 20, message: '密码长度为5 - 20', min: 5 },
-      ],
-    },
-  ],
-  showDefaultActions: false,
-  commonConfig: {
-    labelWidth: 80,
-  },
 });
 
 const currentUser = ref<null | User>(null);
@@ -57,32 +40,28 @@ async function handleOpenChange(open: boolean) {
 
   const { record } = modalApi.getData() as { record: User };
   currentUser.value = record;
-  await formApi.setValues({ userId: record.userId });
+  formData.value = { ...defaultValues, userId: record.userId };
 
   modalApi.modalLoading(false);
 }
 
 async function handleSubmit() {
   try {
-    modalApi.modalLoading(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = await formApi.getValues();
-    await userResetPassword(data as ResetPwdParam);
+    modalApi.lock(true);
+    await formInstance.value?.validate();
+    await userResetPassword(formData.value);
     emit('reload');
-    handleClosed();
+    modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    modalApi.modalLoading(false);
+    modalApi.lock(false);
   }
 }
 
-async function handleClosed() {
-  modalApi.close();
-  await formApi.resetForm();
+function handleClosed() {
+  formData.value = { ...defaultValues };
+  formInstance.value?.resetFields();
   currentUser.value = null;
 }
 
@@ -106,7 +85,16 @@ const items = computed<DescriptionsProps['items']>(() => {
   >
     <div class="flex flex-col gap-[12px]">
       <Descriptions size="small" :column="1" bordered :items="items" />
-      <BasicForm />
+      <Form layout="vertical" ref="formInstance" :model="formData">
+        <FormItem label="新的密码" name="password" :rules="formRules.password">
+          <InputPassword
+            allow-clear
+            :maxlength="20"
+            placeholder="请输入新的密码, 密码长度为5 - 20"
+            v-model:value="formData.password"
+          />
+        </FormItem>
+      </Form>
     </div>
   </BasicModal>
 </template>
