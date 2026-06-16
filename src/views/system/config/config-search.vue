@@ -30,22 +30,36 @@ const model = ref<ConfigSearchFormParams>({
 });
 
 const formInstance = ref<FormInstance>();
-async function handleSubmit() {
-  const d = (await formInstance.value?.validate()) ?? {};
-  if (d.time) {
-    d.params = {
-      beginTime: formatDateTime(d.time[0]),
-      endTime: formatDateTime(d.time[1]),
+
+function buildSearchParams(values: ConfigSearchFormParams) {
+  const params: Record<string, any> = { ...values };
+  if (params.time) {
+    params.params = {
+      beginTime: formatDateTime(params.time[0]),
+      endTime: formatDateTime(params.time[1]),
     };
-    Reflect.deleteProperty(d, 'time');
+    Reflect.deleteProperty(params, 'time');
   }
-  emit('submit', d);
+  return params;
+}
+
+async function getValues() {
+  return buildSearchParams(model.value);
+}
+
+async function handleSubmit() {
+  await formInstance.value?.validate();
+  emit('submit', await getValues());
 }
 
 async function handleReset() {
   formInstance.value?.resetFields();
   emit('reset');
 }
+
+defineExpose({
+  getValues,
+});
 </script>
 
 <template>

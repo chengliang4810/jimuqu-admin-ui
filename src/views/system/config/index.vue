@@ -2,6 +2,8 @@
 import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { SysConfig } from '@/api/system/config/model';
 
+import { ref } from 'vue';
+
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   configExport,
@@ -54,6 +56,8 @@ const [ConfigModal, modalApi] = useVbenModal({
   connectedComponent: configModal,
 });
 
+const searchFormRef = ref<InstanceType<typeof ConfigSearchForm>>();
+
 function handleAdd() {
   modalApi.setData({});
   modalApi.open();
@@ -87,7 +91,7 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(configExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
   // 文件名
   const fileName = buildExportFileName('参数配置');
   exportBlob({ data: formValues, fileName });
@@ -112,6 +116,7 @@ function handleSearchReset() {
     <!-- 外层auto-content-height已经占满了内容高度 -->
     <div class="flex h-full flex-col gap-4">
       <ConfigSearchForm
+        ref="searchFormRef"
         @submit="handleSearchSubmit"
         @reset="handleSearchReset"
       />
