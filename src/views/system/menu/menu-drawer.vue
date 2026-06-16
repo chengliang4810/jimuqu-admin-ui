@@ -1,16 +1,27 @@
 <script setup lang="ts">
+import type { Menu } from '@/api/system/menu/model';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import { menuAdd, menuInfo, menuList, menuUpdate } from '@/api/system/menu';
+import {
+  FormInput as Input,
+  FormInputNumber as InputNumber,
+  FormTreeSelect as TreeSelect,
+} from '@/components/global/form';
+import { DictEnum } from '@/constants';
 import { useVbenDrawer } from '@/effects/common-ui';
+import { VbenIcon } from '@/icons-app';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
-import { Skeleton } from 'antdv-next';
+import { getDictOptions } from '@/utils/dict';
+import { useBeforeCloseDiff } from '@/utils/popup';
+import { Form, FormItem, RadioGroup, Skeleton } from 'antdv-next';
 import JsonEditorVue from 'json-editor-vue';
 
-import { drawerSchema } from './data';
+import { menuTypeOptions } from './data';
 
 interface ModalProps {
   id?: number | string;
@@ -25,18 +36,98 @@ const title = computed(() => {
 });
 const loading = ref(false);
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    componentProps: {
-      class: 'w-full',
-    },
-    formItemClass: 'col-span-2',
-    labelWidth: 90,
-  },
-  schema: drawerSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+type FormData = Partial<Menu> & {
+  activeMenu?: string;
+  ext?: string;
+  queryParam?: string;
+};
+
+function getDefaultValues(): FormData {
+  return {
+    activeMenu: '',
+    component: '',
+    ext: '',
+    icon: '',
+    isCache: 'Y',
+    isFrame: 'N',
+    menuId: undefined,
+    menuName: '',
+    menuType: 'M',
+    orderNum: 1,
+    parentId: 0,
+    path: '',
+    perms: '',
+    queryParam: '',
+    status: '0',
+    visible: '0',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+const menuTreeData = ref<any[]>([]);
+
+const showNotButton = computed(() => formData.value.menuType !== 'F');
+const showMenu = computed(() => formData.value.menuType === 'C');
+const showMenuOrButton = computed(() => formData.value.menuType !== 'M');
+const pathPlaceholder = computed(() => {
+  return formData.value.isFrame === '0'
+    ? '填写链接地址http(s)://  使用新页面打开'
+    : '填写`路由地址`或者`链接地址`  链接默认使用内部iframe内嵌打开';
 });
+
+const formTooltips = {
+  activeMenu:
+    '适用于隐藏菜单, 用于打开隐藏菜单时 左侧激活的菜单 如: /system/oss-config/index',
+  component: '填写./src/views下的组件路径, 如system/menu/index',
+  ext: 'vben5支持的路由meta参数 json格式',
+  icon: '点击搜索图标跳转到iconify & 粘贴',
+  isCache: '路由的keepAlive属性',
+  isFrame:
+    '外链为http(s)://开头\n选择否时, 使用iframe从内部打开页面, 否则新窗口打开',
+  menuName: '支持i18n写法, 如: menu.system.user',
+  orderNum: '排序, 数字越小越靠前',
+  path: '路由地址不带/, 如: menu, user\n链接为http(s)://开头\n链接默认使用内部iframe打开, 可通过{是否外链}控制打开方式',
+  perms: '控制器中定义的权限字符\n如: @SaCheckPermission("system:user:import")',
+  queryParam: 'vue-router中的query属性\n如{"name": "xxx", "age": 16}',
+  status: '停用后不会出现在菜单栏, 也无法访问',
+  visible: '隐藏后不会出现在菜单栏, 但仍然可以访问',
+};
+
+const formRules = computed<AntdFormRules<FormData>>(() => ({
+  component:
+    formData.value.path && !/^https?:\/\//.test(formData.value.path)
+      ? [
+          { message: '非链接时必填组件路径', required: true },
+          {
+            validator: async (_rule, value) => {
+              if (value && (value.startsWith('/') || value.endsWith('/'))) {
+                throw new Error('组件路径开头/末尾不需要带/');
+              }
+            },
+          },
+        ]
+      : [],
+  menuName: [{ required: true, message: $t('ui.formRules.required') }],
+  orderNum: [{ required: true, message: $t('ui.formRules.required') }],
+  parentId: [{ required: true, message: $t('ui.formRules.selectRequired') }],
+  path:
+    formData.value.isFrame === '0'
+      ? [
+          { message: '请输入链接地址', required: true },
+          { message: '请输入正确的链接地址', pattern: /^https?:\/\// },
+        ]
+      : [
+          { message: '请输入路由地址', required: true },
+          {
+            validator: async (_rule, value) => {
+              if (value && value.startsWith('/')) {
+                throw new Error('路由地址不需要带/');
+              }
+            },
+          },
+        ],
+}));
 
 async function setupMenuSelect() {
   // menu
@@ -61,35 +152,17 @@ async function setupMenuSelect() {
   ];
   addFullName(fullMenuTree, 'menuName', ' / ');
 
-  formApi.updateSchema([
-    {
-      componentProps: {
-        fieldNames: {
-          label: 'menuName',
-          value: 'menuId',
-        },
-        getPopupContainer,
-        // 设置弹窗滚动高度 默认256
-        listHeight: 300,
-        showSearch: true,
-        treeData: fullMenuTree,
-        treeDefaultExpandAll: false,
-        // 默认展开的树节点
-        treeDefaultExpandedKeys: [0],
-        treeLine: { showLeafIcon: false },
-        // 筛选的字段
-        treeNodeFilterProp: 'menuName',
-        treeNodeLabelProp: 'fullName',
-      },
-      fieldName: 'parentId',
-    },
-  ]);
+  menuTreeData.value = fullMenuTree;
+}
+
+function customFormValueGetter() {
+  return JSON.stringify(formData.value);
 }
 
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   {
-    initializedGetter: defaultFormValueGetter(formApi),
-    currentGetter: defaultFormValueGetter(formApi),
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
   },
 );
 
@@ -108,7 +181,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     isUpdate.value = update;
 
     if (id) {
-      await formApi.setFieldValue('parentId', id);
+      formData.value.parentId = Number(id);
       // 创建元组(不是数组 元素位置固定)
       const promise = [
         update ? menuInfo(id) : null,
@@ -117,7 +190,10 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       // 并行获取菜单树选择和菜单信息
       const [record] = await Promise.all(promise);
       if (record) {
-        await formApi.setValues(record);
+        formData.value = {
+          ...getDefaultValues(),
+          ...record,
+        };
       }
     } else {
       // 加载菜单树选择
@@ -133,22 +209,19 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 async function handleConfirm() {
   try {
     drawerApi.lock(true);
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
+    await formInstance.value?.validate();
 
     // 有值 json校验失败
-    if (queryParamJsonRef.value?.[0]?.jsonEditor?.validate()) {
+    if (queryParamJsonRef.value?.jsonEditor?.validate()) {
       window.message.warning(`路由参数 json 校验失败`);
       return;
     }
-    if (extJsonRef.value?.[0]?.jsonEditor?.validate()) {
+    if (extJsonRef.value?.jsonEditor?.validate()) {
       window.message.warning(`扩展路由Meta参数 json 校验失败`);
       return;
     }
 
-    const data = cloneDeep(await formApi.getValues());
+    const data = cloneDeep(formData.value);
     await (isUpdate.value ? menuUpdate(data) : menuAdd(data));
     resetInitialized();
     emit('reload');
@@ -161,47 +234,231 @@ async function handleConfirm() {
 }
 
 async function handleClosed() {
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
+  menuTreeData.value = [];
   resetInitialized();
 }
 
+function handleMenuTypeChange() {
+  (formInstance.value as any)?.clearValidate?.();
+}
+
 type JsonEditorVueRef = { jsonEditor: { validate: () => object | undefined } };
-// 放在form中使用为数组 取index0
-const queryParamJsonRef = ref<JsonEditorVueRef[]>();
-const extJsonRef = ref<JsonEditorVueRef[]>();
+const queryParamJsonRef = ref<JsonEditorVueRef>();
+const extJsonRef = ref<JsonEditorVueRef>();
 const jsonEditorMode: any = 'text';
 </script>
 
 <template>
   <BasicDrawer :title="title" :size="600">
     <Skeleton active v-if="loading" />
-    <BasicForm class="system-menu-form" v-show="!loading">
-      <template #queryParam="slotProps">
+    <Form
+      class="system-menu-form"
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '100px' } }"
+      v-show="!loading"
+    >
+      <FormItem label="上级菜单" name="parentId" :rules="formRules.parentId">
+        <TreeSelect
+          class="w-full"
+          :field-names="{ label: 'menuName', value: 'menuId' }"
+          :get-popup-container="getPopupContainer"
+          :list-height="300"
+          show-search
+          :tree-data="menuTreeData"
+          :tree-default-expanded-keys="[0]"
+          :tree-line="{ showLeafIcon: false }"
+          tree-node-filter-prop="menuName"
+          tree-node-label-prop="fullName"
+          v-model:value="formData.parentId"
+        />
+      </FormItem>
+      <FormItem label="菜单类型" name="menuType">
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :options="menuTypeOptions"
+          v-model:value="formData.menuType"
+          @change="handleMenuTypeChange"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showNotButton"
+        label="菜单图标"
+        name="icon"
+        :tooltip="formTooltips.icon"
+      >
+        <Input allow-clear class="w-full" v-model:value="formData.icon">
+          <template #addonBefore>
+            <VbenIcon :icon="formData.icon" />
+          </template>
+          <template #addonAfter>
+            <a href="https://icon-sets.iconify.design/" target="_blank">
+              搜索图标
+            </a>
+          </template>
+        </Input>
+      </FormItem>
+      <FormItem
+        label="菜单名称"
+        name="menuName"
+        :rules="formRules.menuName"
+        :tooltip="formTooltips.menuName"
+      >
+        <Input allow-clear class="w-full" v-model:value="formData.menuName" />
+      </FormItem>
+      <FormItem
+        label="显示排序"
+        name="orderNum"
+        :rules="formRules.orderNum"
+        :tooltip="formTooltips.orderNum"
+      >
+        <InputNumber
+          class="w-full"
+          v-model:value="formData.orderNum"
+          :style="{ width: '100%' }"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showNotButton"
+        label="路由地址"
+        name="path"
+        :rules="formRules.path"
+        :tooltip="formTooltips.path"
+      >
+        <Input
+          allow-clear
+          class="w-full"
+          :placeholder="pathPlaceholder"
+          v-model:value="formData.path"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showMenu"
+        label="组件路径"
+        name="component"
+        :rules="formRules.component"
+        :tooltip="formTooltips.component"
+      >
+        <Input
+          allow-clear
+          class="w-full"
+          :disabled="formData.isFrame === '0'"
+          v-model:value="formData.component"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showMenu"
+        label="菜单激活"
+        name="activeMenu"
+        :tooltip="formTooltips.activeMenu"
+      >
+        <Input
+          allow-clear
+          class="w-full"
+          :disabled="/^https?:\/\//.test(formData.path ?? '')"
+          v-model:value="formData.activeMenu"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showNotButton"
+        label="是否外链"
+        name="isFrame"
+        :tooltip="formTooltips.isFrame"
+      >
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :options="getDictOptions(DictEnum.SYS_YES_NO)"
+          v-model:value="formData.isFrame"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showNotButton"
+        label="是否显示"
+        name="visible"
+        :tooltip="formTooltips.visible"
+      >
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :options="getDictOptions(DictEnum.SYS_SHOW_HIDE)"
+          v-model:value="formData.visible"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showNotButton"
+        label="菜单状态"
+        name="status"
+        :tooltip="formTooltips.status"
+      >
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
+          v-model:value="formData.status"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showMenuOrButton"
+        label="权限标识"
+        name="perms"
+        :tooltip="formTooltips.perms"
+      >
+        <Input allow-clear class="w-full" v-model:value="formData.perms" />
+      </FormItem>
+      <FormItem
+        v-if="showMenu"
+        label="路由参数"
+        name="queryParam"
+        :tooltip="formTooltips.queryParam"
+      >
         <div class="h-[200px] w-full">
           <JsonEditorVue
             ref="queryParamJsonRef"
             class="h-full"
+            v-model="formData.queryParam"
             :mode="jsonEditorMode"
             :main-menu-bar="false"
             :status-bar="false"
-            v-bind="slotProps"
+            :disabled="formData.isFrame === '0'"
+            placeholder="必须为json字符串格式"
           />
         </div>
-      </template>
-
-      <template #ext="slotProps">
+      </FormItem>
+      <FormItem
+        v-if="showMenu"
+        label="是否缓存"
+        name="isCache"
+        :tooltip="formTooltips.isCache"
+      >
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :options="getDictOptions(DictEnum.SYS_YES_NO)"
+          v-model:value="formData.isCache"
+        />
+      </FormItem>
+      <FormItem
+        v-if="showMenu"
+        label="路由meta"
+        name="ext"
+        :tooltip="formTooltips.ext"
+      >
         <div class="h-[200px] w-full">
           <JsonEditorVue
             ref="extJsonRef"
             class="h-full"
+            v-model="formData.ext"
             :mode="jsonEditorMode"
             :main-menu-bar="false"
             :status-bar="false"
-            v-bind="slotProps"
           />
         </div>
-      </template>
-    </BasicForm>
+      </FormItem>
+    </Form>
   </BasicDrawer>
 </template>
 
