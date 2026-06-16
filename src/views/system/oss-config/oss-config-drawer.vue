@@ -1,19 +1,34 @@
 <script setup lang="ts">
+import type { OssConfig } from '@/api/system/oss-config/model';
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance } from 'antdv-next';
+
 import { computed, ref } from 'vue';
 
-import { useVbenForm } from '@/adapter/form';
 import {
   ossConfigAdd,
   ossConfigInfo,
   ossConfigUpdate,
 } from '@/api/system/oss-config';
+import {
+  FormInput as Input,
+  FormTextArea as TextArea,
+} from '@/components/global/form';
+import { DictEnum } from '@/constants';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
-import { defaultFormValueGetter, useBeforeCloseDiff } from '@/utils/popup';
-import { Alert } from 'antdv-next';
-
-import { drawerSchema } from './data';
+import { getDictOptions } from '@/utils/dict';
+import { useBeforeCloseDiff } from '@/utils/popup';
+import {
+  Alert,
+  Divider,
+  Form,
+  FormItem,
+  RadioGroup,
+  SpaceAddon,
+  SpaceCompact,
+} from 'antdv-next';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -22,20 +37,61 @@ const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
 });
 
-const [BasicForm, formApi] = useVbenForm({
-  commonConfig: {
-    formItemClass: 'col-span-6',
-    labelWidth: 100,
-  },
-  schema: drawerSchema(),
-  showDefaultActions: false,
-  wrapperClass: 'grid-cols-6',
+const accessPolicyOptions = [
+  { color: 'orange', label: '私有', value: '0' },
+  { color: 'green', label: '公开', value: '1' },
+  { color: 'blue', label: '自定义', value: '2' },
+];
+
+type FormData = Partial<OssConfig>;
+
+function getDefaultValues(): FormData {
+  return {
+    accessKey: '',
+    accessPolicy: '0',
+    bucketName: '',
+    configKey: '',
+    domain: '',
+    endpoint: '',
+    isHttps: 'N',
+    ossConfigId: undefined,
+    prefix: '',
+    region: '',
+    remark: '',
+    secretKey: '',
+  };
+}
+
+const formData = ref<FormData>(getDefaultValues());
+const formInstance = ref<FormInstance>();
+
+const formRules = ref<AntdFormRules<FormData>>({
+  accessKey: [{ required: true, message: $t('ui.formRules.required') }],
+  bucketName: [{ required: true, message: $t('ui.formRules.required') }],
+  configKey: [{ required: true, message: $t('ui.formRules.required') }],
+  endpoint: [
+    { message: '请输入正确的域名, 不需要http(s)', required: true },
+    {
+      validator: async (_rule, value) => {
+        if (!value || !/^https?:\/\/.*/.test(value)) {
+          return;
+        }
+        throw new Error('请输入正确的域名, 不需要http(s)');
+      },
+    },
+  ],
+  isHttps: [{ required: true, message: $t('ui.formRules.required') }],
+  secretKey: [{ required: true, message: $t('ui.formRules.required') }],
 });
+
+function customFormValueGetter() {
+  return JSON.stringify(formData.value);
+}
 
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   {
-    initializedGetter: defaultFormValueGetter(formApi),
-    currentGetter: defaultFormValueGetter(formApi),
+    initializedGetter: customFormValueGetter,
+    currentGetter: customFormValueGetter,
   },
 );
 
@@ -53,7 +109,11 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     isUpdate.value = !!id;
     if (isUpdate.value && id) {
       const record = await ossConfigInfo(id);
-      await formApi.setValues(record);
+      formData.value = {
+        ...getDefaultValues(),
+        ...record,
+        remark: record.remark ?? '',
+      };
     }
     await markInitialized();
 
@@ -64,15 +124,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
 async function handleConfirm() {
   try {
     drawerApi.lock(true);
-    /**
-     * 这里解构出来的values只能获取到自定义校验参数的值
-     * 需要自行调用formApi.getValues()获取表单值
-     */
-    const { valid } = await formApi.validate();
-    if (!valid) {
-      return;
-    }
-    const data = cloneDeep(await formApi.getValues());
+    await formInstance.value?.validate();
+    const data = cloneDeep(formData.value);
     await (isUpdate.value ? ossConfigUpdate(data) : ossConfigAdd(data));
     resetInitialized();
     emit('reload');
@@ -85,37 +138,89 @@ async function handleConfirm() {
 }
 
 async function handleClosed() {
-  await formApi.resetForm();
+  formData.value = getDefaultValues();
+  formInstance.value?.resetFields();
   resetInitialized();
 }
 </script>
 
 <template>
   <BasicDrawer :title="title" :size="650">
-    <BasicForm>
-      <template #tip>
-        <div class="pl-7">
-          <Alert show-icon type="warning">
-            <template #message>
-              私有桶(minio)使用自定义域名需要参考
-              <a
-                href="https://gitee.com/dromara/RuoYi-Vue-Plus/issues/IBQIKC"
-                target="_blank"
-                class="text-primary"
-              >
-                支持minio预览私有桶
-              </a>
-              , 否则无法预览
-            </template>
-          </Alert>
-        </div>
-      </template>
-    </BasicForm>
+    <Form
+      ref="formInstance"
+      :model="formData"
+      :label-col="{ style: { width: '100px' } }"
+    >
+      <Divider>基本信息</Divider>
+      <FormItem label="配置名称" name="configKey" :rules="formRules.configKey">
+        <Input allow-clear class="w-full" v-model:value="formData.configKey" />
+      </FormItem>
+      <FormItem label="服务地址" name="endpoint" :rules="formRules.endpoint">
+        <SpaceCompact class="w-full">
+          <SpaceAddon>
+            {{ formData.isHttps === 'Y' ? 'https://' : 'http://' }}
+          </SpaceAddon>
+          <Input allow-clear class="w-full" v-model:value="formData.endpoint">
+          </Input>
+        </SpaceCompact>
+      </FormItem>
+      <FormItem label="自定义域名" name="domain">
+        <Input allow-clear class="w-full" v-model:value="formData.domain" />
+      </FormItem>
+
+      <div>
+        <Alert show-icon type="warning">
+          <template #message>
+            私有桶(minio)使用自定义域名需要参考
+            <a
+              href="https://gitee.com/dromara/RuoYi-Vue-Plus/issues/IBQIKC"
+              target="_blank"
+              class="text-primary"
+            >
+              支持minio预览私有桶
+            </a>
+            , 否则无法预览
+          </template>
+        </Alert>
+      </div>
+
+      <Divider>认证信息</Divider>
+      <FormItem label="accessKey" name="accessKey" :rules="formRules.accessKey">
+        <Input allow-clear class="w-full" v-model:value="formData.accessKey" />
+      </FormItem>
+      <FormItem label="secretKey" name="secretKey" :rules="formRules.secretKey">
+        <Input allow-clear class="w-full" v-model:value="formData.secretKey" />
+      </FormItem>
+
+      <Divider>其他信息</Divider>
+      <FormItem label="桶名称" name="bucketName" :rules="formRules.bucketName">
+        <Input allow-clear class="w-full" v-model:value="formData.bucketName" />
+      </FormItem>
+      <FormItem label="前缀" name="prefix">
+        <Input allow-clear class="w-full" v-model:value="formData.prefix" />
+      </FormItem>
+      <FormItem label="权限桶类型" name="accessPolicy">
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :options="accessPolicyOptions"
+          v-model:value="formData.accessPolicy"
+        />
+      </FormItem>
+      <FormItem label="是否https" name="isHttps" :rules="formRules.isHttps">
+        <RadioGroup
+          button-style="solid"
+          option-type="button"
+          :options="getDictOptions(DictEnum.SYS_YES_NO)"
+          v-model:value="formData.isHttps"
+        />
+      </FormItem>
+      <FormItem label="区域" name="region">
+        <Input allow-clear class="w-full" v-model:value="formData.region" />
+      </FormItem>
+      <FormItem label="备注" name="remark">
+        <TextArea allow-clear class="w-full" v-model:value="formData.remark" />
+      </FormItem>
+    </Form>
   </BasicDrawer>
 </template>
-
-<style lang="scss" scoped>
-:deep(.ant-divider) {
-  margin: 8px 0;
-}
-</style>
