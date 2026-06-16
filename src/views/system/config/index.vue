@@ -34,14 +34,20 @@ const gridOptions = withDefaultVxeGridOptions<SysConfig>({
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        const values = formValues instanceof PointerEvent ? {} : formValues;
-        return await configList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...values,
-        });
+        tableLoading.value = true;
+        try {
+          const values = formValues instanceof PointerEvent ? {} : formValues;
+          return await configList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...values,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -64,6 +70,7 @@ const gridEvents: VxeGridListeners = {
 
 const tableRef = useTemplateRef<VxeGridInstance<SysConfig>>('tableRef');
 const checkedRows = ref<SysConfig[]>([]);
+const tableLoading = ref(false);
 
 const [ConfigModal, modalApi] = useVbenModal({
   connectedComponent: configModal,
@@ -152,84 +159,91 @@ async function reload(params: Record<string, any> = {}) {
 <template>
   <Page :auto-content-height="true">
     <!-- 外层auto-content-height已经占满了内容高度 -->
-    <div class="flex h-full flex-col gap-4">
-      <ConfigSearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <ConfigSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
 
-      <!-- 这里占满剩余高度 -->
-      <div class="bg-card h-full min-h-0 flex-1 rounded-md">
-        <VxeGrid
-          ref="tableRef"
-          class="p-2 pt-0"
-          v-bind="gridOptions"
-          v-on="gridEvents"
-        >
-          <template #toolbar-left>
-            <div class="text-[16px] font-medium">参数列表</div>
-          </template>
-          <template #toolbar-right>
-            <Space>
-              <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
-              <a-button
-                v-access:code="['system:config:export']"
-                :loading="exportLoading"
-                :disabled="exportLoading"
-                @click="handleExport"
-              >
-                {{ $t('pages.common.export') }}
-              </a-button>
-              <a-button
-                v-access:code="['system:config:remove']"
-                :disabled="checkedRows.length === 0"
-                danger
-                type="primary"
-                @click="handleMultiDelete"
-              >
-                {{ $t('pages.common.delete') }}
-              </a-button>
-              <a-button
-                v-access:code="['system:config:add']"
-                type="primary"
-                @click="handleAdd"
-              >
-                {{ $t('pages.common.add') }}
-              </a-button>
-            </Space>
-          </template>
-
-          <template #action="{ row }">
-            <Space>
-              <action-button
-                v-access:code="['system:config:edit']"
-                @click.stop="handleEdit(row)"
-              >
-                {{ $t('pages.common.edit') }}
-              </action-button>
-              <Popconfirm
-                placement="left"
-                title="确认删除？"
-                @confirm="handleDelete(row)"
-              >
-                <action-button
+        <!-- 这里占满剩余高度 -->
+        <div class="bg-card flex-1 rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">参数列表</div>
+            </template>
+            <template #toolbar-right>
+              <Space>
+                <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
+                <a-button
+                  v-access:code="['system:config:export']"
+                  :loading="exportLoading"
+                  :disabled="exportLoading"
+                  @click="handleExport"
+                >
+                  {{ $t('pages.common.export') }}
+                </a-button>
+                <a-button
                   v-access:code="['system:config:remove']"
+                  :disabled="checkedRows.length === 0"
                   danger
-                  @click.stop=""
+                  type="primary"
+                  @click="handleMultiDelete"
                 >
                   {{ $t('pages.common.delete') }}
-                </action-button>
-              </Popconfirm>
-            </Space>
-          </template>
+                </a-button>
+                <a-button
+                  v-access:code="['system:config:add']"
+                  type="primary"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
 
-          <template #loading>
-            <Spin :spinning="true" size="large" />
-          </template>
-        </VxeGrid>
+            <template #action="{ row }">
+              <Space>
+                <action-button
+                  v-access:code="['system:config:edit']"
+                  @click.stop="handleEdit(row)"
+                >
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <Popconfirm
+                  placement="left"
+                  title="确认删除？"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    v-access:code="['system:config:remove']"
+                    danger
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
+    </Spin>
 
     <ConfigModal @reload="() => query()" />
   </Page>
