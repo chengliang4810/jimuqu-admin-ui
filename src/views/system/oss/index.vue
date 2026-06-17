@@ -28,8 +28,6 @@ import fileUploadModal from './file-upload-modal.vue';
 import imageUploadModal from './image-upload-modal.vue';
 import OssSearchForm from './oss-search.vue';
 
-const searchFormRef = ref<InstanceType<typeof OssSearchForm>>();
-
 const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
@@ -219,11 +217,10 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-        <OssSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
-        />
+          <OssSearchForm
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
         <div class="flex-1">
           <BasicTable table-title="文件列表">
           <template #toolbar-tools>

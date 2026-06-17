@@ -13,8 +13,6 @@ import categoryModal from './category-modal.vue';
 import CategorySearchForm from './category-search.vue';
 import { columns } from './data';
 
-const searchFormRef = ref<InstanceType<typeof CategorySearchForm>>();
-
 const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
@@ -111,11 +109,10 @@ function handleSearchReset() {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-        <CategorySearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
-        />
+          <CategorySearchForm
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
         <div class="flex-1">
           <BasicTable table-title="流程分类列表">
       <template #toolbar-tools>

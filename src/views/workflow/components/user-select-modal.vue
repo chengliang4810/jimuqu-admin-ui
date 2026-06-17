@@ -9,6 +9,7 @@ import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { userList } from '@/api/system/user';
 import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
 import DeptTree from '@/views/system/user/dept-tree.vue';
+
 import UserSelectSearchForm from './user-select-search.vue';
 
 defineOptions({
@@ -59,7 +60,6 @@ const [BasicModal, modalApi] = useVbenModal({
 // 左边部门用
 const selectDeptId = ref<string[]>([]);
 
-const searchFormRef = ref<InstanceType<typeof UserSelectSearchForm>>();
 // 缓存最近一次搜索参数，部门树切换时重新查询用
 const currentSearchParams = ref<Record<string, any>>({});
 
@@ -281,29 +281,28 @@ function handleSubmit() {
       />
       <div class="flex h-[600px] w-[450px] flex-col">
         <UserSelectSearchForm
-          ref="searchFormRef"
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />
         <div class="flex-1">
           <BasicTable>
-          <template #user="{ row }">
-            <div class="flex items-center gap-2">
-              <VbenAvatar
-                :alt="row.nickName"
-                :src="row.avatar ?? ''"
-                :class="{ 'bg-primary': !row.avatar }"
-                class="size-[32px] rounded-full text-white"
-              />
-              <div class="flex flex-col items-baseline text-[12px]">
-                <div>{{ row.nickName }}</div>
-                <div class="opacity-50">
-                  {{ row.phoneNumber || '暂无手机号' }}
+            <template #user="{ row }">
+              <div class="flex items-center gap-2">
+                <VbenAvatar
+                  :alt="row.nickName"
+                  :src="row.avatar ?? ''"
+                  :class="{ 'bg-primary': !row.avatar }"
+                  class="size-[32px] rounded-full text-white"
+                />
+                <div class="flex flex-col items-baseline text-[12px]">
+                  <div>{{ row.nickName }}</div>
+                  <div class="opacity-50">
+                    {{ row.phoneNumber || '暂无手机号' }}
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
-        </BasicTable>
+            </template>
+          </BasicTable>
         </div>
       </div>
       <div class="flex h-[600px] flex-col">

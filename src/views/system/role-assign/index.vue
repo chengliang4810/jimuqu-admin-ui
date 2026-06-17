@@ -20,8 +20,6 @@ import RoleAssignSearchForm from './role-assign-search.vue';
 const route = useRoute();
 const roleId = route.params.roleId as string;
 
-const searchFormRef = ref<InstanceType<typeof RoleAssignSearchForm>>();
-
 const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
@@ -118,11 +116,10 @@ function handleSearchReset() {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-        <RoleAssignSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
-        />
+          <RoleAssignSearchForm
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
         <div class="flex-1">
           <BasicTable table-title="已分配的用户列表">
           <template #toolbar-tools>

@@ -12,8 +12,6 @@ import { columns } from './data';
 import noticeModal from './notice-modal.vue';
 import NoticeSearchForm from './notice-search.vue';
 
-const searchFormRef = ref<InstanceType<typeof NoticeSearchForm>>();
-
 const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
@@ -112,7 +110,6 @@ function handleSearchReset() {
     >
       <div class="flex h-full flex-col gap-4">
         <NoticeSearchForm
-          ref="searchFormRef"
           @reset="handleSearchReset"
           @submit="handleSearchSubmit"
         />

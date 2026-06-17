@@ -24,7 +24,6 @@ import howToUseModal from './md/how-to-use-modal.vue';
 import tableImportModal from './table-import-modal.vue';
 import GenSearchForm from './gen-search.vue';
 
-const searchFormRef = ref<InstanceType<typeof GenSearchForm>>();
 const dataSourceOptions = ref<{ label: string; value: string }[]>([]);
 
 const tableLoading = ref(false);
@@ -185,7 +184,6 @@ const [HowToUseModal, howToUseModalApi] = useVbenModal({
     >
       <div class="flex h-full flex-col gap-4">
         <GenSearchForm
-          ref="searchFormRef"
           :data-source-options="dataSourceOptions"
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"

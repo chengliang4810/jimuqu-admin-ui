@@ -32,7 +32,6 @@ import ProcessDefinitionSearchForm from './process-definition-search.vue';
 // 左边部门用
 const selectedCode = ref<number[] | string[]>([]);
 
-const searchFormRef = ref<InstanceType<typeof ProcessDefinitionSearchForm>>();
 // 缓存最近一次搜索参数，分类树切换时重新查询用
 const currentSearchParams = ref<Record<string, any>>({});
 
@@ -289,7 +288,6 @@ function handleCategorySelect(keys: string[]) {
         />
         <div class="flex flex-1 flex-col gap-4 overflow-hidden">
           <ProcessDefinitionSearchForm
-            ref="searchFormRef"
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />

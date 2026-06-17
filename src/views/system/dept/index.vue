@@ -13,8 +13,6 @@ import { columns } from './data';
 import deptDrawer from './dept-drawer.vue';
 import DeptSearchForm from './dept-search.vue';
 
-const searchFormRef = ref<InstanceType<typeof DeptSearchForm>>();
-
 const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
@@ -137,11 +135,10 @@ function handleSearchReset() {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-        <DeptSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
-        />
+          <DeptSearchForm
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
         <div class="flex-1">
           <BasicTable table-title="部门列表" table-title-help="双击展开/收起子菜单">
         <template #toolbar-tools>

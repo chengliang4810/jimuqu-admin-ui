@@ -13,8 +13,6 @@ import { slice } from 'lodash-es';
 import { columns } from './data';
 import OnlineSearchForm from './online-search.vue';
 
-const searchFormRef = ref<InstanceType<typeof OnlineSearchForm>>();
-
 const onlineCount = ref(0);
 const tableLoading = ref(false);
 const gridOptions: VxeGridProps = {
@@ -87,7 +85,6 @@ function handleSearchReset() {
     >
       <div class="flex h-full flex-col gap-4">
         <OnlineSearchForm
-          ref="searchFormRef"
           @reset="handleSearchReset"
           @submit="handleSearchSubmit"
         />

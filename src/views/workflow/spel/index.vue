@@ -13,8 +13,6 @@ import { columns } from './data';
 import spelDrawer from './spel-drawer.vue';
 import SpelSearchForm from './spel-search.vue';
 
-const searchFormRef = ref<InstanceType<typeof SpelSearchForm>>();
-
 const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {

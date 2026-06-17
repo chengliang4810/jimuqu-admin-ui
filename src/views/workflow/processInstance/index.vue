@@ -25,7 +25,6 @@ import ProcessInstanceSearchForm from './process-instance-search.vue';
 // 左边分类用
 const selectedCode = ref<number[] | string[]>([]);
 
-const searchFormRef = ref<InstanceType<typeof ProcessInstanceSearchForm>>();
 // 缓存最近一次搜索参数，分类树切换时重新查询用
 const currentSearchParams = ref<Record<string, any>>({});
 
@@ -183,7 +182,6 @@ function handleCategorySelect(keys: string[]) {
         />
         <div class="flex flex-1 flex-col gap-4 overflow-hidden">
           <ProcessInstanceSearchForm
-            ref="searchFormRef"
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />

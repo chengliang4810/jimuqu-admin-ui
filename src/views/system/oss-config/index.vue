@@ -19,8 +19,6 @@ import { columns } from './data';
 import ossConfigDrawer from './oss-config-drawer.vue';
 import OssConfigSearchForm from './oss-config-search.vue';
 
-const searchFormRef = ref<InstanceType<typeof OssConfigSearchForm>>();
-
 const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
@@ -126,11 +124,10 @@ function handleSearchReset() {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-        <OssConfigSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
-        />
+          <OssConfigSearchForm
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
         <div class="flex-1">
           <BasicTable table-title="oss配置列表">
       <template #toolbar-tools>
