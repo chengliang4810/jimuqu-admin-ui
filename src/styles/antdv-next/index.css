@@ -66,6 +66,29 @@ body {
     background: hsl(var(--menu));
   }
 
+  /* 折叠态 hover 弹出的 popup 子菜单：被 teleport 到 body，
+   * 在半深色侧边栏(semiDarkSidebar)下脱离 .dark 作用域，
+   * --menu 回退为 :root 浅色值导致 popup 背景发白、与深色侧边栏割裂。
+   * 这里恢复 antd 默认的 popup 专用背景色（darkPopupBg / popupBg），
+   * 容器保持透明、内部菜单用对应主题色，避免左侧露出白色。 */
+  &.ant-menu-submenu-popup.ant-menu-dark,
+  &.ant-menu-popup.ant-menu-dark {
+    background: transparent;
+
+    .ant-menu {
+      background-color: var(--ant-menu-dark-popup-bg, #001529);
+    }
+  }
+
+  &.ant-menu-submenu-popup.ant-menu-light,
+  &.ant-menu-popup.ant-menu-light {
+    background: transparent;
+
+    .ant-menu {
+      background-color: var(--ant-menu-popup-bg);
+    }
+  }
+
   /* 去掉 inline/vertical 菜单根自带的右边框（antd 默认 border-inline-end: 1px）
    * 侧边栏右侧的边框由 layout-sidebar 的全高容器统一绘制，
    * 否则两条会叠加成 2px，且菜单自带的这条到不了头部/底部。 */
