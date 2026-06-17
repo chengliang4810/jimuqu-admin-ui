@@ -7,8 +7,9 @@ import { ref } from 'vue';
 import { FormInput } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
 import { tableSeachClass } from '@/components/vxe-table';
+import { ChevronDown } from '@/icons-app';
 import { formatDateTime } from '@/utils';
-import { Card, DateRangePicker, Form, FormItem, Space } from 'antdv-next';
+import { Card, DateRangePicker, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
   reset: [];
@@ -96,13 +97,15 @@ defineExpose({
           </FormItem>
         </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
-        <div class="[grid-column-end:-1] justify-self-end">
-          <Space>
-            <a-button @click="toggleCollapse">
-              {{ searchCollapsed ? $t('pages.common.expand') : $t('pages.common.collapse') }}
-            </a-button>
-            <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
-          </Space>
+        <div class="[grid-column-end:-1] flex items-center justify-end gap-4">
+          <a-button type="link" @click="toggleCollapse">
+            {{ searchCollapsed ? $t('pages.common.expand') : $t('pages.common.collapse') }}
+            <ChevronDown
+              class="size-4 transition-transform"
+              :class="{ 'rotate-180': !searchCollapsed }"
+            />
+          </a-button>
+          <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
         </div>
       </div>
     </Form>
