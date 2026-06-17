@@ -30,6 +30,8 @@ import OssSearchForm from './oss-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof OssSearchForm>>();
 
+const tableLoading = ref(false);
+
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
     // 高亮
@@ -44,16 +46,22 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page, sorts }, formValues = {}) => {
-        const params: PageQuery = {
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        };
-        // 添加排序参数
-        addSortParams(params, sorts);
-        return await ossList(params);
+        tableLoading.value = true;
+        try {
+          const params: PageQuery = {
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          };
+          // 添加排序参数
+          addSortParams(params, sorts);
+          return await ossList(params);
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -204,14 +212,20 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <OssSearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="文件列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <OssSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="文件列表">
           <template #toolbar-tools>
             <Space>
               <Tooltip title="预览图片">
@@ -297,6 +311,7 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
         </BasicTable>
       </div>
     </div>
+    </Spin>
     <ImageUploadModal @reload="tableApi.query" />
     <FileUploadModal @reload="tableApi.query" />
   </Page>

@@ -13,7 +13,7 @@ import {
 } from '@/api/system/dict/dict-type';
 import { useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { emitter } from '../mitt';
 import { columns } from './data';
@@ -22,6 +22,8 @@ import DictTypeSearchForm from './dict-type-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof DictTypeSearchForm>>();
 const searchParams = ref<Record<string, unknown>>({});
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -37,13 +39,19 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }) => {
-        return await dictTypeList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...searchParams.value,
-        });
+        tableLoading.value = true;
+        try {
+          return await dictTypeList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...searchParams.value,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -130,14 +138,20 @@ async function handleExport() {
 </script>
 
 <template>
-  <div class="flex h-full flex-col gap-4">
-    <DictTypeSearchForm
-      ref="searchFormRef"
-      @submit="handleSearchSubmit"
-      @reset="handleSearchReset"
-    />
-    <div class="flex-1">
-      <BasicTable table-title="字典类型列表">
+  <Spin
+    :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+    :spinning="tableLoading"
+    size="large"
+    :delay="300"
+  >
+    <div class="flex h-full flex-col gap-4">
+      <DictTypeSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="字典类型列表">
         <template #toolbar-tools>
           <Space>
             <a-button
@@ -199,6 +213,7 @@ async function handleExport() {
     </div>
     <DictTypeModal @reload="tableApi.query()" />
   </div>
+  </Spin>
 </template>
 
 <style lang="scss">

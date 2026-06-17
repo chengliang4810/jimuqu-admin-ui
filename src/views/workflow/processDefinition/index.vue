@@ -21,7 +21,7 @@ import { ApiSwitch } from '@/components/global';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { downloadByData } from '@/utils/file/download';
-import { Popconfirm, RadioGroup, Space } from 'antdv-next';
+import { Popconfirm, RadioGroup, Space, Spin } from 'antdv-next';
 
 import CategoryTree from './category-tree.vue';
 import { columns } from './data';
@@ -35,6 +35,8 @@ const selectedCode = ref<number[] | string[]>([]);
 const searchFormRef = ref<InstanceType<typeof ProcessDefinitionSearchForm>>();
 // 缓存最近一次搜索参数，分类树切换时重新查询用
 const currentSearchParams = ref<Record<string, any>>({});
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -50,20 +52,26 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        // 部门树选择处理
-        if (selectedCode.value.length === 1) {
-          formValues.category = selectedCode.value[0];
-        } else {
-          Reflect.deleteProperty(formValues, 'category');
-        }
+        tableLoading.value = true;
+        try {
+          // 部门树选择处理
+          if (selectedCode.value.length === 1) {
+            formValues.category = selectedCode.value[0];
+          } else {
+            Reflect.deleteProperty(formValues, 'category');
+          }
 
-        return await currentTableApi.value({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+          return await currentTableApi.value({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -266,21 +274,27 @@ function handleCategorySelect(keys: string[]) {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full gap-[8px]">
-      <CategoryTree
-        v-model:select-code="selectedCode"
-        class="w-[260px]"
-        @reload="() => tableApi.reload()"
-        @select="handleCategorySelect"
-      />
-      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
-        <ProcessDefinitionSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full gap-[8px]">
+        <CategoryTree
+          v-model:select-code="selectedCode"
+          class="w-[260px]"
+          @reload="() => tableApi.reload()"
+          @select="handleCategorySelect"
         />
-        <div class="flex-1">
-          <BasicTable class="overflow-hidden">
+        <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+          <ProcessDefinitionSearchForm
+            ref="searchFormRef"
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
+          <div class="flex-1">
+            <BasicTable class="overflow-hidden">
         <template #toolbar-actions>
           <RadioGroup
             v-model:value="currentStatus"
@@ -384,6 +398,7 @@ function handleCategorySelect(keys: string[]) {
         </div>
       </div>
     </div>
+    </Spin>
     <ProcessDefinitionModal @reload="handleReload" />
     <ProcessDefinitionDeployModal @reload="handleDeploySuccess" />
   </Page>

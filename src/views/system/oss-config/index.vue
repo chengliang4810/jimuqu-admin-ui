@@ -13,13 +13,15 @@ import { ApiSwitch } from '@/components/global';
 import { YesNo } from '@/constants';
 import { useAccess } from '@/effects/access';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { columns } from './data';
 import ossConfigDrawer from './oss-config-drawer.vue';
 import OssConfigSearchForm from './oss-config-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof OssConfigSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -35,13 +37,19 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await ossConfigList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+        tableLoading.value = true;
+        try {
+          return await ossConfigList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -111,14 +119,20 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <OssConfigSearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="oss配置列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <OssConfigSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="oss配置列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -175,6 +189,7 @@ function handleSearchReset() {
     </BasicTable>
       </div>
     </div>
+    </Spin>
     <OssConfigDrawer @reload="tableApi.query()" />
   </Page>
 </template>

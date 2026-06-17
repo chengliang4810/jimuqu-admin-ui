@@ -7,13 +7,15 @@ import { nextTick, ref } from 'vue';
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { categoryList, categoryRemove } from '@/api/workflow/category';
 import { Page, useVbenModal } from '@/effects/common-ui';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import categoryModal from './category-modal.vue';
 import CategorySearchForm from './category-search.vue';
 import { columns } from './data';
 
 const searchFormRef = ref<InstanceType<typeof CategorySearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   columns,
@@ -23,12 +25,18 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async (_, formValues = {}) => {
-        const resp = await categoryList({
-          ...formValues,
-        });
-        return { rows: resp };
+        tableLoading.value = true;
+        try {
+          const resp = await categoryList({
+            ...formValues,
+          });
+          return { rows: resp };
+        } finally {
+          tableLoading.value = false;
+        }
       },
       // 默认请求接口后展开全部 不需要可以删除这段
       querySuccess: () => {
@@ -96,14 +104,20 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <CategorySearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="流程分类列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <CategorySearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="流程分类列表">
       <template #toolbar-tools>
         <Space>
           <a-button @click="collapseAll">
@@ -155,6 +169,7 @@ function handleSearchReset() {
     </BasicTable>
       </div>
     </div>
+    </Spin>
     <CategoryModal @reload="tableApi.query()" />
   </Page>
 </template>

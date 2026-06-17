@@ -23,7 +23,7 @@ import {
 import { useAccess } from '@/effects/access';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { columns } from './data';
 import roleAuthModal from './role-auth-modal.vue';
@@ -31,6 +31,8 @@ import roleModal from './role-modal.vue';
 import RoleSearchForm from './role-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof RoleSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -47,13 +49,19 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await roleList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+        tableLoading.value = true;
+        try {
+          return await roleList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -145,14 +153,20 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <RoleSearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="角色列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <RoleSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="角色列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -239,6 +253,7 @@ function handleSearchReset() {
     </BasicTable>
         </div>
       </div>
+    </Spin>
     <RoleModal @reload="tableApi.query()" />
     <RoleAuthModal @reload="tableApi.query()" />
   </Page>

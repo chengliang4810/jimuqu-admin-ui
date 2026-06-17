@@ -5,9 +5,10 @@ import { ref } from 'vue';
 
 import { FormInput, FormSelect } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
+import { tableSeachClass } from '@/components/vxe-table';
 import { DictEnum } from '@/constants';
 import { getDictOptions } from '@/utils/dict';
-import { Card, Form, FormItem } from 'antdv-next';
+import { Card, Form, FormItem, Space } from 'antdv-next';
 
 const emit = defineEmits<{
   reset: [];
@@ -27,6 +28,11 @@ const model = ref<SearchParams>({
 });
 
 const formInstance = ref<FormInstance>();
+const searchCollapsed = ref(false);
+
+function toggleCollapse() {
+  searchCollapsed.value = !searchCollapsed.value;
+}
 
 function buildSearchParams(values: SearchParams) {
   return { ...values };
@@ -59,29 +65,36 @@ defineExpose({
       :model="model"
       :label-col="{ style: { width: '80px' } }"
     >
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <FormItem label="菜单名称" name="menuName">
-          <FormInput v-model:value="model.menuName" allow-clear />
-        </FormItem>
-        <FormItem label="菜单状态" name="status">
-          <FormSelect
-            allow-clear
-            v-model:value="model.status"
-            :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
-          />
-        </FormItem>
-        <FormItem label="显示状态" name="visible">
-          <FormSelect
-            allow-clear
-            v-model:value="model.visible"
-            :options="getDictOptions(DictEnum.SYS_SHOW_HIDE)"
-          />
-        </FormItem>
+      <div :class="tableSeachClass">
+        <template v-if="!searchCollapsed">
+          <FormItem label="菜单名称" name="menuName">
+            <FormInput v-model:value="model.menuName" allow-clear />
+          </FormItem>
+          <FormItem label="菜单状态" name="status">
+            <FormSelect
+              allow-clear
+              v-model:value="model.status"
+              :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
+            />
+          </FormItem>
+          <FormItem label="显示状态" name="visible">
+            <FormSelect
+              allow-clear
+              v-model:value="model.visible"
+              :options="getDictOptions(DictEnum.SYS_SHOW_HIDE)"
+            />
+          </FormItem>
+        </template>
+        <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
+        <div class="[grid-column-end:-1] justify-self-end">
+          <Space>
+            <a-button @click="toggleCollapse">
+              {{ searchCollapsed ? $t('pages.common.expand') : $t('pages.common.collapse') }}
+            </a-button>
+            <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
+          </Space>
+        </div>
       </div>
     </Form>
-
-    <div class="flex items-center justify-end">
-      <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
-    </div>
   </Card>
 </template>

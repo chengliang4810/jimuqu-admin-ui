@@ -7,7 +7,7 @@ import { ref } from 'vue';
 import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { forceLogout, onlineList } from '@/api/monitor/online';
 import { Page } from '@/effects/common-ui';
-import { Popconfirm } from 'antdv-next';
+import { Popconfirm, Spin } from 'antdv-next';
 import { slice } from 'lodash-es';
 
 import { columns } from './data';
@@ -16,31 +16,38 @@ import OnlineSearchForm from './online-search.vue';
 const searchFormRef = ref<InstanceType<typeof OnlineSearchForm>>();
 
 const onlineCount = ref(0);
+const tableLoading = ref(false);
 const gridOptions: VxeGridProps = {
   columns,
   height: 'auto',
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       // 后端其实是一个假分页 返回的是全部数据
       query: async ({ page }, formValues = {}) => {
-        const resp = await onlineList({
-          ...formValues,
-        });
-        // 设置在线数
-        onlineCount.value = resp.total;
+        tableLoading.value = true;
+        try {
+          const resp = await onlineList({
+            ...formValues,
+          });
+          // 设置在线数
+          onlineCount.value = resp.total;
 
-        const { currentPage, pageSize } = page;
-        // 当前需要截取的index -> 当前page-1 * 每页条数
-        const currentIndex = (currentPage - 1) * pageSize;
-        // 当前需要截取的endIndex -> currentIndex + 每页条数
-        const endIndex = currentIndex + pageSize;
-        // 截取区间内的数据
-        const sliceRows = slice(resp.rows, currentIndex, endIndex);
-        resp.rows = sliceRows;
+          const { currentPage, pageSize } = page;
+          // 当前需要截取的index -> 当前page-1 * 每页条数
+          const currentIndex = (currentPage - 1) * pageSize;
+          // 当前需要截取的endIndex -> currentIndex + 每页条数
+          const endIndex = currentIndex + pageSize;
+          // 截取区间内的数据
+          const sliceRows = slice(resp.rows, currentIndex, endIndex);
+          resp.rows = sliceRows;
 
-        return resp;
+          return resp;
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -72,14 +79,20 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <OnlineSearchForm
-        ref="searchFormRef"
-        @reset="handleSearchReset"
-        @submit="handleSearchSubmit"
-      />
-      <div class="flex-1">
-        <BasicTable>
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <OnlineSearchForm
+          ref="searchFormRef"
+          @reset="handleSearchReset"
+          @submit="handleSearchSubmit"
+        />
+        <div class="flex-1">
+          <BasicTable>
         <template #toolbar-actions>
           <div class="mr-1 pl-1 text-[1rem]">
             <div>
@@ -101,5 +114,6 @@ function handleSearchReset() {
       </BasicTable>
       </div>
     </div>
+    </Spin>
   </Page>
 </template>

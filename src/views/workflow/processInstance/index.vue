@@ -14,7 +14,7 @@ import {
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import CategoryTree from '@/views/workflow/processDefinition/category-tree.vue';
-import { Popconfirm, RadioGroup, Space } from 'antdv-next';
+import { Popconfirm, RadioGroup, Space, Spin } from 'antdv-next';
 
 import { flowInfoModal } from '../components';
 import { columns } from './data';
@@ -51,6 +51,8 @@ async function handleTypeChange(e: RadioChangeEvent) {
   await tableApi.reload();
 }
 
+const tableLoading = ref(false);
+
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
     // 高亮
@@ -65,20 +67,26 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        // 部门树选择处理
-        if (selectedCode.value.length === 1) {
-          formValues.category = selectedCode.value[0];
-        } else {
-          Reflect.deleteProperty(formValues, 'category');
-        }
+        tableLoading.value = true;
+        try {
+          // 部门树选择处理
+          if (selectedCode.value.length === 1) {
+            formValues.category = selectedCode.value[0];
+          } else {
+            Reflect.deleteProperty(formValues, 'category');
+          }
 
-        return await currentTypeApi({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+          return await currentTypeApi({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -160,21 +168,27 @@ function handleCategorySelect(keys: string[]) {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full gap-[8px]">
-      <CategoryTree
-        v-model:select-code="selectedCode"
-        class="w-[260px]"
-        @reload="() => tableApi.reload()"
-        @select="handleCategorySelect"
-      />
-      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
-        <ProcessInstanceSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full gap-[8px]">
+        <CategoryTree
+          v-model:select-code="selectedCode"
+          class="w-[260px]"
+          @reload="() => tableApi.reload()"
+          @select="handleCategorySelect"
         />
-        <div class="flex-1">
-          <BasicTable class="overflow-hidden">
+        <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+          <ProcessInstanceSearchForm
+            ref="searchFormRef"
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
+          <div class="flex-1">
+            <BasicTable class="overflow-hidden">
         <template #toolbar-actions>
           <RadioGroup
             v-model:value="currentType"
@@ -236,6 +250,7 @@ function handleCategorySelect(keys: string[]) {
         </div>
       </div>
     </div>
+    </Spin>
     <InstanceInvalidModal @reload="() => tableApi.reload()" />
     <InstanceVariableModal />
     <FlowInfoModal />

@@ -11,7 +11,7 @@ import {
   roleAuthCancelAll,
 } from '@/api/system/role';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { columns } from './data';
 import roleAssignDrawer from './role-assign-drawer.vue';
@@ -21,6 +21,8 @@ const route = useRoute();
 const roleId = route.params.roleId as string;
 
 const searchFormRef = ref<InstanceType<typeof RoleAssignSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -36,14 +38,20 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await roleAllocatedList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          roleId,
-          ...formValues,
-        });
+        tableLoading.value = true;
+        try {
+          return await roleAllocatedList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            roleId,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -103,14 +111,20 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <RoleAssignSearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="已分配的用户列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <RoleAssignSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="已分配的用户列表">
           <template #toolbar-tools>
             <Space>
               <a-button
@@ -149,6 +163,7 @@ function handleSearchReset() {
         </BasicTable>
       </div>
     </div>
+    </Spin>
     <RoleAssignDrawer @reload="tableApi.query()" />
   </Page>
 </template>

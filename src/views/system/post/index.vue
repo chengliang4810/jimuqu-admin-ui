@@ -14,7 +14,7 @@ import {
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import DeptTree from '@/views/system/user/dept-tree.vue';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { columns } from './data';
 import postDrawer from './post-drawer.vue';
@@ -26,6 +26,8 @@ const selectDeptId = ref<string[]>([]);
 const searchFormRef = ref<InstanceType<typeof PostSearchForm>>();
 // 缓存最近一次搜索参数，部门树切换时重新查询用
 const currentSearchParams = ref<Record<string, any>>({});
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -40,20 +42,26 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        // 部门树选择处理
-        if (selectDeptId.value.length === 1) {
-          formValues.belongDeptId = selectDeptId.value[0];
-        } else {
-          Reflect.deleteProperty(formValues, 'belongDeptId');
-        }
+        tableLoading.value = true;
+        try {
+          // 部门树选择处理
+          if (selectDeptId.value.length === 1) {
+            formValues.belongDeptId = selectDeptId.value[0];
+          } else {
+            Reflect.deleteProperty(formValues, 'belongDeptId');
+          }
 
-        return await postList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+          return await postList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -129,21 +137,27 @@ function handleDeptSelect(keys: string[]) {
 
 <template>
   <Page :auto-content-height="true" content-class="flex gap-[8px] w-full">
-    <DeptTree
-      :api="postDeptTreeSelect"
-      v-model:select-dept-id="selectDeptId"
-      class="w-[260px]"
-      @reload="() => tableApi.reload()"
-      @select="handleDeptSelect"
-    />
-    <div class="flex flex-1 flex-col gap-4 overflow-hidden">
-      <PostSearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <DeptTree
+        :api="postDeptTreeSelect"
+        v-model:select-dept-id="selectDeptId"
+        class="w-[260px]"
+        @reload="() => tableApi.reload()"
+        @select="handleDeptSelect"
       />
-      <div class="flex-1">
-        <BasicTable class="overflow-hidden" table-title="岗位列表">
+      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+        <PostSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable class="overflow-hidden" table-title="岗位列表">
       <template #toolbar-tools>
         <Space>
           <a-button
@@ -198,6 +212,7 @@ function handleDeptSelect(keys: string[]) {
     </BasicTable>
       </div>
     </div>
+    </Spin>
     <PostDrawer @reload="tableApi.query()" />
   </Page>
 </template>

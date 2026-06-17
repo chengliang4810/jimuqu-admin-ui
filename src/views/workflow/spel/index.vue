@@ -7,13 +7,15 @@ import { ref } from 'vue';
 import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import { spelDelete, spelList } from '@/api/workflow/spel';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { columns } from './data';
 import spelDrawer from './spel-drawer.vue';
 import SpelSearchForm from './spel-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof SpelSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -27,13 +29,19 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await spelList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+        tableLoading.value = true;
+        try {
+          return await spelList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -91,13 +99,19 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <SpelSearchForm
-        @reset="handleSearchReset"
-        @submit="handleSearchSubmit"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="流程表达式列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <SpelSearchForm
+          @reset="handleSearchReset"
+          @submit="handleSearchSubmit"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="流程表达式列表">
           <template #toolbar-tools>
             <Space>
               <a-button
@@ -145,5 +159,6 @@ function handleSearchReset() {
       </div>
       <SpelDrawer @reload="tableApi.query()" />
     </div>
+    </Spin>
   </Page>
 </template>

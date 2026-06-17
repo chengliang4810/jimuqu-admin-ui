@@ -15,7 +15,7 @@ import {
 } from '@/api/tool/gen';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { downloadByData } from '@/utils/file/download';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 import dayjs from 'dayjs';
 
 import codePreviewModal from './code-preview-modal.vue';
@@ -26,6 +26,8 @@ import GenSearchForm from './gen-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof GenSearchForm>>();
 const dataSourceOptions = ref<{ label: string; value: string }[]>([]);
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -41,13 +43,19 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await generatedList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+        tableLoading.value = true;
+        try {
+          return await generatedList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -169,15 +177,21 @@ const [HowToUseModal, howToUseModalApi] = useVbenModal({
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <GenSearchForm
-        ref="searchFormRef"
-        :data-source-options="dataSourceOptions"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="代码生成列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <GenSearchForm
+          ref="searchFormRef"
+          :data-source-options="dataSourceOptions"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="代码生成列表">
       <template #toolbar-tools>
         <Space>
           <a-button type="link" @click="howToUseModalApi.open()">
@@ -266,6 +280,7 @@ const [HowToUseModal, howToUseModalApi] = useVbenModal({
     </BasicTable>
       </div>
     </div>
+    </Spin>
     <CodePreviewModal />
     <TableImportModal @reload="tableApi.query()" />
     <HowToUseModal />

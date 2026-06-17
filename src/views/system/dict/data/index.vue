@@ -13,7 +13,7 @@ import {
 } from '@/api/system/dict/dict-data';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { emitter } from '../mitt';
 import { columns } from './data';
@@ -23,6 +23,8 @@ import DictDataSearchForm from './dict-data-search.vue';
 const dictType = ref('');
 
 const searchFormRef = ref<InstanceType<typeof DictDataSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -38,18 +40,24 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        const params: PageQuery = {
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        };
-        if (dictType.value) {
-          params.dictType = dictType.value;
-        }
+        tableLoading.value = true;
+        try {
+          const params: PageQuery = {
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          };
+          if (dictType.value) {
+            params.dictType = dictType.value;
+          }
 
-        return await dictDataList(params);
+          return await dictDataList(params);
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -136,14 +144,20 @@ function handleSearchReset() {
 </script>
 
 <template>
-  <div class="flex h-full flex-col gap-4">
-    <DictDataSearchForm
-      ref="searchFormRef"
-      @submit="handleSearchSubmit"
-      @reset="handleSearchReset"
-    />
-    <div class="flex-1">
-      <BasicTable table-title="字典数据列表">
+  <Spin
+    :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+    :spinning="tableLoading"
+    size="large"
+    :delay="300"
+  >
+    <div class="flex h-full flex-col gap-4">
+      <DictDataSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="flex-1">
+        <BasicTable table-title="字典数据列表">
         <template #toolbar-tools>
           <Space>
             <a-button
@@ -202,4 +216,5 @@ function handleSearchReset() {
     </div>
     <DictDataDrawer @reload="tableApi.query()" />
   </div>
+  </Spin>
 </template>

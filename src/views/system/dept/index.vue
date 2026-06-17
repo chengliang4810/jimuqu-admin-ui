@@ -7,13 +7,15 @@ import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { deptList, deptRemove } from '@/api/system/dept';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { eachTree } from '@/utils';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { columns } from './data';
 import deptDrawer from './dept-drawer.vue';
 import DeptSearchForm from './dept-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof DeptSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   columns,
@@ -23,12 +25,18 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async (_, formValues = {}) => {
-        const resp = await deptList({
-          ...formValues,
-        });
-        return { rows: resp };
+        tableLoading.value = true;
+        try {
+          const resp = await deptList({
+            ...formValues,
+          });
+          return { rows: resp };
+        } finally {
+          tableLoading.value = false;
+        }
       },
       // 默认请求接口后展开全部 不需要可以删除这段
       querySuccess: () => {
@@ -122,14 +130,20 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <DeptSearchForm
-        ref="searchFormRef"
-        @submit="handleSearchSubmit"
-        @reset="handleSearchReset"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="部门列表" table-title-help="双击展开/收起子菜单">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <DeptSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="部门列表" table-title-help="双击展开/收起子菜单">
         <template #toolbar-tools>
           <Space>
             <a-button @click="setExpandOrCollapse(false)">
@@ -181,6 +195,7 @@ function handleSearchReset() {
       </BasicTable>
       </div>
     </div>
+    </Spin>
     <DeptDrawer @reload="tableApi.query()" />
   </Page>
 </template>

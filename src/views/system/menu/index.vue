@@ -10,7 +10,7 @@ import { useAccess } from '@/effects/access';
 import { Fallback, Page, useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { eachTree, listToTree, treeToList } from '@/utils';
-import { Popconfirm, Space, Switch, Tooltip } from 'antdv-next';
+import { Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';
 
 import { columns } from './data';
 import menuDrawer from './menu-drawer.vue';
@@ -24,20 +24,26 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async (_, formValues = {}) => {
-        const resp = await menuList({
-          ...formValues,
-        });
-        // 手动转为树结构
-        const treeData = listToTree(resp, { id: 'menuId', pid: 'parentId' });
-        // 添加hasChildren字段
-        eachTree(treeData, (item) => {
-          item.hasChildren = !!(item.children && item.children.length > 0);
-        });
-        console.log(treeData);
+        tableLoading.value = true;
+        try {
+          const resp = await menuList({
+            ...formValues,
+          });
+          // 手动转为树结构
+          const treeData = listToTree(resp, { id: 'menuId', pid: 'parentId' });
+          // 添加hasChildren字段
+          eachTree(treeData, (item) => {
+            item.hasChildren = !!(item.children && item.children.length > 0);
+          });
+          console.log(treeData);
 
-        return { rows: treeData };
+          return { rows: treeData };
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -117,6 +123,7 @@ async function handleEdit(record: Menu) {
  * 是否级联删除
  */
 const cascadingDeletion = ref(false);
+const tableLoading = ref(false);
 async function handleDelete(row: Menu) {
   if (cascadingDeletion.value) {
     // 级联删除
@@ -180,9 +187,15 @@ function handleSearchReset() {
 
 <template>
   <Page v-if="isAdmin" :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <MenuSearchForm @submit="handleSearchSubmit" @reset="handleSearchReset" />
-      <BasicTable table-title="菜单列表" table-title-help="双击展开/收起子菜单">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <MenuSearchForm @submit="handleSearchSubmit" @reset="handleSearchReset" />
+        <BasicTable table-title="菜单列表" table-title-help="双击展开/收起子菜单">
         <template #toolbar-tools>
           <Space>
             <Tooltip title="删除菜单以及子菜单">
@@ -248,6 +261,7 @@ function handleSearchReset() {
         </template>
       </BasicTable>
     </div>
+    </Spin>
     <MenuDrawer @reload="afterEditOrAdd" />
   </Page>
   <Fallback v-else description="您没有菜单管理的访问权限" status="403" />

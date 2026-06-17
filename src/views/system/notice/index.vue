@@ -5,7 +5,7 @@ import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import { noticeList, noticeRemove } from '@/api/system/notice';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { notificationMitt } from '@/utils/mitt/notification';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 import { ref } from 'vue';
 
 import { columns } from './data';
@@ -13,6 +13,8 @@ import noticeModal from './notice-modal.vue';
 import NoticeSearchForm from './notice-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof NoticeSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -28,13 +30,19 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await noticeList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+        tableLoading.value = true;
+        try {
+          return await noticeList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -96,14 +104,20 @@ function handleSearchReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <NoticeSearchForm
-        ref="searchFormRef"
-        @reset="handleSearchReset"
-        @submit="handleSearchSubmit"
-      />
-      <div class="flex-1">
-        <BasicTable table-title="通知公告列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <NoticeSearchForm
+          ref="searchFormRef"
+          @reset="handleSearchReset"
+          @submit="handleSearchSubmit"
+        />
+        <div class="flex-1">
+          <BasicTable table-title="通知公告列表">
         <template #toolbar-tools>
           <Space>
             <a-button
@@ -153,6 +167,7 @@ function handleSearchReset() {
       </BasicTable>
       </div>
     </div>
+    </Spin>
     <NoticeModal @reload="tableApi.query()" />
   </Page>
 </template>

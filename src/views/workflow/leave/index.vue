@@ -9,7 +9,7 @@ import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import { cancelProcessApply } from '@/api/workflow/instance';
 import { Page, useVbenDrawer, useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
 
 import { applyModal, flowInfoModal } from '../components';
 import { leaveExport, leaveList, leaveRemove } from './api';
@@ -19,6 +19,8 @@ import { useRouteIdEdit } from './hook';
 import leaveDrawer from './leave-drawer.vue';
 
 const searchFormRef = ref<InstanceType<typeof LeaveSearchForm>>();
+
+const tableLoading = ref(false);
 
 const gridOptions: VxeGridProps = {
   checkboxConfig: {
@@ -34,13 +36,19 @@ const gridOptions: VxeGridProps = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
+    showLoading: false,
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await leaveList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          ...formValues,
-        });
+        tableLoading.value = true;
+        try {
+          return await leaveList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -156,10 +164,16 @@ function handleReset() {
 
 <template>
   <Page :auto-content-height="true">
-    <div class="flex h-full flex-col gap-4">
-      <LeaveSearchForm ref="searchFormRef" @search="handleSearch" @reset="handleReset" />
-      <div class="flex-1">
-        <BasicTable table-title="请假申请列表">
+    <Spin
+      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+      :spinning="tableLoading"
+      size="large"
+      :delay="300"
+    >
+      <div class="flex h-full flex-col gap-4">
+        <LeaveSearchForm ref="searchFormRef" @search="handleSearch" @reset="handleReset" />
+        <div class="flex-1">
+          <BasicTable table-title="请假申请列表">
           <template #toolbar-tools>
             <Space>
               <a-button
@@ -237,6 +251,7 @@ function handleReset() {
         </BasicTable>
       </div>
     </div>
+    </Spin>
     <FlowInfoModal />
     <ApplyModal
       @complete="handleCompleteOrCancel"
