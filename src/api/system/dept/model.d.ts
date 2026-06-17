@@ -5,7 +5,7 @@ export interface Dept {
   updateTime?: string;
   remark?: string;
   deptId: number;
-  parentId: number;
+  parentId: number | string;
   ancestors: string;
   deptName: string;
   orderNum: number;

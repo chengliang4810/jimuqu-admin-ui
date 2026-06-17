@@ -134,7 +134,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     isUpdate.value = update;
 
     if (id) {
-      formData.value.parentId = Number(id);
+      formData.value.parentId = id;
       if (update) {
         const record = await deptInfo(id);
         formData.value = {

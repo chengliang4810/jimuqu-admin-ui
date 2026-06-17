@@ -181,7 +181,7 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     isUpdate.value = update;
 
     if (id) {
-      formData.value.parentId = Number(id);
+      formData.value.parentId = id;
       // 创建元组(不是数组 元素位置固定)
       const promise = [
         update ? menuInfo(id) : null,
