@@ -1,9 +1,22 @@
 <script setup lang="ts">
-import type { EchartsUIType } from '@/effects/plugins/echarts';
+import type { EChartsOption } from 'echarts';
 
-import { onActivated, onMounted, ref, watch } from 'vue';
+import {
+  nextTick,
+  onActivated,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from 'vue';
 
-import { EchartsUI, useEcharts } from '@/effects/plugins/echarts';
+import { usePreferences } from '@/core/preferences';
+import {
+  useDebounceFn,
+  useResizeObserver,
+  useWindowSize,
+} from '@vueuse/core';
+import * as echarts from 'echarts';
 
 interface Props {
   data?: { name: string; value: string }[];
@@ -13,8 +26,40 @@ const props = withDefaults(defineProps<Props>(), {
   data: () => [],
 });
 
-const chartRef = ref<EchartsUIType>();
-const { renderEcharts, resize } = useEcharts(chartRef);
+const chartRef = ref<HTMLDivElement>();
+let chartInstance: echarts.ECharts | null = null;
+let cacheOptions: EChartsOption = {};
+
+const { isDark } = usePreferences();
+const { height, width } = useWindowSize();
+
+const resizeHandler = useDebounceFn(() => {
+  chartInstance?.resize({
+    animation: {
+      duration: 300,
+      easing: 'quadraticIn',
+    },
+  });
+}, 200);
+
+function initChart() {
+  if (!chartRef.value) return;
+  chartInstance = echarts.init(chartRef.value, isDark.value ? 'dark' : null);
+}
+
+function renderEcharts(options: EChartsOption) {
+  cacheOptions = options;
+  const finalOptions: EChartsOption = {
+    ...options,
+    ...(isDark.value ? { backgroundColor: 'transparent' } : {}),
+  };
+  nextTick(() => {
+    if (!chartInstance) {
+      initChart();
+    }
+    chartInstance?.setOption(finalOptions, true);
+  });
+}
 
 watch(
   () => props.data,
@@ -25,6 +70,20 @@ watch(
   { immediate: true },
 );
 
+watch([width, height], () => {
+  resizeHandler();
+});
+
+useResizeObserver(chartRef, resizeHandler);
+
+watch(isDark, () => {
+  if (!chartInstance) return;
+  chartInstance.dispose();
+  chartInstance = null;
+  initChart();
+  renderEcharts(cacheOptions);
+});
+
 onMounted(() => {
   setEchartsOption(props.data);
 });
@@ -34,7 +93,22 @@ onMounted(() => {
  */
 onActivated(() => resize(false));
 
-type EChartsOption = Parameters<typeof renderEcharts>['0'];
+onBeforeUnmount(() => {
+  chartInstance?.dispose();
+  chartInstance = null;
+});
+
+function resize(withAnimation = true) {
+  chartInstance?.resize({
+    animation: withAnimation
+      ? {
+          duration: 300,
+          easing: 'quadraticIn',
+        }
+      : undefined,
+  });
+}
+
 function setEchartsOption(data: any[]) {
   const option: EChartsOption = {
     series: [
@@ -59,5 +133,5 @@ function setEchartsOption(data: any[]) {
 </script>
 
 <template>
-  <EchartsUI ref="chartRef" height="400px" width="100%" />
+  <div ref="chartRef" style="width: 100%; height: 400px"></div>
 </template>

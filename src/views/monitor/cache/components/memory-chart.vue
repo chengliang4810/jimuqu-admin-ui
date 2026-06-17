@@ -1,9 +1,22 @@
 <script setup lang="ts">
-import type { EchartsUIType } from '@/effects/plugins/echarts';
+import type { EChartsOption } from 'echarts';
 
-import { onActivated, onMounted, ref, watch } from 'vue';
+import {
+  nextTick,
+  onActivated,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from 'vue';
 
-import { EchartsUI, useEcharts } from '@/effects/plugins/echarts';
+import { usePreferences } from '@/core/preferences';
+import {
+  useDebounceFn,
+  useResizeObserver,
+  useWindowSize,
+} from '@vueuse/core';
+import * as echarts from 'echarts';
 
 interface Props {
   data?: string;
@@ -13,23 +26,77 @@ const props = withDefaults(defineProps<Props>(), {
   data: '0',
 });
 
-const memoryHtmlRef = ref<EchartsUIType>();
-const { renderEcharts, resize } = useEcharts(memoryHtmlRef);
+const chartRef = ref<HTMLDivElement>();
+let chartInstance: echarts.ECharts | null = null;
+let cacheOptions: EChartsOption = {};
+
+const { isDark } = usePreferences();
+const { height, width } = useWindowSize();
+
+const resizeHandler = useDebounceFn(() => {
+  chartInstance?.resize({
+    animation: {
+      duration: 300,
+      easing: 'quadraticIn',
+    },
+  });
+}, 200);
+
+function initChart() {
+  if (!chartRef.value) return;
+  chartInstance = echarts.init(chartRef.value, isDark.value ? 'dark' : null);
+}
+
+function renderEcharts(options: EChartsOption) {
+  cacheOptions = options;
+  const finalOptions: EChartsOption = {
+    ...options,
+    ...(isDark.value ? { backgroundColor: 'transparent' } : {}),
+  };
+  nextTick(() => {
+    if (!chartInstance) {
+      initChart();
+    }
+    chartInstance?.setOption(finalOptions, true);
+  });
+}
 
 watch(
   () => props.data,
   () => {
-    if (!memoryHtmlRef.value) return;
+    if (!chartRef.value) return;
     setEchartsOption(props.data);
   },
   { immediate: true },
 );
 
+watch([width, height], () => {
+  resizeHandler();
+});
+
+useResizeObserver(chartRef, resizeHandler);
+
+watch(isDark, () => {
+  if (!chartInstance) return;
+  chartInstance.dispose();
+  chartInstance = null;
+  initChart();
+  renderEcharts(cacheOptions);
+});
+
 onMounted(() => {
   setEchartsOption(props.data);
 });
+
 // 从其他页面切换回来会有一个奇怪的动画效果 需要调用resize
-onActivated(resize);
+onActivated(() => {
+  resizeHandler();
+});
+
+onBeforeUnmount(() => {
+  chartInstance?.dispose();
+  chartInstance = null;
+});
 
 /**
  * 获取最近的十的幂次
@@ -46,7 +113,6 @@ function getNearestPowerOfTen(num: number) {
   return power;
 }
 
-type EChartsOption = Parameters<typeof renderEcharts>['0'];
 function setEchartsOption(value: string) {
   // x10
   const formattedValue = Math.floor(Number.parseFloat(value));
@@ -85,5 +151,5 @@ function setEchartsOption(value: string) {
 </script>
 
 <template>
-  <EchartsUI ref="memoryHtmlRef" height="400px" width="100%" />
+  <div ref="chartRef" style="width: 100%; height: 400px"></div>
 </template>
