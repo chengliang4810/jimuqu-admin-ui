@@ -187,8 +187,8 @@ function handleCategorySelect(keys: string[]) {
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />
-          <div class="flex-1">
-            <BasicTable class="overflow-hidden">
+          <div class="bg-card flex-1 overflow-hidden rounded-lg">
+            <BasicTable>
         <template #toolbar-actions>
           <RadioGroup
             v-model:value="currentType"
@@ -247,9 +247,9 @@ function handleCategorySelect(keys: string[]) {
           </div>
         </template>
       </BasicTable>
+          </div>
         </div>
       </div>
-    </div>
     </Spin>
     <InstanceInvalidModal @reload="() => tableApi.reload()" />
     <InstanceVariableModal />

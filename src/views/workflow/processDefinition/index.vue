@@ -293,42 +293,45 @@ function handleCategorySelect(keys: string[]) {
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />
-          <div class="flex-1">
-            <BasicTable class="overflow-hidden">
-        <template #toolbar-actions>
-          <RadioGroup
-            v-model:value="currentStatus"
-            :options="statusOptions"
-            button-style="solid"
-            option-type="button"
-            @change="handleStatusChange"
-          />
-        </template>
-        <template #toolbar-tools>
-          <Space>
-            <a-button
-              :disabled="!vxeCheckboxChecked(tableApi)"
-              danger
-              type="primary"
-              v-access:code="['system:user:remove']"
-              @click="handleMultiDelete"
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-            <a-button v-access:code="['system:user:add']" @click="handleDeploy">
-              部署
-            </a-button>
-            <a-button
-              type="primary"
-              v-access:code="['system:user:add']"
-              @click="handleAdd"
-            >
-              {{ $t('pages.common.add') }}
-            </a-button>
-          </Space>
-        </template>
-        <template #activityStatus="{ row }">
-          <!-- <Switch
+          <div class="bg-card flex-1 overflow-hidden rounded-lg">
+            <BasicTable>
+              <template #toolbar-actions>
+                <RadioGroup
+                  v-model:value="currentStatus"
+                  :options="statusOptions"
+                  button-style="solid"
+                  option-type="button"
+                  @change="handleStatusChange"
+                />
+              </template>
+              <template #toolbar-tools>
+                <Space>
+                  <a-button
+                    :disabled="!vxeCheckboxChecked(tableApi)"
+                    danger
+                    type="primary"
+                    v-access:code="['system:user:remove']"
+                    @click="handleMultiDelete"
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </a-button>
+                  <a-button
+                    v-access:code="['system:user:add']"
+                    @click="handleDeploy"
+                  >
+                    部署
+                  </a-button>
+                  <a-button
+                    type="primary"
+                    v-access:code="['system:user:add']"
+                    @click="handleAdd"
+                  >
+                    {{ $t('pages.common.add') }}
+                  </a-button>
+                </Space>
+              </template>
+              <template #activityStatus="{ row }">
+                <!-- <Switch
             v-model:checked="row.activityStatus"
             :checked-value="1"
             :unchecked-value="0"
@@ -336,68 +339,72 @@ function handleCategorySelect(keys: string[]) {
             un-checked-children="挂起"
             @change="(status) => handleActive(row, status)"
           /> -->
-          <ApiSwitch
-            :value="row.activityStatus === activeStatus.Enable"
-            checked-children="激活"
-            un-checked-children="挂起"
-            :api="(checked) => handleActive(row, checked)"
-            @reload="() => tableApi.query()"
-          />
-        </template>
-        <template #action="{ row }">
-          <div class="flex flex-col gap-1">
-            <div>
-              <a-button size="small" type="link" @click="handleEdit(row)">
-                编辑信息
-              </a-button>
-              <Popconfirm
-                placement="left"
-                title="确认删除？"
-                @confirm="handleDelete(row)"
-              >
-                <a-button danger size="small" type="link" @click.stop="">
-                  删除流程
-                </a-button>
-              </Popconfirm>
-            </div>
-            <div>
-              <a-button
-                size="small"
-                type="link"
-                @click="handleDesign(row, !!row.isPublish)"
-              >
-                {{ row.isPublish ? '查看流程' : '设计流程' }}
-              </a-button>
-              <Popconfirm
-                :title="`确认发布流程[${row.flowName}]?`"
-                placement="left"
-                @confirm="handlePublish(row)"
-              >
-                <a-button v-if="!row.isPublish" size="small" type="link">
-                  发布流程
-                </a-button>
-                <span v-else></span>
-                <!-- 必须要保证在Popconfirm存在元素 所以用v-else来接收 -->
-              </Popconfirm>
-            </div>
-            <div>
-              <Popconfirm
-                :title="`确认复制流程[${row.flowName}]?`"
-                placement="left"
-                @confirm="handleCopy(row)"
-              >
-                <a-button size="small" type="link"> 复制流程 </a-button>
-              </Popconfirm>
-              <a-button size="small" type="link" @click="handleExportXml(row)">
-                导出流程
-              </a-button>
-            </div>
+                <ApiSwitch
+                  :value="row.activityStatus === activeStatus.Enable"
+                  checked-children="激活"
+                  un-checked-children="挂起"
+                  :api="(checked) => handleActive(row, checked)"
+                  @reload="() => tableApi.query()"
+                />
+              </template>
+              <template #action="{ row }">
+                <div class="flex flex-col gap-1">
+                  <div>
+                    <a-button size="small" type="link" @click="handleEdit(row)">
+                      编辑信息
+                    </a-button>
+                    <Popconfirm
+                      placement="left"
+                      title="确认删除？"
+                      @confirm="handleDelete(row)"
+                    >
+                      <a-button danger size="small" type="link" @click.stop="">
+                        删除流程
+                      </a-button>
+                    </Popconfirm>
+                  </div>
+                  <div>
+                    <a-button
+                      size="small"
+                      type="link"
+                      @click="handleDesign(row, !!row.isPublish)"
+                    >
+                      {{ row.isPublish ? '查看流程' : '设计流程' }}
+                    </a-button>
+                    <Popconfirm
+                      :title="`确认发布流程[${row.flowName}]?`"
+                      placement="left"
+                      @confirm="handlePublish(row)"
+                    >
+                      <a-button v-if="!row.isPublish" size="small" type="link">
+                        发布流程
+                      </a-button>
+                      <span v-else></span>
+                      <!-- 必须要保证在Popconfirm存在元素 所以用v-else来接收 -->
+                    </Popconfirm>
+                  </div>
+                  <div>
+                    <Popconfirm
+                      :title="`确认复制流程[${row.flowName}]?`"
+                      placement="left"
+                      @confirm="handleCopy(row)"
+                    >
+                      <a-button size="small" type="link"> 复制流程 </a-button>
+                    </Popconfirm>
+                    <a-button
+                      size="small"
+                      type="link"
+                      @click="handleExportXml(row)"
+                    >
+                      导出流程
+                    </a-button>
+                  </div>
+                </div>
+              </template>
+            </BasicTable>
           </div>
-        </template>
-      </BasicTable>
         </div>
       </div>
-    </div>
     </Spin>
     <ProcessDefinitionModal @reload="handleReload" />
     <ProcessDefinitionDeployModal @reload="handleDeploySuccess" />
