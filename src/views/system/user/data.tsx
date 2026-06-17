@@ -1,9 +1,4 @@
-import type { VxeGridProps } from '@/adapter/vxe-table';
-
-import { DictEnum } from '@/constants';
-import { getPopupContainer } from '@/utils';
-import { getDictOptions } from '@/utils/dict';
-
+import type { VxeGridProps } from 'vxe-table';
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },
