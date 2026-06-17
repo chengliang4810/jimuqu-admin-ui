@@ -10,13 +10,13 @@ import {
   watch,
 } from 'vue';
 
+import echarts from '@/components/echarts';
 import { usePreferences } from '@/core/preferences';
 import {
   useDebounceFn,
   useResizeObserver,
   useWindowSize,
 } from '@vueuse/core';
-import * as echarts from 'echarts';
 
 interface Props {
   data?: string;
