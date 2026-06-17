@@ -1,4 +1,4 @@
-import type { VxeGridProps } from '@/components/vxe-table';
+import type { VxeGridProps } from 'vxe-table';
 
 import { DictEnum } from '@/constants';
 import { renderDict } from '@/utils/render';
