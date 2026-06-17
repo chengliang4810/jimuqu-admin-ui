@@ -39,7 +39,6 @@ const gridOptions = withDefaultVxeGridOptions<Menu>({
           eachTree(treeData, (item) => {
             item.hasChildren = !!(item.children && item.children.length > 0);
           });
-          console.log(treeData);
 
           return { rows: treeData };
         } finally {
@@ -82,7 +81,7 @@ const gridOptions = withDefaultVxeGridOptions<Menu>({
     // 开启展开 懒加载
     lazy: true,
     // 懒加载方法 直接返回children
-    loadMethod: ({ row }) => row.children ?? [],
+    loadMethod: async ({ row }) => row.children ?? [],
   },
   id: 'system-menu-index',
 });
@@ -209,16 +208,20 @@ async function reload(params: Record<string, any> = {}) {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-        <MenuSearchForm @submit="handleSearchSubmit" @reset="handleSearchReset" />
-        <VxeGrid
-          ref="tableRef"
-          class="p-2 pt-0"
-          v-bind="gridOptions"
-          v-on="gridEvents"
-        >
+        <MenuSearchForm
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
           <template #toolbar-left>
             <div class="text-[16px] font-medium">菜单列表</div>
-            <div class="text-[13px] text-[#999] ml-2">双击展开/收起子菜单</div>
+            <div class="ml-2 text-[13px] text-[#999]">双击展开/收起子菜单</div>
           </template>
           <template #toolbar-right>
             <Space>
@@ -286,7 +289,8 @@ async function reload(params: Record<string, any> = {}) {
           <template #loading>
             <Spin :spinning="true" size="large" />
           </template>
-        </VxeGrid>
+          </VxeGrid>
+        </div>
       </div>
     </Spin>
     <MenuDrawer @reload="afterEditOrAdd" />
