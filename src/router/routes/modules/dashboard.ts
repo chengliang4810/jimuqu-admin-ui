@@ -28,14 +28,6 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: 'Workspace',
-        path: '/workspace',
-        component: () => import('@/views/dashboard/workspace/index.vue'),
-        meta: {
-          title: $t('page.dashboard.workspace'),
-        },
-      },
-      {
         name: 'VbenDocument',
         path: '/vben-admin/document',
         component: IFrameView,
