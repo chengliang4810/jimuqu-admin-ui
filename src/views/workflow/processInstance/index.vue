@@ -10,7 +10,10 @@ import {
   pageByFinish,
   pageByRunning,
 } from '@/api/workflow/instance';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import CategoryTree from '@/views/workflow/processDefinition/category-tree.vue';
@@ -22,6 +25,8 @@ import { columns } from './data';
 import instanceInvalidModal from './instance-invalid-modal.vue';
 import instanceVariableModal from './instance-variable-modal.vue';
 import ProcessInstanceSearchForm from './process-instance-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof ProcessInstanceSearchForm>>();
 
 // 左边分类用
 const selectedCode = ref<number[] | string[]>([]);
@@ -114,6 +119,7 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<Recordable<any>[]>([]);
 
 const [InstanceInvalidModal, instanceInvalidModalApi] = useVbenModal({
@@ -190,15 +196,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>
@@ -218,6 +216,7 @@ async function reload(params: Record<string, any> = {}) {
         />
         <div class="flex flex-1 flex-col gap-4 overflow-hidden">
           <ProcessInstanceSearchForm
+            ref="searchFormRef"
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />

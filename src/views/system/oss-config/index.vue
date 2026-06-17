@@ -11,7 +11,10 @@ import {
   ossConfigRemove,
 } from '@/api/system/oss-config';
 import { ApiSwitch } from '@/components/global';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { YesNo } from '@/constants';
 import { useAccess } from '@/effects/access';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
@@ -21,6 +24,8 @@ import { VxeGrid } from 'vxe-table';
 import { columns } from './data';
 import ossConfigDrawer from './oss-config-drawer.vue';
 import OssConfigSearchForm from './oss-config-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof OssConfigSearchForm>>();
 
 const tableLoading = ref(false);
 
@@ -67,6 +72,7 @@ const gridOptions = withDefaultVxeGridOptions<OssConfig>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<OssConfig>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<OssConfig[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -142,15 +148,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>
@@ -163,6 +161,7 @@ async function reload(params: Record<string, any> = {}) {
     >
       <div class="flex h-full flex-col gap-4">
           <OssConfigSearchForm
+            ref="searchFormRef"
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />

@@ -13,7 +13,10 @@ import {
   roleRemove,
 } from '@/api/system/role';
 import { ApiSwitch } from '@/components/global';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import {
   ADMIN_ROLE_KEY,
   EnableStatus,
@@ -84,6 +87,7 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Role>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<Role[]>([]);
 
 const [RoleModal, roleModalApi] = useVbenModal({
@@ -177,15 +181,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>

@@ -12,7 +12,10 @@ import {
   userStatusChange,
 } from '@/api/system/user';
 import ApiSwitch from '@/components/global/api-switch.vue';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { EnableStatus, SUPERADMIN_USER_ID } from '@/constants';
 import { preferences } from '@/core/preferences';
 import { useAccess } from '@/effects/access';
@@ -110,6 +113,7 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<User>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<User[]>([]);
 const tableLoading = ref(false);
 
@@ -244,15 +248,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>

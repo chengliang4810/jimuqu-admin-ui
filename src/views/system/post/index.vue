@@ -10,7 +10,10 @@ import {
   postList,
   postRemove,
 } from '@/api/system/post';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import DeptTree from '@/views/system/user/dept-tree.vue';
@@ -79,6 +82,7 @@ const gridOptions = withDefaultVxeGridOptions<Post>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<Post>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<Post[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -160,15 +164,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>

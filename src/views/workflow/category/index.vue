@@ -5,13 +5,18 @@ import type { Recordable } from '@/types';
 import { nextTick, ref, useTemplateRef } from 'vue';
 
 import { categoryList, categoryRemove } from '@/api/workflow/category';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import categoryModal from './category-modal.vue';
 import CategorySearchForm from './category-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof CategorySearchForm>>();
 import { columns } from './data';
 
 const tableLoading = ref(false);
@@ -71,6 +76,7 @@ const gridOptions = withDefaultVxeGridOptions<Recordable<any>>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef);
 
 const [CategoryModal, modalApi] = useVbenModal({
   connectedComponent: categoryModal,
@@ -107,13 +113,7 @@ function handleSearchReset() {
   reload();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-}
 </script>
 
 <template>
@@ -126,6 +126,7 @@ async function reload(params: Record<string, any> = {}) {
     >
       <div class="flex h-full flex-col gap-4">
         <CategorySearchForm
+          ref="searchFormRef"
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />

@@ -12,7 +12,10 @@ import {
   clientRemove,
 } from '@/api/system/client';
 import { ApiSwitch } from '@/components/global';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { DEFAULT_CLIENT_ID, EnableStatus } from '@/constants';
 import { useAccess } from '@/effects/access';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
@@ -73,6 +76,7 @@ const gridOptions = withDefaultVxeGridOptions<Client>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<Client>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<Client[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -157,15 +161,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>

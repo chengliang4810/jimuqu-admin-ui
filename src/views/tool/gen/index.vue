@@ -12,7 +12,10 @@ import {
   getDataSourceNames,
   syncDb,
 } from '@/api/tool/gen';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { downloadByData } from '@/utils/file/download';
 import { Popconfirm, Space, Spin } from 'antdv-next';
@@ -24,6 +27,8 @@ import { columns } from './data';
 import howToUseModal from './md/how-to-use-modal.vue';
 import tableImportModal from './table-import-modal.vue';
 import GenSearchForm from './gen-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof GenSearchForm>>();
 
 interface GenRow {
   tableId: number | string;
@@ -83,6 +88,7 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<GenRow>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<GenRow[]>([]);
 
 onMounted(async () => {
@@ -205,15 +211,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>
@@ -226,6 +224,7 @@ async function reload(params: Record<string, any> = {}) {
     >
       <div class="flex h-full flex-col gap-4">
         <GenSearchForm
+          ref="searchFormRef"
           :data-source-options="dataSourceOptions"
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"

@@ -5,7 +5,10 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { computed, ref, useTemplateRef } from 'vue';
 
 import { menuCascadeRemove, menuList, menuRemove } from '@/api/system/menu';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { useAccess } from '@/effects/access';
 import { Fallback, Page, useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
@@ -16,6 +19,8 @@ import { VxeGrid } from 'vxe-table';
 import { columns } from './data';
 import menuDrawer from './menu-drawer.vue';
 import MenuSearchForm from './menu-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof MenuSearchForm>>();
 
 const gridOptions = withDefaultVxeGridOptions<Menu>({
   columns,
@@ -104,6 +109,7 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Menu>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef);
 
 const [MenuDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: menuDrawer,
@@ -190,13 +196,7 @@ function handleSearchReset() {
   reload();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-}
 </script>
 
 <template>
@@ -209,6 +209,7 @@ async function reload(params: Record<string, any> = {}) {
     >
       <div class="flex h-full flex-col gap-4">
         <MenuSearchForm
+          ref="searchFormRef"
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />

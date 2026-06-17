@@ -5,7 +5,10 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import { forceLogout, onlineList } from '@/api/monitor/online';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page } from '@/effects/common-ui';
 import { Popconfirm, Spin } from 'antdv-next';
 import { slice } from 'lodash-es';
@@ -13,6 +16,8 @@ import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import OnlineSearchForm from './online-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof OnlineSearchForm>>();
 
 const onlineCount = ref(0);
 const tableLoading = ref(false);
@@ -69,6 +74,7 @@ const gridOptions = withDefaultVxeGridOptions<OnlineUser>({
 const gridEvents: VxeGridListeners = {};
 
 const tableRef = useTemplateRef<VxeGridInstance<OnlineUser>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef);
 
 async function handleForceOffline(row: OnlineUser) {
   await forceLogout(row.tokenId);
@@ -83,13 +89,7 @@ function handleSearchReset() {
   reload();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-}
 </script>
 
 <template>
@@ -102,6 +102,7 @@ async function reload(params: Record<string, any> = {}) {
     >
       <div class="flex h-full flex-col gap-4">
         <OnlineSearchForm
+          ref="searchFormRef"
           @reset="handleSearchReset"
           @submit="handleSearchSubmit"
         />

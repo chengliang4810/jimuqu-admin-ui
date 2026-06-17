@@ -11,7 +11,10 @@ import {
   loginInfoRemove,
   userUnlock,
 } from '@/api/monitor/logininfo';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import { confirmDeleteModal } from '@/utils/modal';
@@ -71,6 +74,8 @@ const gridOptions = withDefaultVxeGridOptions<LoginLog>({
 const canUnlock = ref(false);
 const tableRef = useTemplateRef<VxeGridInstance<LoginLog>>('tableRef');
 const checkedRows = ref<LoginLog[]>([]);
+
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 
 const gridEvents: VxeGridListeners = {
   checkboxAll: syncCheckedRows,
@@ -163,16 +168,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query');
-  syncCheckedRows();
-}
-
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>
@@ -215,6 +210,7 @@ async function reload(params: Record<string, any> = {}) {
                 >
                   {{ $t('pages.common.export') }}
                 </a-button>
+                {{ checkedRows.length }}
                 <a-button
                   :disabled="checkedRows.length === 0"
                   danger

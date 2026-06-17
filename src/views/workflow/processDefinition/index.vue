@@ -17,7 +17,10 @@ import {
   workflowDefinitionPublish,
 } from '@/api/workflow/definition';
 import { ApiSwitch } from '@/components/global';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { downloadByData } from '@/utils/file/download';
@@ -29,6 +32,8 @@ import { columns } from './data';
 import processDefinitionDeployModal from './process-definition-deploy-modal.vue';
 import processDefinitionModal from './process-definition-modal.vue';
 import ProcessDefinitionSearchForm from './process-definition-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof ProcessDefinitionSearchForm>>();
 
 // 左边部门用
 const selectedCode = ref<number[] | string[]>([]);
@@ -112,6 +117,7 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<Recordable<any>[]>([]);
 
 async function handleStatusChange(e: RadioChangeEvent) {
@@ -297,15 +303,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>
@@ -325,6 +323,7 @@ async function reload(params: Record<string, any> = {}) {
         />
         <div class="flex flex-1 flex-col gap-4 overflow-hidden">
           <ProcessDefinitionSearchForm
+            ref="searchFormRef"
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />

@@ -10,7 +10,10 @@ import {
   dictTypeRemove,
   refreshDictTypeCache,
 } from '@/api/system/dict/dict-type';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
@@ -74,6 +77,7 @@ const gridOptions = withDefaultVxeGridOptions<DictType>({
 const lastDictType = ref('');
 
 const tableRef = useTemplateRef<VxeGridInstance<DictType>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<DictType[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -161,15 +165,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>

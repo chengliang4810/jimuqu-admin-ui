@@ -5,7 +5,10 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import { noticeList, noticeRemove } from '@/api/system/notice';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { notificationMitt } from '@/utils/mitt/notification';
 import { Popconfirm, Space, Spin } from 'antdv-next';
@@ -14,6 +17,8 @@ import { VxeGrid } from 'vxe-table';
 import { columns } from './data';
 import noticeModal from './notice-modal.vue';
 import NoticeSearchForm from './notice-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof NoticeSearchForm>>();
 
 const tableLoading = ref(false);
 
@@ -60,6 +65,7 @@ const gridOptions = withDefaultVxeGridOptions<Notice>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<Notice>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<Notice[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -127,15 +133,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>
@@ -148,6 +146,7 @@ async function reload(params: Record<string, any> = {}) {
     >
       <div class="flex h-full flex-col gap-4">
         <NoticeSearchForm
+          ref="searchFormRef"
           @reset="handleSearchReset"
           @submit="handleSearchSubmit"
         />

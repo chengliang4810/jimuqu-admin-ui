@@ -5,7 +5,10 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { nextTick, ref, useTemplateRef } from 'vue';
 
 import { deptList, deptRemove } from '@/api/system/dept';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  useTableQuery,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { eachTree } from '@/utils';
 import { Popconfirm, Space, Spin } from 'antdv-next';
@@ -14,6 +17,8 @@ import { VxeGrid } from 'vxe-table';
 import { columns } from './data';
 import deptDrawer from './dept-drawer.vue';
 import DeptSearchForm from './dept-search.vue';
+
+const searchFormRef = ref<InstanceType<typeof DeptSearchForm>>();
 
 const tableLoading = ref(false);
 
@@ -90,6 +95,7 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Dept>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef);
 
 const [DeptDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: deptDrawer,
@@ -133,13 +139,7 @@ function handleSearchReset() {
   reload();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-}
 </script>
 
 <template>
@@ -152,6 +152,7 @@ async function reload(params: Record<string, any> = {}) {
     >
       <div class="flex h-full flex-col gap-4">
         <DeptSearchForm
+          ref="searchFormRef"
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />

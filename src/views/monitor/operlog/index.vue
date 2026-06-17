@@ -13,6 +13,7 @@ import {
 } from '@/api/monitor/operlog';
 import {
   addSortParams,
+  useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
@@ -82,6 +83,7 @@ const gridOptions = withDefaultVxeGridOptions<OperationLog>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<OperationLog>>('tableRef');
+const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
 const checkedRows = ref<OperationLog[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -165,15 +167,7 @@ function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
 
-async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
-  syncCheckedRows();
-}
 
-async function reload(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('reload', params);
-  syncCheckedRows();
-}
 </script>
 
 <template>
