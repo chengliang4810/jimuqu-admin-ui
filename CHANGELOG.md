@@ -10,6 +10,9 @@
 - 原oxc部分改回来`eslint+prettier` oxc还不稳定
 - 移除`vaditor`(markdown编辑) 会加载到首屏资源占用
 - 移除`codemirror`(代码块着色) 只是代码生成预览会用到 同样占用资源
+- 移除`useVbenForm` 使用原生代替
+- 移除`useVbenVxeGrid` 使用原生vxe代替 表格搜索表单也改为原生
+- 移除二次封装的`echarts`
 
 ## 提升
 
