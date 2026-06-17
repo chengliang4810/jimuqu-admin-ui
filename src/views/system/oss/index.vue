@@ -6,18 +6,20 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { addSortParams } from '@/adapter/vxe-table';
 import { configInfoByKey } from '@/api/system/config';
 import { checkLoginBeforeDownload, ossList, ossRemove } from '@/api/system/oss';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  addSortParams,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { useAppConfig } from '@/effects/hooks';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
 import { downloadByUrl } from '@/utils/file/download';
 import { Image, Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';
-import { VxeGrid } from 'vxe-table';
 import { stringify } from 'qs';
+import { VxeGrid } from 'vxe-table';
 
 import { supportImageList } from './constant';
 import { columns } from './data';
@@ -248,10 +250,10 @@ async function reload(params: Record<string, any> = {}) {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-          <OssSearchForm
-            @submit="handleSearchSubmit"
-            @reset="handleSearchReset"
-          />
+        <OssSearchForm
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
         <div class="bg-card flex-1 overflow-hidden rounded-lg">
           <VxeGrid
             ref="tableRef"
@@ -262,94 +264,94 @@ async function reload(params: Record<string, any> = {}) {
             <template #toolbar-left>
               <div class="text-[16px] font-medium">文件列表</div>
             </template>
-          <template #toolbar-right>
-            <Space>
-              <Tooltip title="预览图片">
-                <Switch v-model:checked="preview" />
-              </Tooltip>
-              <a-button
-                v-access:code="['system:ossConfig:list']"
-                @click="handleToSettings"
-              >
-                配置管理
-              </a-button>
-              <a-button
-                :disabled="checkedRows.length === 0"
-                danger
-                type="primary"
-                v-access:code="['system:oss:remove']"
-                @click="handleMultiDelete"
-              >
-                {{ $t('pages.common.delete') }}
-              </a-button>
-              <a-button
-                v-access:code="['system:oss:upload']"
-                @click="fileUploadApi.open"
-              >
-                文件上传
-              </a-button>
-              <a-button
-                v-access:code="['system:oss:upload']"
-                @click="imageUploadApi.open"
-              >
-                图片上传
-              </a-button>
-            </Space>
-          </template>
-          <template #url="{ row }">
-            <!-- placeholder为图片未加载时显示的占位图 -->
-            <!-- fallback为图片加载失败时显示 -->
-            <!-- 需要设置key属性 否则切换翻页会有延迟 -->
-            <Image
-              :key="row.ossId"
-              v-if="preview && isImageFile(row.url)"
-              :src="row.url"
-              height="50px"
-              :fallback="fallbackImageBase64"
-            >
-              <template #placeholder>
-                <div class="flex size-full items-center justify-center">
-                  <Spin />
-                </div>
-              </template>
-            </Image>
-            <!-- pdf预览 使用浏览器开新窗口 -->
-            <span
-              v-else-if="preview && isPdfFile(row.url)"
-              class="icon-[vscode-icons--file-type-pdf2] size-10 cursor-pointer"
-              @click.stop="pdfPreview(row.url)"
-            ></span>
-            <span v-else>{{ row.url }}</span>
-          </template>
-          <template #action="{ row }">
-            <Space>
-              <action-button
-                v-access:code="['system:oss:download']"
-                @click="handleDownload(row)"
-              >
-                {{ $t('pages.common.download') }}
-              </action-button>
-              <Popconfirm
-                placement="left"
-                title="确认删除？"
-                @confirm="handleDelete(row)"
-              >
-                <action-button
+            <template #toolbar-right>
+              <Space>
+                <Tooltip title="预览图片">
+                  <Switch v-model:checked="preview" />
+                </Tooltip>
+                <a-button
+                  v-access:code="['system:ossConfig:list']"
+                  @click="handleToSettings"
+                >
+                  配置管理
+                </a-button>
+                <a-button
+                  :disabled="checkedRows.length === 0"
                   danger
+                  type="primary"
                   v-access:code="['system:oss:remove']"
-                  @click.stop=""
+                  @click="handleMultiDelete"
                 >
                   {{ $t('pages.common.delete') }}
+                </a-button>
+                <a-button
+                  v-access:code="['system:oss:upload']"
+                  @click="fileUploadApi.open"
+                >
+                  文件上传
+                </a-button>
+                <a-button
+                  v-access:code="['system:oss:upload']"
+                  @click="imageUploadApi.open"
+                >
+                  图片上传
+                </a-button>
+              </Space>
+            </template>
+            <template #url="{ row }">
+              <!-- placeholder为图片未加载时显示的占位图 -->
+              <!-- fallback为图片加载失败时显示 -->
+              <!-- 需要设置key属性 否则切换翻页会有延迟 -->
+              <Image
+                :key="row.ossId"
+                v-if="preview && isImageFile(row.url)"
+                :src="row.url"
+                height="50px"
+                :fallback="fallbackImageBase64"
+              >
+                <template #placeholder>
+                  <div class="flex size-full items-center justify-center">
+                    <Spin />
+                  </div>
+                </template>
+              </Image>
+              <!-- pdf预览 使用浏览器开新窗口 -->
+              <span
+                v-else-if="preview && isPdfFile(row.url)"
+                class="icon-[vscode-icons--file-type-pdf2] size-10 cursor-pointer"
+                @click.stop="pdfPreview(row.url)"
+              ></span>
+              <span v-else>{{ row.url }}</span>
+            </template>
+            <template #action="{ row }">
+              <Space>
+                <action-button
+                  v-access:code="['system:oss:download']"
+                  @click="handleDownload(row)"
+                >
+                  {{ $t('pages.common.download') }}
                 </action-button>
-              </Popconfirm>
-            </Space>
-          </template>
-          <template #loading>
-            <Spin :spinning="true" size="large" />
-          </template>
-        </VxeGrid>
+                <Popconfirm
+                  placement="left"
+                  title="确认删除？"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    danger
+                    v-access:code="['system:oss:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
     <ImageUploadModal @reload="() => query()" />
     <FileUploadModal @reload="() => query()" />

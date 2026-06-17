@@ -1,4 +1,4 @@
-import type { SetupVxeTable } from './types';
+import type { VxeUIExport } from 'vxe-pc-ui';
 
 import { defineComponent, watch } from 'vue';
 
@@ -12,7 +12,6 @@ import { usePreferences } from '@/core/preferences';
  * @see https://vxetable.cn/other4/#/table/other/antd
  */
 import VxeUIPluginRenderAntd from '@vxe-ui/plugin-render-antd';
-
 import {
   VxeButton,
   VxeCheckbox,
@@ -38,9 +37,11 @@ import {
   VxeToolbar,
 } from 'vxe-table';
 
-import { extendsDefaultFormatter } from './extends'; // 是否加载过
-
 import '@vxe-ui/plugin-render-antd/dist/style.css';
+
+export interface SetupVxeTable {
+  configVxeTable: (ui: VxeUIExport) => void;
+}
 
 // 是否加载过
 let isInit = false;
@@ -126,8 +127,6 @@ export function setupVbenVxeTable(setupOptions: SetupVxeTable) {
       immediate: true,
     },
   );
-
-  extendsDefaultFormatter(VxeUI);
 
   configVxeTable(VxeUI);
 }

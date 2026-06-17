@@ -5,14 +5,16 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import { ref, useTemplateRef } from 'vue';
 
-import { addSortParams } from '@/adapter/vxe-table';
 import {
   operLogClean,
   operLogDelete,
   operLogExport,
   operLogList,
 } from '@/api/monitor/operlog';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import {
+  addSortParams,
+  withDefaultVxeGridOptions,
+} from '@/components/vxe-table';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { useBlobExport } from '@/utils/file/export';
