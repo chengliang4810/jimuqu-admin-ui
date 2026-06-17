@@ -19,8 +19,8 @@ import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
-import LogininfoSearchForm from './logininfo-search.vue';
 import loginInfoModal from './login-info-modal.vue';
+import LogininfoSearchForm from './logininfo-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof LogininfoSearchForm>>();
 
@@ -123,11 +123,12 @@ async function handleUnlock() {
   if (records.length !== 1) {
     return;
   }
-  const { userName } = records[0];
+  const { userName } = records[0]!;
   await userUnlock(userName);
   await query();
   canUnlock.value = false;
   tableRef.value?.clearCheckboxRow();
+  tableRef.value?.clearCheckboxReserve();
 }
 
 const { exportBlob, exportLoading, buildExportFileName } =
@@ -164,7 +165,7 @@ function syncCheckedRows() {
 }
 
 async function query(params: Record<string, any> = {}) {
-  await tableRef.value?.commitProxy('query', params);
+  await tableRef.value?.commitProxy('query');
   syncCheckedRows();
 }
 
@@ -225,6 +226,8 @@ async function reload(params: Record<string, any> = {}) {
                 </a-button>
                 <a-button
                   :disabled="!canUnlock"
+                  color="green"
+                  variant="solid"
                   type="primary"
                   v-access:code="['monitor:logininfor:unlock']"
                   @click="handleUnlock"
@@ -252,9 +255,6 @@ async function reload(params: Record<string, any> = {}) {
                   </action-button>
                 </Popconfirm>
               </Space>
-            </template>
-            <template #loading>
-              <Spin :spinning="true" size="large" />
             </template>
           </VxeGrid>
         </div>

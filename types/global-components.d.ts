@@ -1,4 +1,4 @@
-import { Button } from 'antdv-next/dist/button/Button';
+import { Button } from 'antdv-next';
 
 /* eslint-disable unicorn/require-module-specifiers */
 /* prettier-ignore */
