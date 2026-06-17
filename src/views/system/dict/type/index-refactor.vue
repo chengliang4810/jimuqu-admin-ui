@@ -1,11 +1,10 @@
 <!-- 使用vxe实现成本最小 且自带虚拟滚动  -->
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { DictType } from '@/api/system/dict/dict-type-model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { h, ref, shallowRef, watch } from 'vue';
+import { h, ref, shallowRef, useTemplateRef, watch } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import {
   dictTypeExport,
   dictTypeList,
@@ -23,12 +22,16 @@ import {
   SyncOutlined,
 } from '@antdv-next/icons';
 import { Alert, Input, Popconfirm, Space, Tooltip } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { emitter } from '../mitt';
 import dictTypeModal from './dict-type-modal.vue';
 
 const tableAllData = shallowRef<DictType[]>([]);
-const gridOptions: VxeGridProps = {
+
+const tableRef = useTemplateRef<VxeGridInstance<DictType>>('tableRef');
+
+const gridOptions = {
   columns: [
     {
       title: 'name',
@@ -73,14 +76,11 @@ const gridOptions: VxeGridProps = {
   id: 'system-dict-data-index',
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-  gridEvents: {
-    cellClick: ({ row }) => {
-      handleRowClick(row);
-    },
+const gridEvents: VxeGridListeners = {
+  cellClick: ({ row }) => {
+    handleRowClick(row);
   },
-});
+};
 
 const [DictTypeModal, modalApi] = useVbenModal({
   connectedComponent: dictTypeModal,
@@ -98,13 +98,13 @@ async function handleEdit(record: DictType) {
 
 async function handleDelete(row: DictType) {
   await dictTypeRemove([row.dictId]);
-  await tableApi.query();
+  await query();
 }
 
 async function handleReset() {
   currentRowId.value = '';
   searchValue.value = '';
-  await tableApi.query();
+  await query();
 }
 
 function handleRefreshCache() {
@@ -116,7 +116,7 @@ function handleRefreshCache() {
     },
     onOk: async () => {
       await refreshDictTypeCache();
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -124,11 +124,9 @@ function handleRefreshCache() {
 const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(dictTypeExport);
 async function handleExport() {
-  // 构建表单请求参数
-  const formValues = await tableApi.formApi.getValues();
   // 文件名
   const fileName = buildExportFileName('字典类型数据');
-  exportBlob({ data: formValues, fileName });
+  exportBlob({ data: {}, fileName });
 }
 
 const lastDictType = ref<string>('');
@@ -144,7 +142,8 @@ function handleRowClick(row: DictType) {
 const searchValue = ref('');
 const total = ref(0);
 watch(searchValue, (value) => {
-  if (!tableApi) {
+  const table = tableRef.value;
+  if (!table) {
     return;
   }
   if (value) {
@@ -156,12 +155,16 @@ watch(searchValue, (value) => {
     );
     const filtered = [...new Set([...names, ...types])];
     total.value = filtered.length;
-    tableApi.grid.loadData(filtered);
+    table.loadData(filtered);
   } else {
     total.value = tableAllData.value.length;
-    tableApi.grid.loadData(tableAllData.value);
+    table.loadData(tableAllData.value);
   }
 });
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+}
 </script>
 
 <template>
@@ -222,7 +225,12 @@ watch(searchValue, (value) => {
           </Tooltip>
         </template>
       </Input>
-      <BasicTable class="flex-1 overflow-hidden">
+      <VxeGrid
+        ref="tableRef"
+        class="flex-1 overflow-hidden"
+        v-bind="gridOptions"
+        v-on="gridEvents"
+      >
         <template #render="{ row: item }">
           <div :class="cn('flex items-center justify-between px-2 py-2')">
             <div class="flex flex-col items-baseline overflow-hidden">
@@ -253,10 +261,13 @@ watch(searchValue, (value) => {
             </div>
           </div>
         </template>
-      </BasicTable>
+        <template #loading>
+          <Spin :spinning="true" size="large" />
+        </template>
+      </VxeGrid>
     </div>
     <div class="border-t px-4 py-3">共 {{ total }} 条数据</div>
-    <DictTypeModal @reload="tableApi.query()" />
+    <DictTypeModal @reload="() => query()" />
   </div>
 </template>
 

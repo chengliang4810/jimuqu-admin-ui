@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { DictType } from '@/api/system/dict/dict-type-model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   dictTypeExport,
   dictTypeList,
   dictTypeRemove,
   refreshDictTypeCache,
 } from '@/api/system/dict/dict-type';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { emitter } from '../mitt';
 import { columns } from './data';
@@ -25,7 +26,7 @@ const searchParams = ref<Record<string, unknown>>({});
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<DictType>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -60,25 +61,34 @@ const gridOptions: VxeGridProps = {
     // 高亮当前行
     isCurrent: true,
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-dict-type-index',
   rowClassName: 'hover:cursor-pointer',
-};
+});
 
 const lastDictType = ref('');
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-  gridEvents: {
-    cellClick: (e) => {
-      const { row } = e;
-      if (lastDictType.value === row.dictType) {
-        return;
-      }
-      emitter.emit('rowClick', row.dictType);
-      lastDictType.value = row.dictType;
-    },
+const tableRef = useTemplateRef<VxeGridInstance<DictType>>('tableRef');
+const checkedRows = ref<DictType[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+  cellClick: (e) => {
+    const { row } = e;
+    if (lastDictType.value === row.dictType) {
+      return;
+    }
+    emitter.emit('rowClick', row.dictType);
+    lastDictType.value = row.dictType;
   },
-});
+};
+
 const [DictTypeModal, modalApi] = useVbenModal({
   connectedComponent: dictTypeModal,
 });
@@ -95,11 +105,11 @@ async function handleEdit(record: DictType) {
 
 async function handleDelete(row: DictType) {
   await dictTypeRemove([row.dictId]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: DictType) => row.dictId);
   window.modal.confirm({
     title: '提示',
@@ -107,23 +117,23 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await dictTypeRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
   emitter.emit('reset');
-  tableApi.reload();
+  reload();
 }
 
 async function handleRefreshCache() {
   await refreshDictTypeCache();
-  await tableApi.query();
+  await query();
 }
 
 const { exportBlob, exportLoading, buildExportFileName } =
@@ -134,6 +144,31 @@ async function handleExport() {
   // 文件名
   const fileName = buildExportFileName('字典类型数据');
   exportBlob({ data: formValues, fileName });
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as DictType[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -150,9 +185,17 @@ async function handleExport() {
         @submit="handleSearchSubmit"
         @reset="handleSearchReset"
       />
-      <div class="flex-1">
-        <BasicTable table-title="字典类型列表">
-        <template #toolbar-tools>
+      <div class="bg-card flex-1 overflow-hidden rounded-lg">
+        <VxeGrid
+          ref="tableRef"
+          class="p-2 pt-0"
+          v-bind="gridOptions"
+          v-on="gridEvents"
+        >
+          <template #toolbar-left>
+            <div class="text-[16px] font-medium">字典类型列表</div>
+          </template>
+        <template #toolbar-right>
           <Space>
             <a-button
               v-access:code="['system:dict:edit']"
@@ -169,7 +212,7 @@ async function handleExport() {
               {{ $t('pages.common.export') }}
             </a-button>
             <a-button
-              :disabled="!vxeCheckboxChecked(tableApi)"
+              :disabled="checkedRows.length === 0"
               danger
               type="primary"
               v-access:code="['system:dict:remove']"
@@ -209,9 +252,12 @@ async function handleExport() {
             </Popconfirm>
           </Space>
         </template>
-      </BasicTable>
+        <template #loading>
+          <Spin :spinning="true" size="large" />
+        </template>
+      </VxeGrid>
     </div>
-    <DictTypeModal @reload="tableApi.query()" />
+    <DictTypeModal @reload="() => query()" />
   </div>
   </Spin>
 </template>

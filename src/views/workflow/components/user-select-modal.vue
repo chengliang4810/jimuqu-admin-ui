@@ -1,13 +1,15 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import type { User } from '@/api';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { userList } from '@/api/system/user';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
+import { Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 import DeptTree from '@/views/system/user/dept-tree.vue';
 
 import UserSelectSearchForm from './user-select-search.vue';
@@ -50,9 +52,9 @@ const [BasicModal, modalApi] = useVbenModal({
     // 暂时只处理多选 目前并没有单选的情况
     if (props.mode === 'multiple') {
       // 左边选中
-      await tableApi.grid.setCheckboxRow(userList, true);
+      await tableRef.value?.setCheckboxRow(userList, true);
       // 右边赋值
-      await rightTableApi.grid.loadData(userList);
+      await rightTableRef.value?.loadData(userList);
     }
   },
 });
@@ -63,7 +65,7 @@ const selectDeptId = ref<string[]>([]);
 // 缓存最近一次搜索参数，部门树切换时重新查询用
 const currentSearchParams = ref<Record<string, any>>({});
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<User>({
   checkboxConfig: {
     // 翻页时保留选中状态
     reserve: true,
@@ -107,13 +109,13 @@ const gridOptions: VxeGridProps = {
 
         // 加载完毕需要设置选中的行
         if (props.mode === 'multiple') {
-          const records = rightTableApi.grid.getData();
-          await tableApi.grid.setCheckboxRow(records, true);
+          const records = rightTableRef.value?.getData() ?? [];
+          await tableRef.value?.setCheckboxRow(records, true);
         }
         if (props.mode === 'single') {
-          const records = rightTableApi.grid.getData();
+          const records = rightTableRef.value?.getData() ?? [];
           if (records.length === 1) {
-            await tableApi.grid.setRadioRow(records[0]);
+            await tableRef.value?.setRadioRow(records[0]);
           }
         }
 
@@ -138,17 +140,16 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   showOverflow: false,
+});
+
+const gridEvents: VxeGridListeners = {
+  // 需要控制不同的事件 radio也会触发checkbox事件
+  checkboxChange: checkBoxEvent,
+  checkboxAll: checkBoxEvent,
+  radioChange: radioEvent,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-  gridEvents: {
-    // 需要控制不同的事件 radio也会触发checkbox事件
-    checkboxChange: checkBoxEvent,
-    checkboxAll: checkBoxEvent,
-    radioChange: radioEvent,
-  },
-});
+const tableRef = useTemplateRef<VxeGridInstance<User>>('tableRef');
 
 function checkBoxEvent() {
   if (props.mode !== 'multiple') {
@@ -159,10 +160,10 @@ function checkBoxEvent() {
    * records拿到的是当前页的选中数据
    * reserveRecords拿到的是其他页选中的数据
    */
-  const records = tableApi.grid.getCheckboxRecords();
-  const reserveRecords = tableApi.grid.getCheckboxReserveRecords();
+  const records = tableRef.value?.getCheckboxRecords() ?? [];
+  const reserveRecords = tableRef.value?.getCheckboxReserveRecords() ?? [];
   const realRecords = [...records, ...reserveRecords];
-  rightTableApi.grid.loadData(realRecords);
+  rightTableRef.value?.loadData(realRecords);
 }
 
 function radioEvent() {
@@ -170,11 +171,11 @@ function radioEvent() {
     return;
   }
   // 给右边表格赋值
-  const records = tableApi.grid.getRadioRecord();
-  rightTableApi.grid.loadData([records]);
+  const records = tableRef.value?.getRadioRecord();
+  rightTableRef.value?.loadData([records]);
 }
 
-const rightGridOptions: VxeGridProps = {
+const rightGridOptions = withDefaultVxeGridOptions<User>({
   checkboxConfig: {},
   columns: [
     {
@@ -208,64 +209,66 @@ const rightGridOptions: VxeGridProps = {
     enabled: false,
   },
   showOverflow: false,
-};
-
-const [RightBasicTable, rightTableApi] = useVbenVxeGrid({
-  gridOptions: rightGridOptions,
 });
+
+const rightTableRef = useTemplateRef<VxeGridInstance<User>>('rightTableRef');
 
 async function handleRemoveItem(row: any) {
   if (props.mode === 'multiple') {
-    await tableApi.grid.setCheckboxRow(row, false);
+    await tableRef.value?.setCheckboxRow(row, false);
   }
   if (props.mode === 'single') {
-    await tableApi.grid.clearRadioRow();
+    await tableRef.value?.clearRadioRow();
   }
-  const data = rightTableApi.grid.getData();
-  await rightTableApi.grid.loadData(data.filter((item) => item !== row));
+  const data = rightTableRef.value?.getData() ?? [];
+  await rightTableRef.value?.loadData(data.filter((item) => item !== row));
   // 这个方法有问题
-  // await rightTableApi.grid.remove(row);
+  // await rightTableRef.value?.remove(row);
 }
 
 function handleRemoveAll() {
   if (props.mode === 'multiple') {
-    tableApi.grid.clearCheckboxRow();
-    tableApi.grid.clearCheckboxReserve();
+    tableRef.value?.clearCheckboxRow();
+    tableRef.value?.clearCheckboxReserve();
   }
   if (props.mode === 'single') {
-    tableApi.grid.clearRadioRow();
+    tableRef.value?.clearRadioRow();
   }
-  rightTableApi.grid.loadData([]);
+  rightTableRef.value?.loadData([]);
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
   currentSearchParams.value = data;
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
   currentSearchParams.value = {};
   selectDeptId.value = [];
-  tableApi.reload();
+  reload();
 }
 
 async function handleDeptQuery() {
-  tableApi.reload(currentSearchParams.value);
+  reload(currentSearchParams.value);
   // 重置后恢复 保存勾选的数据
-  const records = rightTableApi.grid.getData();
+  const records = rightTableRef.value?.getData() ?? [];
   if (props.mode === 'multiple') {
-    tableApi?.grid.setCheckboxRow(records, true);
+    tableRef.value?.setCheckboxRow(records, true);
   }
   if (props.mode === 'single' && records.length === 1) {
-    tableApi.grid.setRadioRow(records[0]);
+    tableRef.value?.setRadioRow(records[0]);
   }
 }
 
 function handleSubmit() {
-  const records = rightTableApi.grid.getData();
+  const records = rightTableRef.value?.getData() ?? [];
   console.log(records);
   emit('finish', records);
   modalApi.close();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
 }
 </script>
 
@@ -276,7 +279,7 @@ function handleSubmit() {
         v-model:select-dept-id="selectDeptId"
         :show-search="false"
         class="w-[230px]"
-        @reload="() => tableApi.reload()"
+        @reload="() => reload()"
         @select="handleDeptQuery"
       />
       <div class="flex h-[600px] w-[450px] flex-col">
@@ -284,8 +287,13 @@ function handleSubmit() {
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />
-        <div class="flex-1">
-          <BasicTable>
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
             <template #user="{ row }">
               <div class="flex items-center gap-2">
                 <VbenAvatar
@@ -302,7 +310,10 @@ function handleSubmit() {
                 </div>
               </div>
             </template>
-          </BasicTable>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
         </div>
       </div>
       <div class="flex h-[600px] flex-col">
@@ -316,7 +327,12 @@ function handleSubmit() {
             </div>
           </div>
         </div>
-        <RightBasicTable id="user-select-right-table">
+        <VxeGrid
+          id="user-select-right-table"
+          ref="rightTableRef"
+          class="p-2 pt-0"
+          v-bind="rightGridOptions"
+        >
           <template #user="{ row }">
             <div class="flex items-center gap-2 overflow-hidden">
               <VbenAvatar
@@ -340,7 +356,7 @@ function handleSubmit() {
               移除
             </a-button>
           </template>
-        </RightBasicTable>
+        </VxeGrid>
       </div>
     </div>
   </BasicModal>

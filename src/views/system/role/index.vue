@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Role } from '@/api/system/role/model';
 import type { SwitchProps } from 'antdv-next';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { computed, ref } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   roleChangeStatus,
   roleExport,
@@ -14,6 +13,7 @@ import {
   roleRemove,
 } from '@/api/system/role';
 import { ApiSwitch } from '@/components/global';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import {
   ADMIN_ROLE_KEY,
   EnableStatus,
@@ -24,6 +24,7 @@ import { useAccess } from '@/effects/access';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import roleAuthModal from './role-auth-modal.vue';
@@ -34,7 +35,7 @@ const searchFormRef = ref<InstanceType<typeof RoleSearchForm>>();
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Role>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -68,12 +69,23 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'roleId',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-role-index',
+});
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-});
+const tableRef = useTemplateRef<VxeGridInstance<Role>>('tableRef');
+const checkedRows = ref<Role[]>([]);
+
 const [RoleModal, roleModalApi] = useVbenModal({
   connectedComponent: roleModal,
 });
@@ -90,11 +102,11 @@ async function handleEdit(record: Role) {
 
 async function handleDelete(row: Role) {
   await roleRemove([row.roleId]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: Role) => row.roleId);
   window.modal.confirm({
     title: '提示',
@@ -102,7 +114,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await roleRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -143,11 +155,36 @@ async function handleChangeStatus(checked: SwitchProps['checked'], row: Role) {
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as Role[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -165,96 +202,108 @@ function handleSearchReset() {
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />
-        <div class="flex-1">
-          <BasicTable table-title="角色列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            v-access:code="['system:role:export']"
-            :loading="exportLoading"
-            :disabled="exportLoading"
-            @click="handleExport"
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
           >
-            {{ $t('pages.common.export') }}
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['system:role:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:role:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #status="{ row }">
-        <ApiSwitch
-          :value="row.status === EnableStatus.Enable"
-          :api="(checked) => handleChangeStatus(checked, row)"
-          :disabled="
-            row.roleId === SUPERADMIN_ROLE_ID ||
-            row.roleKey === ADMIN_ROLE_KEY ||
-            !hasAccessByCodes(['system:role:edit'])
-          "
-          @reload="tableApi.query()"
-        />
-      </template>
-      <template #action="{ row }">
-        <!-- 租户管理员不可修改admin角色 防止误操作 -->
-        <!-- 超级管理员可通过租户切换来操作租户管理员角色 -->
-        <template
-          v-if="
-            !row.superAdmin && (row.roleKey !== ADMIN_ROLE_KEY || isSuperAdmin)
-          "
-        >
-          <Space>
-            <action-button
-              v-access:code="['system:role:edit']"
-              @click.stop="handleEdit(row)"
-            >
-              {{ $t('pages.common.edit') }}
-            </action-button>
-            <action-button
-              v-access:code="['system:role:edit']"
-              @click.stop="handleAuthEdit(row)"
-            >
-              权限
-            </action-button>
-            <action-button
-              v-access:code="['system:role:edit']"
-              @click.stop="handleAssignRole(row)"
-            >
-              分配
-            </action-button>
-            <Popconfirm
-              placement="left"
-              title="确认删除？"
-              @confirm="handleDelete(row)"
-            >
-              <action-button
-                danger
-                v-access:code="['system:role:remove']"
-                @click.stop=""
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">角色列表</div>
+            </template>
+            <template #toolbar-right>
+              <Space>
+                <a-button
+                  v-access:code="['system:role:export']"
+                  :loading="exportLoading"
+                  :disabled="exportLoading"
+                  @click="handleExport"
+                >
+                  {{ $t('pages.common.export') }}
+                </a-button>
+                <a-button
+                  :disabled="checkedRows.length === 0"
+                  danger
+                  type="primary"
+                  v-access:code="['system:role:remove']"
+                  @click="handleMultiDelete"
+                >
+                  {{ $t('pages.common.delete') }}
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['system:role:add']"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #status="{ row }">
+              <ApiSwitch
+                :value="row.status === EnableStatus.Enable"
+                :api="(checked) => handleChangeStatus(checked, row)"
+                :disabled="
+                  row.roleId === SUPERADMIN_ROLE_ID ||
+                  row.roleKey === ADMIN_ROLE_KEY ||
+                  !hasAccessByCodes(['system:role:edit'])
+                "
+                @reload="() => query()"
+              />
+            </template>
+            <template #action="{ row }">
+              <!-- 租户管理员不可修改admin角色 防止误操作 -->
+              <!-- 超级管理员可通过租户切换来操作租户管理员角色 -->
+              <template
+                v-if="
+                  !row.superAdmin &&
+                  (row.roleKey !== ADMIN_ROLE_KEY || isSuperAdmin)
+                "
               >
-                {{ $t('pages.common.delete') }}
-              </action-button>
-            </Popconfirm>
-          </Space>
-        </template>
-      </template>
-    </BasicTable>
+                <Space>
+                  <action-button
+                    v-access:code="['system:role:edit']"
+                    @click.stop="handleEdit(row)"
+                  >
+                    {{ $t('pages.common.edit') }}
+                  </action-button>
+                  <action-button
+                    v-access:code="['system:role:edit']"
+                    @click.stop="handleAuthEdit(row)"
+                  >
+                    权限
+                  </action-button>
+                  <action-button
+                    v-access:code="['system:role:edit']"
+                    @click.stop="handleAssignRole(row)"
+                  >
+                    分配
+                  </action-button>
+                  <Popconfirm
+                    placement="left"
+                    title="确认删除？"
+                    @confirm="handleDelete(row)"
+                  >
+                    <action-button
+                      danger
+                      v-access:code="['system:role:remove']"
+                      @click.stop=""
+                    >
+                      {{ $t('pages.common.delete') }}
+                    </action-button>
+                  </Popconfirm>
+                </Space>
+              </template>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
         </div>
       </div>
     </Spin>
-    <RoleModal @reload="tableApi.query()" />
-    <RoleAuthModal @reload="tableApi.query()" />
+    <RoleModal @reload="() => query()" />
+    <RoleAuthModal @reload="() => query()" />
   </Page>
 </template>

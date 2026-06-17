@@ -1,26 +1,24 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { PageQuery } from '@/api/common';
 import type { OperationLog } from '@/api/monitor/operlog/model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import {
-  addSortParams,
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-} from '@/adapter/vxe-table';
+import { addSortParams } from '@/adapter/vxe-table';
 import {
   operLogClean,
   operLogDelete,
   operLogExport,
   operLogList,
 } from '@/api/monitor/operlog';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { useBlobExport } from '@/utils/file/export';
 import { confirmDeleteModal } from '@/utils/modal';
 import { Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import operationPreviewDrawer from './operation-preview-drawer.vue';
@@ -30,7 +28,7 @@ const searchFormRef = ref<InstanceType<typeof OperlogSearchForm>>();
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<OperationLog>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -72,16 +70,24 @@ const gridOptions: VxeGridProps = {
     // 支持多字段排序 默认关闭
     multiple: true,
   },
-  id: 'monitor-operlog-index',
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-  gridEvents: {
-    // 排序 重新请求接口
-    sortChange: () => tableApi.query(),
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
   },
+  id: 'monitor-operlog-index',
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<OperationLog>>('tableRef');
+const checkedRows = ref<OperationLog[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+  // 排序 重新请求接口
+  sortChange: () => query(),
+};
 
 const [OperationPreviewDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: operationPreviewDrawer,
@@ -103,7 +109,7 @@ function handleClear() {
   confirmDeleteModal({
     onValidated: async () => {
       await operLogClean();
-      await tableApi.reload();
+      await reload();
     },
   });
 }
@@ -111,7 +117,7 @@ function handleClear() {
  * 删除日志
  */
 async function handleDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: OperationLog) => row.operId);
   window.modal.confirm({
     title: '提示',
@@ -119,7 +125,7 @@ async function handleDelete() {
     content: `确认删除选中的${ids.length}条操作日志吗？`,
     onOk: async () => {
       await operLogDelete(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -135,11 +141,36 @@ async function handleExport() {
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as OperationLog[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -157,46 +188,57 @@ function handleSearchReset() {
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />
-        <div class="flex-1">
-          <BasicTable table-title="操作日志列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            v-access:code="['monitor:operlog:remove']"
-            @click="handleClear"
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
           >
-            {{ $t('pages.common.clear') }}
-          </a-button>
-          <a-button
-            v-access:code="['monitor:operlog:export']"
-            :loading="exportLoading"
-            :disabled="exportLoading"
-            @click="handleExport"
-          >
-            {{ $t('pages.common.export') }}
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['monitor:operlog:remove']"
-            @click="handleDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <action-button
-          v-access:code="['monitor:operlog:list']"
-          @click.stop="handlePreview(row)"
-        >
-          {{ $t('pages.common.preview') }}
-        </action-button>
-      </template>
-    </BasicTable>
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">操作日志列表</div>
+            </template>
+            <template #toolbar-right>
+              <Space>
+                <a-button
+                  v-access:code="['monitor:operlog:remove']"
+                  @click="handleClear"
+                >
+                  {{ $t('pages.common.clear') }}
+                </a-button>
+                <a-button
+                  v-access:code="['monitor:operlog:export']"
+                  :loading="exportLoading"
+                  :disabled="exportLoading"
+                  @click="handleExport"
+                >
+                  {{ $t('pages.common.export') }}
+                </a-button>
+                <a-button
+                  :disabled="checkedRows.length === 0"
+                  danger
+                  type="primary"
+                  v-access:code="['monitor:operlog:remove']"
+                  @click="handleDelete"
+                >
+                  {{ $t('pages.common.delete') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #action="{ row }">
+              <action-button
+                v-access:code="['monitor:operlog:list']"
+                @click.stop="handlePreview(row)"
+              >
+                {{ $t('pages.common.preview') }}
+              </action-button>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
     <OperationPreviewDrawer />
   </Page>

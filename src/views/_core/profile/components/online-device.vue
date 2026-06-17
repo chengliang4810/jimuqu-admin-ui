@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
-import type { Recordable } from '@/types';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { useTemplateRef } from 'vue';
+
 import { forceLogout2, onlineDeviceList } from '@/api/monitor/online';
-import { columns } from '@/views/monitor/online/data';
-import { Popconfirm } from 'antdv-next';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import { Popconfirm, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
-const onlineDeviceColumns: VxeGridProps['columns'] = [
+import { columns } from '@/views/monitor/online/data';
+
+const onlineDeviceColumns = [
   {
     type: 'seq',
     title: '序号',
@@ -19,7 +22,7 @@ const onlineDeviceColumns: VxeGridProps['columns'] = [
   ) ?? []),
 ];
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions({
   columns: onlineDeviceColumns,
   keepSource: true,
   pagerConfig: {
@@ -37,19 +40,39 @@ const gridOptions: VxeGridProps = {
     keyField: 'tokenId',
     isCurrent: true,
   },
-};
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
+});
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
+const gridEvents: VxeGridListeners = {};
 
-async function handleForceOffline(row: Recordable<any>) {
+const tableRef = useTemplateRef<VxeGridInstance>('tableRef');
+
+async function handleForceOffline(row: Record<string, any>) {
   await forceLogout2(row.tokenId);
-  await tableApi.query();
+  await query();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
 }
 </script>
 
 <template>
   <div>
-    <BasicTable table-title="我的在线设备">
+    <VxeGrid
+      ref="tableRef"
+      class="p-2 pt-0"
+      v-bind="gridOptions"
+      v-on="gridEvents"
+    >
+      <template #toolbar-left>
+        <div class="text-[16px] font-medium">我的在线设备</div>
+      </template>
       <template #action="{ row }">
         <Popconfirm
           :title="`确认强制下线[${row.userName}]?`"
@@ -59,6 +82,9 @@ async function handleForceOffline(row: Recordable<any>) {
           <a-button danger size="small" type="link">强制下线</a-button>
         </Popconfirm>
       </template>
-    </BasicTable>
+      <template #loading>
+        <Spin :spinning="true" size="large" />
+      </template>
+    </VxeGrid>
   </div>
 </template>

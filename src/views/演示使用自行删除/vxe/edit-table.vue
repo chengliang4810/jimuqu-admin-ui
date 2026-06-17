@@ -1,23 +1,32 @@
 <script setup lang="tsx">
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridInstance } from 'vxe-table';
 
-import { nextTick, onMounted } from 'vue';
+import { nextTick, onMounted, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { JsonPreview } from '@/effects/common-ui';
 import { Button, Input, InputNumber, Select, Space } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 /**
  * 与antdv集成 可以参考这里使用自定义插槽
  * https://vxetable.cn/other4/#/table/other/antd
  */
 
+interface EditRow {
+  name?: string;
+  age?: number;
+  job?: string;
+  phone?: string;
+  [key: string]: any;
+}
+
 const options = ['前端佬', '后端佬', '组长'].map((item) => ({
   label: item,
   value: item,
 }));
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions({
   editConfig: {
     // 触发编辑的方式
     trigger: 'click',
@@ -192,11 +201,9 @@ const gridOptions: VxeGridProps = {
     // 保持高度 防止进入编辑模式会有一个撑开的效果
     height: 50,
   },
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<EditRow>>('tableRef');
 
 onMounted(async () => {
   const data = [
@@ -220,20 +227,20 @@ onMounted(async () => {
     },
   ];
   await nextTick();
-  await tableApi.grid.loadData(data);
+  await tableRef.value?.loadData(data);
 });
 async function handleAdd() {
   const record = { name: '', age: undefined, job: undefined };
-  const { row: newRow } = await tableApi.grid.insert(record);
-  await tableApi.grid.setEditCell(newRow, 'name');
+  const { row: newRow } = (await tableRef.value?.insert(record))!;
+  await tableRef.value?.setEditCell(newRow, 'name');
 }
 
 async function handleRemove() {
-  await tableApi.grid.removeCheckboxRow();
+  await tableRef.value?.removeCheckboxRow();
 }
 
 async function handleValidate() {
-  const result = await tableApi.grid.validate(true);
+  const result = await tableRef.value?.validate(true);
   console.log(result);
   if (result) {
     window.message.error('校验失败');
@@ -243,8 +250,8 @@ async function handleValidate() {
 }
 
 function getData() {
-  const data = tableApi.grid.getTableData();
-  const { fullData } = data;
+  const data = tableRef.value?.getTableData();
+  const { fullData } = data!;
   console.log(fullData);
   window.modal.info({
     title: '提示',
@@ -275,6 +282,6 @@ function getData() {
         <a-button type="primary" @click="handleAdd"> 新增一行 </a-button>
       </Space>
     </div>
-    <BasicTable />
+    <VxeGrid ref="tableRef" v-bind="gridOptions" />
   </div>
 </template>

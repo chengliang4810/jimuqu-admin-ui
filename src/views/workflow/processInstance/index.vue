@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import type { Recordable } from '@/types';
 import type { RadioChangeEvent } from 'antdv-next';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   deleteByInstanceIds,
   pageByFinish,
   pageByRunning,
 } from '@/api/workflow/instance';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import CategoryTree from '@/views/workflow/processDefinition/category-tree.vue';
 import { Popconfirm, RadioGroup, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { flowInfoModal } from '../components';
 import { columns } from './data';
@@ -47,12 +48,12 @@ async function handleTypeChange(e: RadioChangeEvent) {
     }
   }
 
-  await tableApi.reload();
+  await reload();
 }
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Recordable<any>>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -99,11 +100,21 @@ const gridOptions: VxeGridProps = {
     keyField: 'id',
   },
   id: 'workflow-definition-index',
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
+});
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-});
+const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
+const checkedRows = ref<Recordable<any>[]>([]);
 
 const [InstanceInvalidModal, instanceInvalidModalApi] = useVbenModal({
   connectedComponent: instanceInvalidModal,
@@ -115,11 +126,11 @@ async function handleInvalid(row: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await deleteByInstanceIds(row.id);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: any) => row.id);
   window.modal.confirm({
     title: '提示',
@@ -127,7 +138,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await deleteByInstanceIds(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -150,18 +161,43 @@ function handleInfo(row: any) {
 
 function handleSearchSubmit(data: Record<string, any>) {
   currentSearchParams.value = data;
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
   currentSearchParams.value = {};
   selectedCode.value = [];
-  tableApi.reload();
+  reload();
 }
 
 function handleCategorySelect(keys: string[]) {
   selectedCode.value = keys;
-  tableApi.reload(currentSearchParams.value);
+  reload(currentSearchParams.value);
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as Recordable<any>[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -177,7 +213,7 @@ function handleCategorySelect(keys: string[]) {
         <CategoryTree
           v-model:select-code="selectedCode"
           class="w-[260px]"
-          @reload="() => tableApi.reload()"
+          @reload="() => reload()"
           @select="handleCategorySelect"
         />
         <div class="flex flex-1 flex-col gap-4 overflow-hidden">
@@ -186,70 +222,78 @@ function handleCategorySelect(keys: string[]) {
             @reset="handleSearchReset"
           />
           <div class="bg-card flex-1 overflow-hidden rounded-lg">
-            <BasicTable>
-        <template #toolbar-actions>
-          <RadioGroup
-            v-model:value="currentType"
-            :options="typeOptions"
-            button-style="solid"
-            option-type="button"
-            @change="handleTypeChange"
-          />
-        </template>
-        <template #toolbar-tools>
-          <Space>
-            <a-button
-              :disabled="!vxeCheckboxChecked(tableApi)"
-              danger
-              type="primary"
-              v-access:code="['system:user:remove']"
-              @click="handleMultiDelete"
+            <VxeGrid
+              ref="tableRef"
+              class="p-2 pt-0"
+              v-bind="gridOptions"
+              v-on="gridEvents"
             >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-          </Space>
-        </template>
-        <template #action="{ row }">
-          <div class="flex flex-col">
-            <div v-if="currentType === 'process_running'">
-              <a-button
-                danger
-                size="small"
-                type="link"
-                @click.stop="handleInvalid(row)"
-              >
-                作废流程
-              </a-button>
-              <Popconfirm
-                placement="left"
-                title="确认删除？"
-                @confirm="handleDelete(row)"
-              >
-                <a-button danger size="small" type="link" @click.stop="">
-                  删除流程
-                </a-button>
-              </Popconfirm>
-            </div>
-            <div>
-              <a-button size="small" type="link" @click.stop="handleInfo(row)">
-                流程预览
-              </a-button>
-              <a-button
-                size="small"
-                type="link"
-                @click.stop="handleVariable(row)"
-              >
-                变量查看
-              </a-button>
-            </div>
-          </div>
-        </template>
-      </BasicTable>
+              <template #toolbar-left>
+                <RadioGroup
+                  v-model:value="currentType"
+                  :options="typeOptions"
+                  button-style="solid"
+                  option-type="button"
+                  @change="handleTypeChange"
+                />
+              </template>
+              <template #toolbar-right>
+                <Space>
+                  <a-button
+                    :disabled="checkedRows.length === 0"
+                    danger
+                    type="primary"
+                    v-access:code="['system:user:remove']"
+                    @click="handleMultiDelete"
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </a-button>
+                </Space>
+              </template>
+              <template #action="{ row }">
+                <div class="flex flex-col">
+                  <div v-if="currentType === 'process_running'">
+                    <a-button
+                      danger
+                      size="small"
+                      type="link"
+                      @click.stop="handleInvalid(row)"
+                    >
+                      作废流程
+                    </a-button>
+                    <Popconfirm
+                      placement="left"
+                      title="确认删除？"
+                      @confirm="handleDelete(row)"
+                    >
+                      <a-button danger size="small" type="link" @click.stop="">
+                        删除流程
+                      </a-button>
+                    </Popconfirm>
+                  </div>
+                  <div>
+                    <a-button size="small" type="link" @click.stop="handleInfo(row)">
+                      流程预览
+                    </a-button>
+                    <a-button
+                      size="small"
+                      type="link"
+                      @click.stop="handleVariable(row)"
+                    >
+                      变量查看
+                    </a-button>
+                  </div>
+                </div>
+              </template>
+              <template #loading>
+                <Spin :spinning="true" size="large" />
+              </template>
+            </VxeGrid>
           </div>
         </div>
       </div>
     </Spin>
-    <InstanceInvalidModal @reload="() => tableApi.reload()" />
+    <InstanceInvalidModal @reload="() => reload()" />
     <InstanceVariableModal />
     <FlowInfoModal />
   </Page>

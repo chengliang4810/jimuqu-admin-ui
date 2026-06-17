@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Dept } from '@/api/system/dept/model';
-import { nextTick, ref } from 'vue';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { nextTick, ref, useTemplateRef } from 'vue';
+
 import { deptList, deptRemove } from '@/api/system/dept';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { eachTree } from '@/utils';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import deptDrawer from './dept-drawer.vue';
@@ -15,7 +17,7 @@ import DeptSearchForm from './dept-search.vue';
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Dept>({
   columns,
   height: 'auto',
   keepSource: true,
@@ -39,11 +41,17 @@ const gridOptions: VxeGridProps = {
       // 默认请求接口后展开全部 不需要可以删除这段
       querySuccess: () => {
         // 默认展开 需要加上标记
-        eachTree(tableApi.grid.getData(), (item) => (item.expand = true));
+        eachTree(tableRef.value?.getData() ?? [], (item) => (item.expand = true));
         nextTick(() => {
           setExpandOrCollapse(true);
         });
       },
+    },
+  },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
     },
   },
   /**
@@ -62,27 +70,27 @@ const gridOptions: VxeGridProps = {
     transform: true,
   },
   id: 'system-dept-index',
+});
+
+const gridEvents: VxeGridListeners = {
+  cellDblclick: (e) => {
+    const { row = {} } = e;
+    if (!row?.children) {
+      return;
+    }
+    const isExpanded = row?.expand;
+    tableRef.value?.setTreeExpand(row, !isExpanded);
+    row.expand = !isExpanded;
+  },
+  // 需要监听使用箭头展开的情况 否则展开/折叠的数据不一致
+  toggleTreeExpand: (e) => {
+    const { row = {}, expanded } = e;
+    row.expand = expanded;
+  },
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-  gridEvents: {
-    cellDblclick: (e) => {
-      const { row = {} } = e;
-      if (!row?.children) {
-        return;
-      }
-      const isExpanded = row?.expand;
-      tableApi.grid.setTreeExpand(row, !isExpanded);
-      row.expand = !isExpanded;
-    },
-    // 需要监听使用箭头展开的情况 否则展开/折叠的数据不一致
-    toggleTreeExpand: (e) => {
-      const { row = {}, expanded } = e;
-      row.expand = expanded;
-    },
-  },
-});
+const tableRef = useTemplateRef<VxeGridInstance<Dept>>('tableRef');
+
 const [DeptDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: deptDrawer,
 });
@@ -105,7 +113,7 @@ async function handleEdit(record: Dept) {
 
 async function handleDelete(row: Dept) {
   await deptRemove(row.deptId);
-  await tableApi.query();
+  await query();
 }
 
 /**
@@ -113,16 +121,24 @@ async function handleDelete(row: Dept) {
  * @param expand 是否展开
  */
 function setExpandOrCollapse(expand: boolean) {
-  eachTree(tableApi.grid.getData(), (item) => (item.expand = expand));
-  tableApi.grid?.setAllTreeExpand(expand);
+  eachTree(tableRef.value?.getData() ?? [], (item) => (item.expand = expand));
+  tableRef.value?.setAllTreeExpand(expand);
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
 }
 </script>
 
@@ -135,64 +151,76 @@ function handleSearchReset() {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-          <DeptSearchForm
-            @submit="handleSearchSubmit"
-            @reset="handleSearchReset"
-          />
-        <div class="flex-1">
-          <BasicTable table-title="部门列表" table-title-help="双击展开/收起子菜单">
-        <template #toolbar-tools>
-          <Space>
-            <a-button @click="setExpandOrCollapse(false)">
-              {{ $t('pages.common.collapse') }}
-            </a-button>
-            <a-button @click="setExpandOrCollapse(true)">
-              {{ $t('pages.common.expand') }}
-            </a-button>
-            <a-button
-              type="primary"
-              v-access:code="['system:dept:add']"
-              @click="handleAdd"
-            >
-              {{ $t('pages.common.add') }}
-            </a-button>
-          </Space>
-        </template>
-        <template #action="{ row }">
-          <Space>
-            <action-button
-              v-access:code="['system:dept:edit']"
-              @click="handleEdit(row)"
-            >
-              {{ $t('pages.common.edit') }}
-            </action-button>
-            <action-button
-              variant="link"
-              color="green"
-              v-access:code="['system:dept:add']"
-              @click="handleSubAdd(row)"
-            >
-              {{ $t('pages.common.add') }}
-            </action-button>
-            <Popconfirm
-              placement="left"
-              title="确认删除？"
-              @confirm="handleDelete(row)"
-            >
-              <action-button
-                danger
-                v-access:code="['system:dept:remove']"
-                @click.stop=""
-              >
-                {{ $t('pages.common.delete') }}
-              </action-button>
-            </Popconfirm>
-          </Space>
-        </template>
-      </BasicTable>
+        <DeptSearchForm
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">部门列表</div>
+              <div class="text-[13px] text-[#999] ml-2">双击展开/收起子菜单</div>
+            </template>
+            <template #toolbar-right>
+              <Space>
+                <a-button @click="setExpandOrCollapse(false)">
+                  {{ $t('pages.common.collapse') }}
+                </a-button>
+                <a-button @click="setExpandOrCollapse(true)">
+                  {{ $t('pages.common.expand') }}
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['system:dept:add']"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #action="{ row }">
+              <Space>
+                <action-button
+                  v-access:code="['system:dept:edit']"
+                  @click="handleEdit(row)"
+                >
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <action-button
+                  variant="link"
+                  color="green"
+                  v-access:code="['system:dept:add']"
+                  @click="handleSubAdd(row)"
+                >
+                  {{ $t('pages.common.add') }}
+                </action-button>
+                <Popconfirm
+                  placement="left"
+                  title="确认删除？"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    danger
+                    v-access:code="['system:dept:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
-    <DeptDrawer @reload="tableApi.query()" />
+    <DeptDrawer @reload="() => query()" />
   </Page>
 </template>

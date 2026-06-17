@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { GenInfo } from '@/api/tool/gen/model';
+import type { VxeGridInstance } from 'vxe-table';
 
 import type { Ref } from 'vue';
 
-import { inject, onMounted, reactive } from 'vue';
+import { inject, onMounted, reactive, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { dictOptionSelectList } from '@/api/system/dict/dict-type';
+import { VxeGrid } from 'vxe-table';
 
 import { validRules, vxeTableColumns } from './gen-data';
 
@@ -34,7 +35,7 @@ onMounted(async () => {
   dictOptions.push(...options);
 });
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions({
   columns: vxeTableColumns(dictOptions),
   keepSource: true,
   editConfig: { trigger: 'click', mode: 'cell', showStatus: true },
@@ -57,15 +58,15 @@ const gridOptions: VxeGridProps = {
     enabled: false,
   },
   data: genInfoData.value.columns,
-};
+});
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
+const tableRef = useTemplateRef<VxeGridInstance>('tableRef');
 
 /**
  * 校验表格数据
  */
 async function validateTable() {
-  const hasError = await tableApi.grid.validate();
+  const hasError = await tableRef.value?.validate();
   return !hasError;
 }
 
@@ -73,7 +74,7 @@ async function validateTable() {
  * 获取表格数据
  */
 function getTableRecords() {
-  return tableApi?.grid?.getData?.() ?? [];
+  return tableRef.value?.getData?.() ?? [];
 }
 
 defineExpose({
@@ -85,7 +86,7 @@ defineExpose({
 <template>
   <div class="flex flex-col gap-[16px]">
     <div class="h-[calc(100vh-200px)] overflow-y-hidden">
-      <BasicTable />
+      <VxeGrid ref="tableRef" v-bind="gridOptions" />
     </div>
   </div>
 </template>

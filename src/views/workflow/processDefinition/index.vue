@@ -1,13 +1,12 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import type { Recordable } from '@/types';
 import type { RadioChangeEvent } from 'antdv-next';
 
-import { computed, ref } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   unPublishList,
   workflowDefinitionActive,
@@ -18,10 +17,12 @@ import {
   workflowDefinitionPublish,
 } from '@/api/workflow/definition';
 import { ApiSwitch } from '@/components/global';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { downloadByData } from '@/utils/file/download';
 import { Popconfirm, RadioGroup, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import CategoryTree from './category-tree.vue';
 import { columns } from './data';
@@ -37,7 +38,20 @@ const currentSearchParams = ref<Record<string, any>>({});
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+// 左边的切换
+const statusOptions = [
+  { label: '已发布流程', value: 1 },
+  { label: '未发布流程', value: 0 },
+];
+const currentStatus = ref(1);
+const currentTableApi = computed(() => {
+  if (currentStatus.value === 1) {
+    return workflowDefinitionList;
+  }
+  return unPublishList;
+});
+
+const gridOptions = withDefaultVxeGridOptions<Recordable<any>>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -84,36 +98,34 @@ const gridOptions: VxeGridProps = {
     keyField: 'id',
   },
   id: 'workflow-definition-index',
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
+});
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-});
+const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
+const checkedRows = ref<Recordable<any>[]>([]);
 
-// 左边的切换
-const statusOptions = [
-  { label: '已发布流程', value: 1 },
-  { label: '未发布流程', value: 0 },
-];
-const currentStatus = ref(1);
-const currentTableApi = computed(() => {
-  if (currentStatus.value === 1) {
-    return workflowDefinitionList;
-  }
-  return unPublishList;
-});
 async function handleStatusChange(e: RadioChangeEvent) {
   currentStatus.value = e.target.value as number;
-  await tableApi.reload();
+  await reload();
 }
 
 async function handleDelete(row: Recordable<any>) {
   await workflowDefinitionDelete(row.id);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: any) => row.id);
   window.modal.confirm({
     title: '提示',
@@ -121,7 +133,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await workflowDefinitionDelete(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -152,7 +164,7 @@ async function handleActive(row: any, checked: boolean) {
   const lastStatus = checked ? activeStatus.Enable : activeStatus.Disable;
   try {
     await workflowDefinitionActive(row.id, !!checked);
-    await tableApi.query();
+    await query();
   } catch (error) {
     row.activityStatus = lastStatus;
     console.error(error);
@@ -165,7 +177,7 @@ async function handleActive(row: any, checked: boolean) {
  */
 async function handlePublish(row: any) {
   await workflowDefinitionPublish(row.id);
-  await tableApi.query();
+  await query();
 }
 
 /**
@@ -176,7 +188,7 @@ async function handleCopy(row: any) {
   await workflowDefinitionCopy(row.id);
   // 跳转到未发布流程tab
   currentStatus.value = 0;
-  await tableApi.reload();
+  await reload();
 }
 
 const [ProcessDefinitionModal, modalApi] = useVbenModal({
@@ -243,7 +255,7 @@ function handleDeploy() {
 async function handleDeploySuccess() {
   // 跳转到未发布
   currentStatus.value = 0;
-  await tableApi.reload();
+  await reload();
 }
 
 // 新增完成需要跳转到未发布
@@ -251,23 +263,48 @@ async function handleReload(type: 'add' | 'update') {
   if (type === 'add') {
     currentStatus.value = 0;
   }
-  await tableApi.reload();
+  await reload();
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
   currentSearchParams.value = data;
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
   currentSearchParams.value = {};
   selectedCode.value = [];
-  tableApi.reload();
+  reload();
 }
 
 function handleCategorySelect(keys: string[]) {
   selectedCode.value = keys;
-  tableApi.reload(currentSearchParams.value);
+  reload(currentSearchParams.value);
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as Recordable<any>[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -283,7 +320,7 @@ function handleCategorySelect(keys: string[]) {
         <CategoryTree
           v-model:select-code="selectedCode"
           class="w-[260px]"
-          @reload="() => tableApi.reload()"
+          @reload="() => reload()"
           @select="handleCategorySelect"
         />
         <div class="flex flex-1 flex-col gap-4 overflow-hidden">
@@ -292,8 +329,13 @@ function handleCategorySelect(keys: string[]) {
             @reset="handleSearchReset"
           />
           <div class="bg-card flex-1 overflow-hidden rounded-lg">
-            <BasicTable>
-              <template #toolbar-actions>
+            <VxeGrid
+              ref="tableRef"
+              class="p-2 pt-0"
+              v-bind="gridOptions"
+              v-on="gridEvents"
+            >
+              <template #toolbar-left>
                 <RadioGroup
                   v-model:value="currentStatus"
                   :options="statusOptions"
@@ -302,10 +344,10 @@ function handleCategorySelect(keys: string[]) {
                   @change="handleStatusChange"
                 />
               </template>
-              <template #toolbar-tools>
+              <template #toolbar-right>
                 <Space>
                   <a-button
-                    :disabled="!vxeCheckboxChecked(tableApi)"
+                    :disabled="checkedRows.length === 0"
                     danger
                     type="primary"
                     v-access:code="['system:user:remove']"
@@ -329,20 +371,12 @@ function handleCategorySelect(keys: string[]) {
                 </Space>
               </template>
               <template #activityStatus="{ row }">
-                <!-- <Switch
-            v-model:checked="row.activityStatus"
-            :checked-value="1"
-            :unchecked-value="0"
-            checked-children="激活"
-            un-checked-children="挂起"
-            @change="(status) => handleActive(row, status)"
-          /> -->
                 <ApiSwitch
                   :value="row.activityStatus === activeStatus.Enable"
                   checked-children="激活"
                   un-checked-children="挂起"
                   :api="(checked) => handleActive(row, checked)"
-                  @reload="() => tableApi.query()"
+                  @reload="() => query()"
                 />
               </template>
               <template #action="{ row }">
@@ -399,7 +433,10 @@ function handleCategorySelect(keys: string[]) {
                   </div>
                 </div>
               </template>
-            </BasicTable>
+              <template #loading>
+                <Spin :spinning="true" size="large" />
+              </template>
+            </VxeGrid>
           </div>
         </div>
       </div>

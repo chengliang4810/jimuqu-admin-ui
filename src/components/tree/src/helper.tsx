@@ -1,5 +1,5 @@
-import type { useVbenVxeGrid } from '@/adapter/vxe-table';
 import type { MenuOption } from '@/api/system/menu/model';
+import type { VxeGridInstance } from 'vxe-table';
 
 import type { MenuPermissionOption } from './data';
 
@@ -80,13 +80,13 @@ export function menusWithPermissions(menus: MenuOption[]) {
  * 设置表格选中
  * @param checkedKeys 选中的keys
  * @param menus 菜单 转换后的菜单
- * @param tableApi api
+ * @param tableRef vxe-grid 实例
  * @param association 是否节点关联
  */
 export function setTableChecked(
   checkedKeys: (number | string)[],
   menus: MenuPermissionOption[],
-  tableApi: ReturnType<typeof useVbenVxeGrid>['1'],
+  tableRef: VxeGridInstance<MenuPermissionOption>,
   association: boolean,
 ) {
   // tree转list
@@ -105,7 +105,7 @@ export function setTableChecked(
 
   // 设置行选中 & permissions选中
   checkedRows.forEach((item) => {
-    tableApi.grid.setCheckboxRow(item, true);
+    tableRef.setCheckboxRow(item, true);
     if (item?.permissions?.length > 0) {
       item.permissions.forEach((permission) => {
         if (checkedKeys.includes(permission.id)) {
@@ -129,7 +129,7 @@ export function setTableChecked(
       );
     });
     // 设置为不选中
-    tableApi.grid.setCheckboxRow(emptyRows, false);
+    tableRef.setCheckboxRow(emptyRows, false);
   }
 }
 

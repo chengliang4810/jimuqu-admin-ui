@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Recordable } from '@/types';
+import type { VxeGridInstance } from 'vxe-table';
 
-import { nextTick } from 'vue';
+import { nextTick, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { getPopupContainer, listToTree } from '@/utils';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { treeList, treeRemove } from './api';
 import { columns } from './data';
 import treeModal from './tree-modal.vue';
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions({
   columns,
   height: 'auto',
   keepSource: true,
@@ -44,15 +45,20 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'id',
   },
-
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   treeConfig: {
     parentField: 'parentId',
     rowField: 'id',
     transform: false,
   },
-};
+});
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
+const tableRef = useTemplateRef<VxeGridInstance>('tableRef');
 const [TreeModal, modalApi] = useVbenModal({
   connectedComponent: treeModal,
 });
@@ -69,25 +75,33 @@ async function handleEdit(row: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await treeRemove(row.id);
-  await tableApi.query();
+  await query();
 }
 
 function expandAll() {
-  tableApi.grid?.setAllTreeExpand(true);
+  tableRef.value?.setAllTreeExpand(true);
 }
 
 function collapseAll() {
-  tableApi.grid?.setAllTreeExpand(false);
+  tableRef.value?.setAllTreeExpand(false);
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
 }
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
+    <VxeGrid
+      ref="tableRef"
+      class="p-2 pt-0"
+      v-bind="gridOptions"
+    >
+      <template #toolbar-left>
         <span class="pl-[7px] text-[16px]">测试树列表</span>
       </template>
-      <template #toolbar-tools>
+      <template #toolbar-right>
         <Space>
           <a-button @click="collapseAll">
             {{ $t('pages.common.collapse') }}
@@ -128,7 +142,10 @@ function collapseAll() {
           </Popconfirm>
         </Space>
       </template>
-    </BasicTable>
-    <TreeModal @reload="tableApi.query()" />
+      <template #loading>
+        <Spin :spinning="true" size="large" />
+      </template>
+    </VxeGrid>
+    <TreeModal @reload="() => query()" />
   </Page>
 </template>

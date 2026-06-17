@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Client } from '@/api/system/client/model';
 import type { SwitchProps } from 'antdv-next';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   clientChangeStatus,
   clientExport,
@@ -13,11 +12,13 @@ import {
   clientRemove,
 } from '@/api/system/client';
 import { ApiSwitch } from '@/components/global';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { DEFAULT_CLIENT_ID, EnableStatus } from '@/constants';
 import { useAccess } from '@/effects/access';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import clientDrawer from './client-drawer.vue';
 import { columns } from './data';
@@ -27,7 +28,7 @@ const searchFormRef = ref<InstanceType<typeof ClientSearchForm>>();
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Client>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -61,13 +62,23 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'id',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-client-index',
   showOverflow: false,
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<Client>>('tableRef');
+const checkedRows = ref<Client[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+};
 
 const [ClientDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: clientDrawer,
@@ -85,11 +96,11 @@ async function handleEdit(record: Client) {
 
 async function handleDelete(row: Client) {
   await clientRemove([row.id]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: Client) => row.id);
   window.modal.confirm({
     title: '提示',
@@ -97,7 +108,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await clientRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -124,11 +135,36 @@ async function handleChangeStatus(
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as Client[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -146,9 +182,17 @@ function handleSearchReset() {
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />
-        <div class="flex-1">
-          <BasicTable table-title="客户端列表">
-      <template #toolbar-tools>
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">客户端列表</div>
+            </template>
+      <template #toolbar-right>
         <Space>
           <a-button
             v-access:code="['system:client:export']"
@@ -159,7 +203,7 @@ function handleSearchReset() {
             {{ $t('pages.common.export') }}
           </a-button>
           <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
+            :disabled="checkedRows.length === 0"
             danger
             type="primary"
             v-access:code="['system:client:remove']"
@@ -186,7 +230,7 @@ function handleSearchReset() {
             row.id === DEFAULT_CLIENT_ID ||
             !hasAccessByCodes(['system:client:edit'])
           "
-          @reload="tableApi.query()"
+          @reload="() => query()"
         />
       </template>
       <template #action="{ row }">
@@ -214,10 +258,13 @@ function handleSearchReset() {
           </Popconfirm>
         </Space>
       </template>
-      </BasicTable>
+      <template #loading>
+        <Spin :spinning="true" size="large" />
+      </template>
+      </VxeGrid>
       </div>
     </div>
     </Spin>
-    <ClientDrawer @reload="tableApi.query()" />
+    <ClientDrawer @reload="() => query()" />
   </Page>
 </template>

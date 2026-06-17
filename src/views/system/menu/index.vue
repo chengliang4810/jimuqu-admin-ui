@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Menu } from '@/api/system/menu/model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { computed, ref } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { menuCascadeRemove, menuList, menuRemove } from '@/api/system/menu';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useAccess } from '@/effects/access';
 import { Fallback, Page, useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { eachTree, listToTree, treeToList } from '@/utils';
 import { Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import menuDrawer from './menu-drawer.vue';
 import MenuSearchForm from './menu-search.vue';
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Menu>({
   columns,
   height: 'auto',
   keepSource: true,
@@ -45,6 +46,12 @@ const gridOptions: VxeGridProps = {
           tableLoading.value = false;
         }
       },
+    },
+  },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
     },
   },
   rowConfig: {
@@ -78,27 +85,27 @@ const gridOptions: VxeGridProps = {
     loadMethod: ({ row }) => row.children ?? [],
   },
   id: 'system-menu-index',
+});
+
+const gridEvents: VxeGridListeners = {
+  cellDblclick: (e) => {
+    const { row = {} } = e;
+    if (!row?.children) {
+      return;
+    }
+    const isExpanded = row?.expand;
+    tableRef.value?.setTreeExpand(row, !isExpanded);
+    row.expand = !isExpanded;
+  },
+  // 需要监听使用箭头展开的情况 否则展开/折叠的数据不一致
+  toggleTreeExpand: (e) => {
+    const { row = {}, expanded } = e;
+    row.expand = expanded;
+  },
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-  gridEvents: {
-    cellDblclick: (e) => {
-      const { row = {} } = e;
-      if (!row?.children) {
-        return;
-      }
-      const isExpanded = row?.expand;
-      tableApi.grid.setTreeExpand(row, !isExpanded);
-      row.expand = !isExpanded;
-    },
-    // 需要监听使用箭头展开的情况 否则展开/折叠的数据不一致
-    toggleTreeExpand: (e) => {
-      const { row = {}, expanded } = e;
-      row.expand = expanded;
-    },
-  },
-});
+const tableRef = useTemplateRef<VxeGridInstance<Menu>>('tableRef');
+
 const [MenuDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: menuDrawer,
 });
@@ -133,7 +140,7 @@ async function handleDelete(row: Menu) {
     // 单删除
     await menuRemove([row.menuId]);
   }
-  await tableApi.query();
+  await query();
 }
 
 function removeConfirmTitle(row: Menu) {
@@ -152,7 +159,7 @@ function removeConfirmTitle(row: Menu) {
  * 编辑/添加成功后刷新表格
  */
 async function afterEditOrAdd() {
-  tableApi.query();
+  query();
 }
 
 /**
@@ -160,8 +167,8 @@ async function afterEditOrAdd() {
  * @param expand 是否展开
  */
 function setExpandOrCollapse(expand: boolean) {
-  eachTree(tableApi.grid.getData(), (item) => (item.expand = expand));
-  tableApi.grid?.setAllTreeExpand(expand);
+  eachTree(tableRef.value?.getData() ?? [], (item) => (item.expand = expand));
+  tableRef.value?.setAllTreeExpand(expand);
 }
 
 /**
@@ -177,11 +184,19 @@ const isAdmin = computed(() => {
 });
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
 }
 </script>
 
@@ -195,72 +210,84 @@ function handleSearchReset() {
     >
       <div class="flex h-full flex-col gap-4">
         <MenuSearchForm @submit="handleSearchSubmit" @reset="handleSearchReset" />
-        <BasicTable table-title="菜单列表" table-title-help="双击展开/收起子菜单">
-        <template #toolbar-tools>
-          <Space>
-            <Tooltip title="删除菜单以及子菜单">
-              <div
+        <VxeGrid
+          ref="tableRef"
+          class="p-2 pt-0"
+          v-bind="gridOptions"
+          v-on="gridEvents"
+        >
+          <template #toolbar-left>
+            <div class="text-[16px] font-medium">菜单列表</div>
+            <div class="text-[13px] text-[#999] ml-2">双击展开/收起子菜单</div>
+          </template>
+          <template #toolbar-right>
+            <Space>
+              <Tooltip title="删除菜单以及子菜单">
+                <div
+                  v-access:role="['superadmin']"
+                  v-access:code="['system:menu:remove']"
+                  class="mr-2 flex items-center"
+                >
+                  <span class="mr-2 text-sm text-[#666666]">级联删除</span>
+                  <Switch v-model:checked="cascadingDeletion" />
+                </div>
+              </Tooltip>
+
+              <a-button @click="setExpandOrCollapse(false)">
+                {{ $t('pages.common.collapse') }}
+              </a-button>
+
+              <a-button
+                type="primary"
+                v-access:code="['system:menu:add']"
                 v-access:role="['superadmin']"
-                v-access:code="['system:menu:remove']"
-                class="mr-2 flex items-center"
+                @click="handleAdd"
               >
-                <span class="mr-2 text-sm text-[#666666]">级联删除</span>
-                <Switch v-model:checked="cascadingDeletion" />
-              </div>
-            </Tooltip>
-
-            <a-button @click="setExpandOrCollapse(false)">
-              {{ $t('pages.common.collapse') }}
-            </a-button>
-
-            <a-button
-              type="primary"
-              v-access:code="['system:menu:add']"
-              v-access:role="['superadmin']"
-              @click="handleAdd"
-            >
-              {{ $t('pages.common.add') }}
-            </a-button>
-          </Space>
-        </template>
-        <template #action="{ row }">
-          <Space>
-            <action-button
-              v-access:code="['system:menu:edit']"
-              v-access:role="['superadmin']"
-              @click="handleEdit(row)"
-            >
-              {{ $t('pages.common.edit') }}
-            </action-button>
-            <!-- '按钮类型'无法再添加子菜单 -->
-            <action-button
-              v-if="row.menuType !== 'F'"
-              variant="link"
-              color="green"
-              v-access:code="['system:menu:add']"
-              v-access:role="['superadmin']"
-              @click="handleSubAdd(row)"
-            >
-              {{ $t('pages.common.add') }}
-            </action-button>
-            <Popconfirm
-              placement="left"
-              :title="removeConfirmTitle(row)"
-              @confirm="handleDelete(row)"
-            >
+                {{ $t('pages.common.add') }}
+              </a-button>
+            </Space>
+          </template>
+          <template #action="{ row }">
+            <Space>
               <action-button
-                danger
-                v-access:code="['system:menu:remove']"
+                v-access:code="['system:menu:edit']"
                 v-access:role="['superadmin']"
-                @click.stop=""
+                @click="handleEdit(row)"
               >
-                {{ $t('pages.common.delete') }}
+                {{ $t('pages.common.edit') }}
               </action-button>
-            </Popconfirm>
-          </Space>
-        </template>
-      </BasicTable>
-    </div>
+              <!-- '按钮类型'无法再添加子菜单 -->
+              <action-button
+                v-if="row.menuType !== 'F'"
+                variant="link"
+                color="green"
+                v-access:code="['system:menu:add']"
+                v-access:role="['superadmin']"
+                @click="handleSubAdd(row)"
+              >
+                {{ $t('pages.common.add') }}
+              </action-button>
+              <Popconfirm
+                placement="left"
+                :title="removeConfirmTitle(row)"
+                @confirm="handleDelete(row)"
+              >
+                <action-button
+                  danger
+                  v-access:code="['system:menu:remove']"
+                  v-access:role="['superadmin']"
+                  @click.stop=""
+                >
+                  {{ $t('pages.common.delete') }}
+                </action-button>
+              </Popconfirm>
+            </Space>
+          </template>
+          <template #loading>
+            <Spin :spinning="true" size="large" />
+          </template>
+        </VxeGrid>
+      </div>
     </Spin>
     <MenuDrawer @reload="afterEditOrAdd" />
   </Page>

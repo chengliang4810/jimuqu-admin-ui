@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { OssConfig } from '@/api/system/oss-config/model';
 import type { SwitchProps } from 'antdv-next';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
+import { ref, useTemplateRef } from 'vue';
+
 import {
   ossConfigChangeStatus,
   ossConfigList,
   ossConfigRemove,
 } from '@/api/system/oss-config';
 import { ApiSwitch } from '@/components/global';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
 import { useAccess } from '@/effects/access';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import ossConfigDrawer from './oss-config-drawer.vue';
@@ -21,7 +24,7 @@ import OssConfigSearchForm from './oss-config-search.vue';
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<OssConfig>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -54,12 +57,22 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'ossConfigId',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-oss-config-index',
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<OssConfig>>('tableRef');
+const checkedRows = ref<OssConfig[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+};
 
 const [OssConfigDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: ossConfigDrawer,
@@ -77,11 +90,11 @@ async function handleEdit(record: OssConfig) {
 
 async function handleDelete(row: OssConfig) {
   await ossConfigRemove([row.ossConfigId]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: OssConfig) => row.ossConfigId);
   window.modal.confirm({
     title: '提示',
@@ -89,7 +102,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await ossConfigRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -107,11 +120,36 @@ async function handleChangeStatus(
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as OssConfig[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -128,12 +166,20 @@ function handleSearchReset() {
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />
-        <div class="flex-1">
-          <BasicTable table-title="oss配置列表">
-      <template #toolbar-tools>
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">oss配置列表</div>
+            </template>
+      <template #toolbar-right>
         <Space>
           <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
+            :disabled="checkedRows.length === 0"
             danger
             type="primary"
             v-access:code="['system:ossConfig:remove']"
@@ -157,7 +203,7 @@ function handleSearchReset() {
           :disabled="!hasAccessByCodes(['system:ossConfig:edit'])"
           checked-text="是"
           un-checked-text="否"
-          @reload="tableApi.query()"
+          @reload="() => query()"
         />
       </template>
       <template #action="{ row }">
@@ -183,10 +229,13 @@ function handleSearchReset() {
           </Popconfirm>
         </Space>
       </template>
-    </BasicTable>
+      <template #loading>
+        <Spin :spinning="true" size="large" />
+      </template>
+    </VxeGrid>
       </div>
     </div>
     </Spin>
-    <OssConfigDrawer @reload="tableApi.query()" />
+    <OssConfigDrawer @reload="() => query()" />
   </Page>
 </template>

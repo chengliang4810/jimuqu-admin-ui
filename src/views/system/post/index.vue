@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Post } from '@/api/system/post/model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   postDeptTreeSelect,
   postExport,
   postList,
   postRemove,
 } from '@/api/system/post';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import DeptTree from '@/views/system/user/dept-tree.vue';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import postDrawer from './post-drawer.vue';
@@ -29,7 +30,7 @@ const currentSearchParams = ref<Record<string, any>>({});
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Post>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -68,12 +69,22 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'postId',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-post-index',
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<Post>>('tableRef');
+const checkedRows = ref<Post[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+};
 
 const [PostDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: postDrawer,
@@ -91,11 +102,11 @@ async function handleEdit(record: Post) {
 
 async function handleDelete(row: Post) {
   await postRemove([row.postId]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: Post) => row.postId);
   window.modal.confirm({
     title: '提示',
@@ -103,7 +114,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await postRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -120,18 +131,43 @@ async function handleExport() {
 
 function handleSearchSubmit(data: Record<string, any>) {
   currentSearchParams.value = data;
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
   currentSearchParams.value = {};
   selectDeptId.value = [];
-  tableApi.reload();
+  reload();
 }
 
 function handleDeptSelect(keys: string[]) {
   selectDeptId.value = keys;
-  tableApi.reload(currentSearchParams.value);
+  reload(currentSearchParams.value);
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as Post[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -148,7 +184,7 @@ function handleDeptSelect(keys: string[]) {
           :api="postDeptTreeSelect"
           v-model:select-dept-id="selectDeptId"
           class="w-[260px]"
-          @reload="() => tableApi.reload()"
+          @reload="() => reload()"
           @select="handleDeptSelect"
         />
         <div class="flex flex-1 flex-col gap-4 overflow-hidden">
@@ -158,8 +194,16 @@ function handleDeptSelect(keys: string[]) {
             @reset="handleSearchReset"
           />
           <div class="bg-card flex-1 overflow-hidden rounded-lg">
-            <BasicTable table-title="岗位列表">
-              <template #toolbar-tools>
+            <VxeGrid
+              ref="tableRef"
+              class="p-2 pt-0"
+              v-bind="gridOptions"
+              v-on="gridEvents"
+            >
+              <template #toolbar-left>
+                <div class="text-[16px] font-medium">岗位列表</div>
+              </template>
+              <template #toolbar-right>
                 <Space>
                   <a-button
                     v-access:code="['system:post:export']"
@@ -170,7 +214,7 @@ function handleDeptSelect(keys: string[]) {
                     {{ $t('pages.common.export') }}
                   </a-button>
                   <a-button
-                    :disabled="!vxeCheckboxChecked(tableApi)"
+                    :disabled="checkedRows.length === 0"
                     danger
                     type="primary"
                     v-access:code="['system:post:remove']"
@@ -210,11 +254,14 @@ function handleDeptSelect(keys: string[]) {
                   </Popconfirm>
                 </Space>
               </template>
-            </BasicTable>
+              <template #loading>
+                <Spin :spinning="true" size="large" />
+              </template>
+            </VxeGrid>
           </div>
         </div>
       </div>
     </Spin>
-    <PostDrawer @reload="tableApi.query()" />
+    <PostDrawer @reload="() => query()" />
   </Page>
 </template>

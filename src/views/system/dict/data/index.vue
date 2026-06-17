@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { PageQuery } from '@/api/common';
 import type { DictData } from '@/api/system/dict/dict-data-model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   dictDataExport,
   dictDataList,
   dictDataRemove,
 } from '@/api/system/dict/dict-data';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { emitter } from '../mitt';
 import { columns } from './data';
@@ -26,7 +27,7 @@ const searchFormRef = ref<InstanceType<typeof DictDataSearchForm>>();
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<DictData>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -64,12 +65,22 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'dictCode',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-dict-data-index',
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<DictData>>('tableRef');
+const checkedRows = ref<DictData[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+};
 
 const [DictDataDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: dictDataDrawer,
@@ -90,11 +101,11 @@ async function handleEdit(record: DictData) {
 
 async function handleDelete(row: DictData) {
   await dictDataRemove([row.dictCode]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: DictData) => row.dictCode);
   window.modal.confirm({
     title: '提示',
@@ -102,7 +113,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await dictDataRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -121,11 +132,11 @@ async function handleExport() {
 onMounted(() => {
   emitter.on('rowClick', async (value) => {
     dictType.value = value;
-    await tableApi.query();
+    await query();
   });
   emitter.on('reset', async () => {
     dictType.value = '';
-    await tableApi.reload();
+    await reload();
   });
 });
 onBeforeUnmount(() => {
@@ -134,12 +145,37 @@ onBeforeUnmount(() => {
 });
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
   searchFormRef.value?.resetFields();
-  tableApi.reload();
+  reload();
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as DictData[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -156,9 +192,17 @@ function handleSearchReset() {
         @submit="handleSearchSubmit"
         @reset="handleSearchReset"
       />
-      <div class="flex-1">
-        <BasicTable table-title="字典数据列表">
-        <template #toolbar-tools>
+      <div class="bg-card flex-1 overflow-hidden rounded-lg">
+        <VxeGrid
+          ref="tableRef"
+          class="p-2 pt-0"
+          v-bind="gridOptions"
+          v-on="gridEvents"
+        >
+          <template #toolbar-left>
+            <div class="text-[16px] font-medium">字典数据列表</div>
+          </template>
+        <template #toolbar-right>
           <Space>
             <a-button
               v-access:code="['system:dict:export']"
@@ -169,7 +213,7 @@ function handleSearchReset() {
               {{ $t('pages.common.export') }}
             </a-button>
             <a-button
-              :disabled="!vxeCheckboxChecked(tableApi)"
+              :disabled="checkedRows.length === 0"
               danger
               type="primary"
               v-access:code="['system:dict:remove']"
@@ -212,9 +256,12 @@ function handleSearchReset() {
             </Popconfirm>
           </Space>
         </template>
-      </BasicTable>
+        <template #loading>
+          <Spin :spinning="true" size="large" />
+        </template>
+      </VxeGrid>
     </div>
-    <DictDataDrawer @reload="tableApi.query()" />
+    <DictDataDrawer @reload="() => query()" />
   </div>
   </Spin>
 </template>

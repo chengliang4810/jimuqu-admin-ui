@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { OnlineUser } from '@/api/monitor/online/model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { forceLogout, onlineList } from '@/api/monitor/online';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page } from '@/effects/common-ui';
 import { Popconfirm, Spin } from 'antdv-next';
 import { slice } from 'lodash-es';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import OnlineSearchForm from './online-search.vue';
 
 const onlineCount = ref(0);
 const tableLoading = ref(false);
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<OnlineUser>({
   columns,
   height: 'auto',
   keepSource: true,
@@ -56,22 +57,38 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'tokenId',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'monitor-online-index',
-};
+});
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
+const gridEvents: VxeGridListeners = {};
+
+const tableRef = useTemplateRef<VxeGridInstance<OnlineUser>>('tableRef');
 
 async function handleForceOffline(row: OnlineUser) {
   await forceLogout(row.tokenId);
-  await tableApi.query();
+  await query();
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
 }
 </script>
 
@@ -88,29 +105,37 @@ function handleSearchReset() {
           @reset="handleSearchReset"
           @submit="handleSearchSubmit"
         />
-        <div class="flex-1">
-          <BasicTable>
-        <template #toolbar-actions>
-          <div class="mr-1 pl-1 text-[1rem]">
-            <div>
-              在线用户列表 (共
-              <span class="text-primary font-bold">{{ onlineCount }}</span>
-              人在线)
-            </div>
-          </div>
-        </template>
-        <template #action="{ row }">
-          <Popconfirm
-            :title="`确认强制下线[${row.userName}]?`"
-            placement="left"
-            @confirm="handleForceOffline(row)"
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
           >
-            <action-button danger>强制下线</action-button>
-          </Popconfirm>
-        </template>
-      </BasicTable>
+            <template #toolbar-left>
+              <div class="mr-1 pl-1 text-[1rem]">
+                <div>
+                  在线用户列表 (共
+                  <span class="text-primary font-bold">{{ onlineCount }}</span>
+                  人在线)
+                </div>
+              </div>
+            </template>
+            <template #action="{ row }">
+              <Popconfirm
+                :title="`确认强制下线[${row.userName}]?`"
+                placement="left"
+                @confirm="handleForceOffline(row)"
+              >
+                <action-button danger>强制下线</action-button>
+              </Popconfirm>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
   </Page>
 </template>

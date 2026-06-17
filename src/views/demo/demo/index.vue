@@ -1,19 +1,25 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Recordable } from '@/types';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { getPopupContainer } from '@/utils';
-import { Popconfirm, Space } from 'antdv-next';
+import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import { demoList, demoRemove } from './api';
 import { columns } from './data';
 import demoModal from './demo-modal.vue';
 
-const gridOptions: VxeGridProps = {
+interface DemoRow {
+  id: number | string;
+  [key: string]: any;
+}
+
+const gridOptions = withDefaultVxeGridOptions<DemoRow>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -41,10 +47,21 @@ const gridOptions: VxeGridProps = {
     isHover: true,
     keyField: 'id',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
+});
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
 };
 
-const checked = ref(false);
-const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
+const tableRef = useTemplateRef<VxeGridInstance<DemoRow>>('tableRef');
+const checkedRows = ref<DemoRow[]>([]);
 
 const [DemoModal, modalApi] = useVbenModal({
   connectedComponent: demoModal,
@@ -62,11 +79,11 @@ async function handleEdit(record: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await demoRemove(row.id);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: any) => row.id);
   window.modal.confirm({
     title: '提示',
@@ -74,23 +91,52 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await demoRemove(ids);
-      await tableApi.query();
-      checked.value = false;
+      await query();
     },
   });
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as DemoRow[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
 <template>
   <Page :auto-content-height="true">
-    <BasicTable>
-      <template #toolbar-actions>
+    <VxeGrid
+      ref="tableRef"
+      class="p-2 pt-0"
+      v-bind="gridOptions"
+      v-on="gridEvents"
+    >
+      <template #toolbar-left>
         <span class="pl-[7px] text-[16px]">测试单列表</span>
       </template>
-      <template #toolbar-tools>
+      <template #toolbar-right>
         <Space>
           <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
+            :disabled="checkedRows.length === 0"
             danger
             type="primary"
             v-access:code="['system:demo:remove']"
@@ -131,7 +177,10 @@ function handleMultiDelete() {
           </Popconfirm>
         </Space>
       </template>
-    </BasicTable>
-    <DemoModal @reload="tableApi.query()" />
+      <template #loading>
+        <Spin :spinning="true" size="large" />
+      </template>
+    </VxeGrid>
+    <DemoModal @reload="() => query()" />
   </Page>
 </template>

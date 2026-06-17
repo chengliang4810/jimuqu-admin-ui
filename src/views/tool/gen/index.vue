@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Recordable } from '@/types';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { onMounted } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
 import {
   batchGenCode,
   generatedList,
@@ -13,10 +12,12 @@ import {
   getDataSourceNames,
   syncDb,
 } from '@/api/tool/gen';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { downloadByData } from '@/utils/file/download';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import dayjs from 'dayjs';
+import { VxeGrid } from 'vxe-table';
 
 import codePreviewModal from './code-preview-modal.vue';
 import { columns } from './data';
@@ -24,11 +25,17 @@ import howToUseModal from './md/how-to-use-modal.vue';
 import tableImportModal from './table-import-modal.vue';
 import GenSearchForm from './gen-search.vue';
 
+interface GenRow {
+  tableId: number | string;
+  tableName?: string;
+  [key: string]: any;
+}
+
 const dataSourceOptions = ref<{ label: string; value: string }[]>([]);
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<GenRow>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -61,12 +68,22 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'tableId',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'tool-gen-index',
+});
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-});
+const tableRef = useTemplateRef<VxeGridInstance<GenRow>>('tableRef');
+const checkedRows = ref<GenRow[]>([]);
 
 onMounted(async () => {
   // 获取数据源
@@ -93,14 +110,14 @@ function handleEdit(record: Recordable<any>) {
 
 async function handleSync(record: Recordable<any>) {
   await syncDb(record.tableId);
-  await tableApi.query();
+  await query();
 }
 
 /**
  * 批量生成代码
  */
 async function handleBatchGen() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: any) => row.tableId);
   if (ids.length === 0) {
     window.message.info('请选择需要生成代码的表');
@@ -136,11 +153,11 @@ async function handleDownload(record: Recordable<any>) {
  */
 async function handleDelete(record: Recordable<any>) {
   await genRemove(record.tableId);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: any) => row.tableId);
   window.modal.confirm({
     title: '提示',
@@ -148,7 +165,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await genRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -162,16 +179,41 @@ function handleImport() {
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
 }
 
 const [HowToUseModal, howToUseModalApi] = useVbenModal({
   connectedComponent: howToUseModal,
 });
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as GenRow[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
+}
 </script>
 
 <template>
@@ -188,99 +230,110 @@ const [HowToUseModal, howToUseModalApi] = useVbenModal({
           @submit="handleSearchSubmit"
           @reset="handleSearchReset"
         />
-        <div class="flex-1">
-          <BasicTable table-title="代码生成列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button type="link" @click="howToUseModalApi.open()">
-            如何使用🤔(beta版)
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['tool:gen:remove']"
-            @click="handleMultiDelete"
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
           >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            v-access:code="['tool:gen:code']"
-            @click="handleBatchGen"
-          >
-            {{ $t('pages.common.generate') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['tool:gen:import']"
-            @click="handleImport"
-          >
-            {{ $t('pages.common.import') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['tool:gen:preview']"
-          @click.stop="handlePreview(row)"
-        >
-          {{ $t('pages.common.preview') }}
-        </a-button>
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['tool:gen:edit']"
-          @click.stop="handleEdit(row)"
-        >
-          {{ $t('pages.common.edit') }}
-        </a-button>
-        <Popconfirm
-          :title="`确认同步[${row.tableName}]?`"
-          placement="left"
-          @confirm="handleSync(row)"
-        >
-          <a-button
-            size="small"
-            type="link"
-            v-access:code="['tool:gen:edit']"
-            @click.stop=""
-          >
-            {{ $t('pages.common.sync') }}
-          </a-button>
-        </Popconfirm>
-        <a-button
-          size="small"
-          type="link"
-          v-access:code="['tool:gen:code']"
-          @click.stop="handleDownload(row)"
-        >
-          生成代码
-        </a-button>
-        <Popconfirm
-          :title="`确认删除[${row.tableName}]?`"
-          placement="left"
-          @confirm="handleDelete(row)"
-        >
-          <a-button
-            danger
-            size="small"
-            type="link"
-            v-access:code="['tool:gen:remove']"
-            @click.stop=""
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-        </Popconfirm>
-      </template>
-    </BasicTable>
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">代码生成列表</div>
+            </template>
+            <template #toolbar-right>
+              <Space>
+                <a-button type="link" @click="howToUseModalApi.open()">
+                  如何使用🤔(beta版)
+                </a-button>
+                <a-button
+                  :disabled="checkedRows.length === 0"
+                  danger
+                  type="primary"
+                  v-access:code="['tool:gen:remove']"
+                  @click="handleMultiDelete"
+                >
+                  {{ $t('pages.common.delete') }}
+                </a-button>
+                <a-button
+                  :disabled="checkedRows.length === 0"
+                  v-access:code="['tool:gen:code']"
+                  @click="handleBatchGen"
+                >
+                  {{ $t('pages.common.generate') }}
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['tool:gen:import']"
+                  @click="handleImport"
+                >
+                  {{ $t('pages.common.import') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #action="{ row }">
+              <a-button
+                size="small"
+                type="link"
+                v-access:code="['tool:gen:preview']"
+                @click.stop="handlePreview(row)"
+              >
+                {{ $t('pages.common.preview') }}
+              </a-button>
+              <a-button
+                size="small"
+                type="link"
+                v-access:code="['tool:gen:edit']"
+                @click.stop="handleEdit(row)"
+              >
+                {{ $t('pages.common.edit') }}
+              </a-button>
+              <Popconfirm
+                :title="`确认同步[${row.tableName}]?`"
+                placement="left"
+                @confirm="handleSync(row)"
+              >
+                <a-button
+                  size="small"
+                  type="link"
+                  v-access:code="['tool:gen:edit']"
+                  @click.stop=""
+                >
+                  {{ $t('pages.common.sync') }}
+                </a-button>
+              </Popconfirm>
+              <a-button
+                size="small"
+                type="link"
+                v-access:code="['tool:gen:code']"
+                @click.stop="handleDownload(row)"
+              >
+                生成代码
+              </a-button>
+              <Popconfirm
+                :title="`确认删除[${row.tableName}]?`"
+                placement="left"
+                @confirm="handleDelete(row)"
+              >
+                <a-button
+                  danger
+                  size="small"
+                  type="link"
+                  v-access:code="['tool:gen:remove']"
+                  @click.stop=""
+                >
+                  {{ $t('pages.common.delete') }}
+                </a-button>
+              </Popconfirm>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
     <CodePreviewModal />
-    <TableImportModal @reload="tableApi.query()" />
+    <TableImportModal @reload="() => query()" />
     <HowToUseModal />
   </Page>
 </template>

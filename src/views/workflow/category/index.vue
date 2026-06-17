@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridInstance } from 'vxe-table';
 import type { Recordable } from '@/types';
 
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
 import { categoryList, categoryRemove } from '@/api/workflow/category';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { Popconfirm, Space, Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 
 import categoryModal from './category-modal.vue';
 import CategorySearchForm from './category-search.vue';
@@ -15,7 +16,7 @@ import { columns } from './data';
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Recordable<any>>({
   columns,
   height: 'auto',
   keepSource: true,
@@ -61,9 +62,16 @@ const gridOptions: VxeGridProps = {
   },
   // 表格全局唯一表示 保存列配置需要用到
   id: 'workflow-category-index',
-};
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
+});
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
+const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
+
 const [CategoryModal, modalApi] = useVbenModal({
   connectedComponent: categoryModal,
 });
@@ -80,23 +88,31 @@ async function handleEdit(row: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await categoryRemove(row.categoryId);
-  await tableApi.query();
+  await query();
 }
 
 function expandAll() {
-  tableApi.grid?.setAllTreeExpand(true);
+  tableRef.value?.setAllTreeExpand(true);
 }
 
 function collapseAll() {
-  tableApi.grid?.setAllTreeExpand(false);
+  tableRef.value?.setAllTreeExpand(false);
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
 }
 </script>
 
@@ -109,64 +125,74 @@ function handleSearchReset() {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-          <CategorySearchForm
-            @submit="handleSearchSubmit"
-            @reset="handleSearchReset"
-          />
-        <div class="flex-1">
-          <BasicTable table-title="流程分类列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button @click="collapseAll">
-            {{ $t('pages.common.collapse') }}
-          </a-button>
-          <a-button @click="expandAll">
-            {{ $t('pages.common.expand') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['workflow:category:add']"
-            @click="handleAdd"
+        <CategorySearchForm
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
           >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['workflow:category:edit']"
-            @click.stop="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <action-button
-            variant="link"
-            color="green"
-            v-access:code="['workflow:category:edit']"
-            @click.stop="handleAdd(row)"
-          >
-            {{ $t('pages.common.add') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
-              danger
-              v-access:code="['workflow:category:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-    </BasicTable>
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">流程分类列表</div>
+            </template>
+            <template #toolbar-right>
+              <Space>
+                <a-button @click="collapseAll">
+                  {{ $t('pages.common.collapse') }}
+                </a-button>
+                <a-button @click="expandAll">
+                  {{ $t('pages.common.expand') }}
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['workflow:category:add']"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #action="{ row }">
+              <Space>
+                <action-button
+                  v-access:code="['workflow:category:edit']"
+                  @click.stop="handleEdit(row)"
+                >
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <action-button
+                  variant="link"
+                  color="green"
+                  v-access:code="['workflow:category:edit']"
+                  @click.stop="handleAdd(row)"
+                >
+                  {{ $t('pages.common.add') }}
+                </action-button>
+                <Popconfirm
+                  placement="left"
+                  title="确认删除？"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    danger
+                    v-access:code="['workflow:category:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
-    <CategoryModal @reload="tableApi.query()" />
+    <CategoryModal @reload="() => query()" />
   </Page>
 </template>

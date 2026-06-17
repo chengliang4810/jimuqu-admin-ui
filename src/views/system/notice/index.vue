@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { Notice } from '@/api/system/notice/model';
-import { useVbenVxeGrid, vxeCheckboxChecked } from '@/adapter/vxe-table';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
+
+import { ref, useTemplateRef } from 'vue';
+
 import { noticeList, noticeRemove } from '@/api/system/notice';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { notificationMitt } from '@/utils/mitt/notification';
 import { Popconfirm, Space, Spin } from 'antdv-next';
-import { ref } from 'vue';
+import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import noticeModal from './notice-modal.vue';
@@ -14,7 +17,7 @@ import NoticeSearchForm from './notice-search.vue';
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<Notice>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -47,12 +50,22 @@ const gridOptions: VxeGridProps = {
   rowConfig: {
     keyField: 'noticeId',
   },
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
+  },
   id: 'system-notice-index',
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<Notice>>('tableRef');
+const checkedRows = ref<Notice[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+};
 
 const [NoticeModal, modalApi] = useVbenModal({
   connectedComponent: noticeModal,
@@ -70,7 +83,7 @@ async function handleEdit(record: Notice) {
 
 async function handleDelete(row: Notice) {
   await noticeRemove([row.noticeId]);
-  await tableApi.query();
+  await query();
 }
 
 function handlePreview(record: Notice) {
@@ -78,7 +91,7 @@ function handlePreview(record: Notice) {
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: Notice) => row.noticeId);
   window.modal.confirm({
     title: '提示',
@@ -86,17 +99,42 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await noticeRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
+}
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as Notice[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
 }
 </script>
 
@@ -113,12 +151,20 @@ function handleSearchReset() {
           @reset="handleSearchReset"
           @submit="handleSearchSubmit"
         />
-        <div class="flex-1">
-          <BasicTable table-title="通知公告列表">
-        <template #toolbar-tools>
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">通知公告列表</div>
+            </template>
+        <template #toolbar-right>
           <Space>
             <a-button
-              :disabled="!vxeCheckboxChecked(tableApi)"
+              :disabled="checkedRows.length === 0"
               danger
               type="primary"
               v-access:code="['system:notice:remove']"
@@ -161,10 +207,13 @@ function handleSearchReset() {
             </Popconfirm>
           </Space>
         </template>
-      </BasicTable>
+        <template #loading>
+          <Spin :spinning="true" size="large" />
+        </template>
+      </VxeGrid>
       </div>
     </div>
     </Spin>
-    <NoticeModal @reload="tableApi.query()" />
+    <NoticeModal @reload="() => query()" />
   </Page>
 </template>

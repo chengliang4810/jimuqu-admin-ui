@@ -1,23 +1,29 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 
-import { useVbenVxeGrid } from '@/adapter/vxe-table';
-import {
-  getDataSourceNames,
-  importTable,
-  readyToGenList,
-} from '@/api/tool/gen';
+import { readyToGenList, getDataSourceNames, importTable } from '@/api/tool/gen';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useVbenModal } from '@/effects/common-ui';
+import { Spin } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 import TableImportSearchForm from './table-import-search.vue';
+
+interface ImportTableRow {
+  tableName: string;
+  tableComment?: string;
+  createTime?: string;
+  updateTime?: string;
+  [key: string]: any;
+}
 
 const emit = defineEmits<{ reload: [] }>();
 
 const searchFormRef = ref<InstanceType<typeof TableImportSearchForm>>();
 const dataSourceOptions = ref<{ label: string; value: string }[]>([]);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<ImportTableRow>({
   checkboxConfig: {
     highlight: true,
     reserve: true,
@@ -70,14 +76,20 @@ const gridOptions: VxeGridProps = {
   },
   id: 'import-table-modal',
   cellClassName: 'cursor-pointer',
+});
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
 };
 
-const [BasicTable, tableApi] = useVbenVxeGrid({ gridOptions });
+const tableRef = useTemplateRef<VxeGridInstance<ImportTableRow>>('tableRef');
+const checkedRows = ref<ImportTableRow[]>([]);
 
 const [BasicModal, modalApi] = useVbenModal({
   onOpenChange: async (isOpen) => {
     if (!isOpen) {
-      tableApi.grid.clearCheckboxRow();
+      tableRef.value?.clearCheckboxRow();
       return null;
     }
     const ret = await getDataSourceNames();
@@ -88,16 +100,16 @@ const [BasicModal, modalApi] = useVbenModal({
 });
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
 }
 
 async function handleSubmit() {
   try {
-    const records = tableApi.grid.getCheckboxRecords();
+    const records = getCheckedRows();
     const tables = records.map((item) => item.tableName);
     if (tables.length === 0) {
       modalApi.close();
@@ -115,6 +127,31 @@ async function handleSubmit() {
     modalApi.modalLoading(false);
   }
 }
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as ImportTableRow[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
+}
 </script>
 
 <template>
@@ -126,8 +163,17 @@ async function handleSubmit() {
         @submit="handleSearchSubmit"
         @reset="handleSearchReset"
       />
-      <div class="flex-1">
-        <BasicTable />
+      <div class="bg-card flex-1 overflow-hidden rounded-lg">
+        <VxeGrid
+          ref="tableRef"
+          class="p-2 pt-0"
+          v-bind="gridOptions"
+          v-on="gridEvents"
+        >
+          <template #loading>
+            <Spin :spinning="true" size="large" />
+          </template>
+        </VxeGrid>
       </div>
     </div>
   </BasicModal>

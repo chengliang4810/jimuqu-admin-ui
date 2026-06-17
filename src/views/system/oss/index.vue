@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import type { VxeGridProps } from '@/adapter/vxe-table';
 import type { PageQuery } from '@/api/common';
 import type { OssFile } from '@/api/system/oss/model';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 
-import {
-  addSortParams,
-  useVbenVxeGrid,
-  vxeCheckboxChecked,
-} from '@/adapter/vxe-table';
+import { addSortParams } from '@/adapter/vxe-table';
 import { configInfoByKey } from '@/api/system/config';
 import { checkLoginBeforeDownload, ossList, ossRemove } from '@/api/system/oss';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Page, useVbenModal } from '@/effects/common-ui';
 import { useAppConfig } from '@/effects/hooks';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
 import { downloadByUrl } from '@/utils/file/download';
 import { Image, Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';
+import { VxeGrid } from 'vxe-table';
 import { stringify } from 'qs';
 
 import { supportImageList } from './constant';
@@ -30,7 +28,7 @@ import OssSearchForm from './oss-search.vue';
 
 const tableLoading = ref(false);
 
-const gridOptions: VxeGridProps = {
+const gridOptions = withDefaultVxeGridOptions<OssFile>({
   checkboxConfig: {
     // 高亮
     highlight: true,
@@ -78,16 +76,24 @@ const gridOptions: VxeGridProps = {
     // 支持多字段排序 默认关闭
     multiple: false,
   },
-  id: 'system-oss-index',
-};
-
-const [BasicTable, tableApi] = useVbenVxeGrid({
-  gridOptions,
-  gridEvents: {
-    // 排序 重新请求接口
-    sortChange: () => tableApi.query(),
+  toolbarConfig: {
+    slots: {
+      buttons: 'toolbar-left',
+      tools: 'toolbar-right',
+    },
   },
+  id: 'system-oss-index',
 });
+
+const tableRef = useTemplateRef<VxeGridInstance<OssFile>>('tableRef');
+const checkedRows = ref<OssFile[]>([]);
+
+const gridEvents: VxeGridListeners = {
+  checkboxAll: syncCheckedRows,
+  checkboxChange: syncCheckedRows,
+  // 排序 重新请求接口
+  sortChange: () => query(),
+};
 
 // async function handleDownload(row: OssFile) {
 //   const downloadSize = ref($t('pages.common.downloadLoading'));
@@ -137,11 +143,11 @@ async function handleDownload(row: OssFile) {
 
 async function handleDelete(row: OssFile) {
   await ossRemove([row.ossId]);
-  await tableApi.query();
+  await query();
 }
 
 function handleMultiDelete() {
-  const rows = tableApi.grid.getCheckboxRecords();
+  const rows = getCheckedRows();
   const ids = rows.map((row: OssFile) => row.ossId);
   window.modal.confirm({
     title: '提示',
@@ -149,7 +155,7 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await ossRemove(ids);
-      await tableApi.query();
+      await query();
     },
   });
 }
@@ -192,11 +198,11 @@ function pdfPreview(url: string) {
 }
 
 function handleSearchSubmit(data: Record<string, any>) {
-  tableApi.reload(data);
+  reload(data);
 }
 
 function handleSearchReset() {
-  tableApi.reload();
+  reload();
 }
 
 const [ImageUploadModal, imageUploadApi] = useVbenModal({
@@ -206,6 +212,31 @@ const [ImageUploadModal, imageUploadApi] = useVbenModal({
 const [FileUploadModal, fileUploadApi] = useVbenModal({
   connectedComponent: fileUploadModal,
 });
+
+function getCheckedRows() {
+  const table = tableRef.value;
+  if (!table) {
+    return [];
+  }
+  return [
+    ...table.getCheckboxRecords(),
+    ...table.getCheckboxReserveRecords(),
+  ] as OssFile[];
+}
+
+function syncCheckedRows() {
+  checkedRows.value = getCheckedRows();
+}
+
+async function query(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('query', params);
+  syncCheckedRows();
+}
+
+async function reload(params: Record<string, any> = {}) {
+  await tableRef.value?.commitProxy('reload', params);
+  syncCheckedRows();
+}
 </script>
 
 <template>
@@ -221,9 +252,17 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
             @submit="handleSearchSubmit"
             @reset="handleSearchReset"
           />
-        <div class="flex-1">
-          <BasicTable table-title="文件列表">
-          <template #toolbar-tools>
+        <div class="bg-card flex-1 overflow-hidden rounded-lg">
+          <VxeGrid
+            ref="tableRef"
+            class="p-2 pt-0"
+            v-bind="gridOptions"
+            v-on="gridEvents"
+          >
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">文件列表</div>
+            </template>
+          <template #toolbar-right>
             <Space>
               <Tooltip title="预览图片">
                 <Switch v-model:checked="preview" />
@@ -235,7 +274,7 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
                 配置管理
               </a-button>
               <a-button
-                :disabled="!vxeCheckboxChecked(tableApi)"
+                :disabled="checkedRows.length === 0"
                 danger
                 type="primary"
                 v-access:code="['system:oss:remove']"
@@ -305,11 +344,14 @@ const [FileUploadModal, fileUploadApi] = useVbenModal({
               </Popconfirm>
             </Space>
           </template>
-        </BasicTable>
+          <template #loading>
+            <Spin :spinning="true" size="large" />
+          </template>
+        </VxeGrid>
       </div>
     </div>
     </Spin>
-    <ImageUploadModal @reload="tableApi.query" />
-    <FileUploadModal @reload="tableApi.query" />
+    <ImageUploadModal @reload="() => query()" />
+    <FileUploadModal @reload="() => query()" />
   </Page>
 </template>
