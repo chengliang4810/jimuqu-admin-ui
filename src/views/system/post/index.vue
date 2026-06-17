@@ -136,82 +136,84 @@ function handleDeptSelect(keys: string[]) {
 </script>
 
 <template>
-  <Page :auto-content-height="true" content-class="flex gap-[8px] w-full">
+  <Page :auto-content-height="true">
     <Spin
       :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
       :spinning="tableLoading"
       size="large"
       :delay="300"
     >
-      <DeptTree
-        :api="postDeptTreeSelect"
-        v-model:select-dept-id="selectDeptId"
-        class="w-[260px]"
-        @reload="() => tableApi.reload()"
-        @select="handleDeptSelect"
-      />
-      <div class="flex flex-1 flex-col gap-4 overflow-hidden">
-        <PostSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
+      <div class="flex h-full gap-[8px]">
+        <DeptTree
+          :api="postDeptTreeSelect"
+          v-model:select-dept-id="selectDeptId"
+          class="w-[260px]"
+          @reload="() => tableApi.reload()"
+          @select="handleDeptSelect"
         />
-        <div class="flex-1">
-          <BasicTable class="overflow-hidden" table-title="岗位列表">
-      <template #toolbar-tools>
-        <Space>
-          <a-button
-            v-access:code="['system:post:export']"
-            :loading="exportLoading"
-            :disabled="exportLoading"
-            @click="handleExport"
-          >
-            {{ $t('pages.common.export') }}
-          </a-button>
-          <a-button
-            :disabled="!vxeCheckboxChecked(tableApi)"
-            danger
-            type="primary"
-            v-access:code="['system:post:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:post:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:post:edit']"
-            @click="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
-              danger
-              v-access:code="['system:post:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-    </BasicTable>
+        <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+          <PostSearchForm
+            ref="searchFormRef"
+            @submit="handleSearchSubmit"
+            @reset="handleSearchReset"
+          />
+          <div class="bg-card flex-1 overflow-hidden rounded-lg">
+            <BasicTable table-title="岗位列表">
+              <template #toolbar-tools>
+                <Space>
+                  <a-button
+                    v-access:code="['system:post:export']"
+                    :loading="exportLoading"
+                    :disabled="exportLoading"
+                    @click="handleExport"
+                  >
+                    {{ $t('pages.common.export') }}
+                  </a-button>
+                  <a-button
+                    :disabled="!vxeCheckboxChecked(tableApi)"
+                    danger
+                    type="primary"
+                    v-access:code="['system:post:remove']"
+                    @click="handleMultiDelete"
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </a-button>
+                  <a-button
+                    type="primary"
+                    v-access:code="['system:post:add']"
+                    @click="handleAdd"
+                  >
+                    {{ $t('pages.common.add') }}
+                  </a-button>
+                </Space>
+              </template>
+              <template #action="{ row }">
+                <Space>
+                  <action-button
+                    v-access:code="['system:post:edit']"
+                    @click="handleEdit(row)"
+                  >
+                    {{ $t('pages.common.edit') }}
+                  </action-button>
+                  <Popconfirm
+                    placement="left"
+                    title="确认删除？"
+                    @confirm="handleDelete(row)"
+                  >
+                    <action-button
+                      danger
+                      v-access:code="['system:post:remove']"
+                      @click.stop=""
+                    >
+                      {{ $t('pages.common.delete') }}
+                    </action-button>
+                  </Popconfirm>
+                </Space>
+              </template>
+            </BasicTable>
+          </div>
+        </div>
       </div>
-    </div>
     </Spin>
     <PostDrawer @reload="tableApi.query()" />
   </Page>
