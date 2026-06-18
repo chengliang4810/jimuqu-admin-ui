@@ -92,7 +92,7 @@ onMounted(() => {
     <Form
       ref="formInstance"
       :model="formData"
-      :label-col="{ style: { width: '60px' } }"
+      :label-col="{ style: { width: '80px' } }"
     >
       <FormItem name="userId" hidden>
         <Input v-model:value="formData.userId" />
@@ -119,9 +119,11 @@ onMounted(() => {
         />
       </FormItem>
       <FormItem>
-        <Button type="primary" :loading="submitLoading" @click="handleSubmit">
-          更新信息
-        </Button>
+        <div class="flex items-center justify-end">
+          <Button type="primary" :loading="submitLoading" @click="handleSubmit">
+            更新信息
+          </Button>
+        </div>
       </FormItem>
     </Form>
   </div>

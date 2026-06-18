@@ -89,7 +89,7 @@ async function handleSubmit() {
     <Form
       ref="formInstance"
       :model="formData"
-      :label-col="{ style: { width: '90px' } }"
+      :label-col="{ style: { width: '100px' } }"
     >
       <FormItem
         label="旧密码"
@@ -116,9 +116,11 @@ async function handleSubmit() {
         />
       </FormItem>
       <FormItem>
-        <Button type="primary" :loading="submitLoading" @click="handleSubmit">
-          修改密码
-        </Button>
+        <div class="flex items-center justify-end">
+          <Button type="primary" :loading="submitLoading" @click="handleSubmit">
+            修改密码
+          </Button>
+        </div>
       </FormItem>
     </Form>
   </div>
