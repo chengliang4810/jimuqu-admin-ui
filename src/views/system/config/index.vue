@@ -72,15 +72,18 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<SysConfig>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const searchFormRef = ref<InstanceType<typeof ConfigSearchForm>>();
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<SysConfig[]>([]);
 const tableLoading = ref(false);
 
 const [ConfigModal, modalApi] = useVbenModal({
   connectedComponent: configModal,
 });
-
-const searchFormRef = ref<InstanceType<typeof ConfigSearchForm>>();
 
 function handleAdd() {
   modalApi.setData({});
@@ -148,8 +151,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>
