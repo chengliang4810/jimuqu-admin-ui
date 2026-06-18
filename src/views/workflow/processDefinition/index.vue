@@ -1,8 +1,8 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
-import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import type { Recordable } from '@/types';
 import type { RadioChangeEvent } from 'antdv-next';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import { computed, ref, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
@@ -117,7 +117,11 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<Recordable<any>[]>([]);
 
 async function handleStatusChange(e: RadioChangeEvent) {
@@ -302,8 +306,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>

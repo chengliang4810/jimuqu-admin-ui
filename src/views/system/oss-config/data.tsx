@@ -1,7 +1,5 @@
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
-import { DictEnum } from '@/constants';
-import { getDictOptions } from '@/utils/dict';
 import { Tag } from 'antdv-next';
 
 const accessPolicyOptions = [
@@ -9,7 +7,6 @@ const accessPolicyOptions = [
   { color: 'green', label: '公开', value: '1' },
   { color: 'blue', label: '自定义', value: '2' },
 ];
-
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

@@ -1,6 +1,5 @@
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
-
 export const columns: VxeGridProps['columns'] = [
   {
     field: 'categoryName',

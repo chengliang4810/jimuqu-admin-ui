@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { DemoForm } from './api/model';
 import type { AntdFormRules } from '@/types/form';
 import type { FormInstance } from 'antdv-next';
+
+import type { DemoForm } from './api/model';
 
 import { computed, ref } from 'vue';
 

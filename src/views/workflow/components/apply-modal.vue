@@ -93,9 +93,7 @@ const [BasicModal, modalApi] = useVbenModal({
 async function handleSubmit() {
   try {
     modalApi.modalLoading(true);
-    const { messageType, flowCopyList, attachment } = cloneDeep(
-      formData.value,
-    );
+    const { messageType, flowCopyList, attachment } = cloneDeep(formData.value);
     const { taskId, taskVariables, variables } =
       modalApi.getData() as ModalProps;
     const flowCCList = flowCopyList.map((item) => ({

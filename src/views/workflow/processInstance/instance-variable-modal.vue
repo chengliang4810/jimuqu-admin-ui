@@ -1,4 +1,7 @@
 <script setup lang="tsx">
+import type { AntdFormRules } from '@/types/form';
+import type { FormInstance, SelectProps } from 'antdv-next';
+
 import { ref } from 'vue';
 
 import { instanceVariable, updateFlowVariable } from '@/api/workflow/instance';
@@ -10,8 +13,6 @@ import { JsonPreview, useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { cn, getPopupContainer } from '@/utils';
 import { Button, Form, FormItem, Tag } from 'antdv-next';
-import type { AntdFormRules } from '@/types/form';
-import type { FormInstance, SelectProps } from 'antdv-next';
 
 interface ModalData {
   /**
@@ -197,7 +198,10 @@ async function handleSubmit(values: any) {
           <template #optionRender="{ option }">
             <div>
               {{ option.label }}
-              <Tag class="ml-1" :color="getFieldTypeColor(option.data.fieldType)">
+              <Tag
+                class="ml-1"
+                :color="getFieldTypeColor(option.data.fieldType)"
+              >
                 {{ option.data.fieldType }}
               </Tag>
             </div>
@@ -217,7 +221,11 @@ async function handleSubmit(values: any) {
         <Input allow-clear class="w-full" v-model:value="formData.value" />
       </FormItem>
       <FormItem :wrapper-col="{ offset: 0 }">
-        <Button type="primary" :loading="submitLoading" @click="handleConfirmUpdate">
+        <Button
+          type="primary"
+          :loading="submitLoading"
+          @click="handleConfirmUpdate"
+        >
           修改
         </Button>
       </FormItem>

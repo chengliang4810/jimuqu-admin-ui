@@ -24,9 +24,9 @@ import { VxeGrid } from 'vxe-table';
 
 import codePreviewModal from './code-preview-modal.vue';
 import { columns } from './data';
+import GenSearchForm from './gen-search.vue';
 import howToUseModal from './md/how-to-use-modal.vue';
 import tableImportModal from './table-import-modal.vue';
-import GenSearchForm from './gen-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof GenSearchForm>>();
 
@@ -88,7 +88,11 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<GenRow>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<GenRow[]>([]);
 
 onMounted(async () => {
@@ -210,8 +214,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>

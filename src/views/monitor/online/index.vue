@@ -88,8 +88,6 @@ function handleSearchSubmit(data: Record<string, any>) {
 function handleSearchReset() {
   reload();
 }
-
-
 </script>
 
 <template>

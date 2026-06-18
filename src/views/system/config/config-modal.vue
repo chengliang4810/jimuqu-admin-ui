@@ -124,11 +124,7 @@ async function handleClosed() {
       >
         <Input allow-clear class="w-full" v-model:value="formData.configName" />
       </FormItem>
-      <FormItem
-        label="参数键名"
-        name="configKey"
-        :rules="formRules.configKey"
-      >
+      <FormItem label="参数键名" name="configKey" :rules="formRules.configKey">
         <Input allow-clear class="w-full" v-model:value="formData.configKey" />
       </FormItem>
       <FormItem

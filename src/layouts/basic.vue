@@ -7,12 +7,6 @@ import { useRouter } from 'vue-router';
 import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@/constants';
 import { preferences, usePreferences } from '@/core/preferences';
 import { useWatermark } from '@/effects/hooks';
-import {
-  LockScreen,
-  Notification,
-  UserDropdown,
-} from './widgets';
-import { BasicLayout } from './basic';
 import { BookOpenText, CircleHelp, GiteeIcon } from '@/icons-app';
 import { $t } from '@/locales';
 import { resetRoutes } from '@/router';
@@ -22,7 +16,9 @@ import { useVersionUpdate } from '@/utils/check-update';
 import { GithubOutlined, UserOutlined } from '@antdv-next/icons';
 import { Badge, Watermark } from 'antdv-next';
 
+import { BasicLayout } from './basic';
 import { useNotification } from './hooks/notification';
+import { LockScreen, Notification, UserDropdown } from './widgets';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();

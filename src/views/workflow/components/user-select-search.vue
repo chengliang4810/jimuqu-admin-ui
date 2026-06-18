@@ -5,7 +5,7 @@ import { ref } from 'vue';
 
 import { FormInput } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
-import { Card, Form, FormItem } from 'antdv-next';
+import { Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
   reset: [];
@@ -54,7 +54,11 @@ defineExpose({
   >
     <div class="grid grid-cols-2">
       <FormItem label="用户账号" name="userName">
-        <FormInput v-model:value="model.userName" allow-clear placeholder="请输入账号" />
+        <FormInput
+          v-model:value="model.userName"
+          allow-clear
+          placeholder="请输入账号"
+        />
       </FormItem>
     </div>
     <div class="flex items-center justify-end">

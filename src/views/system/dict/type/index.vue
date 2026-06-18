@@ -77,7 +77,11 @@ const gridOptions = withDefaultVxeGridOptions<DictType>({
 const lastDictType = ref('');
 
 const tableRef = useTemplateRef<VxeGridInstance<DictType>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<DictType[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -164,8 +168,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>
@@ -191,70 +193,70 @@ function syncCheckedRows() {
           <template #toolbar-left>
             <div class="text-[16px] font-medium">字典类型列表</div>
           </template>
-        <template #toolbar-right>
-          <Space>
-            <a-button
-              v-access:code="['system:dict:edit']"
-              @click="handleRefreshCache"
-            >
-              刷新缓存
-            </a-button>
-            <a-button
-              v-access:code="['system:dict:export']"
-              :loading="exportLoading"
-              :disabled="exportLoading"
-              @click="handleExport"
-            >
-              {{ $t('pages.common.export') }}
-            </a-button>
-            <a-button
-              :disabled="checkedRows.length === 0"
-              danger
-              type="primary"
-              v-access:code="['system:dict:remove']"
-              @click="handleMultiDelete"
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-            <a-button
-              type="primary"
-              v-access:code="['system:dict:add']"
-              @click="handleAdd"
-            >
-              {{ $t('pages.common.add') }}
-            </a-button>
-          </Space>
-        </template>
-        <template #action="{ row }">
-          <Space>
-            <action-button
-              v-access:code="['system:dict:edit']"
-              @click.stop="handleEdit(row)"
-            >
-              {{ $t('pages.common.edit') }}
-            </action-button>
-            <Popconfirm
-              placement="left"
-              title="确认删除？"
-              @confirm="handleDelete(row)"
-            >
-              <action-button
+          <template #toolbar-right>
+            <Space>
+              <a-button
+                v-access:code="['system:dict:edit']"
+                @click="handleRefreshCache"
+              >
+                刷新缓存
+              </a-button>
+              <a-button
+                v-access:code="['system:dict:export']"
+                :loading="exportLoading"
+                :disabled="exportLoading"
+                @click="handleExport"
+              >
+                {{ $t('pages.common.export') }}
+              </a-button>
+              <a-button
+                :disabled="checkedRows.length === 0"
                 danger
+                type="primary"
                 v-access:code="['system:dict:remove']"
-                @click.stop=""
+                @click="handleMultiDelete"
               >
                 {{ $t('pages.common.delete') }}
+              </a-button>
+              <a-button
+                type="primary"
+                v-access:code="['system:dict:add']"
+                @click="handleAdd"
+              >
+                {{ $t('pages.common.add') }}
+              </a-button>
+            </Space>
+          </template>
+          <template #action="{ row }">
+            <Space>
+              <action-button
+                v-access:code="['system:dict:edit']"
+                @click.stop="handleEdit(row)"
+              >
+                {{ $t('pages.common.edit') }}
               </action-button>
-            </Popconfirm>
-          </Space>
-        </template>
-        <template #loading>
-          <Spin :spinning="true" size="large" />
-        </template>
-      </VxeGrid>
+              <Popconfirm
+                placement="left"
+                title="确认删除？"
+                @confirm="handleDelete(row)"
+              >
+                <action-button
+                  danger
+                  v-access:code="['system:dict:remove']"
+                  @click.stop=""
+                >
+                  {{ $t('pages.common.delete') }}
+                </action-button>
+              </Popconfirm>
+            </Space>
+          </template>
+          <template #loading>
+            <Spin :spinning="true" size="large" />
+          </template>
+        </VxeGrid>
+      </div>
+      <DictTypeModal @reload="() => query()" />
     </div>
-    <DictTypeModal @reload="() => query()" />
-  </div>
   </Spin>
 </template>
 

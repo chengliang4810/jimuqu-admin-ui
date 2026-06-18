@@ -3,11 +3,12 @@
 -->
 
 <script setup lang="ts">
-import type { LeaveForm } from './api/model';
 import type { StartWorkFlowReqData } from '@/api/workflow/task/model';
 import type { AntdFormRules } from '@/types/form';
-import type { Dayjs } from 'dayjs';
 import type { FormInstance } from 'antdv-next';
+import type { Dayjs } from 'dayjs';
+
+import type { LeaveForm } from './api/model';
 
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -250,7 +251,11 @@ async function handleCompleteOrCancel() {
             v-model:value="formData.leaveType"
           />
         </FormItem>
-        <FormItem label="开始时间" name="dateRange" :rules="formRules.dateRange">
+        <FormItem
+          label="开始时间"
+          name="dateRange"
+          :rules="formRules.dateRange"
+        >
           <DateRangePicker
             class="w-full"
             format="YYYY-MM-DD"

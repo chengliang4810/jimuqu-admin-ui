@@ -5,17 +5,20 @@ import type { FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { spelAdd, spelInfo, spelUpdate } from '@/api/workflow/spel';
-import { FormInput as Input, FormTextArea as Textarea } from '@/components/global/form';
+import {
+  FormInput as Input,
+  FormTextArea as Textarea,
+} from '@/components/global/form';
+import { DictEnum } from '@/constants';
 import { useVbenDrawer } from '@/effects/common-ui';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
+import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
 import { Form, FormItem, RadioGroup } from 'antdv-next';
 
 import { generateSpel } from './common';
 import SpelPreviewer from './spel-previewer.vue';
-import { DictEnum } from '@/constants';
-import { getDictOptions } from '@/utils/dict';
 
 const emit = defineEmits<{ reload: [] }>();
 
@@ -132,13 +135,25 @@ async function handleClosed() {
         name="componentName"
         :rules="formRules.componentName"
       >
-        <Input allow-clear class="w-full" v-model:value="formData.componentName" />
+        <Input
+          allow-clear
+          class="w-full"
+          v-model:value="formData.componentName"
+        />
       </FormItem>
-      <FormItem label="方法名称" name="methodName" :rules="formRules.methodName">
+      <FormItem
+        label="方法名称"
+        name="methodName"
+        :rules="formRules.methodName"
+      >
         <Input allow-clear class="w-full" v-model:value="formData.methodName" />
       </FormItem>
       <FormItem label="参数名称" name="methodParams">
-        <Input allow-clear class="w-full" v-model:value="formData.methodParams" />
+        <Input
+          allow-clear
+          class="w-full"
+          v-model:value="formData.methodParams"
+        />
       </FormItem>
       <FormItem label="Spel表达式" name="viewSpel">
         <SpelPreviewer

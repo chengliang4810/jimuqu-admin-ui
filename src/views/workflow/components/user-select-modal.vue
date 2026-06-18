@@ -1,16 +1,16 @@
 <!-- eslint-disable no-use-before-define -->
 <script setup lang="ts">
-import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import type { User } from '@/api';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import { ref, useTemplateRef } from 'vue';
 
 import { userList } from '@/api/system/user';
 import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
+import DeptTree from '@/views/system/user/dept-tree.vue';
 import { Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
-import DeptTree from '@/views/system/user/dept-tree.vue';
 
 import UserSelectSearchForm from './user-select-search.vue';
 

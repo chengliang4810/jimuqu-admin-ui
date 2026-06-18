@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { LeaveForm } from './api/model';
 import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
+
+import type { LeaveForm } from './api/model';
 
 import { ref, useTemplateRef } from 'vue';
 
@@ -17,9 +18,9 @@ import { VxeGrid } from 'vxe-table';
 import { applyModal, flowInfoModal } from '../components';
 import { leaveExport, leaveList, leaveRemove } from './api';
 import { columns } from './data';
-import LeaveSearchForm from './leave-search.vue';
 import { useRouteIdEdit } from './hook';
 import leaveDrawer from './leave-drawer.vue';
+import LeaveSearchForm from './leave-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof LeaveSearchForm>>();
 
@@ -32,8 +33,7 @@ const gridOptions = withDefaultVxeGridOptions<Required<LeaveForm>>({
     // 翻页时保留选中状态
     reserve: true,
     // 选中 需要根据状态判断
-    checkMethod: ({ row }) =>
-      ['back', 'cancel', 'draft'].includes(row.status),
+    checkMethod: ({ row }) => ['back', 'cancel', 'draft'].includes(row.status),
   },
   columns,
   height: 'auto',
@@ -89,8 +89,13 @@ const gridEvents: VxeGridListeners = {
   checkboxChange: syncCheckedRows,
 };
 
-const tableRef = useTemplateRef<VxeGridInstance<Required<LeaveForm>>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const tableRef =
+  useTemplateRef<VxeGridInstance<Required<LeaveForm>>>('tableRef');
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<Required<LeaveForm>[]>([]);
 
 const [ApplyModal, applyModalApi] = useVbenModal({
@@ -188,8 +193,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>

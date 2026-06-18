@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import type { Rule } from 'antdv-next/dist/form/types';
-
 import type { Recordable } from '@/types';
+import type { Rule } from 'antdv-next/dist/form/types';
 
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';

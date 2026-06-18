@@ -65,7 +65,11 @@ const gridOptions = withDefaultVxeGridOptions<Notice>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<Notice>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<Notice[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -132,8 +136,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>
@@ -160,58 +162,58 @@ function syncCheckedRows() {
             <template #toolbar-left>
               <div class="text-[16px] font-medium">通知公告列表</div>
             </template>
-        <template #toolbar-right>
-          <Space>
-            <a-button
-              :disabled="checkedRows.length === 0"
-              danger
-              type="primary"
-              v-access:code="['system:notice:remove']"
-              @click="handleMultiDelete"
-            >
-              {{ $t('pages.common.delete') }}
-            </a-button>
-            <a-button
-              type="primary"
-              v-access:code="['system:notice:add']"
-              @click="handleAdd"
-            >
-              {{ $t('pages.common.add') }}
-            </a-button>
-          </Space>
-        </template>
-        <template #action="{ row }">
-          <Space>
-            <action-button @click="handlePreview(row)">
-              {{ $t('pages.common.preview') }}
-            </action-button>
-            <action-button
-              v-access:code="['system:notice:edit']"
-              @click="handleEdit(row)"
-            >
-              {{ $t('pages.common.edit') }}
-            </action-button>
-            <Popconfirm
-              placement="left"
-              title="确认删除？"
-              @confirm="handleDelete(row)"
-            >
-              <action-button
-                danger
-                v-access:code="['system:notice:remove']"
-                @click.stop=""
-              >
-                {{ $t('pages.common.delete') }}
-              </action-button>
-            </Popconfirm>
-          </Space>
-        </template>
-        <template #loading>
-          <Spin :spinning="true" size="large" />
-        </template>
-      </VxeGrid>
+            <template #toolbar-right>
+              <Space>
+                <a-button
+                  :disabled="checkedRows.length === 0"
+                  danger
+                  type="primary"
+                  v-access:code="['system:notice:remove']"
+                  @click="handleMultiDelete"
+                >
+                  {{ $t('pages.common.delete') }}
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['system:notice:add']"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #action="{ row }">
+              <Space>
+                <action-button @click="handlePreview(row)">
+                  {{ $t('pages.common.preview') }}
+                </action-button>
+                <action-button
+                  v-access:code="['system:notice:edit']"
+                  @click="handleEdit(row)"
+                >
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <Popconfirm
+                  placement="left"
+                  title="确认删除？"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    danger
+                    v-access:code="['system:notice:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
     <NoticeModal @reload="() => query()" />
   </Page>

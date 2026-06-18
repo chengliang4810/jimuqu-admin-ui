@@ -3,7 +3,11 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import { ref, useTemplateRef } from 'vue';
 
-import { readyToGenList, getDataSourceNames, importTable } from '@/api/tool/gen';
+import {
+  getDataSourceNames,
+  importTable,
+  readyToGenList,
+} from '@/api/tool/gen';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
@@ -11,6 +15,7 @@ import {
 import { useVbenModal } from '@/effects/common-ui';
 import { Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
+
 import TableImportSearchForm from './table-import-search.vue';
 
 interface ImportTableRow {
@@ -87,7 +92,11 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<ImportTableRow>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<ImportTableRow[]>([]);
 
 const [BasicModal, modalApi] = useVbenModal({
@@ -146,8 +155,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>

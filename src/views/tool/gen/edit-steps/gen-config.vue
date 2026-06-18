@@ -6,8 +6,8 @@ import type { Ref } from 'vue';
 
 import { inject, onMounted, reactive, useTemplateRef } from 'vue';
 
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { dictOptionSelectList } from '@/api/system/dict/dict-type';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { VxeGrid } from 'vxe-table';
 
 import { validRules, vxeTableColumns } from './gen-data';

@@ -3,12 +3,13 @@ import type { UpdatePasswordParam } from '@/api/system/profile/model';
 import type { AntdFormRules } from '@/types/form';
 import type { FormInstance } from 'antdv-next';
 
+import { ref } from 'vue';
+
 import { userUpdatePassword } from '@/api/system/profile';
 import { FormInputPassword as InputPassword } from '@/components/global/form';
 import { useAuthStore } from '@/stores';
 import { Button, Form, FormItem } from 'antdv-next';
 import { omit } from 'lodash-es';
-import { ref } from 'vue';
 
 interface FormData extends UpdatePasswordParam {
   confirmPassword?: string;
@@ -39,9 +40,9 @@ const formRules = ref<AntdFormRules<FormData>>({
     {
       validator: async (_rule: any, value: any) => {
         if (value !== formData.value.newPassword) {
-          return Promise.reject(new Error('新密码和确认密码不一致'));
+          throw new Error('新密码和确认密码不一致');
         }
-        return Promise.resolve();
+        return;
       },
     },
   ],
@@ -51,16 +52,13 @@ const formRules = ref<AntdFormRules<FormData>>({
     {
       validator: async (_rule: any, value: any) => {
         if (value === formData.value.oldPassword) {
-          return Promise.reject(new Error('新旧密码不能相同'));
+          throw new Error('新旧密码不能相同');
         }
-        return Promise.resolve();
+        return;
       },
     },
   ],
-  oldPassword: [
-    { message: '请输入密码', required: true },
-    ...passwordRules,
-  ],
+  oldPassword: [{ message: '请输入密码', required: true }, ...passwordRules],
 });
 
 async function handleSubmit() {
@@ -70,7 +68,9 @@ async function handleSubmit() {
     onOk: async () => {
       try {
         submitLoading.value = true;
-        const data = omit(formData.value, ['confirmPassword']) as UpdatePasswordParam;
+        const data = omit(formData.value, [
+          'confirmPassword',
+        ]) as UpdatePasswordParam;
         await userUpdatePassword(data);
         await authStore.logout(true);
       } catch (error) {
@@ -91,17 +91,19 @@ async function handleSubmit() {
       :model="formData"
       :label-col="{ style: { width: '90px' } }"
     >
-      <FormItem label="旧密码" name="oldPassword" :rules="formRules.oldPassword">
-        <InputPassword
-          class="w-full"
-          v-model:value="formData.oldPassword"
-        />
+      <FormItem
+        label="旧密码"
+        name="oldPassword"
+        :rules="formRules.oldPassword"
+      >
+        <InputPassword class="w-full" v-model:value="formData.oldPassword" />
       </FormItem>
-      <FormItem label="新密码" name="newPassword" :rules="formRules.newPassword">
-        <InputPassword
-          class="w-full"
-          v-model:value="formData.newPassword"
-        />
+      <FormItem
+        label="新密码"
+        name="newPassword"
+        :rules="formRules.newPassword"
+      >
+        <InputPassword class="w-full" v-model:value="formData.newPassword" />
       </FormItem>
       <FormItem
         label="确认密码"

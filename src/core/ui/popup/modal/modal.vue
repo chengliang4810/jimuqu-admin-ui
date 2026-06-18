@@ -3,9 +3,9 @@ import type { ExtendedModalApi, ModalProps } from './modal';
 
 import { computed, nextTick, onDeactivated, provide, useId, watch } from 'vue';
 
+import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { usePriorityValues, useSimpleLocale } from '@/core/composables';
 import { Expand, Shrink } from '@/core/icons';
-import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/utils';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';

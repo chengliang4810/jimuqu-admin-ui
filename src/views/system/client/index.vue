@@ -24,8 +24,8 @@ import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import clientDrawer from './client-drawer.vue';
-import { columns } from './data';
 import ClientSearchForm from './client-search.vue';
+import { columns } from './data';
 
 const searchFormRef = ref<InstanceType<typeof ClientSearchForm>>();
 
@@ -76,7 +76,11 @@ const gridOptions = withDefaultVxeGridOptions<Client>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<Client>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<Client[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -160,8 +164,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>
@@ -188,78 +190,78 @@ function syncCheckedRows() {
             <template #toolbar-left>
               <div class="text-[16px] font-medium">客户端列表</div>
             </template>
-      <template #toolbar-right>
-        <Space>
-          <a-button
-            v-access:code="['system:client:export']"
-            :loading="exportLoading"
-            :disabled="exportLoading"
-            @click="handleExport"
-          >
-            {{ $t('pages.common.export') }}
-          </a-button>
-          <a-button
-            :disabled="checkedRows.length === 0"
-            danger
-            type="primary"
-            v-access:code="['system:client:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:client:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #status="{ row }">
-        <!-- pc不允许禁用 禁用了直接登录不了 应该设置disabled -->
-        <!-- 登录提示: 认证权限类型已禁用 -->
-        <ApiSwitch
-          :value="row.status === EnableStatus.Enable"
-          :api="(checked) => handleChangeStatus(checked, row)"
-          :disabled="
-            row.id === DEFAULT_CLIENT_ID ||
-            !hasAccessByCodes(['system:client:edit'])
-          "
-          @reload="() => query()"
-        />
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:client:edit']"
-            @click.stop="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <Popconfirm
-            :disabled="row.id === 1"
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
-              :disabled="row.id === 1"
-              danger
-              v-access:code="['system:client:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-      <template #loading>
-        <Spin :spinning="true" size="large" />
-      </template>
-      </VxeGrid>
+            <template #toolbar-right>
+              <Space>
+                <a-button
+                  v-access:code="['system:client:export']"
+                  :loading="exportLoading"
+                  :disabled="exportLoading"
+                  @click="handleExport"
+                >
+                  {{ $t('pages.common.export') }}
+                </a-button>
+                <a-button
+                  :disabled="checkedRows.length === 0"
+                  danger
+                  type="primary"
+                  v-access:code="['system:client:remove']"
+                  @click="handleMultiDelete"
+                >
+                  {{ $t('pages.common.delete') }}
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['system:client:add']"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #status="{ row }">
+              <!-- pc不允许禁用 禁用了直接登录不了 应该设置disabled -->
+              <!-- 登录提示: 认证权限类型已禁用 -->
+              <ApiSwitch
+                :value="row.status === EnableStatus.Enable"
+                :api="(checked) => handleChangeStatus(checked, row)"
+                :disabled="
+                  row.id === DEFAULT_CLIENT_ID ||
+                  !hasAccessByCodes(['system:client:edit'])
+                "
+                @reload="() => query()"
+              />
+            </template>
+            <template #action="{ row }">
+              <Space>
+                <action-button
+                  v-access:code="['system:client:edit']"
+                  @click.stop="handleEdit(row)"
+                >
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <Popconfirm
+                  :disabled="row.id === 1"
+                  placement="left"
+                  title="确认删除？"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    :disabled="row.id === 1"
+                    danger
+                    v-access:code="['system:client:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
     <ClientDrawer @reload="() => query()" />
   </Page>

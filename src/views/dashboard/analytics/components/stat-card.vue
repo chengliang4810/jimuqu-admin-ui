@@ -48,7 +48,7 @@ const colorClasses = computed(() => COLOR_MAP[props.color]);
 
 <template>
   <div
-    class="card-box group relative overflow-hidden p-5 transition-all duration-300 hover:shadow-float"
+    class="card-box group hover:shadow-float relative overflow-hidden p-5 transition-all duration-300"
   >
     <!-- 背景装饰 -->
     <div

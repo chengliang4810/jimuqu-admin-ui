@@ -3,7 +3,6 @@ import type { VxeGridProps } from '@/adapter/vxe-table';
 import { DictEnum } from '@/constants';
 import { renderDict } from '@/utils/render';
 
-
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },
   {

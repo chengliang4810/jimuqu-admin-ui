@@ -133,5 +133,6 @@ html:not(.dark) .dark {
      避免菜单根/圆角缝隙露出非对齐色 */
   --sidebar: 209 100% 8%;
   --sidebar-deep: 209 100% 4.5%;
+
   /* --menu 继承 var(--sidebar)，自动对齐 */
 }

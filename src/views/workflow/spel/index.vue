@@ -68,7 +68,11 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Spel>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<Spel[]>([]);
 
 const [SpelDrawer, drawerApi] = useVbenDrawer({
@@ -126,8 +130,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>

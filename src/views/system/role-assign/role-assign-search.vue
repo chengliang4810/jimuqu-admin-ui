@@ -74,7 +74,11 @@ defineExpose({
         <div class="[grid-column-end:-1] justify-self-end">
           <Space>
             <a-button @click="toggleCollapse">
-              {{ searchCollapsed ? $t('pages.common.expand') : $t('pages.common.collapse') }}
+              {{
+                searchCollapsed
+                  ? $t('pages.common.expand')
+                  : $t('pages.common.collapse')
+              }}
             </a-button>
             <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
           </Space>

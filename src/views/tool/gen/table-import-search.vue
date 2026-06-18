@@ -9,6 +9,10 @@ import { tableSeachClass } from '@/components/vxe-table';
 import { ChevronDown } from '@/icons-app';
 import { Card, Form, FormItem } from 'antdv-next';
 
+const props = defineProps<{
+  dataSourceOptions?: SelectOption[];
+}>();
+
 const emit = defineEmits<{
   reset: [];
   submit: [record: Record<string, any>];
@@ -32,10 +36,6 @@ interface SelectOption {
   label: string;
   value: string;
 }
-
-const props = defineProps<{
-  dataSourceOptions?: SelectOption[];
-}>();
 
 const searchCollapsed = ref(false);
 
@@ -92,7 +92,11 @@ defineExpose({
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] flex items-center justify-end gap-4">
           <a-button type="link" @click="toggleCollapse">
-            {{ searchCollapsed ? $t('pages.common.expand') : $t('pages.common.collapse') }}
+            {{
+              searchCollapsed
+                ? $t('pages.common.expand')
+                : $t('pages.common.collapse')
+            }}
             <ChevronDown
               class="size-4 transition-transform"
               :class="{ 'rotate-180': !searchCollapsed }"

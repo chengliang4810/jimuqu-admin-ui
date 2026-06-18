@@ -46,7 +46,10 @@ const gridOptions = withDefaultVxeGridOptions<Dept>({
       // 默认请求接口后展开全部 不需要可以删除这段
       querySuccess: () => {
         // 默认展开 需要加上标记
-        eachTree(tableRef.value?.getData() ?? [], (item) => (item.expand = true));
+        eachTree(
+          tableRef.value?.getData() ?? [],
+          (item) => (item.expand = true),
+        );
         nextTick(() => {
           setExpandOrCollapse(true);
         });
@@ -138,8 +141,6 @@ function handleSearchSubmit(data: Record<string, any>) {
 function handleSearchReset() {
   reload();
 }
-
-
 </script>
 
 <template>
@@ -165,7 +166,9 @@ function handleSearchReset() {
           >
             <template #toolbar-left>
               <div class="text-[16px] font-medium">部门列表</div>
-              <div class="text-[13px] text-[#999] ml-2">双击展开/收起子菜单</div>
+              <div class="ml-2 text-[13px] text-[#999]">
+                双击展开/收起子菜单
+              </div>
             </template>
             <template #toolbar-right>
               <Space>

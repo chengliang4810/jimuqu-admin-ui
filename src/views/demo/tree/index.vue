@@ -93,11 +93,7 @@ async function query(params: Record<string, any> = {}) {
 
 <template>
   <Page :auto-content-height="true">
-    <VxeGrid
-      ref="tableRef"
-      class="p-2 pt-0"
-      v-bind="gridOptions"
-    >
+    <VxeGrid ref="tableRef" class="p-2 pt-0" v-bind="gridOptions">
       <template #toolbar-left>
         <span class="pl-[7px] text-[16px]">测试树列表</span>
       </template>

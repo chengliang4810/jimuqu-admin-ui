@@ -5,10 +5,9 @@ import { useTemplateRef } from 'vue';
 
 import { forceLogout2, onlineDeviceList } from '@/api/monitor/online';
 import { withDefaultVxeGridOptions } from '@/components/vxe-table';
+import { columns } from '@/views/monitor/online/data';
 import { Popconfirm, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
-
-import { columns } from '@/views/monitor/online/data';
 
 const onlineDeviceColumns = [
   {

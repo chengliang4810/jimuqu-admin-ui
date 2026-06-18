@@ -75,7 +75,11 @@ const canUnlock = ref(false);
 const tableRef = useTemplateRef<VxeGridInstance<LoginLog>>('tableRef');
 const checkedRows = ref<LoginLog[]>([]);
 
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 
 const gridEvents: VxeGridListeners = {
   checkboxAll: syncCheckedRows,

@@ -6,7 +6,6 @@ import { renderDict } from '@/utils/render';
 
 import { activityStatusOptions } from '../processDefinition/constant';
 
-
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },
   {

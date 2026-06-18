@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { TreeForm, TreeVO } from './api/model';
 import type { AntdFormRules } from '@/types/form';
 import type { FormInstance } from 'antdv-next';
+
+import type { TreeForm, TreeVO } from './api/model';
 
 import { computed, ref } from 'vue';
 

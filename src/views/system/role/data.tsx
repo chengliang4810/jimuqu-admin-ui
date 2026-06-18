@@ -1,7 +1,5 @@
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
-import { DictEnum } from '@/constants';
-import { getDictOptions } from '@/utils/dict';
 import { Tag } from 'antdv-next';
 
 /**
@@ -15,7 +13,6 @@ export const authScopeOptions = [
   { color: 'error', label: '仅本人数据权限', value: '5' },
   { color: 'default', label: '部门及以下或本人数据权限', value: '6' },
 ];
-
 
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },

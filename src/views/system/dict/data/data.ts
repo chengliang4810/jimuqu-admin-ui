@@ -3,7 +3,6 @@ import type { DictData } from '@/api/system/dict/dict-data-model';
 
 import { renderDictTag } from '@/utils/render';
 
-
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },
   {

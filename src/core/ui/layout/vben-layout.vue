@@ -5,9 +5,9 @@ import type { VbenLayoutProps } from './vben-layout';
 
 import { computed, ref, watch } from 'vue';
 
+import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { SCROLL_FIXED_CLASS, useLayoutHeaderStyle } from '@/core/composables';
 import { IconifyIcon } from '@/core/icons';
-import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { VbenIconButton } from '@/core/ui/adapter';
 import { useMouse, useScroll, useThrottleFn } from '@vueuse/core';
 

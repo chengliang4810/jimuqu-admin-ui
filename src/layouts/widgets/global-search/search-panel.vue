@@ -4,11 +4,10 @@ import type { MenuRecordRaw } from '@/types';
 import { nextTick, onMounted, ref, shallowRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { isHttpUrl } from '@/utils';
 import { VbenIcon, VbenScrollbar } from '@/core/ui/adapter';
 import { SearchX, X } from '@/icons-app';
 import { $t } from '@/locales';
-import { mapTree, traverseTreeValues, uniqueByField } from '@/utils';
+import { isHttpUrl , mapTree, traverseTreeValues, uniqueByField } from '@/utils';
 import {
   onKeyStroke,
   useEventListener,

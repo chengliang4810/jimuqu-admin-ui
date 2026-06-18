@@ -195,8 +195,6 @@ function handleSearchSubmit(data: Record<string, any>) {
 function handleSearchReset() {
   reload();
 }
-
-
 </script>
 
 <template>
@@ -220,76 +218,78 @@ function handleSearchReset() {
             v-bind="gridOptions"
             v-on="gridEvents"
           >
-          <template #toolbar-left>
-            <div class="text-[16px] font-medium">菜单列表</div>
-            <div class="ml-2 text-[13px] text-[#999]">双击展开/收起子菜单</div>
-          </template>
-          <template #toolbar-right>
-            <Space>
-              <Tooltip title="删除菜单以及子菜单">
-                <div
+            <template #toolbar-left>
+              <div class="text-[16px] font-medium">菜单列表</div>
+              <div class="ml-2 text-[13px] text-[#999]">
+                双击展开/收起子菜单
+              </div>
+            </template>
+            <template #toolbar-right>
+              <Space>
+                <Tooltip title="删除菜单以及子菜单">
+                  <div
+                    v-access:role="['superadmin']"
+                    v-access:code="['system:menu:remove']"
+                    class="mr-2 flex items-center"
+                  >
+                    <span class="mr-2 text-sm text-[#666666]">级联删除</span>
+                    <Switch v-model:checked="cascadingDeletion" />
+                  </div>
+                </Tooltip>
+
+                <a-button @click="setExpandOrCollapse(false)">
+                  {{ $t('pages.common.collapse') }}
+                </a-button>
+
+                <a-button
+                  type="primary"
+                  v-access:code="['system:menu:add']"
                   v-access:role="['superadmin']"
-                  v-access:code="['system:menu:remove']"
-                  class="mr-2 flex items-center"
+                  @click="handleAdd"
                 >
-                  <span class="mr-2 text-sm text-[#666666]">级联删除</span>
-                  <Switch v-model:checked="cascadingDeletion" />
-                </div>
-              </Tooltip>
-
-              <a-button @click="setExpandOrCollapse(false)">
-                {{ $t('pages.common.collapse') }}
-              </a-button>
-
-              <a-button
-                type="primary"
-                v-access:code="['system:menu:add']"
-                v-access:role="['superadmin']"
-                @click="handleAdd"
-              >
-                {{ $t('pages.common.add') }}
-              </a-button>
-            </Space>
-          </template>
-          <template #action="{ row }">
-            <Space>
-              <action-button
-                v-access:code="['system:menu:edit']"
-                v-access:role="['superadmin']"
-                @click="handleEdit(row)"
-              >
-                {{ $t('pages.common.edit') }}
-              </action-button>
-              <!-- '按钮类型'无法再添加子菜单 -->
-              <action-button
-                v-if="row.menuType !== 'F'"
-                variant="link"
-                color="green"
-                v-access:code="['system:menu:add']"
-                v-access:role="['superadmin']"
-                @click="handleSubAdd(row)"
-              >
-                {{ $t('pages.common.add') }}
-              </action-button>
-              <Popconfirm
-                placement="left"
-                :title="removeConfirmTitle(row)"
-                @confirm="handleDelete(row)"
-              >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #action="{ row }">
+              <Space>
                 <action-button
-                  danger
-                  v-access:code="['system:menu:remove']"
+                  v-access:code="['system:menu:edit']"
                   v-access:role="['superadmin']"
-                  @click.stop=""
+                  @click="handleEdit(row)"
                 >
-                  {{ $t('pages.common.delete') }}
+                  {{ $t('pages.common.edit') }}
                 </action-button>
-              </Popconfirm>
-            </Space>
-          </template>
-          <template #loading>
-            <Spin :spinning="true" size="large" />
-          </template>
+                <!-- '按钮类型'无法再添加子菜单 -->
+                <action-button
+                  v-if="row.menuType !== 'F'"
+                  variant="link"
+                  color="green"
+                  v-access:code="['system:menu:add']"
+                  v-access:role="['superadmin']"
+                  @click="handleSubAdd(row)"
+                >
+                  {{ $t('pages.common.add') }}
+                </action-button>
+                <Popconfirm
+                  placement="left"
+                  :title="removeConfirmTitle(row)"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    danger
+                    v-access:code="['system:menu:remove']"
+                    v-access:role="['superadmin']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
           </VxeGrid>
         </div>
       </div>

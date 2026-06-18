@@ -6,7 +6,10 @@ import type { FormInstance } from 'antdv-next';
 import { ref } from 'vue';
 
 import { backProcess, getBackTaskNode } from '@/api/workflow/task';
-import { FormSelect as Select, FormTextArea as TextArea } from '@/components/global/form';
+import {
+  FormSelect as Select,
+  FormTextArea as TextArea,
+} from '@/components/global/form';
 import { FileUpload } from '@/components/upload';
 import { useVbenModal } from '@/effects/common-ui';
 import { $t } from '@/locales';
@@ -88,7 +91,7 @@ async function handleSubmit() {
     modalApi.modalLoading(true);
     await formInstance.value?.validate();
     const data = cloneDeep(formData.value) as FormData & {
-      attachment?: undefined | string;
+      attachment?: string | undefined;
       fileId?: string;
     };
     data.fileId = data.attachment;

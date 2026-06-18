@@ -23,7 +23,6 @@ export const leaveFlowOptions = [
   { label: '请假申请-排他并行网关', value: 'leave6' },
 ];
 
-
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },
   {

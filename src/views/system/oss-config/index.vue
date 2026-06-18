@@ -72,7 +72,11 @@ const gridOptions = withDefaultVxeGridOptions<OssConfig>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<OssConfig>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<OssConfig[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -147,8 +151,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>
@@ -160,11 +162,11 @@ function syncCheckedRows() {
       :delay="300"
     >
       <div class="flex h-full flex-col gap-4">
-          <OssConfigSearchForm
-            ref="searchFormRef"
-            @submit="handleSearchSubmit"
-            @reset="handleSearchReset"
-          />
+        <OssConfigSearchForm
+          ref="searchFormRef"
+          @submit="handleSearchSubmit"
+          @reset="handleSearchReset"
+        />
         <div class="bg-card flex-1 overflow-hidden rounded-lg">
           <VxeGrid
             ref="tableRef"
@@ -175,65 +177,65 @@ function syncCheckedRows() {
             <template #toolbar-left>
               <div class="text-[16px] font-medium">oss配置列表</div>
             </template>
-      <template #toolbar-right>
-        <Space>
-          <a-button
-            :disabled="checkedRows.length === 0"
-            danger
-            type="primary"
-            v-access:code="['system:ossConfig:remove']"
-            @click="handleMultiDelete"
-          >
-            {{ $t('pages.common.delete') }}
-          </a-button>
-          <a-button
-            type="primary"
-            v-access:code="['system:ossConfig:add']"
-            @click="handleAdd"
-          >
-            {{ $t('pages.common.add') }}
-          </a-button>
-        </Space>
-      </template>
-      <template #status="{ row }">
-        <ApiSwitch
-          :value="row.status === YesNo.Yes"
-          :api="(checked) => handleChangeStatus(checked, row)"
-          :disabled="!hasAccessByCodes(['system:ossConfig:edit'])"
-          checked-text="是"
-          un-checked-text="否"
-          @reload="() => query()"
-        />
-      </template>
-      <template #action="{ row }">
-        <Space>
-          <action-button
-            v-access:code="['system:ossConfig:edit']"
-            @click="handleEdit(row)"
-          >
-            {{ $t('pages.common.edit') }}
-          </action-button>
-          <Popconfirm
-            placement="left"
-            title="确认删除？"
-            @confirm="handleDelete(row)"
-          >
-            <action-button
-              danger
-              v-access:code="['system:ossConfig:remove']"
-              @click.stop=""
-            >
-              {{ $t('pages.common.delete') }}
-            </action-button>
-          </Popconfirm>
-        </Space>
-      </template>
-      <template #loading>
-        <Spin :spinning="true" size="large" />
-      </template>
-    </VxeGrid>
+            <template #toolbar-right>
+              <Space>
+                <a-button
+                  :disabled="checkedRows.length === 0"
+                  danger
+                  type="primary"
+                  v-access:code="['system:ossConfig:remove']"
+                  @click="handleMultiDelete"
+                >
+                  {{ $t('pages.common.delete') }}
+                </a-button>
+                <a-button
+                  type="primary"
+                  v-access:code="['system:ossConfig:add']"
+                  @click="handleAdd"
+                >
+                  {{ $t('pages.common.add') }}
+                </a-button>
+              </Space>
+            </template>
+            <template #status="{ row }">
+              <ApiSwitch
+                :value="row.status === YesNo.Yes"
+                :api="(checked) => handleChangeStatus(checked, row)"
+                :disabled="!hasAccessByCodes(['system:ossConfig:edit'])"
+                checked-text="是"
+                un-checked-text="否"
+                @reload="() => query()"
+              />
+            </template>
+            <template #action="{ row }">
+              <Space>
+                <action-button
+                  v-access:code="['system:ossConfig:edit']"
+                  @click="handleEdit(row)"
+                >
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <Popconfirm
+                  placement="left"
+                  title="确认删除？"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    danger
+                    v-access:code="['system:ossConfig:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
+            </template>
+            <template #loading>
+              <Spin :spinning="true" size="large" />
+            </template>
+          </VxeGrid>
+        </div>
       </div>
-    </div>
     </Spin>
     <OssConfigDrawer @reload="() => query()" />
   </Page>

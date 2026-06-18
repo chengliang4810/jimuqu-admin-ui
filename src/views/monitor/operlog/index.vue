@@ -83,7 +83,11 @@ const gridOptions = withDefaultVxeGridOptions<OperationLog>({
 });
 
 const tableRef = useTemplateRef<VxeGridInstance<OperationLog>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<OperationLog[]>([]);
 
 const gridEvents: VxeGridListeners = {
@@ -166,8 +170,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>

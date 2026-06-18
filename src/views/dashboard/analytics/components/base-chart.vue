@@ -12,11 +12,7 @@ import {
 
 import echarts from '@/components/echarts';
 import { usePreferences } from '@/core/preferences';
-import {
-  useDebounceFn,
-  useResizeObserver,
-  useWindowSize,
-} from '@vueuse/core';
+import { useDebounceFn, useResizeObserver, useWindowSize } from '@vueuse/core';
 
 interface Props {
   height?: string;

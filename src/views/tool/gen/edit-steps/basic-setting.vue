@@ -108,7 +108,11 @@ const formRules = ref<AntdFormRules<FormData>>({
   ],
   treeRootValue: [{ required: true, message: $t('ui.formRules.required') }],
   uniqueFields: [
-    { required: true, message: $t('ui.formRules.selectRequired'), type: 'array' },
+    {
+      required: true,
+      message: $t('ui.formRules.selectRequired'),
+      type: 'array',
+    },
   ],
 });
 
@@ -233,7 +237,11 @@ defineExpose({
       >
         <Divider title-placement="left">基本信息</Divider>
         <div class="grid grid-cols-1 gap-x-4 md:grid-cols-2">
-          <FormItem label="表名称" name="tableName" :rules="formRules.tableName">
+          <FormItem
+            label="表名称"
+            name="tableName"
+            :rules="formRules.tableName"
+          >
             <Input class="w-full" v-model:value="formData.tableName" />
           </FormItem>
           <FormItem
@@ -243,7 +251,11 @@ defineExpose({
           >
             <Input class="w-full" v-model:value="formData.tableComment" />
           </FormItem>
-          <FormItem label="实体类名称" name="className" :rules="formRules.className">
+          <FormItem
+            label="实体类名称"
+            name="className"
+            :rules="formRules.className"
+          >
             <Input class="w-full" v-model:value="formData.className" />
           </FormItem>
           <FormItem
@@ -320,7 +332,11 @@ defineExpose({
           >
             <Input class="w-full" v-model:value="formData.packageName" />
           </FormItem>
-          <FormItem label="生成模块名" name="moduleName" :rules="formRules.moduleName">
+          <FormItem
+            label="生成模块名"
+            name="moduleName"
+            :rules="formRules.moduleName"
+          >
             <Input class="w-full" v-model:value="formData.moduleName" />
           </FormItem>
           <FormItem

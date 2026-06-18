@@ -3,7 +3,6 @@ import type { VxeGridProps } from '@/adapter/vxe-table';
 import { renderBrowserIcon, renderOsIcon } from '@/utils/render';
 import dayjs from 'dayjs';
 
-
 export const columns: VxeGridProps['columns'] = [
   {
     title: '登录平台',

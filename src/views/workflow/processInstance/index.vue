@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import type { Recordable } from '@/types';
 import type { RadioChangeEvent } from 'antdv-next';
+import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import { ref, useTemplateRef } from 'vue';
 
@@ -119,7 +119,11 @@ const gridEvents: VxeGridListeners = {
 };
 
 const tableRef = useTemplateRef<VxeGridInstance<Recordable<any>>>('tableRef');
-const { query, reload } = useTableQuery(searchFormRef, tableRef, syncCheckedRows);
+const { query, reload } = useTableQuery(
+  searchFormRef,
+  tableRef,
+  syncCheckedRows,
+);
 const checkedRows = ref<Recordable<any>[]>([]);
 
 const [InstanceInvalidModal, instanceInvalidModalApi] = useVbenModal({
@@ -195,8 +199,6 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
-
-
 </script>
 
 <template>
@@ -271,7 +273,11 @@ function syncCheckedRows() {
                     </Popconfirm>
                   </div>
                   <div>
-                    <a-button size="small" type="link" @click.stop="handleInfo(row)">
+                    <a-button
+                      size="small"
+                      type="link"
+                      @click.stop="handleInfo(row)"
+                    >
                       流程预览
                     </a-button>
                     <a-button

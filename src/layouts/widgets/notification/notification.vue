@@ -3,10 +3,10 @@ import type { NotificationItem } from './types';
 
 import { computed } from 'vue';
 
-import { cn } from '@/utils';
 import VbenScrollbar from '@/core/ui/adapter/scrollbar.vue';
 import { Bell, CircleCheckBig, CircleX, MailCheck } from '@/icons-app';
 import { $t } from '@/locales';
+import { cn } from '@/utils';
 import { useToggle } from '@vueuse/core';
 import { Button, Popover, Segmented } from 'antdv-next';
 

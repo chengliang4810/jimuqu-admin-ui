@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { h } from 'vue';
-import { ref } from 'vue';
+import { h , ref } from 'vue';
 
 import { ImageUpload } from '@/components/upload';
 import { JsonPreview, useVbenModal } from '@/effects/common-ui';

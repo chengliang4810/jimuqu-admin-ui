@@ -8,11 +8,10 @@ import { computed, ref, useTemplateRef } from 'vue';
 import { preferences, usePreferences } from '@/core/preferences';
 import { VbenAvatar, VbenIcon } from '@/core/ui/adapter';
 import { useVbenModal } from '@/core/ui/popup';
-import { cn } from '@/utils';
 import { LockKeyhole, LogOut, Settings } from '@/icons-app';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
-import { isWindowsOs } from '@/utils';
+import { cn , isWindowsOs } from '@/utils';
 import { useMagicKeys, whenever } from '@vueuse/core';
 import { Badge, Dropdown } from 'antdv-next';
 

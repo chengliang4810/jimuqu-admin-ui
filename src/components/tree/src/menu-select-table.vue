@@ -10,7 +10,14 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import type { MenuPermissionOption } from './data';
 
-import { nextTick, onMounted, ref, shallowRef, useTemplateRef, watch } from 'vue';
+import {
+  nextTick,
+  onMounted,
+  ref,
+  shallowRef,
+  useTemplateRef,
+  watch,
+} from 'vue';
 
 import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { cloneDeep, findGroupParentIds } from '@/utils';
@@ -104,9 +111,8 @@ const gridOptions = withDefaultVxeGridOptions({
   showOverflow: false,
 });
 
-const tableRef = useTemplateRef<VxeGridInstance<MenuPermissionOption>>(
-  'tableRef',
-);
+const tableRef =
+  useTemplateRef<VxeGridInstance<MenuPermissionOption>>('tableRef');
 
 const gridEvents: VxeGridListeners = {
   // 勾选事件
@@ -247,7 +253,12 @@ async function handleAssociationChange(e: RadioChangeEvent) {
   await tableRef.value?.scrollTo(0, 0);
 
   // 节点切换 不同的选中
-  setTableChecked(lastCheckedKeys.value, records, tableRef.value!, !e.target.value);
+  setTableChecked(
+    lastCheckedKeys.value,
+    records,
+    tableRef.value!,
+    !e.target.value,
+  );
 
   updateCheckedNumber();
 }

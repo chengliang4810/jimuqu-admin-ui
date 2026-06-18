@@ -15,7 +15,6 @@ export const designerModeOptions = [
   },
 ];
 
-
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 60 },
   {

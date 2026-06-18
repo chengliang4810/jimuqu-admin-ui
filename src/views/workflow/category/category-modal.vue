@@ -154,7 +154,11 @@ async function handleClosed() {
         name="categoryName"
         :rules="formRules.categoryName"
       >
-        <Input allow-clear class="w-full" v-model:value="formData.categoryName" />
+        <Input
+          allow-clear
+          class="w-full"
+          v-model:value="formData.categoryName"
+        />
       </FormItem>
       <FormItem label="排序" name="orderNum">
         <InputNumber class="w-full" v-model:value="formData.orderNum" />

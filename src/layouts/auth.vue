@@ -2,8 +2,9 @@
 import { computed } from 'vue';
 
 import { preferences } from '@/core/preferences';
-import { AuthPageLayout } from './authentication';
 import { $t } from '@/locales';
+
+import { AuthPageLayout } from './authentication';
 
 const appName = computed(() => preferences.app.name);
 const logo = computed(() => preferences.logo.source);

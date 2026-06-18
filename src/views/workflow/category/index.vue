@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { VxeGridInstance } from 'vxe-table';
 import type { Recordable } from '@/types';
+import type { VxeGridInstance } from 'vxe-table';
 
 import { nextTick, ref, useTemplateRef } from 'vue';
 
@@ -15,9 +15,9 @@ import { VxeGrid } from 'vxe-table';
 
 import categoryModal from './category-modal.vue';
 import CategorySearchForm from './category-search.vue';
+import { columns } from './data';
 
 const searchFormRef = ref<InstanceType<typeof CategorySearchForm>>();
-import { columns } from './data';
 
 const tableLoading = ref(false);
 
@@ -112,8 +112,6 @@ function handleSearchSubmit(data: Record<string, any>) {
 function handleSearchReset() {
   reload();
 }
-
-
 </script>
 
 <template>
@@ -131,11 +129,7 @@ function handleSearchReset() {
           @reset="handleSearchReset"
         />
         <div class="bg-card flex-1 overflow-hidden rounded-lg">
-          <VxeGrid
-            ref="tableRef"
-            class="p-2 pt-0"
-            v-bind="gridOptions"
-          >
+          <VxeGrid ref="tableRef" class="p-2 pt-0" v-bind="gridOptions">
             <template #toolbar-left>
               <div class="text-[16px] font-medium">流程分类列表</div>
             </template>

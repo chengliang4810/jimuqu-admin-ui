@@ -8,8 +8,8 @@ import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
 import { LockKeyhole } from '@/icons-app';
 import { $t, useI18n } from '@/locales';
 import { storeToRefs, useAccessStore } from '@/stores';
-import { Form, FormItem, InputPassword } from 'antdv-next';
 import { useDateFormat, useNow } from '@vueuse/core';
+import { Form, FormItem, InputPassword } from 'antdv-next';
 
 interface Props {
   avatar?: string;
