@@ -1,4 +1,5 @@
 import type { VxeGridInstance } from 'vxe-table';
+
 import type { Ref } from 'vue';
 
 /**
@@ -23,8 +24,8 @@ export interface VxeTableSearchFormInstance {
  * @param onCompleted 每次 query / reload 完成后的回调（如同步选中行）
  */
 export function useTableQuery(
-  searchFormRef: Ref<VxeTableSearchFormInstance | undefined>,
-  tableRef: Ref<VxeGridInstance | undefined>,
+  searchFormRef: Ref<undefined | VxeTableSearchFormInstance>,
+  tableRef: Ref<undefined | VxeGridInstance>,
   onCompleted?: () => void,
 ) {
   /** 获取搜索表单当前值 */
