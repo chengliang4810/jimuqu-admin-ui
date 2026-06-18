@@ -1,2 +1,2 @@
-export type * from './normal-menu';
+export type { NormalMenuProps } from './normal-menu';
 export { default as NormalMenu } from './normal-menu.vue';

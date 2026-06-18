@@ -1,2 +1,8 @@
-export * from './color';
-export * from './convert';
+export { isDarkColor, isLightColor } from './color';
+export {
+  convertToHsl,
+  convertToHslCssVar,
+  convertToRgb,
+  isValidColor,
+  TinyColor,
+} from './convert';

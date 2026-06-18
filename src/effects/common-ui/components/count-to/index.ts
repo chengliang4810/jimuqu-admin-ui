@@ -1,2 +1,6 @@
 export { default as CountTo } from './count-to.vue';
-export * from './types';
+export {
+  type CountToProps,
+  type TransitionPresets,
+  TransitionPresetsKeys,
+} from './types';

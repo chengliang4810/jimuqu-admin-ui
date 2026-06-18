@@ -42,5 +42,31 @@ export const preferences: Preferences = getPreferences();
 
 export { preferencesManager };
 
-export type * from './types';
-export * from './use-preferences';
+export type {
+  AnyCustomPreferencesField,
+  AppPreferences,
+  BaseCustomPreferencesField,
+  BreadcrumbPreferences,
+  CustomPreferencesField,
+  CustomPreferencesInputField,
+  CustomPreferencesNumberField,
+  CustomPreferencesOption,
+  CustomPreferencesRecord,
+  CustomPreferencesSelectField,
+  CustomPreferencesSwitchField,
+  CustomPreferencesValue,
+  HeaderPreferences,
+  InitialOptions,
+  LogoPreferences,
+  NavigationPreferences,
+  Preferences,
+  PreferencesExtension,
+  PreferencesKeys,
+  SidebarPreferences,
+  SupportedLanguagesType,
+  TabbarPreferences,
+  ThemePreferences,
+  TransitionPreferences,
+  WidgetPreferences,
+} from './types';
+export { usePreferences } from './use-preferences';

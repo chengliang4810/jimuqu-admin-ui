@@ -1,10 +1,15 @@
-export * from './col-page';
-export * from './count-to';
-export * from './ellipsis-text';
-export * from './json-preview';
-export * from './loading';
-export * from './page';
-export * from './resize';
+export { ColPage, type ColPageProps } from './col-page';
+export {
+  CountTo,
+  type CountToProps,
+  type TransitionPresets,
+  TransitionPresetsKeys,
+} from './count-to';
+export { EllipsisText } from './ellipsis-text';
+export { JsonPreview } from './json-preview';
+export { Loading, registerLoadingDirective, Spinner } from './loading';
+export { Page, type PageProps } from './page';
+export { VResize } from './resize';
 export { globalShareState } from '@/core/shared/global-state';
 // 给文档用
 export {
@@ -22,4 +27,31 @@ export {
 
 export type { FlattenedItem } from '@/core/ui/adapter';
 
-export * from '@/core/ui/popup';
+export {
+  alert,
+  Alert,
+  type AlertProps,
+  type BeforeCloseScope,
+  clearAllAlerts,
+  type CloseIconPlacement,
+  confirm,
+  type DrawerApiOptions,
+  type DrawerPlacement,
+  type DrawerProps,
+  type DrawerState,
+  type ExtendedDrawerApi,
+  type ExtendedModalApi,
+  type IconType,
+  type ModalApiOptions,
+  type ModalProps,
+  type ModalState,
+  prompt,
+  type PromptProps,
+  setDefaultDrawerProps,
+  setDefaultModalProps,
+  useAlertContext,
+  useVbenDrawer,
+  useVbenModal,
+  VbenDrawer,
+  VbenModal,
+} from '@/core/ui/popup';

@@ -1,3 +1,32 @@
-export * from './alert';
-export * from './drawer';
-export * from './modal';
+export {
+  alert,
+  Alert,
+  type AlertProps,
+  type BeforeCloseScope,
+  clearAllAlerts,
+  confirm,
+  type IconType,
+  prompt,
+  type PromptProps,
+  useAlertContext,
+} from './alert';
+export {
+  type CloseIconPlacement,
+  type DrawerApiOptions,
+  type DrawerPlacement,
+  type DrawerProps,
+  type DrawerState,
+  type ExtendedDrawerApi,
+  setDefaultDrawerProps,
+  useVbenDrawer,
+  VbenDrawer,
+} from './drawer';
+export {
+  type ExtendedModalApi,
+  type ModalApiOptions,
+  type ModalProps,
+  type ModalState,
+  setDefaultModalProps,
+  useVbenModal,
+  VbenModal,
+} from './modal';

@@ -1,2 +1,2 @@
 export { default as ColPage } from './col-page.vue';
-export * from './types';
+export { type ColPageProps } from './types';

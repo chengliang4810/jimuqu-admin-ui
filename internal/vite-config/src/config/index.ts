@@ -6,9 +6,8 @@ import { join } from 'node:path';
 import { defineApplicationConfig } from './application';
 import { defineLibraryConfig } from './library';
 
-export * from './application';
-export * from './library';
-
+export { defineApplicationConfig } from './application';
+export { defineLibraryConfig } from './library';
 function defineConfig(
   userConfigPromise?: DefineConfig,
   type: 'application' | 'auto' | 'library' = 'auto',

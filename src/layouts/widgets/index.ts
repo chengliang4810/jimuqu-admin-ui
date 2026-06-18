@@ -1,10 +1,14 @@
 export { default as Breadcrumb } from './breadcrumb.vue';
-export * from './check-updates';
-export * from './global-search';
+export { CheckUpdates } from './check-updates';
+export { GlobalSearch } from './global-search';
 export { default as LanguageToggle } from './language-toggle.vue';
 export { default as AuthenticationLayoutToggle } from './layout-toggle.vue';
-export * from './lock-screen';
-export * from './notification';
-export * from './preferences';
-export * from './theme-toggle';
-export * from './user-dropdown';
+export { LockScreen, LockScreenModal } from './lock-screen';
+export { Notification, type NotificationItem } from './notification';
+export {
+  Preferences,
+  PreferencesButton,
+  useOpenPreferences,
+} from './preferences';
+export { ThemeToggle } from './theme-toggle';
+export { UserDropdown } from './user-dropdown';

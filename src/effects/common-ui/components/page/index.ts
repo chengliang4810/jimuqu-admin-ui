@@ -1,2 +1,2 @@
 export { default as Page } from './page.vue';
-export * from './types';
+export { type PageProps } from './types';

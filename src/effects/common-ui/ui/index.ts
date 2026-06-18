@@ -1,1 +1,1 @@
-export * from './fallback';
+export { Fallback, type FallbackProps } from './fallback';

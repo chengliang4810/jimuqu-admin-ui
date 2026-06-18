@@ -1,5 +1,20 @@
 // 库级 widgets（无命名冲突，全部导出）
-export * from './widgets';
+export {
+  AuthenticationLayoutToggle,
+  Breadcrumb,
+  CheckUpdates,
+  GlobalSearch,
+  LanguageToggle,
+  LockScreen,
+  LockScreenModal,
+  Notification,
+  type NotificationItem,
+  Preferences,
+  PreferencesButton,
+  ThemeToggle,
+  useOpenPreferences,
+  UserDropdown,
+} from './widgets';
 // 库级 iframe 路由视图（IFrameView 由应用包装器导出，此处仅导出 IFrameRouterView）
 export { default as IFrameRouterView } from './iframe/iframe-router-view.vue';
 
