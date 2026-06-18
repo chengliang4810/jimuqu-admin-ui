@@ -1,6 +1,6 @@
 import type { NoticeList, SystemList, WorkflowList } from '@/api';
 import type { SSEMessage } from '@/api/common';
-import type { NotificationItem } from '@/effects/layouts';
+import type { NotificationItem } from '@/layouts';
 
 import { computed, ref, watch } from 'vue';
 

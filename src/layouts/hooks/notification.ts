@@ -1,4 +1,4 @@
-import type { NotificationItem } from '@/effects/layouts';
+import type { NotificationItem } from '../widgets';
 
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';

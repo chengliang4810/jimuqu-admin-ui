@@ -8,11 +8,11 @@ import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@/constants';
 import { preferences, usePreferences } from '@/core/preferences';
 import { useWatermark } from '@/effects/hooks';
 import {
-  BasicLayout,
   LockScreen,
   Notification,
   UserDropdown,
-} from '@/effects/layouts';
+} from './widgets';
+import { BasicLayout } from './basic';
 import { BookOpenText, CircleHelp, GiteeIcon } from '@/icons-app';
 import { $t } from '@/locales';
 import { resetRoutes } from '@/router';

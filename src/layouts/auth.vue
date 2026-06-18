@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { preferences } from '@/core/preferences';
-import { AuthPageLayout } from '@/effects/layouts';
+import { AuthPageLayout } from './authentication';
 import { $t } from '@/locales';
 
 const appName = computed(() => preferences.app.name);

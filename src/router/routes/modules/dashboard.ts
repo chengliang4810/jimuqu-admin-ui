@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import { IFrameView } from '@/effects/layouts';
+import { IFrameView } from '@/layouts';
 import { $t } from '@/locales';
 
 const {
