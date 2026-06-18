@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, unref, watch, watchEffect } from 'vue';
 
-import { isNumber } from '@/core/shared/utils';
+import { isNumber } from '@/utils';
 import { TransitionPresets, useTransition } from '@vueuse/core';
 
 interface Props {

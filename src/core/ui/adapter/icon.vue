@@ -4,7 +4,7 @@ import type { Component } from 'vue';
 import { computed } from 'vue';
 
 import { IconDefault, IconifyIcon } from '@/core/icons';
-import { isFunction, isHttpUrl, isObject, isString } from '@/core/shared/utils';
+import { isFunction, isHttpUrl, isObject, isString } from '@/utils';
 
 const props = defineProps<{
   fallback?: boolean;

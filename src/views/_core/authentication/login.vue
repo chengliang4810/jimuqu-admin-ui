@@ -5,7 +5,7 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { captchaImage } from '@/api/core/captcha';
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 import { $t } from '@/locales';
 import { useAuthStore } from '@/stores';
 import {

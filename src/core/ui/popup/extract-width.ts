@@ -1,6 +1,6 @@
 import type { ClassType } from '@/core/typings';
 
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 
 interface ExtractWidthResult {
   /** 去掉宽度类后剩余的 class */

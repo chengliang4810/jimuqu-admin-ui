@@ -11,7 +11,7 @@ import type {
 import { markRaw, reactive, readonly, watch } from 'vue';
 
 import { MemoryStorageDriver, StorageManager } from '@/core/shared/cache';
-import { isMacOs, merge } from '@/core/shared/utils';
+import { isMacOs, merge } from '@/utils';
 import {
   breakpointsTailwind,
   useBreakpoints,

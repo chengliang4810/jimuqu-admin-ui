@@ -7,7 +7,7 @@ import type { AlertProps, BeforeCloseScope, PromptProps } from './alert';
 import { h, nextTick, ref, render } from 'vue';
 
 import { useSimpleLocale } from '@/core/composables';
-import { isFunction, isString } from '@/core/shared/utils';
+import { isFunction, isString } from '@/utils';
 import { Input } from 'antdv-next';
 
 import RenderContent from '../render-content';

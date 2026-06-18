@@ -1,4 +1,4 @@
-import { getScrollbarWidth, needsScrollbar } from '@/core/shared/utils';
+import { getScrollbarWidth, needsScrollbar } from '@/utils';
 import {
   useScrollLock as _useScrollLock,
   tryOnBeforeUnmount,

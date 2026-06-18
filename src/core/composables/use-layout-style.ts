@@ -1,4 +1,4 @@
-import type { VisibleDomRect } from '@/core/shared/utils';
+import type { VisibleDomRect } from '@/utils';
 
 import type { CSSProperties } from 'vue';
 
@@ -9,7 +9,7 @@ import {
   CSS_VARIABLE_LAYOUT_CONTENT_WIDTH,
   CSS_VARIABLE_LAYOUT_HEADER_HEIGHT,
 } from '@/constants';
-import { getElementVisibleRect } from '@/core/shared/utils';
+import { getElementVisibleRect } from '@/utils';
 import { useCssVar, useDebounceFn } from '@vueuse/core';
 
 /**

@@ -6,7 +6,7 @@ import type {
 
 import type { RouteRecordRaw } from 'vue-router';
 
-import { mapTree } from '@/core/shared/utils';
+import { mapTree } from '../tree';
 
 /**
  * 判断路由是否在菜单中显示但访问时展示 403（让用户知悉功能并申请权限）

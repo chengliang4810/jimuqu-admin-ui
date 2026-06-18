@@ -5,7 +5,7 @@ import type { CSSProperties } from 'vue';
 
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 
 interface Props {
   class?: ClassType;

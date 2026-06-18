@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 
 import VbenIcon from './icon.vue';
 import VbenTooltip from './tooltip.vue';

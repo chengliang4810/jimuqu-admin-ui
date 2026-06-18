@@ -7,7 +7,7 @@ import { usePriorityValues, useSimpleLocale } from '@/core/composables';
 import { Expand, Shrink } from '@/core/icons';
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { globalShareState } from '@/core/shared/global-state';
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
 import { merge } from 'lodash-es';
 

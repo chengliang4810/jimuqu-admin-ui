@@ -6,7 +6,7 @@ import type { FlattenedItem, TreeProps } from './tree';
 
 import { computed, h, ref, useSlots, watchEffect } from 'vue';
 
-import { cn, get } from '@/core/shared/utils';
+import { cn, get } from '@/utils';
 import { Tree } from 'antdv-next';
 
 import VbenIcon from './icon.vue';

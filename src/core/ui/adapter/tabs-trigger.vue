@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 
 import { tabsContextKey } from './tabs-context';
 

@@ -6,7 +6,7 @@ import type {
 
 import type { Router, RouteRecordRaw } from 'vue-router';
 
-import { filterTree, mapTree, sortTree } from '@/core/shared/utils';
+import { filterTree, mapTree, sortTree } from '../tree';
 
 /**
  * 根据 routes 生成菜单列表

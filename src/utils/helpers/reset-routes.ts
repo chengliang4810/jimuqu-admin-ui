@@ -1,6 +1,6 @@
 import type { Router, RouteRecordName, RouteRecordRaw } from 'vue-router';
 
-import { traverseTreeValues } from '@/core/shared/utils';
+import { traverseTreeValues } from '../tree';
 
 /**
  * @zh_CN 重置所有路由，如有指定白名单除外

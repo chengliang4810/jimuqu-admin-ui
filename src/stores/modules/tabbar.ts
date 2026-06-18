@@ -18,7 +18,7 @@ import {
   Stack,
   startProgress,
   stopProgress,
-} from '@/core/shared/utils';
+} from '@/utils';
 import { acceptHMRUpdate, defineStore } from 'pinia';
 
 interface RouteCached {

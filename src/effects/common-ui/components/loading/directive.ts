@@ -2,7 +2,7 @@ import type { App, Directive, DirectiveBinding } from 'vue';
 
 import { h, render } from 'vue';
 
-import { isString } from '@/core/shared/utils';
+import { isString } from '@/utils';
 import { VbenLoading, VbenSpinner } from '@/core/ui/adapter';
 
 const LOADING_INSTANCE_KEY = Symbol('loading');

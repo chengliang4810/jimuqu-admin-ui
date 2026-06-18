@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 import { Button } from 'antdv-next';
 
 interface Props {

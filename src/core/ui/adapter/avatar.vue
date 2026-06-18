@@ -5,7 +5,7 @@ import type { CSSProperties } from 'vue';
 
 import { computed } from 'vue';
 
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 import { Avatar } from 'antdv-next';
 
 interface Props {

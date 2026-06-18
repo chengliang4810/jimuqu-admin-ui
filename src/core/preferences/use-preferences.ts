@@ -1,6 +1,6 @@
 import { computed } from 'vue';
 
-import { diff } from '@/core/shared/utils';
+import { diff } from '@/utils';
 
 import { preferencesManager } from './preferences';
 import { isDarkTheme } from './update-css-variables';

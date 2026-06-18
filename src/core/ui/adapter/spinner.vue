@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
-import { cn } from '@/core/shared/utils';
+import { cn } from '@/utils';
 import { Spin } from 'antdv-next';
 
 interface Props {

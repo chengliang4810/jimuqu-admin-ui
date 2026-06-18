@@ -1,7 +1,7 @@
 import type { ModalApiOptions, ModalState } from './modal';
 
 import { Store } from '@/core/shared/store';
-import { bindMethods, isFunction } from '@/core/shared/utils';
+import { bindMethods, isFunction } from '@/utils';
 
 export class ModalApi {
   // 共享数据
