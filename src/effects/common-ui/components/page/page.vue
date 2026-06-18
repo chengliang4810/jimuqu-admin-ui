@@ -5,7 +5,7 @@ import type { PageProps } from './types';
 
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
-import { CSS_VARIABLE_LAYOUT_CONTENT_HEIGHT } from '@/core/shared/constants';
+import { CSS_VARIABLE_LAYOUT_CONTENT_HEIGHT } from '@/constants';
 import { cn } from '@/core/shared/utils';
 
 defineOptions({

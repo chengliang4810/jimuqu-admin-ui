@@ -1,3 +1,4 @@
 export * from './core';
 export * from './dict-enum';
-export * from '@/core/shared/constants';
+export * from './globals';
+export * from './vben';

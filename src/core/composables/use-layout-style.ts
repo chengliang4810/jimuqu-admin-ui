@@ -8,7 +8,7 @@ import {
   CSS_VARIABLE_LAYOUT_CONTENT_HEIGHT,
   CSS_VARIABLE_LAYOUT_CONTENT_WIDTH,
   CSS_VARIABLE_LAYOUT_HEADER_HEIGHT,
-} from '@/core/shared/constants';
+} from '@/constants';
 import { getElementVisibleRect } from '@/core/shared/utils';
 import { useCssVar, useDebounceFn } from '@vueuse/core';
 

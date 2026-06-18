@@ -5,7 +5,7 @@ import { computed, nextTick, onDeactivated, provide, useId, watch } from 'vue';
 
 import { usePriorityValues, useSimpleLocale } from '@/core/composables';
 import { Expand, Shrink } from '@/core/icons';
-import { ELEMENT_ID_MAIN_CONTENT } from '@/core/shared/constants';
+import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/core/shared/utils';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
