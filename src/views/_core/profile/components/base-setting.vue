@@ -85,6 +85,8 @@ onMounted(() => {
     ...data,
   };
 });
+
+const options = getDictOptions(DictEnum.SYS_USER_GENDER);
 </script>
 
 <template>
@@ -107,7 +109,7 @@ onMounted(() => {
         <RadioGroup
           button-style="solid"
           option-type="button"
-          :options="getDictOptions(DictEnum.SYS_USER_GENDER)"
+          :options="options"
           v-model:value="formData.sex"
         />
       </FormItem>
