@@ -4,13 +4,7 @@ import type { MenuRecordRaw } from '@/types';
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { useVbenModal } from '@/core/ui/popup';
-import {
-  ArrowDown,
-  ArrowUp,
-  CornerDownLeft,
-  MdiKeyboardEsc,
-  Search,
-} from '@/icons-app';
+import { ArrowDown, ArrowUp, CornerDownLeft, Search } from '@/icons-app';
 import { $t } from '@/locales';
 import { isWindowsOs } from '@/utils';
 import { useMagicKeys, whenever } from '@vueuse/core';
@@ -126,7 +120,7 @@ onMounted(() => {
             {{ $t('ui.widgets.search.navigate') }}
           </div>
           <div class="flex items-center">
-            <MdiKeyboardEsc class="mr-1 size-3" />
+            <span class="icon-[mdi--keyboard-esc] mr-1 size-3"></span>
             {{ $t('ui.widgets.search.close') }}
           </div>
         </div>
