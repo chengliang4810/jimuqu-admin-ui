@@ -25,7 +25,7 @@ export interface VxeTableSearchFormInstance {
  */
 export function useTableQuery(
   searchFormRef: Ref<undefined | VxeTableSearchFormInstance>,
-  tableRef: Ref<undefined | VxeGridInstance>,
+  tableRef: Ref<null | undefined | VxeGridInstance>,
   onCompleted?: () => void,
 ) {
   /** 获取搜索表单当前值 */
