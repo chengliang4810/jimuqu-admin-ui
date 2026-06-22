@@ -31,15 +31,13 @@ export { useTableQuery } from './use-table-query';
 export type { VxeTableSearchFormInstance } from './use-table-query';
 
 export const tableSeachClass = cn(
+  // 语义钩子类：供 styles/antdv-next/index.css 定位本搜索表单
+  'table-search-grid',
   // 响应式栅格：随断点 1/2/3/4 列
   'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  // 行/列间距统一由 grid gap 提供，避免依赖表单项自身 margin
+  // 行/列间距统一由 grid gap 提供；FormItem 默认下 margin 的清除见
+  // styles/antdv-next/index.css 中的 .table-search-grid 规则
   'gap-x-4 gap-y-6',
-  // 去掉 FormItem 默认下 margin，否则最后一行会多出拖尾间距，
-  // 导致搜索区展开/收起时卡片底部留白不一致
-  // 注意这里是因为不需要校验表单的情况下 如果你需要校验(??) 需要覆盖这里
-  // 用 ! 提权：tw v4 工具类在 @layer 内，antd 无层级样式优先级更高，普通 mb-0 打不过
-  '[&_.ant-form-item]:mb-0!',
 );
 
 /**

@@ -28,6 +28,17 @@ body {
 
 /** note: 表格搜索表单底层已经使用antdv-next的Form 这里不需要做对边框颜色的兼容了  */
 
+/**
+ * 表格搜索表单：清除 FormItem 默认下 margin，行间距改由容器 grid gap 提供，
+ * 否则最后一行会多出拖尾 margin，导致搜索区展开/收起时卡片底部留白不一致。
+ * 覆写的是 antd 的 token 变量(其内部为 margin-bottom: var(--ant-form-item-margin-bottom))，
+ * 改数据源而非最终属性，故无需 !important。
+ * 若某表单需校验信息占位，单独给该实例覆盖此变量即可。
+ */
+.table-search-grid .ant-form-item {
+  --ant-form-item-margin-bottom: 0px;
+}
+
 /** 前后置小圆点样式 */
 .dot-before-common {
   @apply before:relative before:top-[-2px] before:mr-[5px] before:inline-block before:size-[6px] before:rounded-full before:content-[''];
