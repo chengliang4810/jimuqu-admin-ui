@@ -4,7 +4,6 @@ import type {
   ApplicationPluginOptions,
   CommonPluginOptions,
   ConditionPlugin,
-  LibraryPluginOptions,
 } from '../typing';
 
 import viteVueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
@@ -12,7 +11,6 @@ import tailwindcss from '@tailwindcss/vite';
 import viteVue from '@vitejs/plugin-vue';
 import viteVueJsx from '@vitejs/plugin-vue-jsx';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
-import viteDtsPlugin from 'unplugin-dts/vite';
 import viteCompressPlugin from 'vite-plugin-compression';
 import { VitePWA } from 'vite-plugin-pwa';
 import viteVueDevTools from 'vite-plugin-vue-devtools';
@@ -209,33 +207,11 @@ async function loadApplicationPlugins(
   ]);
 }
 
-/**
- * 根据条件获取库类型的vite插件
- */
-async function loadLibraryPlugins(
-  options: LibraryPluginOptions,
-): Promise<PluginOption[]> {
-  // 单独取，否则commonOptions拿不到
-  const isBuild = options.isBuild;
-  const { dts, ...commonOptions } = options;
-  const dtsOptions = typeof dts === 'object' ? dts : undefined;
-  const commonPlugins = await loadCommonPlugins(commonOptions);
-  return await loadConditionPlugins([
-    ...commonPlugins,
-    {
-      condition: isBuild && !!dts,
-      plugins: () => [viteDtsPlugin(dtsOptions)],
-    },
-  ]);
-}
-
 export {
   loadApplicationPlugins,
-  loadLibraryPlugins,
   viteArchiverPlugin,
   viteCompressPlugin,
   viteDayjsPlugin,
-  viteDtsPlugin,
   viteHtmlPlugin,
   viteVisualizerPlugin,
   viteVxeTableImportsPlugin,

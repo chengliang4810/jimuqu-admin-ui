@@ -1,16 +1,10 @@
-export {
-  defineApplicationConfig,
-  defineConfig,
-  defineLibraryConfig,
-} from './config';
+export { defineApplicationConfig, defineConfig } from './config';
 export { getDefaultPwaOptions } from './options';
 export {
   loadApplicationPlugins,
-  loadLibraryPlugins,
   viteArchiverPlugin,
   viteCompressPlugin,
   viteDayjsPlugin,
-  viteDtsPlugin,
   viteHtmlPlugin,
   viteVisualizerPlugin,
   viteVxeTableImportsPlugin,
@@ -22,9 +16,7 @@ export type {
   ConditionPlugin,
   DefineApplicationOptions,
   DefineConfig,
-  DefineLibraryOptions,
   HtmlPluginOptions,
-  LibraryPluginOptions,
   PrintPluginOptions,
   VbenViteConfig,
 } from './typing';

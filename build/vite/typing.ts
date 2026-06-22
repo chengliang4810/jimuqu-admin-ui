@@ -1,6 +1,5 @@
 import type { Options as HtmlMinifierOptions } from 'html-minifier-terser';
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
-import type { PluginOptions } from 'unplugin-dts';
 import type {
   ConfigEnv,
   PluginOption,
@@ -196,27 +195,9 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
 }
 
 /**
- * 库插件配置选项
- * @description 用于配置库构建时的插件选项
- */
-interface LibraryPluginOptions extends CommonPluginOptions {
-  /**
-   * 是否开启 DTS 输出
-   * @default true
-   * @description 生成 TypeScript 类型声明文件
-   */
-  dts?: boolean | PluginOptions;
-}
-
-/**
  * 应用配置选项类型
  */
 type ApplicationOptions = ApplicationPluginOptions;
-
-/**
- * 库配置选项类型
- */
-type LibraryOptions = LibraryPluginOptions;
 
 /**
  * 应用配置定义函数类型
@@ -230,21 +211,10 @@ type DefineApplicationOptions = (config?: ConfigEnv) => Promise<{
 }>;
 
 /**
- * 库配置定义函数类型
- * @description 用于定义库构建配置
- */
-type DefineLibraryOptions = (config?: ConfigEnv) => Promise<{
-  /** 库插件配置 */
-  library?: LibraryOptions;
-  /** Vite 配置 */
-  vite?: UserConfig;
-}>;
-
-/**
  * 配置定义类型
- * @description 应用或库的配置定义
+ * @description 应用的配置定义
  */
-type DefineConfig = DefineApplicationOptions | DefineLibraryOptions;
+type DefineConfig = DefineApplicationOptions;
 
 type VbenViteConfig = Promise<UserConfig> | UserConfig | UserConfigFnPromise;
 
@@ -255,9 +225,7 @@ export type {
   ConditionPlugin,
   DefineApplicationOptions,
   DefineConfig,
-  DefineLibraryOptions,
   HtmlPluginOptions,
-  LibraryPluginOptions,
   PrintPluginOptions,
   VbenViteConfig,
 };

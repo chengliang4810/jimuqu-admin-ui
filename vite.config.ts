@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 
-import { defineConfig } from '@vben/vite-config';
+import { defineConfig } from './build/vite/index';
 
 // 自行取消注释来启用按需导入功能
 // import { AntdvNextResolver } from '@antdv-next/auto-import-resolver'
