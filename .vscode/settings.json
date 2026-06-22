@@ -180,6 +180,8 @@
   "js/ts.inlayHints.enumMemberValues.enabled": true,
   "js/ts.preferences.preferTypeOnlyAutoImports": true,
   "js/ts.preferences.includePackageJsonAutoImports": "on",
+  "javascript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
 
   "eslint.validate": [
     "javascript",
