@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-dynamic-delete */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -71,7 +70,7 @@ const outputLines = [
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
-  "import { addIcon } from '@iconify/vue';",
+  "import { addIcon } from '@iconify/vue/offline';",
   '',
 ];
 
