@@ -5,9 +5,9 @@ import { computed, nextTick, onDeactivated, provide, useId, watch } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { usePriorityValues, useSimpleLocale } from '@/core/composables';
-import { Expand, Shrink } from '@/core/icons';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/utils';
+import { ExpandOutlined, FullscreenExitOutlined } from '@antdv-next/icons';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
 import { merge } from 'lodash-es';
 
@@ -199,11 +199,11 @@ function handleClosed() {
           v-if="fullscreenButton"
           type="text"
           size="small"
-          class="flex-center ml-2 size-6 rounded-full"
+          class="flex-center ml-3 size-6 rounded-full"
           @click="handleFullscreen"
         >
-          <Shrink v-if="fullscreen" class="size-3.5" />
-          <Expand v-else class="size-3.5" />
+          <FullscreenExitOutlined v-if="fullscreen" class="size-3.5" />
+          <ExpandOutlined v-else class="size-3.5" />
         </Button>
       </div>
     </template>
@@ -258,6 +258,8 @@ function handleClosed() {
 }
 
 .vben-modal-fullscreen .ant-modal {
+  --ant-border-radius-lg: 0;
+
   top: 0;
   max-width: 100vw;
   padding-bottom: 0;
