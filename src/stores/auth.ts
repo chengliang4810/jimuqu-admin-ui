@@ -12,12 +12,12 @@ import {
 import { LOGIN_PATH } from '@/constants';
 import { preferences } from '@/core/preferences';
 import { $t } from '@/locales';
-import { useAccessStore, useUserStore } from './modules';
-import { resetAllStores } from './setup';
 import { defineStore } from 'pinia';
 
 import { useDictStore } from './dict';
 import { useGlobalLoadingStore } from './loading';
+import { useAccessStore, useUserStore } from './modules';
+import { resetAllStores } from './setup';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();

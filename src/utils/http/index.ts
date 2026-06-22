@@ -1,9 +1,9 @@
+import type { AxiosError, AxiosRequestConfig } from 'axios';
+
 import type {
   BaseAsymmetricEncryption,
   BaseSymmetricEncryption,
 } from '../encryption';
-import type { AxiosError, AxiosRequestConfig } from 'axios';
-
 import type { HttpResponse } from './type';
 
 import { BUSINESS_SUCCESS_CODE, UNAUTHORIZED_CODE } from '@/constants';
@@ -11,13 +11,6 @@ import { preferences } from '@/core/preferences';
 import { useAppConfig } from '@/hooks';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
-import {
-  AesEncryption,
-  decodeBase64,
-  encodeBase64,
-  randomStr,
-  RsaEncryption,
-} from '../encryption';
 import { axiosRequestAdapter } from '@alova/adapter-axios';
 import { createAlova } from 'alova';
 import VueHook from 'alova/vue';
@@ -25,6 +18,13 @@ import axios from 'axios';
 import { isEmpty, isNull, merge } from 'lodash-es';
 import { stringify } from 'qs';
 
+import {
+  AesEncryption,
+  decodeBase64,
+  encodeBase64,
+  randomStr,
+  RsaEncryption,
+} from '../encryption';
 import { checkStatus } from './checkStatus';
 import { BusinessException } from './exception';
 import { ContentTypeEnum, handleUnauthorizedLogout } from './helper';

@@ -8,9 +8,9 @@ import { h } from 'vue';
 import { JsonPreview } from '@/components';
 import { DictTag } from '@/components/dict';
 import { IconifyIcon, VbenIcon } from '@/icons';
-import { cn } from './cn';
 import { Tag } from 'antdv-next';
 
+import { cn } from './cn';
 import { getDictOptions } from './dict';
 
 /**
