@@ -5,7 +5,7 @@ import type { DescriptionsProps } from 'antdv-next';
 import { computed, shallowRef } from 'vue';
 
 import { DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/effects/common-ui';
+import { useVbenDrawer } from '@/components';
 import {
   renderDict,
   renderHttpMethodTag,

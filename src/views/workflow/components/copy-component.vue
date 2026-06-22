@@ -6,7 +6,7 @@ import type { PropType } from 'vue';
 
 import { computed } from 'vue';
 
-import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
+import { useVbenModal, VbenAvatar } from '@/components';
 import { Avatar, AvatarGroup, Tooltip } from 'antdv-next';
 
 import { userSelectModal } from '.';

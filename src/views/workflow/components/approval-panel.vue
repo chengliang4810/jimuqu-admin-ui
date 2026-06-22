@@ -14,7 +14,7 @@ import { computed, h, ref, watch } from 'vue';
 import { flowInfo } from '@/api/workflow/instance';
 import { getTaskByTaskId } from '@/api/workflow/task';
 import { DictEnum } from '@/constants';
-import { Fallback, VbenAvatar } from '@/effects/common-ui';
+import { Fallback, VbenAvatar } from '@/components';
 import { cn } from '@/utils';
 import { renderDict } from '@/utils/render';
 import { CopyOutlined } from '@antdv-next/icons';

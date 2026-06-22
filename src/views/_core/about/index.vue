@@ -3,7 +3,7 @@ import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, h } from 'vue';
 
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 import { Card, Descriptions } from 'antdv-next';
 
 defineOptions({ name: 'About' });

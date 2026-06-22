@@ -5,7 +5,7 @@ import type { UploadFile } from 'antdv-next';
 import { h, ref } from 'vue';
 
 import { FileUpload, ImageUpload } from '@/components/upload';
-import { Page, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenModal } from '@/components';
 import { useClipboard } from '@vueuse/core';
 import { Alert, Card, RadioGroup, Switch } from 'antdv-next';
 

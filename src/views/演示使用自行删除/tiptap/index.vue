@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import { Tiptap } from '@/components/tiptap';
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 import { cn } from '@/utils';
 import { Button, RadioGroup, Switch } from 'antdv-next';
 

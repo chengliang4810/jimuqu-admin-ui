@@ -6,7 +6,7 @@ import { ref } from 'vue';
 
 import { workflowInstanceInvalid } from '@/api/workflow/instance';
 import { FormTextArea as Textarea } from '@/components/global/form';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { Form, FormItem } from 'antdv-next';
 import { cloneDeep } from 'lodash-es';

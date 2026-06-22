@@ -10,7 +10,7 @@ import {
   taskOperation,
   terminationTask,
 } from '@/api/workflow/task';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { Descriptions } from 'antdv-next';
 
 import { userSelectModal } from '.';

@@ -5,7 +5,7 @@ import type { DescriptionsProps } from 'antdv-next';
 import { computed } from 'vue';
 
 import { DictEnum } from '@/constants';
-import { VbenAvatar } from '@/effects/common-ui';
+import { VbenAvatar } from '@/components';
 import { renderDict } from '@/utils/render';
 import { Descriptions, Tooltip } from 'antdv-next';
 

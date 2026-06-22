@@ -17,7 +17,7 @@ import {
 } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
 import { useAccess } from '@/effects/access';
-import { Page, useVbenDrawer } from '@/effects/common-ui';
+import { Page, useVbenDrawer } from '@/components';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

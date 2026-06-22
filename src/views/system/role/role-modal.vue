@@ -13,7 +13,7 @@ import {
   FormTextArea as TextArea,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

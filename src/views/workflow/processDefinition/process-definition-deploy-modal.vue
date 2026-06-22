@@ -4,7 +4,7 @@ import type { UploadFile } from 'antdv-next';
 import { ref } from 'vue';
 
 import { workflowDefinitionImport } from '@/api/workflow/definition';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { InboxOutlined } from '@antdv-next/icons';
 import { Upload } from 'antdv-next';
 

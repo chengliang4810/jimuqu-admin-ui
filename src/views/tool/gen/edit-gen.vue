@@ -6,7 +6,7 @@ import { onMounted, provide, ref, unref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { editSave, genInfo } from '@/api/tool/gen';
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 import { useTabs } from '@/effects/hooks';
 import { cloneDeep, safeParseNumber } from '@/utils';
 import { Card, Skeleton, TabPane, Tabs } from 'antdv-next';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { JsonPreview, Page } from '@/effects/common-ui';
+import { JsonPreview, Page } from '@/components';
 import { alovaInstance } from '@/utils/http';
 import { Alert, Card } from 'antdv-next';
 import dayjs from 'dayjs';

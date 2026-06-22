@@ -11,7 +11,7 @@ import {
   FormTextArea as TextArea,
 } from '@/components/global/form';
 import { FileUpload } from '@/components/upload';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
 import { CheckboxGroup, Form, FormItem } from 'antdv-next';

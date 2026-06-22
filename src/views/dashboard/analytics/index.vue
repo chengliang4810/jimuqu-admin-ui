@@ -3,7 +3,7 @@ import type { EChartsOption } from 'echarts';
 
 import { ref } from 'vue';
 
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 import { Card, Segmented } from 'antdv-next';
 
 import BaseChart from './components/base-chart.vue';

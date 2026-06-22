@@ -5,7 +5,7 @@ import { onMounted, ref, shallowRef } from 'vue';
 
 import { roleMenuTreeSelect } from '@/api/system/menu';
 import { MenuSelectTable } from '@/components/tree';
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 
 const checkedKeys = ref<number[]>([]);
 const menus = shallowRef<MenuOption[]>([]);

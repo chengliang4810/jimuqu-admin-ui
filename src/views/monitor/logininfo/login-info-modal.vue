@@ -5,7 +5,7 @@ import type { DescriptionsProps } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { renderBrowserIcon, renderDict, renderOsIcon } from '@/utils/render';
 import { Descriptions } from 'antdv-next';
 

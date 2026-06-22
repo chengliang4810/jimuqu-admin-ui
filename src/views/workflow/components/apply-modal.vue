@@ -9,7 +9,7 @@ import { ref } from 'vue';
 
 import { completeTask, getTaskByTaskId } from '@/api/workflow/task';
 import { FileUpload } from '@/components/upload';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { CheckboxGroup, Form, FormItem } from 'antdv-next';
 import { cloneDeep } from 'lodash-es';
 

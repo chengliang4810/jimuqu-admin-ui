@@ -7,7 +7,7 @@ import type { Component } from 'vue';
 import { ref } from 'vue';
 
 import { previewCode } from '@/api/tool/gen';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { useClipboard } from '@vueuse/core';
 import { Alert, Skeleton, Tree } from 'antdv-next';
 

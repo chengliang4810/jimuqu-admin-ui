@@ -177,7 +177,7 @@ const matchVbenCoreChunk = createChunkMatcher([
 const matchVbenUiCoreChunk = createChunkMatcher(['/src/core/ui/']);
 const matchVbenCommonUiAuthChunk = createChunkMatcher([
   '/src/effects/common-ui/ui/authentication/',
-  '/src/effects/common-ui/ui/fallback/',
+  '/src/components/fallback/',
 ]);
 const matchVbenCommonUiDashboardChunk = createChunkMatcher([
   '/src/effects/common-ui/ui/about/',
@@ -189,15 +189,14 @@ const matchVbenCommonUiCaptchaChunk = createChunkMatcher([
 ]);
 const matchVbenCommonUiEditorChunk = createChunkMatcher([
   '/src/effects/common-ui/components/code-mirror/',
-  '/src/effects/common-ui/components/json-preview/',
+  '/src/components/json-preview/',
   '/src/effects/common-ui/components/json-viewer/',
   '/src/effects/common-ui/components/markdown/',
   '/src/effects/common-ui/components/tippy/',
 ]);
 const matchVbenCommonUiWidgetsChunk = createChunkMatcher([
-  '/src/effects/common-ui/components/',
-  '/src/effects/common-ui/index.ts',
-  '/src/effects/common-ui/ui/index.ts',
+  '/src/components/loading/',
+  '/src/components/page/',
 ]);
 const matchVbenIconsChunk = createChunkMatcher(['/src/icons/']);
 const matchVbenStylesChunk = createChunkMatcher(['/src/styles/']);

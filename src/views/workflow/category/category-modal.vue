@@ -15,7 +15,7 @@ import {
   FormInputNumber as InputNumber,
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

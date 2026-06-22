@@ -2,7 +2,7 @@
 import { h , ref } from 'vue';
 
 import { ImageUpload } from '@/components/upload';
-import { JsonPreview, useVbenModal } from '@/effects/common-ui';
+import { JsonPreview, useVbenModal } from '@/components';
 import { Form, FormItem, Space } from 'antdv-next';
 
 const formData = ref({

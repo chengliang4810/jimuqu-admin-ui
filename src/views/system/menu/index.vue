@@ -10,7 +10,7 @@ import {
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { useAccess } from '@/effects/access';
-import { Fallback, Page, useVbenDrawer } from '@/effects/common-ui';
+import { Fallback, Page, useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { eachTree, listToTree, treeToList } from '@/utils';
 import { Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';

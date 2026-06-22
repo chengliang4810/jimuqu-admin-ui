@@ -4,7 +4,7 @@ import type { UserProfile } from '@/api/system/profile/model';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import { userProfile } from '@/api/system/profile';
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 import { useAuthStore, useUserStore } from '@/stores';
 
 import { emitter } from './mitt';

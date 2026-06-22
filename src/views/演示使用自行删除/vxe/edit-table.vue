@@ -4,7 +4,7 @@ import type { VxeGridInstance } from 'vxe-table';
 import { nextTick, onMounted, useTemplateRef } from 'vue';
 
 import { withDefaultVxeGridOptions } from '@/components/vxe-table';
-import { JsonPreview } from '@/effects/common-ui';
+import { JsonPreview } from '@/components';
 import { Button, Input, InputNumber, Select, Space } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

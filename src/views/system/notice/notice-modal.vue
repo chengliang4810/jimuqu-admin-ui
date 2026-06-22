@@ -12,7 +12,7 @@ import { noticeAdd, noticeInfo, noticeUpdate } from '@/api/system/notice';
 import { FormInput } from '@/components/global/form';
 import { contentWithOssIdTransform, Tiptap } from '@/components/tiptap';
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';

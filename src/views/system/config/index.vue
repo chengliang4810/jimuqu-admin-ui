@@ -15,7 +15,7 @@ import {
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
-import { Page, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenModal } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

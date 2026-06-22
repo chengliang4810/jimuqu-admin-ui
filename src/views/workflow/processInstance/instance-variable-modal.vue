@@ -9,7 +9,7 @@ import {
   FormInput as Input,
   FormSelect as Select,
 } from '@/components/global/form';
-import { JsonPreview, useVbenModal } from '@/effects/common-ui';
+import { JsonPreview, useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cn, getPopupContainer } from '@/utils';
 import { Button, Form, FormItem, Tag } from 'antdv-next';

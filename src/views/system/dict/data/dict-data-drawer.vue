@@ -16,7 +16,7 @@ import {
   FormInputNumber as InputNumber,
   FormTextArea as TextArea,
 } from '@/components/global/form';
-import { useVbenDrawer } from '@/effects/common-ui';
+import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

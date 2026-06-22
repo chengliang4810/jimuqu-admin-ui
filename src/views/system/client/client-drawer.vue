@@ -12,7 +12,7 @@ import {
   FormSelect as Select,
 } from '@/components/global/form';
 import { DEFAULT_CLIENT_ID, DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/effects/common-ui';
+import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

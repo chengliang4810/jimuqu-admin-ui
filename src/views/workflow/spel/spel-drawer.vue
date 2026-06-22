@@ -10,7 +10,7 @@ import {
   FormTextArea as Textarea,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/effects/common-ui';
+import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

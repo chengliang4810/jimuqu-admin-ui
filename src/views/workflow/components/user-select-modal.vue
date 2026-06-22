@@ -7,7 +7,7 @@ import { ref, useTemplateRef } from 'vue';
 
 import { userList } from '@/api/system/user';
 import { withDefaultVxeGridOptions } from '@/components/vxe-table';
-import { useVbenModal, VbenAvatar } from '@/effects/common-ui';
+import { useVbenModal, VbenAvatar } from '@/components';
 import DeptTree from '@/views/system/user/dept-tree.vue';
 import { Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

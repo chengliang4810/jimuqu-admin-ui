@@ -4,7 +4,7 @@ import type { UploadFile } from 'antdv-next';
 import { h, ref, unref } from 'vue';
 
 import { downloadImportTemplate, userImportData } from '@/api/system/user';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { InboxOutlined } from '@antdv-next/icons';
 import { Switch, Upload } from 'antdv-next';

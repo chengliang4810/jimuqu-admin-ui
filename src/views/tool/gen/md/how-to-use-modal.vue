@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 
 import image from './image.png';
 

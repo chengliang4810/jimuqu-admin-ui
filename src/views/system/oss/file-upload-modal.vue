@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import { FileUpload } from '@/components/upload';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 
 const emit = defineEmits<{ reload: [] }>();
 

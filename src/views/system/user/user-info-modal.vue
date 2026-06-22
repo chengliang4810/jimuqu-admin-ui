@@ -7,7 +7,7 @@ import { computed, shallowRef } from 'vue';
 import { findUserInfo } from '@/api/system/user';
 import { DictTag } from '@/components/dict';
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { getDictOptions } from '@/utils/dict';
 import { Descriptions, Tag } from 'antdv-next';
 import dayjs from 'dayjs';

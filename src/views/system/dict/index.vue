@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 
 import DictDataPanel from './data/index.vue';
 import DictTypePanel from './type/index.vue';

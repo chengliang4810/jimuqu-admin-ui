@@ -13,7 +13,7 @@ import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenModal } from '@/components';
 import { useAppConfig } from '@/effects/hooks';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';

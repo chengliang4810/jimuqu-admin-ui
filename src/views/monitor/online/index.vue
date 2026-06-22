@@ -9,7 +9,7 @@ import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 import { Popconfirm, Spin } from 'antdv-next';
 import { slice } from 'lodash-es';
 import { VxeGrid } from 'vxe-table';

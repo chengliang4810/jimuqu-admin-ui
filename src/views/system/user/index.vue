@@ -19,7 +19,7 @@ import {
 import { EnableStatus, SUPERADMIN_USER_ID } from '@/constants';
 import { preferences } from '@/core/preferences';
 import { useAccess } from '@/effects/access';
-import { Page, useVbenDrawer, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { useBlobExport } from '@/utils/file/export';
 import { Avatar, Dropdown, Popconfirm, Space, Spin } from 'antdv-next';

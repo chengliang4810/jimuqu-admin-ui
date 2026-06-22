@@ -12,7 +12,7 @@ import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

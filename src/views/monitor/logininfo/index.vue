@@ -15,7 +15,7 @@ import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenModal } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { confirmDeleteModal } from '@/utils/modal';
 import { Popconfirm, Space, Spin } from 'antdv-next';

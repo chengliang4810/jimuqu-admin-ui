@@ -21,7 +21,7 @@ import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { downloadByData } from '@/utils/file/download';
 import { Popconfirm, RadioGroup, Space, Spin } from 'antdv-next';

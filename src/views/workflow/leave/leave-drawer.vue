@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StartWorkFlowReqData } from '@/api/workflow/task/model';
-import type { ExtendedModalApi } from '@/effects/common-ui';
+import type { ExtendedModalApi } from '@/components';
 import type { AntdFormRules } from '@/types/form';
 import type { FormInstance } from 'antdv-next';
 import type { Dayjs } from 'dayjs';
@@ -15,7 +15,7 @@ import {
   FormSelect as Select,
   FormTextArea as Textarea,
 } from '@/components/global/form';
-import { useVbenDrawer } from '@/effects/common-ui';
+import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
 import { DateRangePicker, Form, FormItem } from 'antdv-next';

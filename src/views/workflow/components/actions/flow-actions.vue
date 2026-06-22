@@ -17,7 +17,7 @@ import {
   terminationTask,
   updateAssignee,
 } from '@/api/workflow/task';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { cn, getPopupContainer } from '@/utils';
 import {
   ArrowLeftOutlined,

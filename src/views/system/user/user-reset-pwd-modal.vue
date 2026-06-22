@@ -6,7 +6,7 @@ import type { DescriptionsProps, FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { userResetPassword } from '@/api/system/user';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { Descriptions, Form, FormItem, InputPassword } from 'antdv-next';
 
 const emit = defineEmits<{ reload: [] }>();

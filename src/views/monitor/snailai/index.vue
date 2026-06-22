@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Page } from '@/effects/common-ui';
+import { Page } from '@/components';
 import { Card, Result } from 'antdv-next';
 </script>
 

@@ -11,7 +11,7 @@ import {
   dictTypeRemove,
   refreshDictTypeCache,
 } from '@/api/system/dict/dict-type';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { cn } from '@/utils';
 import { useBlobExport } from '@/utils/file/export';
 import {

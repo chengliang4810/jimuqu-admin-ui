@@ -5,7 +5,7 @@ import type { VxeGridInstance } from 'vxe-table';
 import { nextTick, useTemplateRef } from 'vue';
 
 import { withDefaultVxeGridOptions } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenModal } from '@/components';
 import { getPopupContainer, listToTree } from '@/utils';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

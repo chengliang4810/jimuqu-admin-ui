@@ -4,7 +4,7 @@ import type { TimelineItemProps, TimelineProps } from 'antdv-next';
 
 import { computed } from 'vue';
 
-import { VbenAvatar } from '@/effects/common-ui';
+import { VbenAvatar } from '@/components';
 import { cn } from '@/utils';
 import { UsergroupAddOutlined } from '@antdv-next/icons';
 import { Avatar, Empty, Timeline } from 'antdv-next';

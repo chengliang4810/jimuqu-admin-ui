@@ -10,7 +10,7 @@ import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenDrawer, useVbenModal } from '@/effects/common-ui';
+import { Page, useVbenDrawer, useVbenModal } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

@@ -7,7 +7,7 @@ import { nextTick, ref } from 'vue';
 import { roleMenuTreeSelect } from '@/api/system/menu';
 import { roleDeptTree, roleInfo, roleSetPermissions } from '@/api/system/role';
 import { MenuSelectTable, TreeSelectPanel } from '@/components/tree';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, eachTree, findGroupParentIds } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

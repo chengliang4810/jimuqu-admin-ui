@@ -10,7 +10,7 @@ import {
   FormInput as Input,
   FormInputNumber as InputNumber,
 } from '@/components/global/form';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { Form, FormItem } from 'antdv-next';

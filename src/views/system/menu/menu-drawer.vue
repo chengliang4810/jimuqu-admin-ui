@@ -12,7 +12,7 @@ import {
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/effects/common-ui';
+import { useVbenDrawer } from '@/components';
 import { VbenIcon } from '@/icons';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';

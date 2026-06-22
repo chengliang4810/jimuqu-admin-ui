@@ -6,7 +6,7 @@ import { shallowRef } from 'vue';
 // 直接从 helper 引入, 避免经 barrel 连带打包重型 tiptap 编辑器
 import { contentWithOssIdTransform } from '@/components/tiptap/src/helper';
 import { useAccess } from '@/effects/access';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 
 const currentNotice = shallowRef<Notice | null>(null);
 const { hasAccessByCodes } = useAccess();

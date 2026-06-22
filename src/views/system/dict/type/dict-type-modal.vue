@@ -14,7 +14,7 @@ import {
   FormInput as Input,
   FormTextArea as TextArea,
 } from '@/components/global/form';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

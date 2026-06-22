@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 
-import { JsonPreview, Page } from '@/effects/common-ui';
+import { JsonPreview, Page } from '@/components';
 
 const route = useRoute();
 const query = route.query;

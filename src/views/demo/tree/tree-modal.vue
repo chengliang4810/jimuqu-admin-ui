@@ -11,7 +11,7 @@ import {
   FormInputNumber as InputNumber,
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer, listToTree } from '@/utils';
 import { Form, FormItem } from 'antdv-next';

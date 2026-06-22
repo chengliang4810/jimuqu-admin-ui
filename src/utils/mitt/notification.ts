@@ -2,7 +2,7 @@ import type { Notice } from '@/api/system/notice/model';
 
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { mitt } from '@/utils';
 import noticePreviewModal from '@/views/system/notice/notice-preview-modal.vue';
 

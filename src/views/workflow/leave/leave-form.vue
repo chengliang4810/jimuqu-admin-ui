@@ -19,7 +19,7 @@ import {
   FormSelect as Select,
   FormTextArea as Textarea,
 } from '@/components/global/form';
-import { useVbenModal } from '@/effects/common-ui';
+import { useVbenModal } from '@/components';
 import { useTabs } from '@/effects/hooks';
 import { $t } from '@/locales';
 import { getPopupContainer } from '@/utils';
