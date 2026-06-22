@@ -2,8 +2,8 @@
 
 ## 重构部分
 
-- 由`monorepo`改为单仓(其实还是包含了一个vite的子包) 注意安装依赖需要`-w`参数
-- 原`packages`已经拆分到src下 其他只保留`vite-config`包
+- 由`monorepo`改为单仓 注意安装依赖需要`-w`参数
+- 原`packages`已经拆分到src下
 - 移除`shadcn`等headless组件库  使用`antdv-next`/适配器重构
 - 重构原`designToken`生成逻辑 改为由`antdv-next`派生
 - 偏好设置功能做精简 主题只保留一个(light dark支持)
