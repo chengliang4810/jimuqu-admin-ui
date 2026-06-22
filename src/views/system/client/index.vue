@@ -17,7 +17,7 @@ import {
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { DEFAULT_CLIENT_ID, EnableStatus } from '@/constants';
-import { useAccess } from '@/effects/access';
+import { useAccess } from '@/components/access';
 import { Page, useVbenDrawer } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';

@@ -1,10 +1,10 @@
 import { createApp, watchEffect } from 'vue';
 
-import { setupGlobalComponent } from '@/components/global';
-import { preferences } from '@/core/preferences';
-import { registerAccessDirective } from '@/effects/access';
 import { setDefaultModalProps } from '@/components';
+import { registerAccessDirective } from '@/components/access';
+import { setupGlobalComponent } from '@/components/global';
 import { registerLoadingDirective } from '@/components/loading';
+import { preferences } from '@/core/preferences';
 import { $t, setupI18n } from '@/locales';
 import { initStores } from '@/stores';
 import { useTitle } from '@vueuse/core';

@@ -18,7 +18,7 @@ import {
 } from '@/components/vxe-table';
 import { EnableStatus, SUPERADMIN_USER_ID } from '@/constants';
 import { preferences } from '@/core/preferences';
-import { useAccess } from '@/effects/access';
+import { useAccess } from '@/components/access';
 import { Page, useVbenDrawer, useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { useBlobExport } from '@/utils/file/export';

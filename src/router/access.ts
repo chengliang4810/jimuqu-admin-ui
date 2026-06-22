@@ -7,7 +7,7 @@ import type {
 } from '@/types';
 
 import { getAllMenusApi } from '@/api';
-import { generateAccessible } from '@/effects/access';
+import { generateAccessible } from '@/components/access';
 import { BasicLayout, IFrameView } from '@/layouts';
 import { $t } from '@/locales';
 

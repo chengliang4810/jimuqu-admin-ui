@@ -23,7 +23,7 @@ import {
   SUPERADMIN_ROLE_ID,
   SUPERADMIN_ROLE_KEY,
 } from '@/constants';
-import { useAccess } from '@/effects/access';
+import { useAccess } from '@/components/access';
 import { Page, useVbenModal } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
