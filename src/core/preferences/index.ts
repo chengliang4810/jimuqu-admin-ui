@@ -1,4 +1,4 @@
-import type { DeepPartial } from '@/core/typings';
+import type { DeepPartial } from '@/types';
 
 import type {
   CustomPreferencesRecord,

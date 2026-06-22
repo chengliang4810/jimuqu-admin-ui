@@ -1,4 +1,4 @@
-import type { MenuRecordRaw } from '@/core/typings';
+import type { MenuRecordRaw } from '@/types';
 
 /**
  * 构建菜单路径映射，从 menu.path 到其所有父级路径链

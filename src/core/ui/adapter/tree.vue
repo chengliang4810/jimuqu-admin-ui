@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ClassType, Recordable } from '@/core/typings';
+import type { ClassType, Recordable } from '@/types';
 import type { Arrayable } from '@vueuse/core';
 
 import type { FlattenedItem, TreeProps } from './tree';

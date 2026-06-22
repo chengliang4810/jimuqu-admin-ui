@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TabDefinition } from '@/core/typings';
+import type { TabDefinition } from '@/types';
 
 import type { TabConfig, TabsProps } from '../../types';
 

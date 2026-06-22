@@ -1,4 +1,4 @@
-import type { MenuRecordRaw } from '@/core/typings';
+import type { MenuRecordRaw } from '@/types';
 
 import type { RouteRecordRaw } from 'vue-router';
 

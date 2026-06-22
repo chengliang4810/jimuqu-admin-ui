@@ -9,7 +9,7 @@ import type {
   PreferencesButtonPositionType,
   TabsStyleType,
   ThemeModeType,
-} from '@/core/typings';
+} from '@/types';
 
 type SupportedLanguagesType = 'en-US' | 'zh-CN';
 type CustomPreferencesValue = boolean | number | string;

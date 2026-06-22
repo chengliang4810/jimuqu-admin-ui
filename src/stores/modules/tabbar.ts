@@ -1,4 +1,4 @@
-import type { TabDefinition } from '@/core/typings';
+import type { TabDefinition } from '@/types';
 
 import type { ComputedRef, VNode } from 'vue';
 import type {

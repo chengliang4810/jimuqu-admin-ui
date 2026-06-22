@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ContentCompactType } from '@/core/typings';
+import type { ContentCompactType } from '@/types';
 
 import type { CSSProperties } from 'vue';
 

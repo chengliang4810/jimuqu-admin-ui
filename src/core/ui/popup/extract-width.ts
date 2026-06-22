@@ -1,4 +1,4 @@
-import type { ClassType } from '@/core/typings';
+import type { ClassType } from '@/types';
 
 import { cn } from '@/utils';
 

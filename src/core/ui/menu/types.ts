@@ -1,4 +1,4 @@
-import type { ThemeModeType } from '@/core/typings';
+import type { ThemeModeType } from '@/types';
 
 interface MenuProps {
   /**

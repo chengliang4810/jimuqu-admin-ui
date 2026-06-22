@@ -2,7 +2,7 @@ import type {
   ExRouteRecordRaw,
   MenuRecordRaw,
   RouteMeta,
-} from '@/core/typings';
+} from '@/types';
 
 import type { Router, RouteRecordRaw } from 'vue-router';
 

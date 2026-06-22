@@ -1,4 +1,4 @@
-import type { Recordable } from '@/core/typings';
+import type { Recordable } from '@/types';
 
 import type { Component, VNode } from 'vue';
 

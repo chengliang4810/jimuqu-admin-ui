@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MenuRecordBadgeRaw } from '@/core/typings';
+import type { MenuRecordBadgeRaw } from '@/types';
 
 import { computed } from 'vue';
 

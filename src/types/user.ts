@@ -1,4 +1,4 @@
-import type { BasicUserInfo } from '@/core/typings';
+import type { BasicUserInfo } from './basic';
 
 /** 用户信息 */
 interface UserInfo extends BasicUserInfo {

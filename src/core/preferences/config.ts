@@ -1,5 +1,7 @@
 import type { Preferences } from './types';
 
+import defaultAntdNextLogo from '@/icons/svg/icons/antdv-next-logo.svg';
+
 const defaultPreferences: Preferences = {
   app: {
     authPageLayout: 'panel-right',
@@ -14,8 +16,7 @@ const defaultPreferences: Preferences = {
     contentPaddingLeft: 0,
     contentPaddingRight: 0,
     contentPaddingTop: 0,
-    defaultAvatar:
-      'https://unpkg.com/@vbenjs/static-source@0.1.7/source/avatar-v1.webp',
+    defaultAvatar: defaultAntdNextLogo,
     defaultHomePath: '/analytics',
     dynamicTitle: true,
     enableCheckUpdates: true,

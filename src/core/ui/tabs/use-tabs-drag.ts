@@ -1,5 +1,5 @@
 import type { Sortable } from '@/core/composables';
-import type { EmitType } from '@/core/typings';
+import type { EmitType } from '@/types';
 
 import type { TabsProps } from './types';
 

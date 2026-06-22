@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MenuRecordRaw } from '@/core/typings';
+import type { MenuRecordRaw } from '@/types';
 
 import { computed, inject } from 'vue';
 

@@ -2,7 +2,7 @@ import type {
   ComponentRecordType,
   GenerateMenuAndRoutesOptions,
   RouteRecordStringComponent,
-} from '@/core/typings';
+} from '@/types';
 
 import type { RouteRecordRaw } from 'vue-router';
 

@@ -1,4 +1,4 @@
-import type { LayoutType } from '@/core/typings';
+import type { LayoutType } from '@/types';
 
 import type { VbenLayoutProps } from '../vben-layout';
 

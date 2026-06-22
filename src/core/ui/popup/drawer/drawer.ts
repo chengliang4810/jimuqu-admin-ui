@@ -1,4 +1,4 @@
-import type { ClassType, MaybePromise } from '@/core/typings';
+import type { ClassType, MaybePromise } from '@/types';
 import type { DrawerProps as AntdDrawerProps } from 'antdv-next';
 
 import type { Component, Ref, StyleValue } from 'vue';

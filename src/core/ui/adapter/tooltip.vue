@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ClassType } from '@/core/typings';
+import type { ClassType } from '@/types';
 
 import type { StyleValue } from 'vue';
 
