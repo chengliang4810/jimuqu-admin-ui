@@ -224,9 +224,10 @@
     "*.ts": "$(capture).test.ts, $(capture).test.tsx, $(capture).spec.ts, $(capture).spec.tsx, $(capture).d.ts",
     "*.tsx": "$(capture).test.ts, $(capture).test.tsx, $(capture).spec.ts, $(capture).spec.tsx,$(capture).d.ts",
     "*.env": "$(capture).env.*",
-    "README.md": "README*,CHANGELOG*,LICENSE,CNAME",
+    "README.md": "README*,LICENSE,CNAME",
+    "index.html": "loading.html",
     "package.json": "pnpm-lock.yaml,.gitattributes,.gitignore,.gitpod.yml,.npmrc,.browserslistrc,.node-version,.git*,.tazerc.json",
-    "eslint.config.mjs": ".eslintignore,.stylelintignore,.commitlintrc.*,stylelint.config.*,.lintstagedrc.mjs,cspell.json,lefthook.yml,.prettierrc.*,.prettierignore"
+    "eslint.config.mjs": ".eslintignore,.stylelintignore,.commitlintrc.*,stylelint.config.*,.lintstagedrc.mjs,cspell.json,lefthook.yml,.prettierrc.*,.prettierignore,.editorconfig"
   },
   "commentTranslate.hover.enabled": false,
   "commentTranslate.multiLineMerge": true,
