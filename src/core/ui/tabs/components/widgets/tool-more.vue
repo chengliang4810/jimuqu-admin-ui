@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { DropdownMenuProps } from '@/core/ui/adapter';
 
-import { LayoutGrid } from '@/core/icons';
+import { LayoutGrid } from '@/icons';
 import { VbenDropdownMenu } from '@/core/ui/adapter';
 
 defineProps<DropdownMenuProps>();

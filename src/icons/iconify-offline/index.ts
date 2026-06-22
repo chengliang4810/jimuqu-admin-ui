@@ -1,5 +1,6 @@
-import { createOfflineIconifyIcon } from '@/core/icons';
 import giteeIcon from '@iconify/icons-simple-icons/gitee';
+
+import { createOfflineIconifyIcon } from './create-offline-icon';
 
 import './offline-icons';
 

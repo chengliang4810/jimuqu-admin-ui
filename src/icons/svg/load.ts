@@ -1,6 +1,6 @@
-import type { IconifyIconStructure } from '@/core/icons';
+import type { IconifyIcon as IconifyIconStructure } from '@iconify/vue';
 
-import { addIcon } from '@/core/icons';
+import { addIcon } from '@iconify/vue';
 
 loadSvgIcons();
 

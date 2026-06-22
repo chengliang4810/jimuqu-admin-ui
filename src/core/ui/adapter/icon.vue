@@ -3,7 +3,7 @@ import type { Component } from 'vue';
 
 import { computed } from 'vue';
 
-import { IconDefault, IconifyIcon } from '@/core/icons';
+import { IconDefault, IconifyIcon } from '@/icons';
 import { isFunction, isHttpUrl, isObject, isString } from '@/utils';
 
 const props = defineProps<{

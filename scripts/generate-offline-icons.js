@@ -71,7 +71,7 @@ const outputLines = [
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
   '// 该文件由脚本 generate-offline-icons.js 生成 ，不要手动修改',
-  "import { addIcon } from '@/core/icons';",
+  "import { addIcon } from '@iconify/vue';",
   '',
 ];
 

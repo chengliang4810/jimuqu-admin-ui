@@ -13,7 +13,7 @@ import {
   CircleX,
   Info,
   X,
-} from '@/core/icons';
+} from '@/icons';
 import { usePreferences } from '@/core/preferences';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/utils';

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RotateCw } from '@/core/icons';
+import { RotateCw } from '@/icons';
 
 const emit = defineEmits(['refresh']);
 

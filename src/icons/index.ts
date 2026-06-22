@@ -1,25 +1,7 @@
 export { GiteeIcon } from './iconify-offline';
+export { createOfflineIconifyIcon } from './iconify-offline/create-offline-icon';
 export { default as EmptyIcon } from './icons/empty-icon.vue';
 export {
-  SvgAntdvLogoIcon,
-  SvgAvatar1Icon,
-  SvgAvatar2Icon,
-  SvgAvatar3Icon,
-  SvgAvatar4Icon,
-  SvgBellIcon,
-  SvgCakeIcon,
-  SvgCardIcon,
-  SvgDownloadIcon,
-  SvgMaxKeyIcon,
-  SvgMessageUrl,
-  SvgQQIcon,
-  SvgSnailJobIcon,
-  SvgTopiamIcon,
-  SvgWechatIcon,
-} from './svg';
-export {
-  addCollection,
-  addIcon,
   AlignCenter,
   AlignLeft,
   AlignRight,
@@ -47,8 +29,6 @@ export {
   CircleX,
   Copy,
   CornerDownLeft,
-  createIconifyIcon,
-  createOfflineIconifyIcon,
   Download,
   Ellipsis,
   Eraser,
@@ -66,8 +46,6 @@ export {
   Heading2,
   Highlighter,
   IconDefault,
-  IconifyIcon,
-  type IconifyIconStructure,
   ImagePlus,
   Inbox,
   Info,
@@ -77,7 +55,6 @@ export {
   LayoutGrid,
   Link2,
   List,
-  listIcons,
   ListOrdered,
   LoaderCircle,
   LockKeyhole,
@@ -119,5 +96,29 @@ export {
   Unlink2,
   UserRoundPen,
   X,
-} from '@/core/icons';
+} from './lucide';
+export {
+  SvgAntdvLogoIcon,
+  SvgAvatar1Icon,
+  SvgAvatar2Icon,
+  SvgAvatar3Icon,
+  SvgAvatar4Icon,
+  SvgBellIcon,
+  SvgCakeIcon,
+  SvgCardIcon,
+  SvgDownloadIcon,
+  SvgMaxKeyIcon,
+  SvgMessageUrl,
+  SvgQQIcon,
+  SvgSnailJobIcon,
+  SvgTopiamIcon,
+  SvgWechatIcon,
+} from './svg';
 export { VbenIcon } from '@/core/ui/adapter';
+export type { IconifyIcon as IconifyIconStructure } from '@iconify/vue';
+export {
+  addCollection,
+  addIcon,
+  Icon as IconifyIcon,
+  listIcons,
+} from '@iconify/vue';

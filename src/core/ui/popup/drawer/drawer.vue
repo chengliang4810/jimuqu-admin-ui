@@ -5,7 +5,7 @@ import { computed, onDeactivated, provide, useId } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { usePriorityValues, useSimpleLocale } from '@/core/composables';
-import { X } from '@/core/icons';
+import { X } from '@/icons';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/utils';
 import { CloseOutlined } from '@antdv-next/icons';

@@ -168,7 +168,6 @@ const matchCryptoVendorChunk = createChunkMatcher(
 const matchMotionVendorChunk = createChunkMatcher(fromPnpm('motion-v'));
 const matchVbenCoreChunk = createChunkMatcher([
   '/src/core/shared/',
-  '/src/core/icons/',
   '/src/styles/design/',
   '/src/core/composables/',
   '/src/constants/',
