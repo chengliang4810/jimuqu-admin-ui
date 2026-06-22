@@ -1,6 +1,7 @@
 import prettierConfig from 'eslint-config-prettier';
 
 import {
+  custom,
   ignores,
   imports,
   javascript,
@@ -27,6 +28,7 @@ async function defineConfig(config = []) {
     unicorn(),
     yaml(),
     pnpm(),
+    custom(),
     ...config,
     // 关闭与 prettier 冲突的格式化规则,必须放在最后
     prettierConfig,
