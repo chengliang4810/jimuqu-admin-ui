@@ -4,7 +4,7 @@ import type { Ref } from 'vue';
 
 import { computed, ref } from 'vue';
 
-import { prompt } from '@/components';
+import { prompt } from '@/core/ui/popup';
 import { cn } from '@/utils';
 
 export type ToolbarBlock =

@@ -3,7 +3,7 @@ import type { Notice } from '@/api/system/notice/model';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import { useVbenModal } from '@/components';
-import { mitt } from '@/utils';
+import { mitt } from '../helpers';
 import noticePreviewModal from '@/views/system/notice/notice-preview-modal.vue';
 
 type NotificationEvent = {

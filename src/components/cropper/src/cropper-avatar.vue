@@ -5,7 +5,7 @@ import type { CSSProperties, PropType } from 'vue';
 
 import { computed, ref, unref, watch, watchEffect } from 'vue';
 
-import { useVbenModal } from '@/components';
+import { useVbenModal } from '@/core/ui/popup';
 import { $t as t } from '@/locales';
 
 import cropperModal from './cropper-modal.vue';

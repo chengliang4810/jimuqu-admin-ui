@@ -1,7 +1,7 @@
 import type {
   BaseAsymmetricEncryption,
   BaseSymmetricEncryption,
-} from '@/utils';
+} from '../encryption';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 
 import type { HttpResponse } from './type';
@@ -17,7 +17,7 @@ import {
   encodeBase64,
   randomStr,
   RsaEncryption,
-} from '@/utils';
+} from '../encryption';
 import { axiosRequestAdapter } from '@alova/adapter-axios';
 import { createAlova } from 'alova';
 import VueHook from 'alova/vue';
