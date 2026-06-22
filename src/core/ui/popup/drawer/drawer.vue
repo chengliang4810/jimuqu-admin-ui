@@ -8,6 +8,7 @@ import { usePriorityValues, useSimpleLocale } from '@/core/composables';
 import { X } from '@/core/icons';
 import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/utils';
+import { CloseOutlined } from '@antdv-next/icons';
 import { Button, Drawer, Spin, Tooltip } from 'antdv-next';
 
 import { extractWidthFromClass } from '../extract-width';
@@ -177,7 +178,7 @@ function onAfterOpenChange(open: boolean) {
           :disabled="submitting"
           @click="handleClose"
         >
-          <slot name="close-icon"><X class="size-4" /></slot>
+          <slot name="close-icon"><CloseOutlined class="size-4" /></slot>
         </Button>
       </div>
     </template>
