@@ -28,9 +28,9 @@ export async function typescript() {
           extraFileExtensions: ['.vue'],
           jsxPragma: 'React',
           // 扁平化为单仓后,使用 projectService 按文件就近解析各 workspace 的 tsconfig
-          projectService: {
-            allowDefaultProject: ['*.config.ts'],
-          },
+          // projectService: {
+          //   allowDefaultProject: ['*.config.ts'],
+          // },
           sourceType: 'module',
           tsconfigRootDir: process.cwd(),
         },
