@@ -45,7 +45,7 @@ const menus = computed(() => {
     },
     {
       handler: () => {
-        openWindow('https://gitee.com/dapppp/ruoyi-plus-vben5', {
+        openWindow('https://gitee.com/dapppp/bell-plus', {
           target: '_blank',
         });
       },

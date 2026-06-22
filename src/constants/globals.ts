@@ -12,3 +12,8 @@ export const ELEMENT_ID_MAIN_CONTENT = `__vben_main_content`;
  * @zh_CN 默认命名空间
  */
 export const DEFAULT_NAMESPACE = 'vben';
+
+/**
+ * gitee仓库链接
+ */
+export const GITEE_LINK = 'https://gitee.com/dapppp/bell-plus';

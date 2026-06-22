@@ -39,7 +39,6 @@ const renderLink = (href: string, text: string) =>
   );
 
 const {
-  authorEmail,
   authorName,
   authorUrl,
   buildTime,
@@ -72,18 +71,15 @@ const baseInfoItems = computed<AboutDescriptionItem>(() => [
     label: '最后构建时间',
   },
   {
-    content: renderLink('', '点击查看'),
+    content: renderLink('https://gitee.com/dapppp/bell-plus', '点击查看'),
     label: '文档地址',
   },
   {
-    content: renderLink('', '点击查看'),
-    label: 'Github',
+    content: renderLink('https://gitee.com/dapppp/bell-plus', '点击查看'),
+    label: 'Gitee',
   },
   {
-    content: h('div', [
-      renderLink(authorUrl, `${authorName}  `),
-      renderLink(`mailto:${authorEmail}`, authorEmail),
-    ]),
+    content: h('div', [renderLink(authorUrl, `${authorName}  `)]),
     label: '作者',
   },
 ]);
