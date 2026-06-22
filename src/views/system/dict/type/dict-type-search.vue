@@ -58,7 +58,7 @@ defineExpose({
       :model="model"
       :label-col="{ style: { width: '80px' } }"
     >
-      <div :class="cn(tableSeachClass, 'lg:grid-cols-2 xl:grid-cols-2')">
+      <div :class="cn(tableSeachClass, 'lg:grid-cols-3 xl:grid-cols-3')">
         <template v-if="!searchCollapsed">
           <FormItem label="字典名称" name="dictName">
             <FormInput v-model:value="model.dictName" allow-clear />
