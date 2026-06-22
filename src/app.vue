@@ -17,7 +17,7 @@ defineOptions({ name: 'App' });
 const { isDark } = usePreferences();
 const { tokens } = useAntdvNextTokens();
 
-const tokenTheme = computed(() => {
+const tokenTheme = computed<ConfigProviderProps['theme']>(() => {
   const algorithm = isDark.value
     ? [theme.darkAlgorithm]
     : [theme.defaultAlgorithm];
