@@ -5,11 +5,7 @@ export {
   type BeforeCloseScope,
   clearAllAlerts,
   type CloseIconPlacement,
-  ColPage,
-  type ColPageProps,
   confirm,
-  CountTo,
-  type CountToProps,
   type DrawerApiOptions,
   type DrawerPlacement,
   type DrawerProps,
@@ -33,8 +29,6 @@ export {
   setDefaultDrawerProps,
   setDefaultModalProps,
   Spinner,
-  type TransitionPresets,
-  TransitionPresetsKeys,
   useAlertContext,
   useVbenDrawer,
   useVbenModal,
@@ -50,6 +44,5 @@ export {
   VbenLogo,
   VbenModal,
   VbenSpinner,
-  VResize,
 } from './components';
 export { Fallback, type FallbackProps } from './ui';
