@@ -9,7 +9,7 @@ import {
   TabsToolScreen,
   TabsView,
 } from '@/core/ui/tabs';
-import { useContentMaximize, useTabs } from '@/effects/hooks';
+import { useContentMaximize, useTabs } from '@/hooks';
 import { useTabbarStore } from '@/stores';
 
 import { useTabbar } from './use-tabbar';

@@ -6,7 +6,7 @@ import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { pageByCurrent } from '@/api/workflow/instance';
 import { Page } from '@/components';
-import { useTabs } from '@/effects/hooks';
+import { useTabs } from '@/hooks';
 import { getPopupContainer } from '@/utils';
 import { FilterOutlined, RedoOutlined } from '@antdv-next/icons';
 import {

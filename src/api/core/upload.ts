@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig } from '@/effects/request';
+import type { AxiosRequestConfig } from 'axios';
 
 import { alovaInstance } from '@/utils/http';
 import { ContentTypeEnum } from '@/utils/http/helper';

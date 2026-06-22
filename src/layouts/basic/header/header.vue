@@ -3,7 +3,7 @@ import { computed, useSlots } from 'vue';
 
 import { preferences, usePreferences } from '@/core/preferences';
 import { VbenFullScreen, VbenIconButton } from '@/core/ui/adapter';
-import { useRefresh } from '@/effects/hooks';
+import { useRefresh } from '@/hooks';
 import { RotateCw } from '@/icons';
 import { useAccessStore } from '@/stores';
 

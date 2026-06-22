@@ -202,7 +202,7 @@ const matchVbenIconsChunk = createChunkMatcher(['/src/icons/']);
 const matchVbenStylesChunk = createChunkMatcher(['/src/styles/']);
 const matchVbenLayoutChunk = createChunkMatcher([
   '/src/components/access/',
-  '/src/effects/hooks/',
+  '/src/hooks/',
   '/src/effects/layouts/',
 ]);
 const matchVbenStateChunk = createChunkMatcher([

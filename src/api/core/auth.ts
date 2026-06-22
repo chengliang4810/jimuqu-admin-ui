@@ -1,4 +1,4 @@
-import { useAppConfig } from '@/effects/hooks';
+import { useAppConfig } from '@/hooks';
 import { alovaInstance } from '@/utils/http';
 
 const { clientId, sseEnable } = useAppConfig(

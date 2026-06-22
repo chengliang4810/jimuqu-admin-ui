@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAppConfig, useTabs } from '@/effects/hooks';
+import { useAppConfig, useTabs } from '@/hooks';
 import { useAccessStore } from '@/stores';
 import { useEventListener } from '@vueuse/core';
 import { stringify } from 'qs';

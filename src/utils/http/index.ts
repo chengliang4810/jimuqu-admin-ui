@@ -8,7 +8,7 @@ import type { HttpResponse } from './type';
 
 import { BUSINESS_SUCCESS_CODE, UNAUTHORIZED_CODE } from '@/constants';
 import { preferences } from '@/core/preferences';
-import { useAppConfig } from '@/effects/hooks';
+import { useAppConfig } from '@/hooks';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
 import {

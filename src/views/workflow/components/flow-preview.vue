@@ -1,7 +1,7 @@
 <!-- 流程图预览组件 -->
 
 <script setup lang="ts">
-import { useAppConfig } from '@/effects/hooks';
+import { useAppConfig } from '@/hooks';
 import { useAccessStore } from '@/stores';
 import { motion } from 'motion-v';
 import { stringify } from 'qs';

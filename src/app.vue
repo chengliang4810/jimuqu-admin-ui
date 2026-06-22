@@ -4,7 +4,7 @@ import type { ConfigProviderProps } from 'antdv-next';
 import { computed } from 'vue';
 
 import { preferences, usePreferences } from '@/core/preferences';
-import { useAntdvNextTokens } from '@/effects/hooks';
+import { useAntdvNextTokens } from '@/hooks';
 import { antdLocale } from '@/locales';
 import { App, ConfigProvider, Spin, theme } from 'antdv-next';
 import { storeToRefs } from 'pinia';

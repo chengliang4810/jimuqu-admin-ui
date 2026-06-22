@@ -14,7 +14,7 @@ import {
 } from '@/core/preferences';
 import { VbenBackTop, VbenLogo } from '@/core/ui/adapter';
 import { VbenAdminLayout } from '@/core/ui/layout';
-import { useRefresh } from '@/effects/hooks';
+import { useRefresh } from '@/hooks';
 import { $t, i18n } from '@/locales';
 import { useAccessStore, useTabbarStore } from '@/stores';
 import { cloneDeep, mapTree } from '@/utils';

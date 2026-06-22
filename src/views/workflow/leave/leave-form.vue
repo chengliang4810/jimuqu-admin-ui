@@ -20,7 +20,7 @@ import {
   FormTextArea as Textarea,
 } from '@/components/global/form';
 import { useVbenModal } from '@/components';
-import { useTabs } from '@/effects/hooks';
+import { useTabs } from '@/hooks';
 import { $t } from '@/locales';
 import { getPopupContainer } from '@/utils';
 import { Card, DateRangePicker, Form, FormItem, Spin } from 'antdv-next';

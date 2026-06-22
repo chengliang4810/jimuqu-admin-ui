@@ -8,7 +8,7 @@ import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { categoryTree } from '@/api/workflow/category';
 import { pageByTaskWait } from '@/api/workflow/task';
 import { Page } from '@/components';
-import { useTabs } from '@/effects/hooks';
+import { useTabs } from '@/hooks';
 import { addFullName, getPopupContainer } from '@/utils';
 import { FilterOutlined, RedoOutlined } from '@antdv-next/icons';
 import {

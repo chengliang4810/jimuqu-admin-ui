@@ -1,4 +1,4 @@
-import { useAppConfig } from '@/effects/hooks';
+import { useAppConfig } from '@/hooks';
 import { useAccessStore } from '@/stores';
 import { useEventSource, useWebSocket } from '@vueuse/core';
 

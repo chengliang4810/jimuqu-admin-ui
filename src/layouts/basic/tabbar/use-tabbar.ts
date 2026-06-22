@@ -6,7 +6,7 @@ import type { RouteLocationNormalizedGeneric } from 'vue-router';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useContentMaximize, useTabs } from '@/effects/hooks';
+import { useContentMaximize, useTabs } from '@/hooks';
 import {
   ArrowLeftToLine,
   ArrowRightLeft,
