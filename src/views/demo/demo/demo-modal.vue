@@ -6,11 +6,11 @@ import type { DemoForm } from './api/model';
 
 import { computed, ref } from 'vue';
 
+import { useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormInputNumber as InputNumber,
 } from '@/components/global/form';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { Form, FormItem } from 'antdv-next';

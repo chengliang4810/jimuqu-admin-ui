@@ -6,8 +6,8 @@ import { ref, useTemplateRef } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { roleSelectAll, roleUnallocatedList } from '@/api/system/role';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useVbenDrawer } from '@/components';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

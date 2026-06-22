@@ -14,12 +14,12 @@ import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { startWorkFlow } from '@/api/workflow/task';
+import { useVbenModal } from '@/components';
 import {
   FormInputNumber as InputNumber,
   FormSelect as Select,
   FormTextArea as Textarea,
 } from '@/components/global/form';
-import { useVbenModal } from '@/components';
 import { useTabs } from '@/hooks';
 import { $t } from '@/locales';
 import { getPopupContainer } from '@/utils';

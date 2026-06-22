@@ -10,11 +10,11 @@ import {
   dictTypeInfo,
   dictTypeUpdate,
 } from '@/api/system/dict/dict-type';
+import { useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormTextArea as TextArea,
 } from '@/components/global/form';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

@@ -13,6 +13,7 @@ import {
   deptUpdate,
 } from '@/api/system/dept';
 import { listUserByDeptId } from '@/api/system/user';
+import { useVbenDrawer } from '@/components';
 import {
   FormInput as Input,
   FormInputNumber as InputNumber,
@@ -20,7 +21,6 @@ import {
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

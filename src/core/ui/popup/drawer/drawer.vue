@@ -5,8 +5,8 @@ import { computed, onDeactivated, provide, useId } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { usePriorityValues, useSimpleLocale } from '@/core/composables';
-import { X } from '@/icons';
 import { globalShareState } from '@/core/shared/global-state';
+import { X } from '@/icons';
 import { cn } from '@/utils';
 import { CloseOutlined } from '@antdv-next/icons';
 import { Button, Drawer, Spin, Tooltip } from 'antdv-next';

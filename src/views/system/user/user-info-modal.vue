@@ -5,9 +5,9 @@ import type { DescriptionsProps } from 'antdv-next';
 import { computed, shallowRef } from 'vue';
 
 import { findUserInfo } from '@/api/system/user';
+import { useVbenModal } from '@/components';
 import { DictTag } from '@/components/dict';
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/components';
 import { getDictOptions } from '@/utils/dict';
 import { Descriptions, Tag } from 'antdv-next';
 import dayjs from 'dayjs';

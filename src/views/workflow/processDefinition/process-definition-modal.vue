@@ -10,11 +10,11 @@ import {
   workflowDefinitionInfo,
   workflowDefinitionUpdate,
 } from '@/api/workflow/definition';
+import { useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

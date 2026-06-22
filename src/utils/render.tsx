@@ -5,8 +5,8 @@ import type { Component as ComponentType } from 'vue';
 
 import { h } from 'vue';
 
-import { DictTag } from '@/components/dict';
 import { JsonPreview } from '@/components';
+import { DictTag } from '@/components/dict';
 import { IconifyIcon, VbenIcon } from '@/icons';
 import { cn } from '@/utils';
 import { Tag } from 'antdv-next';

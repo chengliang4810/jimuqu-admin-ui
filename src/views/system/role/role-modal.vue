@@ -6,6 +6,7 @@ import type { FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { roleAdd, roleInfo, roleUpdate } from '@/api/system/role';
+import { useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormInputNumber as InputNumber,
@@ -13,7 +14,6 @@ import {
   FormTextArea as TextArea,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

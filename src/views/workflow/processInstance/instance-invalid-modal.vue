@@ -5,8 +5,8 @@ import type { FormInstance } from 'antdv-next';
 import { ref } from 'vue';
 
 import { workflowInstanceInvalid } from '@/api/workflow/instance';
-import { FormTextArea as Textarea } from '@/components/global/form';
 import { useVbenModal } from '@/components';
+import { FormTextArea as Textarea } from '@/components/global/form';
 import { $t } from '@/locales';
 import { Form, FormItem } from 'antdv-next';
 import { cloneDeep } from 'lodash-es';

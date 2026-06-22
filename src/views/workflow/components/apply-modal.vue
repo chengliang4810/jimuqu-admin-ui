@@ -8,8 +8,8 @@ import type { FormInstance } from 'antdv-next';
 import { ref } from 'vue';
 
 import { completeTask, getTaskByTaskId } from '@/api/workflow/task';
-import { FileUpload } from '@/components/upload';
 import { useVbenModal } from '@/components';
+import { FileUpload } from '@/components/upload';
 import { CheckboxGroup, Form, FormItem } from 'antdv-next';
 import { cloneDeep } from 'lodash-es';
 

@@ -4,8 +4,8 @@ import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, ref } from 'vue';
 
-import { DictEnum } from '@/constants';
 import { useVbenModal } from '@/components';
+import { DictEnum } from '@/constants';
 import { renderBrowserIcon, renderDict, renderOsIcon } from '@/utils/render';
 import { Descriptions } from 'antdv-next';
 

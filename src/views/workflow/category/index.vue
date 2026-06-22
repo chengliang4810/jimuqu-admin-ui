@@ -5,11 +5,11 @@ import type { VxeGridInstance } from 'vxe-table';
 import { nextTick, ref, useTemplateRef } from 'vue';
 
 import { categoryList, categoryRemove } from '@/api/workflow/category';
+import { Page, useVbenModal } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/components';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

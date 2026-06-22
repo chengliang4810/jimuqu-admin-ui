@@ -10,11 +10,11 @@ import {
   dictDataList,
   dictDataRemove,
 } from '@/api/system/dict/dict-data';
+import { useVbenDrawer } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { useVbenDrawer } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

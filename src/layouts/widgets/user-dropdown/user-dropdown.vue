@@ -11,7 +11,7 @@ import { useVbenModal } from '@/core/ui/popup';
 import { LockKeyhole, LogOut, Settings } from '@/icons';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
-import { cn , isWindowsOs } from '@/utils';
+import { cn, isWindowsOs } from '@/utils';
 import { useMagicKeys, whenever } from '@vueuse/core';
 import { Badge, Dropdown } from 'antdv-next';
 

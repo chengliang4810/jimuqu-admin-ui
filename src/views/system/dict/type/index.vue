@@ -10,11 +10,11 @@ import {
   dictTypeRemove,
   refreshDictTypeCache,
 } from '@/api/system/dict/dict-type';
+import { useVbenModal } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { useVbenModal } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

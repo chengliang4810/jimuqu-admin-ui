@@ -8,6 +8,7 @@ import { computed, ref } from 'vue';
 
 import { postAdd, postInfo, postUpdate } from '@/api/system/post';
 import { getDeptTree } from '@/api/system/user';
+import { useVbenDrawer } from '@/components';
 import {
   FormInput as Input,
   FormInputNumber as InputNumber,
@@ -15,7 +16,6 @@ import {
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

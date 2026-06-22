@@ -10,14 +10,14 @@ import {
   ossConfigList,
   ossConfigRemove,
 } from '@/api/system/oss-config';
+import { Page, useVbenDrawer } from '@/components';
+import { useAccess } from '@/components/access';
 import { ApiSwitch } from '@/components/global';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
-import { useAccess } from '@/components/access';
-import { Page, useVbenDrawer } from '@/components';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

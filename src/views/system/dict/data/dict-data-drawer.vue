@@ -10,13 +10,13 @@ import {
   dictDataUpdate,
   dictDetailInfo,
 } from '@/api/system/dict/dict-data';
+import { useVbenDrawer } from '@/components';
 import { tagTypes } from '@/components/dict';
 import {
   FormInput as Input,
   FormInputNumber as InputNumber,
   FormTextArea as TextArea,
 } from '@/components/global/form';
-import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

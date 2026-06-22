@@ -6,13 +6,13 @@ import type { FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { menuAdd, menuInfo, menuList, menuUpdate } from '@/api/system/menu';
+import { useVbenDrawer } from '@/components';
 import {
   FormInput as Input,
   FormInputNumber as InputNumber,
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/components';
 import { VbenIcon } from '@/icons';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';

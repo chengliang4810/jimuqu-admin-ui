@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { Tiptap } from '@/components/tiptap';
 import { Page } from '@/components';
+import { Tiptap } from '@/components/tiptap';
 import { cn } from '@/utils';
 import { Button, RadioGroup, Switch } from 'antdv-next';
 

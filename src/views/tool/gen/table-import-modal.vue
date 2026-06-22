@@ -8,11 +8,11 @@ import {
   importTable,
   readyToGenList,
 } from '@/api/tool/gen';
+import { useVbenModal } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { useVbenModal } from '@/components';
 import { Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

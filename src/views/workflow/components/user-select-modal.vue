@@ -6,8 +6,8 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import { userList } from '@/api/system/user';
-import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import { useVbenModal, VbenAvatar } from '@/components';
+import { withDefaultVxeGridOptions } from '@/components/vxe-table';
 import DeptTree from '@/views/system/user/dept-tree.vue';
 import { Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

@@ -3,10 +3,10 @@ import type { Notice } from '@/api/system/notice/model';
 
 import { shallowRef } from 'vue';
 
+import { useVbenModal } from '@/components';
+import { useAccess } from '@/components/access';
 // 直接从 helper 引入, 避免经 barrel 连带打包重型 tiptap 编辑器
 import { contentWithOssIdTransform } from '@/components/tiptap/src/helper';
-import { useAccess } from '@/components/access';
-import { useVbenModal } from '@/components';
 
 const currentNotice = shallowRef<Notice | null>(null);
 const { hasAccessByCodes } = useAccess();

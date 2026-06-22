@@ -5,11 +5,11 @@ import type { FormInstance, SelectProps } from 'antdv-next';
 import { ref } from 'vue';
 
 import { instanceVariable, updateFlowVariable } from '@/api/workflow/instance';
+import { JsonPreview, useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormSelect as Select,
 } from '@/components/global/form';
-import { JsonPreview, useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cn, getPopupContainer } from '@/utils';
 import { Button, Form, FormItem, Tag } from 'antdv-next';

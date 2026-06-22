@@ -2,8 +2,8 @@
 import type { TabsEmits, TabsProps } from './types';
 
 import { useForwardPropsEmits } from '@/core/composables';
-import { ChevronsLeft, ChevronsRight } from '@/icons';
 import { VbenScrollbar } from '@/core/ui/adapter';
+import { ChevronsLeft, ChevronsRight } from '@/icons';
 
 import { Tabs, TabsChrome } from './components';
 import { useTabsDrag } from './use-tabs-drag';

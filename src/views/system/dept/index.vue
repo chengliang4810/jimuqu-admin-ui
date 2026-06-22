@@ -5,11 +5,11 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { nextTick, ref, useTemplateRef } from 'vue';
 
 import { deptList, deptRemove } from '@/api/system/dept';
+import { Page, useVbenDrawer } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenDrawer } from '@/components';
 import { eachTree } from '@/utils';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';

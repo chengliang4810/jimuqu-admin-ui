@@ -9,10 +9,10 @@ import type { FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { noticeAdd, noticeInfo, noticeUpdate } from '@/api/system/notice';
+import { useVbenModal } from '@/components';
 import { FormInput } from '@/components/global/form';
 import { contentWithOssIdTransform, Tiptap } from '@/components/tiptap';
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';

@@ -1,8 +1,4 @@
-import type {
-  ExRouteRecordRaw,
-  MenuRecordRaw,
-  RouteMeta,
-} from '@/types';
+import type { ExRouteRecordRaw, MenuRecordRaw, RouteMeta } from '@/types';
 
 import type { Router, RouteRecordRaw } from 'vue-router';
 

@@ -10,11 +10,11 @@ import {
   postList,
   postRemove,
 } from '@/api/system/post';
+import { Page, useVbenDrawer } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenDrawer } from '@/components';
 import { useBlobExport } from '@/utils/file/export';
 import DeptTree from '@/views/system/user/dept-tree.vue';
 import { Popconfirm, Space, Spin } from 'antdv-next';

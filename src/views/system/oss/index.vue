@@ -8,12 +8,12 @@ import { useRouter } from 'vue-router';
 
 import { configInfoByKey } from '@/api/system/config';
 import { checkLoginBeforeDownload, ossList, ossRemove } from '@/api/system/oss';
+import { Page, useVbenModal } from '@/components';
 import {
   addSortParams,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/components';
 import { useAppConfig } from '@/hooks';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';

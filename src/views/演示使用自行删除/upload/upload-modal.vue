@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { h , ref } from 'vue';
+import { h, ref } from 'vue';
 
-import { ImageUpload } from '@/components/upload';
 import { JsonPreview, useVbenModal } from '@/components';
+import { ImageUpload } from '@/components/upload';
 import { Form, FormItem, Space } from 'antdv-next';
 
 const formData = ref({

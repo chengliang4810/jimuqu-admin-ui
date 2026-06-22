@@ -10,12 +10,12 @@ import {
   ossConfigInfo,
   ossConfigUpdate,
 } from '@/api/system/oss-config';
+import { useVbenDrawer } from '@/components';
 import {
   FormInput as Input,
   FormTextArea as TextArea,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

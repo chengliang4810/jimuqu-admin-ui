@@ -10,12 +10,12 @@ import {
   categoryList,
   categoryUpdate,
 } from '@/api/workflow/category';
+import { useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormInputNumber as InputNumber,
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 import { useBeforeCloseDiff } from '@/utils/popup';

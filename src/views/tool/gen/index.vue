@@ -12,11 +12,11 @@ import {
   getDataSourceNames,
   syncDb,
 } from '@/api/tool/gen';
+import { Page, useVbenModal } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/components';
 import { downloadByData } from '@/utils/file/download';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import dayjs from 'dayjs';

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { FileUpload } from '@/components/upload';
 import { useVbenModal } from '@/components';
+import { FileUpload } from '@/components/upload';
 
 const emit = defineEmits<{ reload: [] }>();
 

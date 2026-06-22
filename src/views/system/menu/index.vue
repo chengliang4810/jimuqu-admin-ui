@@ -5,12 +5,12 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { computed, ref, useTemplateRef } from 'vue';
 
 import { menuCascadeRemove, menuList, menuRemove } from '@/api/system/menu';
+import { Fallback, Page, useVbenDrawer } from '@/components';
+import { useAccess } from '@/components/access';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { useAccess } from '@/components/access';
-import { Fallback, Page, useVbenDrawer } from '@/components';
 import { $t } from '@/locales';
 import { eachTree, listToTree, treeToList } from '@/utils';
 import { Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';

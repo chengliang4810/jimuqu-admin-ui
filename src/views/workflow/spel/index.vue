@@ -5,11 +5,11 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import { spelDelete, spelList } from '@/api/workflow/spel';
+import { Page, useVbenDrawer } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenDrawer } from '@/components';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 

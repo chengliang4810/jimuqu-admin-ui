@@ -3,9 +3,9 @@ import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, h, ref } from 'vue';
 
+import { Page } from '@/components';
 import { DictTag } from '@/components/dict';
 import { DictEnum } from '@/constants';
-import { Page } from '@/components';
 import { getDictOptions } from '@/utils/dict';
 import {
   Alert,

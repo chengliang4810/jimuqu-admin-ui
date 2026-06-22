@@ -10,9 +10,9 @@ import type { FormInstance } from 'antdv-next';
 import { ref } from 'vue';
 
 import { completeTask, getNextNodeList } from '@/api/workflow/task';
+import { useVbenModal } from '@/components';
 import { FormTextArea as TextArea } from '@/components/global/form';
 import { FileUpload } from '@/components/upload';
-import { useVbenModal } from '@/components';
 import { cloneDeep } from '@/utils';
 import { CheckboxGroup, Form, FormItem } from 'antdv-next';
 import { omit } from 'lodash-es';

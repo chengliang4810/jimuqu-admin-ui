@@ -6,12 +6,12 @@ import type { FormInstance } from 'antdv-next';
 import { ref } from 'vue';
 
 import { backProcess, getBackTaskNode } from '@/api/workflow/task';
+import { useVbenModal } from '@/components';
 import {
   FormSelect as Select,
   FormTextArea as TextArea,
 } from '@/components/global/form';
 import { FileUpload } from '@/components/upload';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
 import { CheckboxGroup, Form, FormItem } from 'antdv-next';

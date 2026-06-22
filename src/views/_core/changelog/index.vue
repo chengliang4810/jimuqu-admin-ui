@@ -2,8 +2,8 @@
 import { computed, defineAsyncComponent } from 'vue';
 
 import changeLog from '@/../changelog.md?raw';
-import { usePreferences } from '@/core/preferences';
 import { Page } from '@/components';
+import { usePreferences } from '@/core/preferences';
 // import { XMarkdown } from '@antdv-next/x-markdown';
 
 import '@antdv-next/x-markdown/themes/index.css';

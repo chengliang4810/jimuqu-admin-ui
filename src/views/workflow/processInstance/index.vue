@@ -10,11 +10,11 @@ import {
   pageByFinish,
   pageByRunning,
 } from '@/api/workflow/instance';
+import { Page, useVbenModal } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import CategoryTree from '@/views/workflow/processDefinition/category-tree.vue';
 import { Popconfirm, RadioGroup, Space, Spin } from 'antdv-next';

@@ -6,12 +6,12 @@ import type { FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { configAdd, configInfo, configUpdate } from '@/api/system/config';
+import { useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormTextArea as TextArea,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
-import { useVbenModal } from '@/components';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

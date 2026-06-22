@@ -5,11 +5,11 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import { noticeList, noticeRemove } from '@/api/system/notice';
+import { Page, useVbenModal } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Page, useVbenModal } from '@/components';
 import { notificationMitt } from '@/utils/mitt/notification';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
