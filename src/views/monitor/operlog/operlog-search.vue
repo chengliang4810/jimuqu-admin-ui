@@ -8,7 +8,6 @@ import { FormInput, FormSelect } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
 import { tableSeachClass } from '@/components/vxe-table';
 import { DictEnum } from '@/constants';
-import { ChevronDown } from '@/icons';
 import { formatDateTime } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { Card, DateRangePicker, Form, FormItem } from 'antdv-next';
@@ -38,10 +37,6 @@ const model = ref<SearchParams>({
 
 const formInstance = ref<FormInstance>();
 const searchCollapsed = ref(false);
-
-function toggleCollapse() {
-  searchCollapsed.value = !searchCollapsed.value;
-}
 
 function buildSearchParams(values: SearchParams) {
   const params: Record<string, any> = { ...values };
@@ -113,18 +108,12 @@ defineExpose({
         </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] flex items-center justify-end gap-4">
-          <a-button type="link" @click="toggleCollapse">
-            {{
-              searchCollapsed
-                ? $t('pages.common.expand')
-                : $t('pages.common.collapse')
-            }}
-            <ChevronDown
-              class="size-4 transition-transform"
-              :class="{ 'rotate-180': !searchCollapsed }"
-            />
-          </a-button>
-          <SearchButtonGroup @reset="handleReset" @submit="handleSubmit" />
+          <SearchButtonGroup
+            collapsible
+            v-model:collapsed="searchCollapsed"
+            @reset="handleReset"
+            @submit="handleSubmit"
+          />
         </div>
       </div>
     </Form>
