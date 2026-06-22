@@ -143,6 +143,7 @@ async function handleUnlock() {
   canUnlock.value = false;
   tableRef.value?.clearCheckboxRow();
   tableRef.value?.clearCheckboxReserve();
+  syncCheckedRows();
 }
 
 const { exportBlob, exportLoading, buildExportFileName } =
