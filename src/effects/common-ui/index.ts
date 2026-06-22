@@ -10,7 +10,6 @@ export {
   type DrawerPlacement,
   type DrawerProps,
   type DrawerState,
-  EllipsisText,
   type ExtendedDrawerApi,
   type ExtendedModalApi,
   type FlattenedItem,

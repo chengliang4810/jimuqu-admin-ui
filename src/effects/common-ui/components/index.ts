@@ -1,4 +1,3 @@
-export { EllipsisText } from './ellipsis-text';
 export { JsonPreview } from './json-preview';
 export { Loading, registerLoadingDirective, Spinner } from './loading';
 export { Page, type PageProps } from './page';
