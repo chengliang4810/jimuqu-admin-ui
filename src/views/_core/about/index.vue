@@ -3,7 +3,6 @@ import type { DescriptionsProps } from 'antdv-next';
 
 import { computed, h } from 'vue';
 
-import { VBEN_DOC_URL, VBEN_GITHUB_URL, VBEN_PREVIEW_URL } from '@/constants';
 import { Page } from '@/effects/common-ui';
 import { Card, Descriptions } from 'antdv-next';
 
@@ -78,15 +77,15 @@ const baseInfoItems = computed<AboutDescriptionItem>(() => [
     label: '主页',
   },
   {
-    content: renderLink(VBEN_DOC_URL, '点击查看'),
+    content: renderLink('', '点击查看'),
     label: '文档地址',
   },
   {
-    content: renderLink(VBEN_PREVIEW_URL, '点击查看'),
+    content: renderLink('', '点击查看'),
     label: '预览地址',
   },
   {
-    content: renderLink(VBEN_GITHUB_URL, '点击查看'),
+    content: renderLink('', '点击查看'),
     label: 'Github',
   },
   {
@@ -117,7 +116,7 @@ const devDependenciesItems = computed<AboutDescriptionItem>(() =>
   <Page :title="title" content-class="flex flex-col gap-4">
     <template #description>
       <p class="text-foreground mt-3 text-sm/6">
-        <a :href="VBEN_GITHUB_URL" class="vben-link" target="_blank">
+        <a href="https://www.baidu.com" class="vben-link" target="_blank">
           {{ name }}
         </a>
         {{ description }}

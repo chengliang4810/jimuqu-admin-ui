@@ -94,6 +94,8 @@ async function handleEdit(row: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   await categoryRemove(row.categoryId);
+  // 取消该行选中状态，避免 reserve 记录残留
+  tableRef.value?.setCheckboxRow(row, false);
   await query();
 }
 

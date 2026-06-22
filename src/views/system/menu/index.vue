@@ -145,6 +145,8 @@ async function handleDelete(row: Menu) {
     // 单删除
     await menuRemove([row.menuId]);
   }
+  // 取消该行选中状态，避免 reserve 记录残留
+  tableRef.value?.setCheckboxRow(row, false);
   await query();
 }
 

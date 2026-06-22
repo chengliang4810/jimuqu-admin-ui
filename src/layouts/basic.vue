@@ -4,16 +4,15 @@ import type { CSSProperties } from 'vue';
 import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@/constants';
 import { preferences, usePreferences } from '@/core/preferences';
 import { useWatermark } from '@/effects/hooks';
-import { BookOpenText, CircleHelp, GiteeIcon } from '@/icons-app';
+import { GiteeIcon } from '@/icons-app';
 import { $t } from '@/locales';
 import { resetRoutes } from '@/router';
 import { useAuthStore, useUserStore } from '@/stores';
 import { openWindow } from '@/utils';
 import { useVersionUpdate } from '@/utils/check-update';
-import { GithubOutlined, UserOutlined } from '@antdv-next/icons';
+import { UserOutlined } from '@antdv-next/icons';
 import { Badge, Watermark } from 'antdv-next';
 
 import { BasicLayout } from './basic';
@@ -39,15 +38,6 @@ const menus = computed(() => {
   const defaultMenus = [
     {
       handler: () => {
-        openWindow(VBEN_DOC_URL, {
-          target: '_blank',
-        });
-      },
-      icon: BookOpenText,
-      text: $t('ui.widgets.document'),
-    },
-    {
-      handler: () => {
         router.push('/profile');
       },
       icon: UserOutlined,
@@ -62,24 +52,6 @@ const menus = computed(() => {
       icon: GiteeIcon,
       iconClass: 'text-red-800',
       text: 'Gitee项目地址',
-    },
-    {
-      handler: () => {
-        openWindow(VBEN_GITHUB_URL, {
-          target: '_blank',
-        });
-      },
-      icon: GithubOutlined,
-      text: 'Vben官方地址',
-    },
-    {
-      handler: () => {
-        openWindow(`${VBEN_GITHUB_URL}/issues`, {
-          target: '_blank',
-        });
-      },
-      icon: CircleHelp,
-      text: $t('ui.widgets.qa'),
     },
   ];
   return defaultMenus;

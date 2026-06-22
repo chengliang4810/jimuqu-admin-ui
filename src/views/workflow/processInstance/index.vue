@@ -148,6 +148,9 @@ function handleMultiDelete() {
     content: `确认删除选中的${ids.length}条记录吗？`,
     onOk: async () => {
       await deleteByInstanceIds(ids);
+      // 清除所有选中状态，避免 reserve 记录残留
+      tableRef.value?.clearCheckboxRow();
+      tableRef.value?.clearCheckboxReserve();
       await query();
     },
   });
