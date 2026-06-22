@@ -1,8 +1,14 @@
 {
   "name": "ruoyi-plus-antdv",
-  "version": "2.0.1",
+  "version": "1.0.0-alpha1",
   "private": true,
+  "homepage": "https://gitee.com/dapppp/bell-plus",
+  "repository": "dapppp/bell-plus",
   "license": "MIT",
+  "author": {
+    "name": "dap",
+    "url": "https://gitee.com/dapppp"
+  },
   "type": "module",
   "scripts": {
     "bootstrap": "pnpm install",
