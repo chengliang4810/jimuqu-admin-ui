@@ -7,7 +7,6 @@ import { computed, ref, watch } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { SCROLL_FIXED_CLASS, useLayoutHeaderStyle } from '@/core/composables';
-import { IconifyIcon } from '@/core/icons';
 import { VbenIconButton } from '@/core/ui/adapter';
 import { useMouse, useScroll, useThrottleFn } from '@vueuse/core';
 
@@ -533,8 +532,8 @@ const idMainContent = ELEMENT_ID_MAIN_CONTENT;
               class="my-0 mr-1 rounded-md"
               @click="handleHeaderToggle"
             >
-              <IconifyIcon v-if="showSidebar" icon="ep:fold" />
-              <IconifyIcon v-else icon="ep:expand" />
+              <span v-if="showSidebar" class="icon-[ep--fold]"></span>
+              <span v-else class="icon-[ep--expand]"></span>
             </VbenIconButton>
           </template>
           <slot name="header"></slot>
