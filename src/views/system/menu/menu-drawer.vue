@@ -13,7 +13,7 @@ import {
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
 import { useVbenDrawer } from '@/effects/common-ui';
-import { VbenIcon } from '@/icons-app';
+import { VbenIcon } from '@/icons';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 import { getDictOptions } from '@/utils/dict';

@@ -19,7 +19,7 @@ import {
   PinOff,
   RotateCw,
   X,
-} from '@/icons-app';
+} from '@/icons';
 import { $t, useI18n } from '@/locales';
 import { getTabKey, useAccessStore, useTabbarStore } from '@/stores';
 import { filterTree } from '@/utils';

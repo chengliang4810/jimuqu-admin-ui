@@ -4,7 +4,7 @@ import type { SupportedLanguagesType } from '@/locales';
 import { SUPPORT_LANGUAGES } from '@/constants';
 import { preferences, updatePreferences } from '@/core/preferences';
 import { VbenDropdownRadioMenu, VbenIconButton } from '@/core/ui/adapter';
-import { Languages } from '@/icons-app';
+import { Languages } from '@/icons';
 import { loadLocaleMessages } from '@/locales';
 
 defineOptions({

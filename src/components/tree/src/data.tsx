@@ -4,7 +4,7 @@ import type { MenuOption } from '@/api/system/menu/model';
 
 import { h } from 'vue';
 
-import { VbenIcon } from '@/icons-app';
+import { VbenIcon } from '@/icons';
 import { menuTypes } from '@/views/system/menu/data';
 
 export interface Permission {

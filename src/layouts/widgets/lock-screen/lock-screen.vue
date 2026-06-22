@@ -5,7 +5,7 @@ import { computed, nextTick, ref } from 'vue';
 
 import { useScrollLock } from '@/core/composables';
 import { VbenAvatar, VbenButton } from '@/core/ui/adapter';
-import { LockKeyhole } from '@/icons-app';
+import { LockKeyhole } from '@/icons';
 import { $t, useI18n } from '@/locales';
 import { storeToRefs, useAccessStore } from '@/stores';
 import { useDateFormat, useNow } from '@vueuse/core';

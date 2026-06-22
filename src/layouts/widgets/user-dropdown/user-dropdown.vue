@@ -8,7 +8,7 @@ import { computed, ref, useTemplateRef } from 'vue';
 import { preferences, usePreferences } from '@/core/preferences';
 import { VbenAvatar, VbenIcon } from '@/core/ui/adapter';
 import { useVbenModal } from '@/core/ui/popup';
-import { LockKeyhole, LogOut, Settings } from '@/icons-app';
+import { LockKeyhole, LogOut, Settings } from '@/icons';
 import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
 import { cn , isWindowsOs } from '@/utils';

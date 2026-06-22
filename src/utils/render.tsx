@@ -7,7 +7,7 @@ import { h } from 'vue';
 
 import { DictTag } from '@/components/dict';
 import { JsonPreview } from '@/effects/common-ui';
-import { IconifyIcon, VbenIcon } from '@/icons-app';
+import { IconifyIcon, VbenIcon } from '@/icons';
 import { cn } from '@/utils';
 import { Tag } from 'antdv-next';
 

@@ -22,7 +22,7 @@ import {
 import { globalShareState } from '@/core/shared/global-state';
 import { VbenButton, VbenIconButton, VbenSegmented } from '@/core/ui/adapter';
 import { useVbenDrawer } from '@/core/ui/popup';
-import { Copy, Pin, PinOff, RotateCw } from '@/icons-app';
+import { Copy, Pin, PinOff, RotateCw } from '@/icons';
 import { $t, loadLocaleMessages } from '@/locales';
 import { useClipboard } from '@vueuse/core';
 

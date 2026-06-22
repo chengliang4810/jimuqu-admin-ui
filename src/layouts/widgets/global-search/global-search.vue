@@ -4,7 +4,7 @@ import type { MenuRecordRaw } from '@/types';
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { useVbenModal } from '@/core/ui/popup';
-import { ArrowDown, ArrowUp, CornerDownLeft, Search } from '@/icons-app';
+import { ArrowDown, ArrowUp, CornerDownLeft, Search } from '@/icons';
 import { $t } from '@/locales';
 import { isWindowsOs } from '@/utils';
 import { useMagicKeys, whenever } from '@vueuse/core';

@@ -151,7 +151,7 @@ uniqueIcons.forEach((iconStr) => {
 
 const outputPath = path.join(
   projectRoot,
-  'src/icons-app/iconify-offline',
+  'src/icons/iconify-offline',
   'offline-icons.ts',
 );
 fs.writeFileSync(outputPath, `${outputLines.join('\n')}\n`);

@@ -4,7 +4,7 @@ import type { SelectOption } from '@/types';
 import { useSlots } from 'vue';
 
 import { VbenTooltip } from '@/core/ui/adapter';
-import { CircleHelp, CircleX } from '@/icons-app';
+import { CircleHelp, CircleX } from '@/icons';
 import { Input } from 'antdv-next';
 
 defineOptions({

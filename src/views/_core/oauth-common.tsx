@@ -1,7 +1,7 @@
 import type { Component, CSSProperties } from 'vue';
 
 import { authBinding } from '@/api/core/auth';
-import { VbenIcon } from '@/icons-app';
+import { VbenIcon } from '@/icons';
 import { cn } from '@/utils';
 
 /**

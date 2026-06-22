@@ -6,7 +6,7 @@ import type { Component } from 'vue';
 import { watch } from 'vue';
 
 import { usePreferences } from '@/core/preferences';
-import { MoonStar, Sun, SunMoon } from '@/icons-app';
+import { MoonStar, Sun, SunMoon } from '@/icons';
 import { $t } from '@/locales';
 
 import SwitchItem from '../switch-item.vue';

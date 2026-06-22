@@ -6,7 +6,7 @@ import type { Component } from 'vue';
 import { computed } from 'vue';
 
 import { VbenTooltip } from '@/core/ui/adapter';
-import { CircleHelp } from '@/icons-app';
+import { CircleHelp } from '@/icons';
 import { $t } from '@/locales';
 
 import {

@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 
 import { preferences, usePreferences } from '@/core/preferences';
 import { useWatermark } from '@/effects/hooks';
-import { GiteeIcon } from '@/icons-app';
+import { GiteeIcon } from '@/icons';
 import { $t } from '@/locales';
 import { resetRoutes } from '@/router';
 import { useAuthStore, useUserStore } from '@/stores';

@@ -201,7 +201,7 @@ const matchVbenCommonUiWidgetsChunk = createChunkMatcher([
   '/src/effects/common-ui/index.ts',
   '/src/effects/common-ui/ui/index.ts',
 ]);
-const matchVbenIconsChunk = createChunkMatcher(['/src/icons-app/']);
+const matchVbenIconsChunk = createChunkMatcher(['/src/icons/']);
 const matchVbenStylesChunk = createChunkMatcher(['/src/styles/']);
 const matchVbenLayoutChunk = createChunkMatcher([
   '/src/effects/access/',

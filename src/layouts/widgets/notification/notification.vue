@@ -4,7 +4,7 @@ import type { NotificationItem } from './types';
 import { computed } from 'vue';
 
 import VbenScrollbar from '@/core/ui/adapter/scrollbar.vue';
-import { Bell, CircleCheckBig, CircleX, MailCheck } from '@/icons-app';
+import { Bell, CircleCheckBig, CircleX, MailCheck } from '@/icons';
 import { $t } from '@/locales';
 import { cn } from '@/utils';
 import { useToggle } from '@vueuse/core';

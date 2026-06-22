@@ -1,7 +1,7 @@
 import type { VxeGridProps } from '@/adapter/vxe-table';
 
 import { DictEnum } from '@/constants';
-import { VbenIcon } from '@/icons-app';
+import { VbenIcon } from '@/icons';
 import { $t } from '@/locales';
 import { renderDict } from '@/utils/render';
 

@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { preferences, updatePreferences } from '@/core/preferences';
 import { VbenButton } from '@/core/ui/adapter';
 import { useVbenDrawer } from '@/core/ui/popup';
-import { Settings } from '@/icons-app';
+import { Settings } from '@/icons';
 import { $t, loadLocaleMessages } from '@/locales';
 import { capitalizeFirstLetter } from '@/utils';
 

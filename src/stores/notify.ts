@@ -5,7 +5,7 @@ import type { NotificationItem } from '@/layouts';
 import { computed, ref, watch } from 'vue';
 
 import { getNotificationList } from '@/api';
-import { SvgMessageUrl } from '@/icons-app';
+import { SvgMessageUrl } from '@/icons';
 import { $t } from '@/locales';
 import { useSseMessage } from '@/utils/message';
 import dayjs from 'dayjs';

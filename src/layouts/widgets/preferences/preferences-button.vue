@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import { VbenIconButton } from '@/core/ui/adapter';
-import { Settings } from '@/icons-app';
+import { Settings } from '@/icons';
 
 import Preferences from './preferences.vue';
 

@@ -10,7 +10,7 @@ import {
   usePreferences,
 } from '@/core/preferences';
 import { VbenDropdownRadioMenu, VbenIconButton } from '@/core/ui/adapter';
-import { InspectionPanel, PanelLeft, PanelRight } from '@/icons-app';
+import { InspectionPanel, PanelLeft, PanelRight } from '@/icons';
 import { $t } from '@/locales';
 
 defineOptions({

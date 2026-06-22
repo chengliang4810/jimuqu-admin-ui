@@ -2,7 +2,7 @@
 import { useSlots } from 'vue';
 
 import { VbenTooltip } from '@/core/ui/adapter';
-import { CircleHelp } from '@/icons-app';
+import { CircleHelp } from '@/icons';
 import { Switch } from 'antdv-next';
 
 defineOptions({
