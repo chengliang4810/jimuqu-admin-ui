@@ -27,7 +27,7 @@ declare global {
 type AboutDescriptionItem = DescriptionsProps['items'];
 
 const description =
-  '是一个现代化开箱即用的中后台解决方案，采用最新的技术栈，包括 Vue 3.0、Vite、TailwindCSS 和 TypeScript 等前沿技术，代码规范严谨，提供丰富的配置选项，旨在为中大型项目的开发提供现成的开箱即用解决方案及丰富的示例，同时，它也是学习和深入前端技术的一个极佳示例。';
+  '基于vben5.7版本(被一万行提交改坏前的最后一个提交)重构 更新为单仓项目 组件库为antdv-next';
 const name = 'Vben Admin';
 const title = '关于项目';
 
@@ -45,7 +45,6 @@ const {
   buildTime,
   dependencies = {},
   devDependencies = {},
-  homepage,
   license,
   version,
   // vite inject-metadata 插件注入的全局变量
@@ -73,16 +72,8 @@ const baseInfoItems = computed<AboutDescriptionItem>(() => [
     label: '最后构建时间',
   },
   {
-    content: renderLink(homepage, '点击查看'),
-    label: '主页',
-  },
-  {
     content: renderLink('', '点击查看'),
     label: '文档地址',
-  },
-  {
-    content: renderLink('', '点击查看'),
-    label: '预览地址',
   },
   {
     content: renderLink('', '点击查看'),
