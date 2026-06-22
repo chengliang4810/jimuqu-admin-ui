@@ -2,9 +2,34 @@ export { GiteeIcon } from './iconify-offline';
 export { createOfflineIconifyIcon } from './iconify-offline/create-offline-icon';
 export { default as EmptyIcon } from './icons/empty-icon.vue';
 export {
-  AlignCenter,
-  AlignLeft,
-  AlignRight,
+  SvgAntdvLogoIcon,
+  SvgAvatar1Icon,
+  SvgAvatar2Icon,
+  SvgAvatar3Icon,
+  SvgAvatar4Icon,
+  SvgBellIcon,
+  SvgCakeIcon,
+  SvgCardIcon,
+  SvgDownloadIcon,
+  SvgMaxKeyIcon,
+  SvgMessageUrl,
+  SvgQQIcon,
+  SvgSnailJobIcon,
+  SvgTopiamIcon,
+  SvgWechatIcon,
+} from './svg';
+export { VbenIcon } from '@/core/ui/adapter';
+export type { IconifyIcon as IconifyIconStructure } from '@iconify/vue';
+export {
+  addCollection,
+  addIcon,
+  Icon as IconifyIcon,
+  listIcons,
+} from '@iconify/vue';
+export {
+  TextAlignCenter as AlignCenter,
+  TextAlignStart as AlignLeft,
+  TextAlignEnd as AlignRight,
   ArrowDown,
   ArrowLeft,
   ArrowLeftToLine,
@@ -45,7 +70,7 @@ export {
   Heading1,
   Heading2,
   Highlighter,
-  IconDefault,
+  Menu as IconDefault,
   ImagePlus,
   Inbox,
   Info,
@@ -61,8 +86,8 @@ export {
   LogOut,
   MailCheck,
   Maximize,
-  MdiMenuClose,
-  MdiMenuOpen,
+  ArrowRightFromLine as MdiMenuClose,
+  ArrowLeftFromLine as MdiMenuOpen,
   Menu,
   MessageSquareCode,
   Minimize,
@@ -96,29 +121,4 @@ export {
   Unlink2,
   UserRoundPen,
   X,
-} from './lucide';
-export {
-  SvgAntdvLogoIcon,
-  SvgAvatar1Icon,
-  SvgAvatar2Icon,
-  SvgAvatar3Icon,
-  SvgAvatar4Icon,
-  SvgBellIcon,
-  SvgCakeIcon,
-  SvgCardIcon,
-  SvgDownloadIcon,
-  SvgMaxKeyIcon,
-  SvgMessageUrl,
-  SvgQQIcon,
-  SvgSnailJobIcon,
-  SvgTopiamIcon,
-  SvgWechatIcon,
-} from './svg';
-export { VbenIcon } from '@/core/ui/adapter';
-export type { IconifyIcon as IconifyIconStructure } from '@iconify/vue';
-export {
-  addCollection,
-  addIcon,
-  Icon as IconifyIcon,
-  listIcons,
-} from '@iconify/vue';
+} from 'lucide-vue-next';
