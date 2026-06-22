@@ -6,6 +6,7 @@ import { ref } from 'vue';
 import { FormInput } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
 import { tableSeachClass } from '@/components/vxe-table';
+import { cn } from '@/utils';
 import { Card, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
@@ -55,7 +56,7 @@ defineExpose({
       :model="model"
       :label-col="{ style: { width: '80px' } }"
     >
-      <div :class="tableSeachClass">
+      <div :class="cn(tableSeachClass, 'lg:grid-cols-2 xl:grid-cols-2')">
         <template v-if="!searchCollapsed">
           <FormItem label="字典标签" name="dictLabel">
             <FormInput v-model:value="model.dictLabel" allow-clear />
