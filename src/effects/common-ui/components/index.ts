@@ -1,15 +1,7 @@
-export { ColPage, type ColPageProps } from './col-page';
-export {
-  CountTo,
-  type CountToProps,
-  type TransitionPresets,
-  TransitionPresetsKeys,
-} from './count-to';
 export { EllipsisText } from './ellipsis-text';
 export { JsonPreview } from './json-preview';
 export { Loading, registerLoadingDirective, Spinner } from './loading';
 export { Page, type PageProps } from './page';
-export { VResize } from './resize';
 export { globalShareState } from '@/core/shared/global-state';
 // 给文档用
 export {
