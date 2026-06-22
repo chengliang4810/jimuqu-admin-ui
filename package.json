@@ -7,7 +7,7 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "dev": "vite --mode development",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode production",
+    "build": "vite build --mode production",
     "build:test": "vite build --mode test",
     "build:analyze": "vite build --mode analyze",
     "preview": "vite preview",
