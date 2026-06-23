@@ -1,4 +1,4 @@
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridProps } from 'vxe-table';
 
 import { Tag } from 'antdv-next';
 

@@ -1,4 +1,4 @@
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridProps } from 'vxe-table';
 import type { ID } from '@/api/common';
 import type { MenuOption } from '@/api/system/menu/model';
 

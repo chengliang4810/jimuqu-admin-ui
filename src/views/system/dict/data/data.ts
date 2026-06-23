@@ -1,4 +1,4 @@
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridProps } from 'vxe-table';
 import type { DictData } from '@/api/system/dict/dict-data-model';
 
 import { renderDictTag } from '@/utils/render';

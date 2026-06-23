@@ -1,4 +1,4 @@
-import type { VxeGridProps } from '@/adapter/vxe-table';
+import type { VxeGridProps } from 'vxe-table';
 
 export const columns: VxeGridProps['columns'] = [
   {
