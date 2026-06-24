@@ -200,7 +200,7 @@ if (enableShortcutKey.value) {
           <VbenAvatar
             :alt="text"
             :src="avatar"
-            class="size-12"
+            :size="48"
             dot
             dot-class="bottom-0 right-1 border-2 size-4 bg-green-500"
           />
