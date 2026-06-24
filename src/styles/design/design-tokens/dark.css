@@ -165,11 +165,11 @@ html:not(.dark) .dark {
     color: rgb(255 255 255 / 85%) !important;
   }
   .sidebar-extra-panel .ant-menu-item:hover {
-    background: #002140 !important;
+    background: rgb(255 255 255 / 8%) !important;
     color: #fff !important;
   }
   .sidebar-extra-panel .ant-menu-item-selected {
-    background: #002140 !important;
+    background: var(--ant-color-primary) !important;
     color: #fff !important;
   }
   .sidebar-extra-panel .ant-menu-submenu-title {
@@ -177,7 +177,7 @@ html:not(.dark) .dark {
     color: rgb(255 255 255 / 85%) !important;
   }
   .sidebar-extra-panel .ant-menu-submenu-title:hover {
-    background: #002140 !important;
+    background: rgb(255 255 255 / 8%) !important;
     color: #fff !important;
   }
   .sidebar-extra-panel .ant-menu-sub {
