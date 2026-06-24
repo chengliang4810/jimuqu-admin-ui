@@ -187,7 +187,12 @@ function syncCheckedRows() {
             </template>
             <template #toolbar-right>
               <Space>
-                <a-button @click="handleRefreshCache"> 刷新缓存 </a-button>
+                <Popconfirm
+                  title="确认刷新参数缓存？"
+                  @confirm="handleRefreshCache"
+                >
+                  <a-button> 刷新缓存 </a-button>
+                </Popconfirm>
                 <a-button
                   v-access:code="['system:config:export']"
                   :loading="exportLoading"
