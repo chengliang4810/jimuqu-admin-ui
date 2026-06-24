@@ -23,9 +23,15 @@
 ## 待办
 
 - modal/drawer bugfix
+- [bug] useVbenModal 全屏模式高度未占满屏幕（宽度正常），
+  尝试过 100vh/absolute/height:100% 均不能完美适配所有场景
 - 夜间模式适配(颜色不正常)
 - menu除侧边模式 其他模式的支持
 - 深色侧边栏适配
 - [bug] 水平菜单折叠后，溢出弹窗内的子菜单 popup 定位飞到左上角 (0,0)，
   getPopupContainer 挂载到溢出弹窗内部会导致失焦/关闭，需 antdv-next 上游修复
   或使用 MutationObserver 手动修正 popup 位置
+- [bug] 侧边菜单折叠后再展开，vxe-table 的 fixed-right 操作列短暂消失约 1 秒后恢复，
+  根因：侧边栏 CSS transition(150ms) 期间内容区宽度逐帧变化，vxe-table 在中间态将操作列
+  判定隐藏且无法自行恢复。尝试过 transitionend/window.resize/setTimeout+double-rAF/
+  强制宽度抖动触发 ResizeObserver，均未解决。需排查 vxe-table 内部 fixed 列恢复机制
