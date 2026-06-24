@@ -13,7 +13,7 @@ import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
 import { cn, isWindowsOs } from '@/utils';
 import { useMagicKeys, whenever } from '@vueuse/core';
-import { Badge, Dropdown } from 'antdv-next';
+import { Badge, Dropdown, Tag } from 'antdv-next';
 
 import { LockScreenModal } from '../lock-screen';
 import { Preferences } from '../preferences';
@@ -216,14 +216,9 @@ if (enableShortcutKey.value) {
                 {{ text }}
               </div>
               <slot name="tagText">
-                <Badge v-if="tagText" class="ml-2 text-green-400">
-                  <div
-                    class="max-w-[50px] overflow-hidden text-ellipsis"
-                    :title="tagText"
-                  >
-                    {{ tagText }}
-                  </div>
-                </Badge>
+                <Tag v-if="tagText" color="green" class="ml-2">
+                  {{ tagText }}
+                </Tag>
               </slot>
             </div>
             <div class="text-muted-foreground text-xs font-normal">
