@@ -74,6 +74,7 @@ defineExpose({
       ref="formInstance"
       :model="model"
       :label-col="{ style: { width: '100px' } }"
+      @keydown.enter.prevent="handleSubmit"
     >
       <div :class="tableSeachClass">
         <template v-if="!searchCollapsed">

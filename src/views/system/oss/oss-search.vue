@@ -69,6 +69,7 @@ defineExpose({
 <template>
   <Card size="small">
     <Form
+      @keydown.enter.prevent="handleSubmit"
       ref="formInstance"
       :model="model"
       :label-col="{ style: { width: '80px' } }"
