@@ -26,3 +26,6 @@
 - 夜间模式适配(颜色不正常)
 - menu除侧边模式 其他模式的支持
 - 深色侧边栏适配
+- [bug] 水平菜单折叠后，溢出弹窗内的子菜单 popup 定位飞到左上角 (0,0)，
+  getPopupContainer 挂载到溢出弹窗内部会导致失焦/关闭，需 antdv-next 上游修复
+  或使用 MutationObserver 手动修正 popup 位置
