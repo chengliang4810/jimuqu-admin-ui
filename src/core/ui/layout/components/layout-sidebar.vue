@@ -272,13 +272,14 @@ function handleMouseleave() {
     @mouseleave="handleMouseleave"
   >
     <div
-      class="border-border relative h-full border-r"
       :class="[
         {
           'bg-sidebar-deep': isSidebarMixed,
           'bg-sidebar': !isSidebarMixed,
+          'border-r border-border': !isSidebarMixed || !extraVisible,
         },
       ]"
+      class="relative h-full"
       :style="{ width: `${width}px` }"
     >
       <SidebarFixedButton
@@ -303,11 +304,11 @@ function handleMouseleave() {
       :class="[
         themeSub,
         {
-          'border-l': extraVisible,
+          'border-l border-r': extraVisible,
         },
       ]"
       :style="extraStyle"
-      class="bg-sidebar fixed top-0 h-full overflow-hidden transition-all duration-200"
+      class="border-border bg-sidebar fixed top-0 h-full overflow-hidden sidebar-extra-panel transition-all duration-200"
     >
       <SidebarCollapseButton
         v-if="isSidebarMixed && expandOnHover"
@@ -321,7 +322,7 @@ function handleMouseleave() {
       <div
         v-if="!extraCollapse"
         :style="extraTitleStyle"
-        class="border-border border-r pl-2"
+        class="border-border pl-2"
       >
         <slot name="extra-title"></slot>
       </div>
