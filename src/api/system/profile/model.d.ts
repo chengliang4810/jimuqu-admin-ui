@@ -67,8 +67,7 @@ export interface UpdatePasswordParam {
   newPassword: string;
 }
 
-interface FileCallBack {
-  name: string;
-  file: Blob;
-  filename: string;
+export interface UpdateProfileParam {
+  avatar?: string | number;
+  [key: string]: any;
 }
