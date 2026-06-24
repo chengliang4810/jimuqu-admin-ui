@@ -53,7 +53,7 @@ provide(
 const menuPathMap = computed(() => buildMenuPathMap(props.menus));
 
 function resolveOpenKeys(keys: string[]) {
-  if (!props.accordion || props.mode === 'horizontal') {
+  if (!props.accordion) {
     return keys;
   }
 
@@ -106,6 +106,10 @@ watch(
   (active) => {
     if (active) {
       selectedKeys.value = [active];
+      // 水平模式下不自动操作 openKeys，避免与用户交互冲突
+      if (props.mode === 'horizontal') {
+        return;
+      }
       // 自动展开父级路径
       const parents = menuPathMap.value.get(active);
       if (parents?.length) {
