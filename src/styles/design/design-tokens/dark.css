@@ -102,6 +102,32 @@
   color-scheme: dark;
 }
 
+/* ===== 真·暗色模式 (html.dark) 下的侧边栏对齐 =====
+ * 问题：bg-sidebar / bg-header 在 theme.css 中映射为 --ant-color-bg-container，
+ * 但 antd darkAlgorithm 生成的容器背景是中性深灰(#141414附近)，
+ * 而 .ant-menu-dark { background: hsl(var(--menu)) } 用的是自定义暗蓝色调
+ * (--sidebar: 222.34deg 10.43% 12.27%)，导致侧边栏容器与菜单之间出现色差。
+ * 这里在 sidebar/header 的 .dark 作用域下，将 antd 容器色桥接到自定义色调，
+ * 同时让菜单 submenu/popup 背景也统一切换，消除割裂感。 */
+html.dark .dark {
+  --ant-color-bg-container: hsl(var(--sidebar));
+  --ant-color-bg-layout: hsl(var(--sidebar-deep));
+
+/* 暗色菜单: 一级/二级背景统一用侧边栏色，hover/选中微提亮，不加深 */
+  --ant-menu-dark-item-bg: hsl(var(--sidebar)) !important;
+  --ant-menu-dark-sub-menu-item-bg: hsl(var(--sidebar)) !important;
+  --ant-menu-dark-item-hover-bg: hsl(var(--heavy)) !important;
+  --ant-menu-dark-item-selected-bg: hsl(var(--heavy)) !important;
+  --ant-menu-dark-item-selected-color: #fff !important;
+  --ant-menu-dark-popup-bg: hsl(var(--sidebar)) !important;
+  --ant-menu-dark-group-title-color: hsl(var(--foreground) / 45%) !important;
+
+  /* 直接覆盖 antd CSS-in-JS 生成的元素级 background（再补一刀） */
+  .ant-menu-sub {
+    background: hsl(var(--sidebar)) !important;
+  }
+}
+
 /* 深色侧边栏(semiDarkSidebar):浅色主题下侧边栏单独使用深色。
  * 此时菜单走 antd theme="dark"，背景为 antd 暗色菜单写死的固定色(#001529)，
  * 但侧边栏容器 bg-sidebar 经 theme.css 的 @theme inline 内联为
