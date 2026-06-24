@@ -51,7 +51,7 @@ function getDefaultValues(): FormData {
     accessPolicy: '0',
     bucketName: '',
     configKey: '',
-    domain: '',
+    domainUrl: '',
     endpoint: '',
     isHttps: 'N',
     ossConfigId: undefined,
@@ -164,8 +164,8 @@ async function handleClosed() {
           </Input>
         </SpaceCompact>
       </FormItem>
-      <FormItem label="自定义域名" name="domain">
-        <Input allow-clear class="w-full" v-model:value="formData.domain" />
+      <FormItem label="自定义域名" name="domainUrl">
+        <Input allow-clear class="w-full" v-model:value="formData.domainUrl" />
       </FormItem>
 
       <div>
