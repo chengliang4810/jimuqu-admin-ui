@@ -200,12 +200,16 @@ function syncCheckedRows() {
           </template>
           <template #toolbar-right>
             <Space>
-              <a-button
-                v-access:code="['system:dict:edit']"
-                @click="handleRefreshCache"
+              <Popconfirm
+                title="确认刷新字典缓存？"
+                @confirm="handleRefreshCache"
               >
-                刷新缓存
-              </a-button>
+                <a-button
+                  v-access:code="['system:dict:edit']"
+                >
+                  刷新缓存
+                </a-button>
+              </Popconfirm>
               <a-button
                 v-access:code="['system:dict:export']"
                 :loading="exportLoading"
