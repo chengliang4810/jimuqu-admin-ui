@@ -5,6 +5,7 @@ import type { FormInstance, SelectProps } from 'antdv-next';
 
 import { computed, h, onMounted, ref } from 'vue';
 
+import { uploadApi } from '@/api/core/upload';
 import { configInfoByKey } from '@/api/system/config';
 import { postOptionSelect } from '@/api/system/post';
 import {
@@ -14,6 +15,7 @@ import {
   userUpdate,
 } from '@/api/system/user';
 import { useVbenDrawer } from '@/components';
+import { CropperAvatar } from '@/components/cropper';
 import {
   FormInput as Input,
   FormInputPassword as InputPassword,
@@ -22,8 +24,9 @@ import {
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
 import { DictEnum } from '@/constants';
+import { preferences } from '@/core/preferences';
 import { $t } from '@/locales';
-import { addFullName, cloneDeep, getPopupContainer } from '@/utils';
+import { addFullName, buildUUID, cloneDeep, getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
 import { authScopeOptions } from '@/views/system/role/data';
@@ -45,6 +48,7 @@ type SelectOptions = NonNullable<SelectProps['options']>;
 
 function getDefaultValues(): FormData {
   return {
+    avatar: undefined,
     deptId: undefined,
     email: undefined,
     nickName: '',
@@ -61,6 +65,34 @@ function getDefaultValues(): FormData {
 }
 
 const formData = ref<FormData>(getDefaultValues());
+
+/** 编辑时当前用户的头像 URL（仅用于显示，不随表单提交） */
+const currentAvatarUrl = ref('');
+
+/** CropperAvatar 显示用的值：上传后用自己的 base64，否则用已有 URL */
+const avatarDisplayValue = computed(() => {
+  return currentAvatarUrl.value || preferences.app.defaultAvatar;
+});
+
+/**
+ * 头像上传：先上传到 OSS → 拿到 ossId → 存入表单
+ */
+async function handleAvatarUpload({
+  file,
+  filename,
+}: {
+  file: Blob;
+  filename: string;
+}) {
+  const uploadFile = filename
+    ? new File([file], filename)
+    : new File([file], `${buildUUID()}.png`);
+
+  const result = await uploadApi(uploadFile);
+  formData.value.avatar = result.ossId;
+  return { url: result.url };
+}
+
 const formInstance = ref<FormInstance>();
 const deptTreeData = ref<DeptTree[]>([]);
 const postOptions = ref<SelectOptions>([]);
@@ -191,9 +223,12 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     // 部门选择、初始密码及用户相关操作并行处理
     const promises = [setupDeptSelect(), loadDefaultPassword(isUpdate.value)];
     if (user) {
+      currentAvatarUrl.value = user.avatar ?? '';
       formData.value = {
         ...getDefaultValues(),
         ...user,
+        // avatar 只在用户上传新头像后才赋值 ossId，编辑时不预填 URL
+        avatar: undefined,
         postIds: postIds ?? [],
         roleIds: roleIds ?? [],
       };
@@ -226,6 +261,7 @@ async function handleConfirm() {
 
 function handleClosed() {
   formData.value = getDefaultValues();
+  currentAvatarUrl.value = '';
   formInstance.value?.resetFields();
   postOptions.value = [];
   roleOptions.value = [];
@@ -266,6 +302,14 @@ function handleClosed() {
       </FormItem>
       <FormItem label="用户昵称" name="nickName" :rules="formRules.nickName">
         <Input allow-clear class="w-full" v-model:value="formData.nickName" />
+      </FormItem>
+      <FormItem label="头像">
+        <CropperAvatar
+          :show-btn="false"
+          :upload-api="handleAvatarUpload"
+          :value="avatarDisplayValue"
+          width="80"
+        />
       </FormItem>
       <FormItem label="所属部门" name="deptId" :rules="formRules.deptId">
         <TreeSelect
