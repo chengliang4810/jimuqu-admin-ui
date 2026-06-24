@@ -2,66 +2,20 @@ import type { PluginOption } from 'vite';
 
 import { readWorkspaceManifest } from '@pnpm/workspace.read-manifest';
 
-import {
-  dateUtil,
-  findMonorepoRoot,
-  getPackages,
-  readPackageJSON,
-} from '../utils';
+import { dateUtil, readPackageJSON } from '../utils';
 
-function resolvePackageVersion(
-  pkgsMeta: Record<string, string>,
-  name: string,
-  value: string,
+/**
+ * 将 catalog: 占位符替换为真实版本号
+ */
+function resolveVersions(
+  deps: Record<string, string>,
   catalog: Record<string, string>,
-) {
-  if (value.includes('catalog:')) {
-    return catalog[name];
+): Record<string, string> {
+  const resolved: Record<string, string> = {};
+  for (const [name, version] of Object.entries(deps)) {
+    resolved[name] = version === 'catalog:' ? (catalog[name] ?? version) : version;
   }
-
-  if (value.includes('workspace')) {
-    return pkgsMeta[name];
-  }
-
-  return value;
-}
-
-async function resolveMonorepoDependencies() {
-  const { packages } = await getPackages();
-  const manifest = await readWorkspaceManifest(findMonorepoRoot());
-  const catalog = manifest?.catalog || {};
-
-  const resultDevDependencies: Record<string, string | undefined> = {};
-  const resultDependencies: Record<string, string | undefined> = {};
-  const pkgsMeta: Record<string, string> = {};
-
-  for (const { packageJson } of packages) {
-    pkgsMeta[packageJson.name] = packageJson.version;
-  }
-
-  for (const { packageJson } of packages) {
-    const { dependencies = {}, devDependencies = {} } = packageJson;
-    for (const [key, value] of Object.entries(dependencies)) {
-      resultDependencies[key] = resolvePackageVersion(
-        pkgsMeta,
-        key,
-        value,
-        catalog,
-      );
-    }
-    for (const [key, value] of Object.entries(devDependencies)) {
-      resultDevDependencies[key] = resolvePackageVersion(
-        pkgsMeta,
-        key,
-        value,
-        catalog,
-      );
-    }
-  }
-  return {
-    dependencies: resultDependencies,
-    devDependencies: resultDevDependencies,
-  };
+  return resolved;
 }
 
 /**
@@ -70,16 +24,24 @@ async function resolveMonorepoDependencies() {
 async function viteMetadataPlugin(
   root = process.cwd(),
 ): Promise<PluginOption | undefined> {
-  const { author, description, homepage, license, version } =
-    await readPackageJSON(root);
+  const {
+    author,
+    dependencies = {},
+    description,
+    devDependencies = {},
+    homepage,
+    license,
+    version,
+  } = await readPackageJSON(root);
+
+  // 从 pnpm-workspace.yaml 解析 catalog 版本映射
+  const manifest = await readWorkspaceManifest(root);
+  const catalog = (manifest?.catalog as Record<string, string>) ?? {};
 
   const buildTime = dateUtil().format('YYYY-MM-DD HH:mm:ss');
 
   return {
-    async config() {
-      const { dependencies, devDependencies } =
-        await resolveMonorepoDependencies();
-
+    config() {
       const isAuthorObject = typeof author === 'object';
       const authorName = isAuthorObject ? author.name : author;
       const authorEmail = isAuthorObject ? author.email : null;
@@ -92,9 +54,9 @@ async function viteMetadataPlugin(
             authorName,
             authorUrl,
             buildTime,
-            dependencies,
+            dependencies: resolveVersions(dependencies, catalog),
             description,
-            devDependencies,
+            devDependencies: resolveVersions(devDependencies, catalog),
             homepage,
             license,
             version,
