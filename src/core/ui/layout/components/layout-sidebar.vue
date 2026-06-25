@@ -262,11 +262,11 @@ function handleMouseleave() {
     v-if="domVisible"
     :class="theme"
     :style="hiddenSideStyle"
-    class="h-full transition-all duration-150"
+    class="h-full"
   ></div>
   <aside
     :style="style"
-    class="fixed top-0 left-0 h-full transition-all duration-150"
+    class="fixed top-0 left-0 h-full"
     :class="theme"
     @mouseenter="handleMouseenter"
     @mouseleave="handleMouseleave"
