@@ -19,12 +19,10 @@ import {
   updateCustomPreferences,
   usePreferences,
 } from '@/core/preferences';
-import { globalShareState } from '@/core/shared/global-state';
 import { VbenButton, VbenIconButton, VbenSegmented } from '@/core/ui/adapter';
 import { useVbenDrawer } from '@/core/ui/popup';
-import { Copy, Pin, PinOff, RotateCw } from '@/icons';
+import { Pin, PinOff, RotateCw } from '@/icons';
 import { $t, loadLocaleMessages } from '@/locales';
-import { useClipboard } from '@vueuse/core';
 
 import {
   Animation,
@@ -46,8 +44,6 @@ import {
 
 const emit = defineEmits<{ clearPreferencesAndLogout: [] }>();
 
-const message = globalShareState.getMessage();
-
 const appLocale = defineModel<SupportedLanguagesType>('appLocale');
 const appDynamicTitle = defineModel<boolean>('appDynamicTitle');
 const appLayout = defineModel<LayoutType>('appLayout');
@@ -57,9 +53,6 @@ const appContentCompact = defineModel<ContentCompactType>('appContentCompact');
 const appWatermark = defineModel<boolean>('appWatermark');
 const appWatermarkContent = defineModel<string>('appWatermarkContent');
 const appEnableCheckUpdates = defineModel<boolean>('appEnableCheckUpdates');
-const appEnableCopyPreferences = defineModel<boolean>(
-  'appEnableCopyPreferences',
-);
 const appEnableStickyPreferencesNavigationBar = defineModel<boolean>(
   'appEnableStickyPreferencesNavigationBar',
 );
@@ -137,7 +130,6 @@ const {
   isSideMode,
   isSideNav,
 } = usePreferences();
-const { copy } = useClipboard({ legacy: true });
 
 const [Drawer] = useVbenDrawer();
 
@@ -211,15 +203,6 @@ const showBreadcrumbConfig = computed(() => {
     preferences.header.enable
   );
 });
-
-async function handleCopy() {
-  await copy(JSON.stringify(mergedDiffPreference.value, null, 2));
-
-  message.copyPreferencesSuccess?.(
-    $t('preferences.copyPreferencesSuccessTitle'),
-    $t('preferences.copyPreferencesSuccess'),
-  );
-}
 
 async function handleClearCache() {
   await resetPreferences();
@@ -297,7 +280,6 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
               <General
                 v-model:app-dynamic-title="appDynamicTitle"
                 v-model:app-enable-check-updates="appEnableCheckUpdates"
-                v-model:app-enable-copy-preferences="appEnableCopyPreferences"
                 v-model:app-locale="appLocale"
                 v-model:app-watermark="appWatermark"
                 v-model:app-watermark-content="appWatermarkContent"
@@ -443,20 +425,9 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
 
       <template #footer>
         <VbenButton
-          v-if="appEnableCopyPreferences"
-          :disabled="!mergedDiffPreference"
-          class="mx-4 w-full"
-          size="sm"
-          variant="default"
-          @click="handleCopy"
-        >
-          <Copy class="mr-2 size-3" />
-          {{ $t('preferences.copyPreferences') }}
-        </VbenButton>
-        <VbenButton
           :disabled="!mergedDiffPreference"
           class="mr-4 w-full"
-          size="sm"
+          size="large"
           variant="ghost"
           @click="handleClearCache"
         >
