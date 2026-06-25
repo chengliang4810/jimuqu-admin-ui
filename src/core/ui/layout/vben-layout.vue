@@ -509,7 +509,7 @@ const idMainContent = ELEMENT_ID_MAIN_CONTENT;
           SCROLL_FIXED_CLASS,
         ]"
         :style="headerWrapperStyle"
-        class="overflow-hidden transition-all duration-200"
+        class="overflow-hidden transition-[box-shadow] duration-200"
       >
         <LayoutHeader
           v-if="headerVisible"
