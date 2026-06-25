@@ -16,6 +16,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import viteVueDevTools from 'vite-plugin-vue-devtools';
 
 import { viteArchiverPlugin } from './archiver';
+import { viteCheckTransitionPlugin } from './check-transition';
 import { viteDayjsPlugin } from './dayjs';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
 import { viteHtmlPlugin } from './html';
@@ -59,6 +60,7 @@ async function loadCommonPlugins(
           },
         }),
         viteVueJsx(),
+        viteCheckTransitionPlugin(),
         viteTailwindReferencePlugin(),
         tailwindcss(),
       ],
