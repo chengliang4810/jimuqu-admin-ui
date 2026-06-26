@@ -32,6 +32,7 @@ export const menuTypes = {
     value: '目录',
   },
 };
+
 export const columns: VxeGridProps['columns'] = [
   {
     title: '菜单名称',
@@ -42,24 +43,14 @@ export const columns: VxeGridProps['columns'] = [
     align: 'left',
     slots: {
       // 需要i18n支持 否则返回原始值
-      default: ({ row }) => $t(row.menuName),
-    },
-  },
-  {
-    title: '图标',
-    field: 'icon',
-    width: 80,
-    slots: {
-      default: ({ row }) => {
-        if (row?.icon === '#') {
-          return '';
-        }
-        return (
+      default: ({ row }) => (
+        <div class="flex items-center gap-2">
           <span class={'flex justify-center'}>
             <VbenIcon icon={row.icon} />
           </span>
-        );
-      },
+          {$t(row.menuName)}
+        </div>
+      ),
     },
   },
   {
