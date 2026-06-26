@@ -208,7 +208,7 @@ function handleClosed() {
       </div>
     </template>
 
-    <Spin :spinning="!!(showLoading || submitting)">
+    <Spin :spinning="!!(showLoading || submitting)" size="large">
       <div
         :class="
           cn('relative min-h-40 overflow-y-auto p-3', contentClass, {
