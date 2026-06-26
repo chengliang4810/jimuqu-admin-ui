@@ -1,0 +1,92 @@
+/**
+ * 勾选列 checkbox 视觉对齐 antd：
+ * 关闭 vxe 字体图标字形，把 .vxe-checkbox--icon 这个 <i> 改造成 antd 方框，
+ * 对勾/半选用伪元素绘制，颜色全部接 --ant-* token。
+ * （表头全选与行选择共用 .vxe-cell--checkbox，一套样式同时覆盖）
+ */
+.vxe-table .vxe-cell--checkbox .vxe-checkbox--icon {
+  position: relative;
+  display: inline-block;
+  width: var(--ant-control-interactive-size, 16px);
+  height: var(--ant-control-interactive-size, 16px);
+  font-size: 0;
+  line-height: 1;
+  vertical-align: text-bottom;
+  background: var(--ant-color-bg-container);
+  border: 1px solid var(--ant-color-border);
+  border-radius: var(--ant-border-radius-sm);
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+/* 移除 vxe 字体图标字形（三态共用） */
+.vxe-table .vxe-cell--checkbox .vxe-checkbox--icon::before {
+  content: none;
+}
+
+/* hover：边框高亮 */
+.vxe-table .vxe-cell--checkbox:not(.is--disabled):hover .vxe-checkbox--icon {
+  border-color: var(--ant-color-primary);
+}
+
+/* 选中：primary 填充 + 白色对勾 */
+.vxe-table .vxe-cell--checkbox.is--checked .vxe-checkbox--icon {
+  background: var(--ant-color-primary);
+  border-color: var(--ant-color-primary);
+}
+
+.vxe-table .vxe-cell--checkbox.is--checked .vxe-checkbox--icon::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 8px;
+  border: 2px solid var(--ant-color-white, #fff);
+  border-top: 0;
+  border-left: 0;
+  content: '';
+  transform: translate(-50%, -55%) rotate(45deg);
+}
+
+/* 半选：白底 + 中间 primary 小方块 */
+.vxe-table .vxe-cell--checkbox.is--indeterminate .vxe-checkbox--icon {
+  background: var(--ant-color-bg-container);
+  border-color: var(--ant-color-border);
+}
+
+.vxe-table .vxe-cell--checkbox.is--indeterminate .vxe-checkbox--icon::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--ant-color-primary);
+  border-radius: 2px;
+  content: '';
+  transform: translate(-50%, -50%);
+}
+
+/* 禁用态 */
+.vxe-table .vxe-cell--checkbox.is--disabled .vxe-checkbox--icon {
+  background: var(--ant-color-bg-container-disabled);
+  border-color: var(--ant-color-border);
+}
+
+.vxe-table
+  .vxe-cell--checkbox.is--disabled.is--checked
+  .vxe-checkbox--icon::after {
+  border-color: var(--ant-color-text-disabled);
+}
+
+.vxe-table
+  .vxe-cell--checkbox.is--disabled.is--indeterminate
+  .vxe-checkbox--icon::after {
+  background: var(--ant-color-text-disabled);
+}
+
+/* 树表需要对齐 */
+.vxe-tree-cell:has(.vxe-cell--checkbox) > .vxe-cell--checkbox {
+  display: flex;
+  align-items: center;
+}

@@ -10,6 +10,7 @@ import { setupVbenVxeTable } from './init';
 import 'vxe-table/styles/cssvar.scss';
 import 'vxe-pc-ui/styles/cssvar.scss';
 import './style.css';
+import './checkbox.css';
 
 /**
  * 合并默认值
