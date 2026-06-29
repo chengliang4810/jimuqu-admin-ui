@@ -1,4 +1,8 @@
+import type { User } from '@/api/system/user/model';
 import type { VxeGridProps } from 'vxe-table';
+
+import { preferences } from '@/core/preferences';
+import { Avatar } from 'antdv-next';
 
 export const columns: VxeGridProps['columns'] = [
   {
@@ -13,24 +17,32 @@ export const columns: VxeGridProps['columns'] = [
     minWidth: 120,
   },
   {
-    title: '用户昵称',
+    title: '用户信息',
     field: 'nickName',
-    minWidth: 120,
-  },
-  {
-    title: '手机号码',
-    field: 'phoneNumber',
-    width: 120,
-    align: 'center',
-    resizable: false
-  },
-  {
-    field: 'action',
-    fixed: 'right',
-    slots: { default: 'action' },
-    title: '操作',
-    resizable: false,
-    align: 'center',
-    width: 'auto',
+    align: 'left',
+    minWidth: 200,
+    slots: {
+      default: ({ row }: { row: User }) => {
+        return (
+          <div class="flex items-center">
+            <Avatar
+              class="size-9"
+              src={row.avatar || preferences.app.defaultAvatar}
+            />
+            <div class="ml-2 flex flex-col items-start overflow-hidden">
+              <span
+                class="text-foreground text-sm font-medium"
+                title={row.nickName}
+              >
+                {row.nickName}
+              </span>
+              <span class="text-muted-foreground text-xs">
+                {row.phoneNumber || '-'}
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
   },
 ];
