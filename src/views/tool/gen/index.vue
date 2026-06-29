@@ -244,7 +244,13 @@ function syncCheckedRows() {
             v-on="gridEvents"
           >
             <template #toolbar-left>
-              <div class="text-[16px] font-medium">代码生成列表</div>
+              <div class="text-[16px] font-medium">
+                代码生成列表
+
+                <span class="text-[14px] font-semibold text-red-600">
+                  (等待pull request中 感觉AI生成更快 用不着前端模板)
+                </span>
+              </div>
             </template>
             <template #toolbar-right>
               <Space>
