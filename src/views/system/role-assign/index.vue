@@ -25,6 +25,7 @@ import RoleAssignSearchForm from './role-assign-search.vue';
 const searchFormRef = ref<InstanceType<typeof RoleAssignSearchForm>>();
 
 const roleId = ref('');
+const title = ref('选择角色');
 
 const tableLoading = ref(false);
 
@@ -146,7 +147,10 @@ function syncCheckedRows() {
 
 onMounted(() => {
   emitter.on('rowClick', async (value) => {
-    roleId.value = value;
+    console.log(value);
+
+    roleId.value = value.roleId;
+    title.value = value.roleName;
     await query();
   });
   emitter.on('reset', async () => {
@@ -181,7 +185,7 @@ onBeforeUnmount(() => {
           v-on="gridEvents"
         >
           <template #toolbar-left>
-            <div class="text-[16px] font-medium">授权用户</div>
+            <div class="text-[16px] font-medium">[{{ title }}]授权用户</div>
           </template>
           <template #toolbar-right>
             <Space>

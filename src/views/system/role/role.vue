@@ -88,7 +88,7 @@ const gridEvents: VxeGridListeners = {
     } else if (lastRoleId.value === row.roleId) {
       return;
     }
-    emitter.emit('rowClick', row.roleId);
+    emitter.emit('rowClick', row);
     lastRoleId.value = row.roleId;
   },
 };
@@ -205,6 +205,7 @@ function syncCheckedRows() {
         >
           <template #toolbar-left>
             <div class="text-[16px] font-medium">角色列表</div>
+            <div class="ml-2 text-[13px] text-[#999]">选择角色授权用户</div>
           </template>
           <template #toolbar-right>
             <Space>
