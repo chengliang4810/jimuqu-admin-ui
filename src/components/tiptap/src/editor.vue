@@ -3,11 +3,16 @@ import type { Editor, JSONContent } from '@tiptap/core';
 
 import type { TiptapModelValue, TiptapProps, TiptapUploadImage } from './type';
 
-import { shallowRef, watch } from 'vue';
+import { computed, shallowRef, watch } from 'vue';
 
 import { cn } from '@/utils';
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Button, ColorPicker, Select, Spin, Tooltip, Upload } from 'antdv-next';
+// 内部 API：读取/重置 Form.Item 注入的校验状态 context
+import {
+  NoFormStyle,
+  useFormItemInputContext,
+} from 'antdv-next/dist/form/context';
 
 import { createExtensions } from './extensions';
 import { getComparableValue, getEditorValue } from './helpers';
@@ -62,6 +67,21 @@ const {
 });
 
 const { editorContentClass, editorStyle, rootClass } = useTiptapStyles(props);
+
+/**
+ * 读取外层 Form.Item 通过 context 注入的校验状态
+ * tiptap 编辑器本体是普通 div 不会消费该 context 故手动处理:
+ * 1. 校验 error 时给整个编辑器容器加错误边框
+ * 2. 工具栏内的 antd 控件(段落格式 Select 等)需重置该 status 避免被误染红
+ */
+const formItemInputContext = useFormItemInputContext();
+const hasError = computed(
+  () => formItemInputContext.value?.status === 'error',
+);
+
+const mergedRootClass = computed(() =>
+  cn(rootClass.value, hasError.value && 'border-destructive'),
+);
 
 const { handleImageUploadRequest, handlePaste } = useTiptapUpload({
   getEditor,
@@ -186,13 +206,13 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="rootClass" :style="editorStyle">
-    <div
-      v-if="toolbar"
-      class="border-border bg-muted/30 flex flex-wrap items-center gap-1 border-b p-2"
-      role="toolbar"
-      aria-label="Tiptap 编辑器工具栏"
-    >
+  <div :class="mergedRootClass" :style="editorStyle">
+    <NoFormStyle v-if="toolbar" status :override="true">
+      <div
+        class="border-border bg-muted/30 flex flex-wrap items-center gap-1 border-b p-2"
+        role="toolbar"
+        aria-label="Tiptap 编辑器工具栏"
+      >
       <Select
         :value="currentBlock"
         size="small"
@@ -288,6 +308,7 @@ defineExpose({
         </template>
       </template>
     </div>
+    </NoFormStyle>
 
     <Spin :spinning="isUploading" tip="图片上传中...">
       <EditorContent
