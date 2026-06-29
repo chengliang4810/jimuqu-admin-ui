@@ -5,7 +5,7 @@ import { ref } from 'vue';
 
 import { FormInput } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
-import { tableSeachClass } from '@/components/vxe-table';
+import { cn } from '@/utils';
 import { Card, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
@@ -17,6 +17,12 @@ interface SearchParams {
   userName?: string;
   phoneNumber?: string;
 }
+
+const tableSeachClass = cn(
+  'table-search-grid',
+  'grid grid-cols-1 md:grid-cols-3',
+  'gap-x-4 gap-y-6',
+);
 
 const model = ref<SearchParams>({
   userName: undefined,
@@ -70,7 +76,6 @@ defineExpose({
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] justify-self-end">
           <SearchButtonGroup
-            collapsible
             v-model:collapsed="searchCollapsed"
             @reset="handleReset"
             @submit="handleSubmit"

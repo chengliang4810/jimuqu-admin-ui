@@ -3,7 +3,6 @@ import type { User } from '@/api/system/user/model';
 import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import { ref, useTemplateRef } from 'vue';
-import { useRoute } from 'vue-router';
 
 import { roleSelectAll, roleUnallocatedList } from '@/api/system/role';
 import { useVbenDrawer } from '@/components';
@@ -15,19 +14,16 @@ import { columns } from './data';
 import RoleAssignSearchForm from './role-assign-search.vue';
 
 const emit = defineEmits<{ reload: [] }>();
-
+const drawerRoleId = ref('');
 const [BasicDrawer, drawerApi] = useVbenDrawer({
   onConfirm: handleSubmit,
   onCancel: handleReset,
   destroyOnClose: true,
 });
 
-const route = useRoute();
-const roleId = route.params.roleId as string;
-
 const searchFormRef = ref<InstanceType<typeof RoleAssignSearchForm>>();
 const searchParams = ref<Record<string, any>>({});
-
+const tableLoading = ref(false);
 const gridOptions = withDefaultVxeGridOptions<User>({
   checkboxConfig: {
     // 高亮
@@ -44,12 +40,19 @@ const gridOptions = withDefaultVxeGridOptions<User>({
   proxyConfig: {
     ajax: {
       query: async ({ page }) => {
-        return await roleUnallocatedList({
-          pageNum: page.currentPage,
-          pageSize: page.pageSize,
-          roleId,
-          ...searchParams.value,
-        });
+        tableLoading.value = true;
+        try {
+          const { roleId } = drawerApi.getData() as { roleId: string };
+          drawerRoleId.value = roleId;
+          return roleUnallocatedList({
+            pageNum: page.currentPage,
+            pageSize: page.pageSize,
+            roleId,
+            ...searchParams.value,
+          });
+        } finally {
+          tableLoading.value = false;
+        }
       },
     },
   },
@@ -70,7 +73,7 @@ async function handleSubmit() {
   const records = getCheckedRows();
   const userIds = records.map((item) => item.userId);
   if (userIds.length > 0) {
-    await roleSelectAll(roleId, userIds);
+    await roleSelectAll(drawerRoleId.value, userIds);
   }
   handleReset();
   emit('reload');
@@ -113,7 +116,7 @@ async function reload(params: Record<string, any> = {}) {
 </script>
 
 <template>
-  <BasicDrawer :size="800" title="选择用户">
+  <BasicDrawer :size="600" title="选择用户">
     <div class="flex h-full flex-col gap-4">
       <RoleAssignSearchForm
         ref="searchFormRef"

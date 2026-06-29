@@ -2,15 +2,14 @@
 import type { User } from '@/api/system/user/model';
 import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref, useTemplateRef } from 'vue';
-import { useRoute } from 'vue-router';
+import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
 
 import {
   roleAllocatedList,
   roleAuthCancel,
   roleAuthCancelAll,
 } from '@/api/system/role';
-import { Page, useVbenDrawer } from '@/components';
+import { useVbenDrawer } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
@@ -18,14 +17,14 @@ import {
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
+import { emitter } from '../role/mitt';
 import { columns } from './data';
 import roleAssignDrawer from './role-assign-drawer.vue';
 import RoleAssignSearchForm from './role-assign-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof RoleAssignSearchForm>>();
 
-const route = useRoute();
-const roleId = route.params.roleId as string;
+const roleId = ref('');
 
 const tableLoading = ref(false);
 
@@ -48,12 +47,14 @@ const gridOptions = withDefaultVxeGridOptions<User>({
       query: async ({ page }, formValues = {}) => {
         tableLoading.value = true;
         try {
-          return await roleAllocatedList({
-            pageNum: page.currentPage,
-            pageSize: page.pageSize,
-            roleId,
-            ...formValues,
-          });
+          if (roleId.value) {
+            return await roleAllocatedList({
+              pageNum: page.currentPage,
+              pageSize: page.pageSize,
+              roleId: roleId.value,
+              ...formValues,
+            });
+          }
         } finally {
           tableLoading.value = false;
         }
@@ -90,7 +91,7 @@ const [RoleAssignDrawer, drawerApi] = useVbenDrawer({
 });
 
 function handleAdd() {
-  drawerApi.setData({});
+  drawerApi.setData({ roleId: roleId.value });
   drawerApi.open();
 }
 
@@ -98,7 +99,7 @@ function handleAdd() {
  * 取消授权 一条记录
  */
 async function handleAuthCancel(record: User) {
-  await roleAuthCancel({ userId: record.userId, roleId });
+  await roleAuthCancel({ userId: record.userId, roleId: roleId.value });
   await query();
 }
 
@@ -113,7 +114,7 @@ function handleMultipleAuthCancel() {
     okType: 'danger',
     content: `确认取消选中的${ids.length}条授权记录吗？`,
     onOk: async () => {
-      await roleAuthCancelAll(roleId, ids);
+      await roleAuthCancelAll(roleId.value, ids);
       await query();
       tableRef.value?.clearCheckboxRow();
     },
@@ -142,74 +143,88 @@ function getCheckedRows() {
 function syncCheckedRows() {
   checkedRows.value = getCheckedRows();
 }
+
+onMounted(() => {
+  emitter.on('rowClick', async (value) => {
+    roleId.value = value;
+    await query();
+  });
+  emitter.on('reset', async () => {
+    roleId.value = '';
+    await reload();
+  });
+});
+onBeforeUnmount(() => {
+  emitter.off('rowClick');
+  emitter.off('reset');
+});
 </script>
 
 <template>
-  <Page :auto-content-height="true">
-    <Spin
-      :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
-      :spinning="tableLoading"
-      size="large"
-      :delay="300"
-    >
-      <div class="flex h-full flex-col gap-4">
-        <RoleAssignSearchForm
-          ref="searchFormRef"
-          @submit="handleSearchSubmit"
-          @reset="handleSearchReset"
-        />
-        <div class="bg-card flex-1 overflow-hidden rounded-lg">
-          <VxeGrid
-            ref="tableRef"
-            class="p-2 pt-0"
-            v-bind="gridOptions"
-            v-on="gridEvents"
-          >
-            <template #toolbar-left>
-              <div class="text-[16px] font-medium">已分配的用户列表</div>
-            </template>
-            <template #toolbar-right>
-              <Space>
-                <a-button
-                  :disabled="checkedRows.length === 0"
-                  danger
-                  type="primary"
-                  v-access:code="['system:role:remove']"
-                  @click="handleMultipleAuthCancel"
-                >
-                  取消授权
-                </a-button>
-                <a-button
-                  type="primary"
-                  v-access:code="['system:role:add']"
-                  @click="handleAdd"
-                >
-                  {{ $t('pages.common.add') }}
-                </a-button>
-              </Space>
-            </template>
-            <template #action="{ row }">
-              <Popconfirm
-                :title="`是否取消授权用户[${row.userName} - ${row.nickName}]?`"
-                placement="left"
-                @confirm="handleAuthCancel(row)"
+  <Spin
+    :styles="{ root: { height: '100%' }, container: { height: '100%' } }"
+    :spinning="tableLoading"
+    size="large"
+    :delay="300"
+  >
+    <div class="flex h-full flex-col gap-2">
+      <RoleAssignSearchForm
+        ref="searchFormRef"
+        @submit="handleSearchSubmit"
+        @reset="handleSearchReset"
+      />
+      <div class="bg-card flex-1 overflow-hidden rounded-lg">
+        <VxeGrid
+          ref="tableRef"
+          class="p-2 pt-0"
+          v-bind="gridOptions"
+          v-on="gridEvents"
+        >
+          <template #toolbar-left>
+            <div class="text-[16px] font-medium">授权用户</div>
+          </template>
+          <template #toolbar-right>
+            <Space>
+              <a-button
+                :disabled="checkedRows.length === 0"
+                danger
+                type="primary"
+                v-access:code="['system:role:remove']"
+                @click="handleMultipleAuthCancel"
               >
-                <action-button
-                  danger
-                  v-access:code="['system:role:remove']"
-                  @click.stop=""
-                >
-                  取消授权
-                </action-button>
-              </Popconfirm>
-            </template>
-            <template #loading>
-              <Spin :spinning="true" size="large" />
-            </template>
-          </VxeGrid>
-        </div>
+                取消授权
+              </a-button>
+              <a-button
+                type="primary"
+                :disabled="roleId === ''"
+                v-access:code="['system:role:add']"
+                @click="handleAdd"
+              >
+                授权用户
+              </a-button>
+            </Space>
+          </template>
+          <template #action="{ row }">
+            <Popconfirm
+              :title="`是否取消授权用户[${row.userName} - ${row.nickName}]?`"
+              placement="left"
+              @confirm="handleAuthCancel(row)"
+            >
+              <action-button
+                danger
+                v-access:code="['system:role:remove']"
+                @click.stop=""
+              >
+                取消
+              </action-button>
+            </Popconfirm>
+          </template>
+          <template #loading>
+            <Spin :spinning="true" size="large" />
+          </template>
+        </VxeGrid>
       </div>
-    </Spin>
+    </div>
     <RoleAssignDrawer @reload="() => query()" />
-  </Page>
+  </Spin>
 </template>
