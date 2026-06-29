@@ -258,16 +258,18 @@ function createApplicationCodeSplitting() {
   return {
     groups: [
       {
-        // 优先级压过所有 antdv 组件组(markdown 48 ~ next 39),
+        // Vue/runtime 必须最先 claim。否则懒加载库如果优先级更高,
+        // 会把 Vue helper 递归带进自己的 chunk,反过来钉到首屏 preload。
+        name: 'framework',
+        priority: 60,
+        test: matchFrameworkChunk,
+      },
+      {
+        // 优先级压过所有 antdv 组件组(icons 47 ~ next 39),
         // 确保 dayjs 被独立 claim 而非被 form-ext 等消费方聚走
         name: 'dayjs-vendor',
         priority: 50,
         test: matchDayjsVendorChunk,
-      },
-      {
-        name: 'antdv-x-markdown',
-        priority: 48,
-        test: matchAntdvNextMarkdownChunk,
       },
       {
         name: 'antdv-icons',
@@ -317,11 +319,6 @@ function createApplicationCodeSplitting() {
         name: 'antdv-next',
         priority: 39,
         test: matchAntdvNextChunk,
-      },
-      {
-        name: 'framework',
-        priority: 30,
-        test: matchFrameworkChunk,
       },
       {
         // crypto 登录即用,属首屏;高优先级确保其独占 chunk,
@@ -399,6 +396,13 @@ function createApplicationCodeSplitting() {
         name: 'lazy-utils-vendor',
         priority: 6,
         test: matchLazyUtilsVendorChunk,
+      },
+      {
+        // 仅更新日志懒加载使用。必须低于 framework/antdv 组件组,
+        // 避免递归抢走 Vue 或 antdv 公共依赖后进入首屏。
+        name: 'antdv-x-markdown',
+        priority: 5,
+        test: matchAntdvNextMarkdownChunk,
       },
       // 以下为"仅懒加载路由使用"的重型 vendor: 优先级必须低于上方所有
       // 首屏组(framework/utils-vendor/crypto-vendor/vben-*),这样首屏共享依赖
