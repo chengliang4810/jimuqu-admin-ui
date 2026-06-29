@@ -28,9 +28,6 @@
     "catalog": "pnpm dlx codemod pnpm/catalog",
     "generate-offline-icons": "node scripts/generate-offline-icons.js"
   },
-  "imports": {
-    "@/*": "./src/*"
-  },
   "dependencies": {
     "@alova/adapter-axios": "catalog:",
     "@antdv-next/auto-import-resolver": "catalog:",
