@@ -41,8 +41,6 @@ export {
   type ModalState,
   prompt,
   type PromptProps,
-  setDefaultDrawerProps,
-  setDefaultModalProps,
   useAlertContext,
   useVbenDrawer,
   useVbenModal,

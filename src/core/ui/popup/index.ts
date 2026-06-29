@@ -17,7 +17,6 @@ export {
   type DrawerProps,
   type DrawerState,
   type ExtendedDrawerApi,
-  setDefaultDrawerProps,
   useVbenDrawer,
   VbenDrawer,
 } from './drawer';
@@ -26,7 +25,6 @@ export {
   type ModalApiOptions,
   type ModalProps,
   type ModalState,
-  setDefaultModalProps,
   useVbenModal,
   VbenModal,
 } from './modal';

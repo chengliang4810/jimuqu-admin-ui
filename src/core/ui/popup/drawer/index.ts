@@ -7,4 +7,4 @@ export type {
   ExtendedDrawerApi,
 } from './drawer';
 export { default as VbenDrawer } from './drawer.vue';
-export { setDefaultDrawerProps, useVbenDrawer } from './use-drawer';
+export { useVbenDrawer } from './use-drawer';

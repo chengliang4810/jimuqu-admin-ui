@@ -1,6 +1,5 @@
 import { createApp, watchEffect } from 'vue';
 
-import { setDefaultModalProps } from '@/components';
 import { registerAccessDirective } from '@/components/access';
 import { setupGlobalComponent } from '@/components/global';
 import { registerLoadingDirective } from '@/components/loading';
@@ -18,16 +17,6 @@ import '@/styles';
 import '@/styles/antdv-next/index.css';
 
 async function bootstrap(namespace: string) {
-  // // 设置弹窗的默认配置
-  setDefaultModalProps({
-    fullscreenButton: false,
-    animationType: 'scale',
-  });
-  // // 设置抽屉的默认配置
-  // setDefaultDrawerProps({
-  //   zIndex: 1020,
-  // });
-
   const app = createApp(App);
 
   // 全局组件
