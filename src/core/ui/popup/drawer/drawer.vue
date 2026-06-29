@@ -185,7 +185,7 @@ function onAfterOpenChange(open: boolean) {
 
     <Spin
       :spinning="!!(showLoading || submitting)"
-      :classes="{ root: 'h-full' }"
+      :classes="{ root: 'h-full', container:'h-full' }"
       size="large"
     >
       <div

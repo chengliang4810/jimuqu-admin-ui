@@ -6,11 +6,10 @@ import { ref } from 'vue';
 
 import { FormInput, FormSelect } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
-import { tableSeachClass } from '@/components/vxe-table';
 import { DictEnum } from '@/constants';
-import { formatDateTime } from '@/utils';
+import { cn, formatDateTime } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
-import { Card, DateRangePicker, Form, FormItem } from 'antdv-next';
+import { Card, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
   reset: [];
@@ -23,6 +22,12 @@ interface SearchParams {
   status?: string;
   createTime?: [Dayjs, Dayjs];
 }
+
+const tableSeachClass = cn(
+  'table-search-grid',
+  'grid grid-cols-1 md:grid-cols-3',
+  'gap-x-4 gap-y-6',
+);
 
 const model = ref<SearchParams>({
   roleName: undefined,
@@ -79,24 +84,23 @@ defineExpose({
           <FormItem label="角色名称" name="roleName">
             <FormInput v-model:value="model.roleName" allow-clear />
           </FormItem>
-          <FormItem label="权限字符" name="roleKey">
-            <FormInput v-model:value="model.roleKey" allow-clear />
-          </FormItem>
-          <FormItem label="状态" name="status">
+          <!--          <FormItem label="权限字符" name="roleKey">-->
+          <!--            <FormInput v-model:value="model.roleKey" allow-clear />-->
+          <!--          </FormItem>-->
+          <FormItem label="角色状态" name="status">
             <FormSelect
               allow-clear
               v-model:value="model.status"
               :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
             />
           </FormItem>
-          <FormItem label="创建时间" name="createTime">
-            <DateRangePicker v-model:value="model.createTime" allow-clear />
-          </FormItem>
+          <!--          <FormItem label="创建时间" name="createTime">-->
+          <!--            <DateRangePicker v-model:value="model.createTime" allow-clear />-->
+          <!--          </FormItem>-->
         </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] flex items-baseline justify-end gap-4">
           <SearchButtonGroup
-            collapsible
             v-model:collapsed="searchCollapsed"
             @reset="handleReset"
             @submit="handleSubmit"
