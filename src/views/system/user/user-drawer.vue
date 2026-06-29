@@ -251,7 +251,7 @@ async function handleConfirm() {
     await (isUpdate.value ? userUpdate(data) : userAdd(data));
     resetInitialized();
     emit('reload');
-    drawerApi.close();
+    await drawerApi.close();
   } catch (error) {
     console.error(error);
   } finally {
@@ -280,6 +280,14 @@ function handleClosed() {
       <FormItem name="userId" hidden>
         <Input v-model:value="formData.userId" />
       </FormItem>
+      <FormItem label="用户头像">
+        <CropperAvatar
+          :show-btn="false"
+          :upload-api="handleAvatarUpload"
+          :value="avatarDisplayValue"
+          width="80"
+        />
+      </FormItem>
       <FormItem label="用户账号" name="userName" :rules="formRules.userName">
         <Input
           allow-clear
@@ -303,31 +311,24 @@ function handleClosed() {
       <FormItem label="用户昵称" name="nickName" :rules="formRules.nickName">
         <Input allow-clear class="w-full" v-model:value="formData.nickName" />
       </FormItem>
-      <FormItem label="头像">
-        <CropperAvatar
-          :show-btn="false"
-          :upload-api="handleAvatarUpload"
-          :value="avatarDisplayValue"
-          width="80"
-        />
-      </FormItem>
-      <FormItem label="所属部门" name="deptId" :rules="formRules.deptId">
-        <TreeSelect
-          allow-clear
-          class="w-full"
-          :field-names="{ value: 'id', children: 'children' }"
-          :get-popup-container="getPopupContainer"
-          placeholder="请选择"
-          show-search
-          :tree-data="deptTreeData"
-          tree-default-expand-all
-          :tree-line="{ showLeafIcon: false }"
-          tree-node-filter-prop="label"
-          tree-node-label-prop="fullName"
-          v-model:value="formData.deptId"
-          @select="handleDeptSelect"
-        />
-      </FormItem>
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <FormItem label="用户性别" name="sex">
+          <RadioGroup
+            button-style="solid"
+            option-type="button"
+            :options="getDictOptions(DictEnum.SYS_USER_GENDER)"
+            v-model:value="formData.sex"
+          />
+        </FormItem>
+        <FormItem label="用户状态" name="status">
+          <RadioGroup
+            button-style="solid"
+            option-type="button"
+            :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
+            v-model:value="formData.status"
+          />
+        </FormItem>
+      </div>
       <FormItem
         label="手机号码"
         name="phoneNumber"
@@ -339,32 +340,27 @@ function handleClosed() {
           v-model:value="formData.phoneNumber"
         />
       </FormItem>
-      <FormItem label="邮箱" name="email" :rules="formRules.email">
+      <FormItem label="电子邮箱" name="email" :rules="formRules.email">
         <Input allow-clear class="w-full" v-model:value="formData.email" />
       </FormItem>
-      <div class="grid grid-cols-1 lg:grid-cols-2">
-        <FormItem label="性别" name="sex">
-          <RadioGroup
-            button-style="solid"
-            option-type="button"
-            :options="getDictOptions(DictEnum.SYS_USER_GENDER)"
-            v-model:value="formData.sex"
-          />
-        </FormItem>
-        <FormItem label="状态" name="status">
-          <RadioGroup
-            button-style="solid"
-            option-type="button"
-            :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
-            v-model:value="formData.status"
-          />
-        </FormItem>
-      </div>
-      <FormItem
-        extra="选择部门后, 将自动加载该部门下所有的岗位"
-        label="岗位"
-        name="postIds"
-      >
+      <FormItem label="所属部门" name="deptId" :rules="formRules.deptId">
+        <TreeSelect
+          allow-clear
+          class="w-full"
+          :field-names="{ value: 'id', children: 'children' }"
+          :get-popup-container="getPopupContainer"
+          placeholder="选择部门后, 将自动加载该部门下所有的岗位"
+          show-search
+          :tree-data="deptTreeData"
+          tree-default-expand-all
+          :tree-line="{ showLeafIcon: false }"
+          tree-node-filter-prop="label"
+          tree-node-label-prop="fullName"
+          v-model:value="formData.deptId"
+          @select="handleDeptSelect"
+        />
+      </FormItem>
+      <FormItem extra="" label="所属岗位" name="postIds">
         <Select
           allow-clear
           class="w-full"
@@ -377,7 +373,7 @@ function handleClosed() {
           v-model:value="formData.postIds"
         />
       </FormItem>
-      <FormItem label="角色" name="roleIds" :rules="formRules.roleIds">
+      <FormItem label="所属角色" name="roleIds" :rules="formRules.roleIds">
         <Select
           allow-clear
           class="w-full"
@@ -390,7 +386,7 @@ function handleClosed() {
           v-model:value="formData.roleIds"
         />
       </FormItem>
-      <FormItem label="备注" name="remark">
+      <FormItem label="备注信息" name="remark">
         <TextArea allow-clear class="w-full" v-model:value="formData.remark" />
       </FormItem>
     </Form>

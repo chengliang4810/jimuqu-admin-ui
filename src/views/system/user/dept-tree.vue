@@ -117,10 +117,9 @@ function handleSelect(keys: Key[]) {
             <Input
               v-model:value="searchValue"
               :placeholder="$t('pages.common.search')"
-              size="small"
               allow-clear
             />
-            <a-button size="small" @click="handleReload">
+            <a-button @click="handleReload">
               <SyncOutlined class="text-primary" />
             </a-button>
           </SpaceCompact>
