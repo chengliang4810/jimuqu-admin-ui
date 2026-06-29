@@ -1,4 +1,7 @@
+import type { User } from '@/api/system/user/model';
 import type { VxeGridProps } from 'vxe-table';
+
+import { UserInfoCell } from '@/components';
 
 export const columns: VxeGridProps['columns'] = [
   {
@@ -8,31 +11,26 @@ export const columns: VxeGridProps['columns'] = [
     resizable: false,
   },
   {
-    field: 'avatar',
-    title: '头像',
-    slots: { default: 'avatar' },
-    width: 60,
-    align: 'center',
-  },
-  {
     field: 'userName',
     title: '用户账号',
     minWidth: 80,
   },
   {
+    title: '用户信息',
     field: 'nickName',
-    title: '用户昵称',
-    minWidth: 130,
-  },
-  {
-    field: 'phoneNumber',
-    title: '手机号码',
-    formatter({ cellValue }) {
-      return cellValue || '暂无';
+    align: 'left',
+    minWidth: 200,
+    slots: {
+      default: ({ row }: { row: User }) => {
+        return (
+          <UserInfoCell
+            avatar={row.avatar}
+            subtitle={row.phoneNumber}
+            title={row.nickName}
+          />
+        );
+      },
     },
-    width: 120,
-    align: 'center',
-    resizable: false,
   },
   {
     field: 'deptName',
@@ -42,7 +40,7 @@ export const columns: VxeGridProps['columns'] = [
   {
     field: 'createTime',
     title: '创建时间',
-    width: 150,
+    width: 180,
     align: 'center',
     resizable: false,
   },

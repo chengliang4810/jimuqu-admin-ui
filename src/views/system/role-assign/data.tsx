@@ -1,8 +1,7 @@
 import type { User } from '@/api/system/user/model';
 import type { VxeGridProps } from 'vxe-table';
 
-import { preferences } from '@/core/preferences';
-import { Avatar } from 'antdv-next';
+import { UserInfoCell } from '@/components';
 
 export const columns: VxeGridProps['columns'] = [
   {
@@ -24,23 +23,11 @@ export const columns: VxeGridProps['columns'] = [
     slots: {
       default: ({ row }: { row: User }) => {
         return (
-          <div class="flex items-center">
-            <Avatar
-              class="size-9"
-              src={row.avatar || preferences.app.defaultAvatar}
-            />
-            <div class="ml-2 flex flex-col items-start overflow-hidden">
-              <span
-                class="text-foreground text-sm font-medium"
-                title={row.nickName}
-              >
-                {row.nickName}
-              </span>
-              <span class="text-muted-foreground text-xs">
-                {row.phoneNumber || '-'}
-              </span>
-            </div>
-          </div>
+          <UserInfoCell
+            avatar={row.avatar}
+            subtitle={row.phoneNumber}
+            title={row.nickName}
+          />
         );
       },
     },

@@ -19,10 +19,9 @@ import {
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { EnableStatus, SUPERADMIN_USER_ID } from '@/constants';
-import { preferences } from '@/core/preferences';
 import { $t } from '@/locales';
 import { useBlobExport } from '@/utils/file/export';
-import { Avatar, Dropdown, Popconfirm, Space, Spin } from 'antdv-next';
+import { Dropdown, Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
@@ -322,10 +321,6 @@ function syncCheckedRows() {
                     {{ $t('pages.common.add') }}
                   </a-button>
                 </Space>
-              </template>
-              <template #avatar="{ row }">
-                <!-- 可能要判断空字符串情况 所以没有使用?? -->
-                <Avatar :src="row.avatar || preferences.app.defaultAvatar" />
               </template>
               <template #status="{ row }">
                 <!-- value只能接收boolean值 -->
