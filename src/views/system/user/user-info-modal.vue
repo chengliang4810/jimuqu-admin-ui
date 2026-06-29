@@ -91,16 +91,13 @@ const items = computed<DescriptionsProps['items']>(() => {
   }
   const { userId, status } = currentUser.value;
   return [
-    { label: 'userId', content: userId },
-    {
-      label: '用户状态',
-      content: <DictTag dicts={statusOptions} value={status} />,
-    },
+    { label: '唯一标识', content: userId },
+
     { label: '用户信息', content: mixInfo.value },
-    { label: '手机号', content: currentUser.value.phoneNumber || '-' },
-    { label: '邮箱', content: currentUser.value.email || '-' },
+    { label: '手机号码', content: currentUser.value.phoneNumber || '-' },
+    { label: '电子邮箱', content: currentUser.value.email || '-' },
     {
-      label: '岗位',
+      label: '所属岗位',
       content: (
         <div class="flex flex-wrap gap-0.5">
           {currentUser.value.postNames.map((item) => (
@@ -110,7 +107,7 @@ const items = computed<DescriptionsProps['items']>(() => {
       ),
     },
     {
-      label: '权限',
+      label: '角色权限',
       content: (
         <div class="flex flex-wrap gap-0.5">
           {currentUser.value.roleNames.map((item) => (
@@ -120,6 +117,10 @@ const items = computed<DescriptionsProps['items']>(() => {
       ),
     },
     { label: '创建时间', content: currentUser.value.createTime },
+    {
+      label: '用户状态',
+      content: <DictTag dicts={statusOptions} value={status} />,
+    },
     { label: '上次登录IP', content: currentUser.value.loginIp || '-' },
     {
       label: '上次登录时间',
@@ -134,7 +135,7 @@ const items = computed<DescriptionsProps['items']>(() => {
         </>
       ),
     },
-    { label: '备注', content: currentUser.value.remark || '-' },
+    { label: '备注信息', content: currentUser.value.remark || '-' },
   ];
 });
 </script>
