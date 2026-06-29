@@ -75,6 +75,7 @@ const gridOptions = withDefaultVxeGridOptions<Role>({
     },
   },
   id: 'system-role-index',
+  rowClassName: 'hover:cursor-pointer',
 });
 const lastRoleId = ref('');
 const gridEvents: VxeGridListeners = {
