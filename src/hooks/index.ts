@@ -21,6 +21,5 @@ export {
   usePriorityValue,
   usePriorityValues,
   useScrollLock,
-  useSimpleLocale,
   useSortable,
 } from '@/core/composables';

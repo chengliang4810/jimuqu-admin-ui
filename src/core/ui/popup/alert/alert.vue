@@ -5,7 +5,6 @@ import type { AlertProps } from './alert';
 
 import { computed, h, nextTick, ref } from 'vue';
 
-import { useSimpleLocale } from '@/core/composables';
 import { usePreferences } from '@/core/preferences';
 import {
   CircleAlert,
@@ -15,6 +14,7 @@ import {
   Info,
   X,
 } from '@/icons';
+import { $t } from '@/locales';
 import { cn } from '@/utils';
 import { Button, Modal, Spin } from 'antdv-next';
 
@@ -30,7 +30,6 @@ const props = withDefaults(defineProps<AlertProps>(), {
 const emits = defineEmits(['closed', 'confirm', 'opened']);
 const { globalEscapeShortcutKey } = usePreferences();
 const open = defineModel<boolean>('open', { default: false });
-const { $t } = useSimpleLocale();
 const isConfirm = ref(false);
 
 function onAlertClosed() {
@@ -165,10 +164,10 @@ async function handleOpenChange(val: boolean) {
       <div class="flex items-center gap-x-2" :class="`justify-${buttonAlign}`">
         <RenderContent :content="footer" />
         <Button v-if="showCancel" :disabled="loading" @click="doCancel">
-          {{ cancelText || $t('cancel') }}
+          {{ cancelText || $t('common.cancel') }}
         </Button>
         <Button type="primary" :loading="loading" @click="doConfirm">
-          {{ confirmText || $t('confirm') }}
+          {{ confirmText || $t('common.confirm') }}
         </Button>
       </div>
     </div>

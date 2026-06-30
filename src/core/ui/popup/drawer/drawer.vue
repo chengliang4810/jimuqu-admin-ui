@@ -4,8 +4,9 @@ import type { DrawerProps, ExtendedDrawerApi } from './drawer';
 import { computed, onDeactivated, provide, useId } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
-import { usePriorityValues, useSimpleLocale } from '@/core/composables';
+import { usePriorityValues } from '@/core/composables';
 import { X } from '@/icons';
+import { $t } from '@/locales';
 import { cn } from '@/utils';
 import { CloseOutlined } from '@antdv-next/icons';
 import { Button, Drawer, Spin, Tooltip } from 'antdv-next';
@@ -25,8 +26,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const id = useId();
 provide('DISMISSABLE_DRAWER_ID', id);
-
-const { $t } = useSimpleLocale();
 
 const state = props.drawerApi?.useStore?.();
 
@@ -201,7 +200,7 @@ function onAfterOpenChange(open: boolean) {
             :disabled="submitting"
             @click="() => drawerApi?.onCancel()"
           >
-            <slot name="cancelText">{{ cancelText || $t('cancel') }}</slot>
+            <slot name="cancelText">{{ cancelText || $t('common.cancel') }}</slot>
           </Button>
           <slot name="center-footer"></slot>
           <Button
@@ -211,7 +210,7 @@ function onAfterOpenChange(open: boolean) {
             :loading="confirmLoading || submitting"
             @click="() => drawerApi?.onConfirm()"
           >
-            <slot name="confirmText">{{ confirmText || $t('confirm') }}</slot>
+            <slot name="confirmText">{{ confirmText || $t('common.confirm') }}</slot>
           </Button>
         </slot>
         <slot name="append-footer"></slot>

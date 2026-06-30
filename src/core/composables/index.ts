@@ -13,5 +13,4 @@ export {
   usePriorityValues,
 } from './use-priority-value';
 export { SCROLL_FIXED_CLASS, useScrollLock } from './use-scroll-lock';
-export { useSimpleLocale } from './use-simple-locale';
 export { type Sortable, useSortable } from './use-sortable';

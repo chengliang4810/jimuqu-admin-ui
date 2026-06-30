@@ -13,7 +13,6 @@ import type {
 import { ref, unref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import { useSimpleLocale } from '@/core/composables';
 import { preferences } from '@/core/preferences';
 import antdEnLocale from 'antdv-next/locale/en_US';
 import antdDefaultLocale from 'antdv-next/locale/zh_CN';
@@ -30,8 +29,6 @@ const $te = i18n.global.te;
 const antdLocale = ref<AntdLocale>(antdDefaultLocale);
 
 const modules = import.meta.glob('./langs/**/*.json');
-
-const { setSimpleLocale } = useSimpleLocale();
 
 const localesMap = loadLocalesMapFromDir(
   /\.\/langs\/([^/]+)\/(.*)\.json$/,
@@ -185,7 +182,6 @@ async function loadLocaleMessages(lang: SupportedLanguagesType) {
   if (unref(i18n.global.locale) === lang) {
     return setI18nLanguage(lang);
   }
-  setSimpleLocale(lang);
 
   const message = await localesMap[lang]?.();
 

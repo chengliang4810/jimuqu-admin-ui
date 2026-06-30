@@ -4,7 +4,8 @@ import type { ExtendedModalApi, ModalProps } from './modal';
 import { computed, nextTick, onDeactivated, provide, useId, watch } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
-import { usePriorityValues, useSimpleLocale } from '@/core/composables';
+import { usePriorityValues } from '@/core/composables';
+import { $t } from '@/locales';
 import { cn } from '@/utils';
 import { ExpandOutlined, FullscreenExitOutlined } from '@antdv-next/icons';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
@@ -23,7 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
 const id = useId();
 provide('DISMISSABLE_MODAL_ID', id);
 
-const { $t } = useSimpleLocale();
 const state = props.modalApi?.useStore?.();
 
 const {
@@ -250,7 +250,7 @@ function handleClosed() {
             :disabled="submitting"
             @click="() => modalApi?.onCancel()"
           >
-            <slot name="cancelText">{{ cancelText || $t('cancel') }}</slot>
+            <slot name="cancelText">{{ cancelText || $t('common.cancel') }}</slot>
           </Button>
           <slot name="center-footer"></slot>
           <Button
@@ -260,7 +260,7 @@ function handleClosed() {
             :loading="confirmLoading || submitting"
             @click="() => modalApi?.onConfirm()"
           >
-            <slot name="confirmText">{{ confirmText || $t('confirm') }}</slot>
+            <slot name="confirmText">{{ confirmText || $t('common.confirm') }}</slot>
           </Button>
         </slot>
         <slot name="append-footer"></slot>
