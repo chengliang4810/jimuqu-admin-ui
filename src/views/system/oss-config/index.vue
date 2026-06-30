@@ -3,14 +3,14 @@ import type { OssConfig } from '@/api/system/oss-config/model';
 import type { SwitchProps } from 'antdv-next';
 import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { ref, useTemplateRef } from 'vue';
+import { h, ref, useTemplateRef } from 'vue';
 
 import {
   ossConfigChangeStatus,
   ossConfigList,
   ossConfigRemove,
 } from '@/api/system/oss-config';
-import { Page, useVbenDrawer } from '@/components';
+import { Page, useVbenDrawer, useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 import { ApiSwitch } from '@/components/global';
 import {
@@ -18,11 +18,13 @@ import {
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
+import { SettingOutlined } from '@antdv-next/icons';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import ossConfigDrawer from './oss-config-drawer.vue';
+import ossConfigImportModal from './oss-config-import-modal.vue';
 import OssConfigSearchForm from './oss-config-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof OssConfigSearchForm>>();
@@ -88,8 +90,21 @@ const [OssConfigDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: ossConfigDrawer,
 });
 
+const [OssConfigImportModal, importModalApi] = useVbenModal({
+  connectedComponent: ossConfigImportModal,
+});
+
 function handleAdd() {
   drawerApi.setData({});
+  drawerApi.open();
+}
+
+function handleImport() {
+  importModalApi.open();
+}
+
+function handleImported(record: Partial<OssConfig>) {
+  drawerApi.setData({ record });
   drawerApi.open();
 }
 
@@ -194,6 +209,15 @@ function syncCheckedRows() {
                   {{ $t('pages.common.delete') }}
                 </a-button>
                 <a-button
+                  color="green"
+                  variant="solid"
+                  :icon="h(SettingOutlined)"
+                  v-access:code="['system:ossConfig:add']"
+                  @click="handleImport"
+                >
+                  导入配置
+                </a-button>
+                <a-button
                   type="primary"
                   v-access:code="['system:ossConfig:add']"
                   @click="handleAdd"
@@ -243,5 +267,6 @@ function syncCheckedRows() {
       </div>
     </Spin>
     <OssConfigDrawer @reload="() => query()" />
+    <OssConfigImportModal @import="handleImported" />
   </Page>
 </template>

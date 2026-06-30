@@ -20,6 +20,7 @@ import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
+import { useClipboard } from '@vueuse/core';
 import {
   Divider,
   Form,
@@ -122,14 +123,32 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     }
     drawerApi.drawerLoading(true);
 
-    const { id } = drawerApi.getData() as { id?: number | string };
+    const { id, record } = drawerApi.getData() as {
+      id?: number | string;
+      record?: Partial<OssConfig>;
+    };
     isUpdate.value = !!id;
     if (isUpdate.value && id) {
-      const record = await ossConfigInfo(id);
+      const detail = await ossConfigInfo(id);
       formData.value = {
         ...getDefaultValues(),
-        ...record,
-        remark: record.remark ?? '',
+        ...detail,
+        remark: detail.remark ?? '',
+      };
+    } else if (record) {
+      // 导入配置: 仅取表单已知字段(白名单)预填, 清空主键并去掉协议头, 走新增流程
+      const defaults = getDefaultValues();
+      const picked: FormData = {};
+      for (const key of Object.keys(defaults) as (keyof FormData)[]) {
+        if (record[key] !== undefined) {
+          (picked[key] as unknown) = record[key];
+        }
+      }
+      formData.value = {
+        ...defaults,
+        ...picked,
+        ossConfigId: undefined,
+        endpoint: (picked.endpoint ?? '').replace(/^https?:\/\//i, ''),
       };
     }
     await markInitialized();
@@ -158,6 +177,14 @@ async function handleClosed() {
   formData.value = getDefaultValues();
   formInstance.value?.resetFields();
   resetInitialized();
+}
+
+const { copy } = useClipboard({ legacy: true });
+async function handleCopyConfig() {
+  await formInstance.value?.validate();
+  const data = cloneDeep(formData.value);
+  await copy(JSON.stringify(data));
+  window.message.success('已复制当前配置json');
 }
 </script>
 
@@ -234,5 +261,17 @@ async function handleClosed() {
         <TextArea allow-clear class="w-full" v-model:value="formData.remark" />
       </FormItem>
     </Form>
+
+    <template #prepend-footer>
+      <a-button
+        v-if="isUpdate"
+        class="mr-auto"
+        color="green"
+        variant="solid"
+        @click="handleCopyConfig"
+      >
+        复制配置
+      </a-button>
+    </template>
   </BasicDrawer>
 </template>
