@@ -47,6 +47,7 @@ const gridOptions = withDefaultVxeGridOptions<ImportTableRow>({
     {
       title: '表名称',
       field: 'tableName',
+      headerAlign: 'center',
       align: 'left',
       minWidth: 180,
       showOverflow: true,
@@ -54,6 +55,7 @@ const gridOptions = withDefaultVxeGridOptions<ImportTableRow>({
     {
       title: '表描述',
       field: 'tableComment',
+      headerAlign: 'center',
       align: 'left',
       minWidth: 210,
       showOverflow: true,
