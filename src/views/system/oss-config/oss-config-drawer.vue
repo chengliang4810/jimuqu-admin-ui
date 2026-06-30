@@ -21,7 +21,6 @@ import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
 import {
-  Alert,
   Divider,
   Form,
   FormItem,
@@ -164,25 +163,13 @@ async function handleClosed() {
           </Input>
         </SpaceCompact>
       </FormItem>
-      <FormItem label="自定义域名" name="domainUrl">
+      <FormItem
+        label="自定义域名"
+        name="domainUrl"
+        extra="后端v6已经支持私有桶自定义域名"
+      >
         <Input allow-clear class="w-full" v-model:value="formData.domainUrl" />
       </FormItem>
-
-      <div>
-        <Alert show-icon type="warning">
-          <template #message>
-            私有桶(minio)使用自定义域名需要参考
-            <a
-              href="https://gitee.com/dromara/RuoYi-Vue-Plus/issues/IBQIKC"
-              target="_blank"
-              class="text-primary"
-            >
-              支持minio预览私有桶
-            </a>
-            , 否则无法预览
-          </template>
-        </Alert>
-      </div>
 
       <Divider>认证信息</Divider>
       <FormItem label="accessKey" name="accessKey" :rules="formRules.accessKey">
