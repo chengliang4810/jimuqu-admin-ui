@@ -4,23 +4,37 @@ import { DictEnum } from '@/constants';
 import { renderDict } from '@/utils/render';
 
 export const columns: VxeGridProps['columns'] = [
-  { type: 'checkbox', width: 60 },
+  {
+    type: 'checkbox',
+    width: 45,
+    align: 'center',
+    resizable: false,
+  },
   {
     title: '参数名称',
     field: 'configName',
+    minWidth: 240,
   },
   {
-    title: '参数KEY',
+    title: '参数键名',
     field: 'configKey',
+    minWidth: 240,
   },
   {
-    title: '参数Value',
+    title: '参数键值',
     field: 'configValue',
+    minWidth: 240,
   },
   {
-    title: '系统内置',
+    title: '备注信息',
+    field: 'remark',
+    minWidth: 240,
+  },
+  {
+    title: '内置',
     field: 'configType',
-    width: 120,
+    width: 80,
+    align: 'center',
     slots: {
       default: ({ row }) => {
         return renderDict(row.configType, DictEnum.SYS_YES_NO);
@@ -28,19 +42,12 @@ export const columns: VxeGridProps['columns'] = [
     },
   },
   {
-    title: '备注',
-    field: 'remark',
-  },
-  {
-    title: '创建时间',
-    field: 'createTime',
-  },
-  {
     field: 'action',
     fixed: 'right',
     slots: { default: 'action' },
     title: '操作',
     resizable: false,
+    align: 'center',
     width: 'auto',
   },
 ];

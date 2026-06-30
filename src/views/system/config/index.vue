@@ -5,7 +5,6 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import {
-  configExport,
   configList,
   configRefreshCache,
   configRemove,
@@ -16,7 +15,6 @@ import {
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
-import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
@@ -119,16 +117,6 @@ function handleMultiDelete() {
   });
 }
 
-const { exportBlob, exportLoading, buildExportFileName } =
-  useBlobExport(configExport);
-async function handleExport() {
-  // 构建表单请求参数
-  const formValues = (await searchFormRef.value?.getValues()) ?? {};
-  // 文件名
-  const fileName = buildExportFileName('参数配置');
-  exportBlob({ data: formValues, fileName });
-}
-
 async function handleRefreshCache() {
   await configRefreshCache();
   await query();
@@ -194,14 +182,6 @@ function syncCheckedRows() {
                   <a-button> 刷新缓存 </a-button>
                 </Popconfirm>
                 <a-button
-                  v-access:code="['system:config:export']"
-                  :loading="exportLoading"
-                  :disabled="exportLoading"
-                  @click="handleExport"
-                >
-                  {{ $t('pages.common.export') }}
-                </a-button>
-                <a-button
                   v-access:code="['system:config:remove']"
                   :disabled="checkedRows.length === 0"
                   danger
@@ -234,6 +214,7 @@ function syncCheckedRows() {
                   @confirm="handleDelete(row)"
                 >
                   <action-button
+                    :disabled="row.configType === YesNo.Yes"
                     v-access:code="['system:config:remove']"
                     danger
                     @click.stop=""

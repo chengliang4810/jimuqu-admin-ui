@@ -95,7 +95,7 @@ async function handleConfirm() {
     await (isUpdate.value ? configUpdate(data) : configAdd(data));
     resetInitialized();
     emit('reload');
-    modalApi.close();
+    await modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
@@ -151,7 +151,7 @@ async function handleClosed() {
           v-model:value="formData.configType"
         />
       </FormItem>
-      <FormItem label="备注" name="remark">
+      <FormItem label="备注信息" name="remark">
         <TextArea allow-clear class="w-full" v-model:value="formData.remark" />
       </FormItem>
     </Form>

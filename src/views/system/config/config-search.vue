@@ -10,7 +10,7 @@ import { tableSeachClass } from '@/components/vxe-table';
 import { DictEnum } from '@/constants';
 import { formatDateTime } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
-import { Card, DateRangePicker, Form, FormItem } from 'antdv-next';
+import { Card, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
   reset: [];
@@ -88,14 +88,10 @@ defineExpose({
               :options="getDictOptions(DictEnum.SYS_YES_NO)"
             />
           </FormItem>
-          <FormItem label="创建时间" name="time">
-            <DateRangePicker v-model:value="model.time" allow-clear />
-          </FormItem>
         </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] flex items-baseline justify-end gap-4">
           <SearchButtonGroup
-            collapsible
             v-model:collapsed="searchCollapsed"
             @reset="handleReset"
             @submit="handleSubmit"
