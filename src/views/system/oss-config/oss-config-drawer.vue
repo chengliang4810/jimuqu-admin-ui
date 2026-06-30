@@ -15,7 +15,7 @@ import {
   FormInput as Input,
   FormTextArea as TextArea,
 } from '@/components/global/form';
-import { DictEnum } from '@/constants';
+import { DictEnum, YesNo } from '@/constants';
 import { $t } from '@/locales';
 import { cloneDeep } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
@@ -91,6 +91,18 @@ function customFormValueGetter() {
 function handleEndpointInput(event: Event) {
   const value = (event.target as HTMLInputElement).value;
   formData.value.endpoint = value.replace(/^https?:\/\//i, '');
+}
+
+// 自定义域名失焦时, 若未带协议头则按是否https自动补全
+function handleDomainUrlBlur() {
+  const value = formData.value.domainUrl?.trim();
+  if (!value || /^https?:\/\//i.test(value)) {
+    formData.value.domainUrl = value;
+    return;
+  }
+  const protocol =
+    formData.value.isHttps === YesNo.Yes ? 'https://' : 'http://';
+  formData.value.domainUrl = `${protocol}${value}`;
 }
 
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
@@ -180,6 +192,7 @@ async function handleClosed() {
           class="w-full"
           v-model:value="formData.domainUrl"
           placeholder="已经支持私有桶自定义域名"
+          @blur="handleDomainUrlBlur"
         />
       </FormItem>
 
