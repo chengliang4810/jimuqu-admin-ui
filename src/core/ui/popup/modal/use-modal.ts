@@ -11,7 +11,7 @@ import {
 } from 'vue';
 
 import { usePreferences } from '@/core/preferences';
-import { useStore } from '@/core/shared/store';
+import { useStore } from '@tanstack/vue-store';
 
 import { ModalApi } from './modal-api';
 import VbenModal from './modal.vue';

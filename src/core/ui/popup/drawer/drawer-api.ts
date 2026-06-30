@@ -1,7 +1,7 @@
 import type { DrawerApiOptions, DrawerState } from './drawer';
 
-import { Store } from '@/core/shared/store';
 import { bindMethods, isFunction } from '@/utils';
+import { Store } from '@tanstack/vue-store';
 
 export class DrawerApi {
   // 共享数据
