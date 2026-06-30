@@ -66,11 +66,12 @@ const computedNotificationList = computed(() => {
 <template>
   <Popover
     :open="open"
-    overlay-class-name="relative right-2 !z-[1998] w-90 p-0"
+    overlay-class-name="relative right-2 w-90 p-0"
     trigger="click"
     :styles="{
       root: {
         '--ant-popover-inner-padding': '0',
+        '--ant-popover-z-index-popup': '1999'
       },
     }"
     @open-change="handleOpenUpdate"
