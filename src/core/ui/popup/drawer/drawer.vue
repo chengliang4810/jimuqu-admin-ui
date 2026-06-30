@@ -5,7 +5,6 @@ import { computed, onDeactivated, provide, useId } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { usePriorityValues, useSimpleLocale } from '@/core/composables';
-import { globalShareState } from '@/core/shared/global-state';
 import { X } from '@/icons';
 import { cn } from '@/utils';
 import { CloseOutlined } from '@antdv-next/icons';
@@ -23,8 +22,6 @@ const props = withDefaults(defineProps<Props>(), {
   submitting: false,
   zIndex: 1000,
 });
-
-const components = globalShareState.getComponents();
 
 const id = useId();
 provide('DISMISSABLE_DRAWER_ID', id);
@@ -82,9 +79,6 @@ const getContainer = computed(() => {
       `#${ELEMENT_ID_MAIN_CONTENT}>div:not(.absolute)>div`,
     ) as HTMLElement) ?? document.body;
 });
-
-const DefaultButton = computed(() => components.DefaultButton || Button);
-const PrimaryButton = computed(() => components.PrimaryButton || Button);
 
 onDeactivated(() => {
   if (!appendToMain.value) {
@@ -202,17 +196,15 @@ function onAfterOpenChange(open: boolean) {
       >
         <slot name="prepend-footer"></slot>
         <slot name="footer">
-          <component
-            :is="DefaultButton"
+          <Button
             v-if="showCancelButton"
             :disabled="submitting"
             @click="() => drawerApi?.onCancel()"
           >
             <slot name="cancelText">{{ cancelText || $t('cancel') }}</slot>
-          </component>
+          </Button>
           <slot name="center-footer"></slot>
-          <component
-            :is="PrimaryButton"
+          <Button
             v-if="showConfirmButton"
             type="primary"
             :disabled="confirmDisabled"
@@ -220,7 +212,7 @@ function onAfterOpenChange(open: boolean) {
             @click="() => drawerApi?.onConfirm()"
           >
             <slot name="confirmText">{{ confirmText || $t('confirm') }}</slot>
-          </component>
+          </Button>
         </slot>
         <slot name="append-footer"></slot>
       </div>

@@ -5,7 +5,6 @@ import { computed, nextTick, onDeactivated, provide, useId, watch } from 'vue';
 
 import { ELEMENT_ID_MAIN_CONTENT } from '@/constants';
 import { usePriorityValues, useSimpleLocale } from '@/core/composables';
-import { globalShareState } from '@/core/shared/global-state';
 import { cn } from '@/utils';
 import { ExpandOutlined, FullscreenExitOutlined } from '@antdv-next/icons';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
@@ -20,8 +19,6 @@ const props = withDefaults(defineProps<Props>(), {
   destroyOnClose: false,
   modalApi: undefined,
 });
-
-const components = globalShareState.getComponents();
 
 const id = useId();
 provide('DISMISSABLE_MODAL_ID', id);
@@ -107,8 +104,6 @@ const modalWidth = computed(() => {
   return 520;
 });
 
-const DefaultButton = computed(() => components.DefaultButton || Button);
-const PrimaryButton = computed(() => components.PrimaryButton || Button);
 const modalFooter = computed(() => (showFooter.value ? undefined : null));
 
 // 在开启 keepAlive 情况下,直接通过浏览器按钮/手势等返回不会关闭弹窗
@@ -250,17 +245,15 @@ function handleClosed() {
       >
         <slot name="prepend-footer"></slot>
         <slot name="footer">
-          <component
-            :is="DefaultButton"
+          <Button
             v-if="showCancelButton"
             :disabled="submitting"
             @click="() => modalApi?.onCancel()"
           >
             <slot name="cancelText">{{ cancelText || $t('cancel') }}</slot>
-          </component>
+          </Button>
           <slot name="center-footer"></slot>
-          <component
-            :is="PrimaryButton"
+          <Button
             v-if="showConfirmButton"
             type="primary"
             :disabled="confirmDisabled"
@@ -268,7 +261,7 @@ function handleClosed() {
             @click="() => modalApi?.onConfirm()"
           >
             <slot name="confirmText">{{ confirmText || $t('confirm') }}</slot>
-          </component>
+          </Button>
         </slot>
         <slot name="append-footer"></slot>
       </div>

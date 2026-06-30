@@ -4,8 +4,6 @@ export { Loading, registerLoadingDirective, Spinner } from './loading';
 export { Page, type PageProps } from './page';
 export { UserInfoCell } from './user-info-cell';
 
-export { globalShareState } from '@/core/shared/global-state';
-
 // 给文档用
 export {
   VbenAvatar,

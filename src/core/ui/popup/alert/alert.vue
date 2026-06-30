@@ -7,7 +7,6 @@ import { computed, h, nextTick, ref } from 'vue';
 
 import { useSimpleLocale } from '@/core/composables';
 import { usePreferences } from '@/core/preferences';
-import { globalShareState } from '@/core/shared/global-state';
 import {
   CircleAlert,
   CircleCheckBig,
@@ -32,11 +31,7 @@ const emits = defineEmits(['closed', 'confirm', 'opened']);
 const { globalEscapeShortcutKey } = usePreferences();
 const open = defineModel<boolean>('open', { default: false });
 const { $t } = useSimpleLocale();
-const components = globalShareState.getComponents();
 const isConfirm = ref(false);
-
-const DefaultButton = computed(() => components.DefaultButton || Button);
-const PrimaryButton = computed(() => components.PrimaryButton || Button);
 
 function onAlertClosed() {
   emits('closed', isConfirm.value);
@@ -169,22 +164,12 @@ async function handleOpenChange(val: boolean) {
       />
       <div class="flex items-center gap-x-2" :class="`justify-${buttonAlign}`">
         <RenderContent :content="footer" />
-        <component
-          :is="DefaultButton"
-          v-if="showCancel"
-          :disabled="loading"
-          @click="doCancel"
-        >
+        <Button v-if="showCancel" :disabled="loading" @click="doCancel">
           {{ cancelText || $t('cancel') }}
-        </component>
-        <component
-          :is="PrimaryButton"
-          type="primary"
-          :loading="loading"
-          @click="doConfirm"
-        >
+        </Button>
+        <Button type="primary" :loading="loading" @click="doConfirm">
           {{ confirmText || $t('confirm') }}
-        </component>
+        </Button>
       </div>
     </div>
   </Modal>
