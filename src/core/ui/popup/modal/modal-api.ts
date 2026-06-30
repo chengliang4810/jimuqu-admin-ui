@@ -37,7 +37,7 @@ export class ModalApi {
 
     const defaultState: ModalState = {
       bordered: true,
-      centered: true,
+      centered: false,
       class: '',
       closeOnClickModal: true,
       closeOnPressEscape: true,
