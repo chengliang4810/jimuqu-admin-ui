@@ -17,7 +17,7 @@ import { $t } from '@/locales';
 import { cloneDeep, getPopupContainer } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
-import { Form, FormItem, RadioGroup } from 'antdv-next';
+import { Form, FormItem, RadioGroup, theme } from 'antdv-next';
 
 import SecretInput from './secret-input.vue';
 
@@ -151,6 +151,9 @@ async function handleClosed() {
   formInstance.value?.resetFields();
   resetInitialized();
 }
+
+const antdToken = theme.useToken();
+const radius = computed(() => antdToken.token.value.borderRadius);
 </script>
 
 <template>
@@ -189,6 +192,7 @@ async function handleClosed() {
         class="col-span-1 lg:col-span-2"
       >
         <SecretInput
+          class="w-full"
           :disabled="isUpdate"
           v-model:value="formData.clientSecret"
         />
@@ -265,7 +269,7 @@ async function handleClosed() {
           addon-after="秒"
           class="w-full"
           placeholder="请输入"
-          :style="{ '--ant-border-radius': 'var(--radius) 0 0 var(--radius)' }"
+          :style="{ '--ant-border-radius': `${radius}px 0 0 ${radius}px` }"
           v-model:value="formData.activeTimeout"
         />
       </FormItem>
@@ -279,7 +283,7 @@ async function handleClosed() {
         <InputNumber
           addon-after="秒"
           class="w-full"
-          :style="{ '--ant-border-radius': 'var(--radius) 0 0 var(--radius)' }"
+          :style="{ '--ant-border-radius': `${radius}px 0 0 ${radius}px` }"
           v-model:value="formData.timeout"
         />
       </FormItem>
