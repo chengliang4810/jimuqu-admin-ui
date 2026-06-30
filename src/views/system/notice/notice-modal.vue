@@ -119,7 +119,7 @@ async function handleConfirm() {
     await (isUpdate.value ? noticeUpdate(data) : noticeAdd(data));
     resetInitialized();
     emit('reload');
-    modalApi.close();
+    await modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {

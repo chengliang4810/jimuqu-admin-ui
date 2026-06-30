@@ -7,7 +7,9 @@ import { useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 // 直接从 helper 引入, 避免经 barrel 连带打包重型 tiptap 编辑器
 import { contentWithOssIdTransform } from '@/components/tiptap/src/helper';
-
+import { DictEnum } from '@/constants';
+import { renderDict } from '@/utils/render';
+import { Divider, Empty } from 'antdv-next';
 const currentNotice = shallowRef<Notice | null>(null);
 const { hasAccessByCodes } = useAccess();
 
@@ -40,13 +42,24 @@ const [BasicModal, modalApi] = useVbenModal({
 </script>
 
 <template>
-  <BasicModal :title="currentNotice?.noticeTitle ?? '预览公告'">
+  <BasicModal title="通知公告">
     <div v-if="currentNotice">
-      <div
-        class="notice-content max-h-[400px] overflow-y-auto"
-        v-html="currentNotice.noticeContent"
-      ></div>
+      <div class="flex min-h-150 w-full justify-center">
+        <div class="h-full w-full max-w-[680px]">
+          <div class="pt-4 pb-4 text-xl font-bold">
+            {{ currentNotice?.noticeTitle }}
+          </div>
+          <div class="flex gap-4">
+            <component :is="renderDict(currentNotice?.noticeType, DictEnum.SYS_NOTICE_TYPE)" />
+            <span>{{ currentNotice?.createByName }} </span>
+            <span>{{ currentNotice?.createTime }}</span>
+          </div>
+          <Divider />
+          <div v-html="currentNotice?.noticeContent" class="pb-16"></div>
+        </div>
+      </div>
     </div>
+    <Empty v-else />
   </BasicModal>
 </template>
 

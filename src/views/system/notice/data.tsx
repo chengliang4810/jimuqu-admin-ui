@@ -4,27 +4,40 @@ import { DictEnum } from '@/constants';
 import { renderDict } from '@/utils/render';
 
 export const columns: VxeGridProps['columns'] = [
-  { type: 'checkbox', width: 60 },
+  {
+    type: 'checkbox',
+    width: 45,
+    align: 'center',
+    resizable: false,
+  },
   {
     title: '公告标题',
     field: 'noticeTitle',
     align: 'left',
     headerAlign: 'center',
-  },
-  {
-    title: '公告类型',
-    field: 'noticeType',
-    width: 120,
+    minWidth: 240,
     slots: {
       default: ({ row }) => {
-        return renderDict(row.noticeType, DictEnum.SYS_NOTICE_TYPE);
+        return (
+          <div class="flex items-center gap-2">
+            {renderDict(row.noticeType, DictEnum.SYS_NOTICE_TYPE)}
+            <div
+              class="overflow-hidden text-ellipsis whitespace-nowrap"
+              title={row.noticeTitle}
+            >
+              {row.noticeTitle}
+            </div>
+          </div>
+        );
       },
     },
   },
   {
     title: '状态',
     field: 'status',
-    width: 120,
+    resizable: false,
+    align: 'center',
+    width: 80,
     slots: {
       default: ({ row }) => {
         return renderDict(row.status, DictEnum.SYS_NOTICE_STATUS);
@@ -32,13 +45,17 @@ export const columns: VxeGridProps['columns'] = [
     },
   },
   {
-    title: '创建人',
+    title: '发布人',
     field: 'createByName',
     width: 150,
+    resizable: false,
   },
   {
-    title: '创建时间',
     field: 'createTime',
+    title: '发布时间',
+    width: 160,
+    align: 'center',
+    resizable: false,
   },
   {
     field: 'action',
@@ -46,6 +63,7 @@ export const columns: VxeGridProps['columns'] = [
     slots: { default: 'action' },
     title: '操作',
     resizable: false,
+    align: 'center',
     width: 'auto',
   },
 ];

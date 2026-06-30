@@ -211,9 +211,21 @@ function handleClosed() {
     <Spin :spinning="!!(showLoading || submitting)" size="large">
       <div
         :class="
-          cn('relative min-h-40 overflow-y-auto p-3', contentClass, {
-            'pointer-events-none': showLoading || submitting,
-          })
+          fullscreen
+            ? cn(
+                'relative h-[100vh] min-h-40 overflow-y-auto p-3',
+                contentClass,
+                {
+                  'pointer-events-none': showLoading || submitting,
+                },
+              )
+            : cn(
+                'relative max-h-[80vh] min-h-40 overflow-y-auto p-3',
+                contentClass,
+                {
+                  'pointer-events-none': showLoading || submitting,
+                },
+              )
         "
       >
         <slot></slot>
@@ -255,6 +267,11 @@ function handleClosed() {
 <style>
 .vben-modal .ant-modal-body {
   padding: 0;
+}
+
+/**临时解决modal-fullscreen全屏body超出滚动**/
+.vben-modal-fullscreen {
+  overflow: hidden !important;
 }
 
 .vben-modal-fullscreen .ant-modal {
