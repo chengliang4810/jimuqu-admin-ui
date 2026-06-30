@@ -9,6 +9,7 @@ import { $t } from '@/locales';
 import { useAuthStore } from '@/stores';
 import { cn } from '@/utils';
 import {
+  Alert,
   Button,
   Checkbox,
   Form,
@@ -145,6 +146,13 @@ onMounted(async () => {
         {{ $t('authentication.loginSubtitle') }}
       </p>
     </div>
+
+    <Alert
+      :styles="{ root: { marginBottom: '16px' } }"
+      title="当前版本对应后端v6版本"
+      show-icon
+      type="warning"
+    />
 
     <Form
       :model="formState"
