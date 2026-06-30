@@ -212,14 +212,30 @@ function handleClosed() {
       <div
         :class="
           fullscreen
-            ? cn(
-                'relative h-[100vh] min-h-40 overflow-y-auto p-3',
-                contentClass,
-                {
-                  'pointer-events-none': showLoading || submitting,
-                },
-              )
-            : cn(
+            ? showFooter
+              ? cn(
+                  'relative h-[90vh] min-h-40 overflow-y-auto p-3',
+                  contentClass,
+                  {
+                    'pointer-events-none': showLoading || submitting,
+                  },
+                )
+              : cn(
+                  'relative h-[100vh] min-h-40 overflow-y-auto p-3',
+                  contentClass,
+                  {
+                    'pointer-events-none': showLoading || submitting,
+                  },
+                )
+            : showFooter
+              ? cn(
+                  'relative max-h-[70vh] min-h-40 overflow-y-auto p-3',
+                  contentClass,
+                  {
+                    'pointer-events-none': showLoading || submitting,
+                  },
+                )
+               :cn(
                 'relative max-h-[80vh] min-h-40 overflow-y-auto p-3',
                 contentClass,
                 {

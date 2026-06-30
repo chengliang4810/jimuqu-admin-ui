@@ -283,59 +283,61 @@ function syncCheckedRows() {
               </Space>
             </template>
             <template #action="{ row }">
-              <a-button
-                size="small"
-                type="link"
-                v-access:code="['tool:gen:preview']"
-                @click.stop="handlePreview(row)"
-              >
-                {{ $t('pages.common.preview') }}
-              </a-button>
-              <a-button
-                size="small"
-                type="link"
-                v-access:code="['tool:gen:edit']"
-                @click.stop="handleEdit(row)"
-              >
-                {{ $t('pages.common.edit') }}
-              </a-button>
-              <Popconfirm
-                :title="`确认同步[${row.tableName}]?`"
-                placement="left"
-                @confirm="handleSync(row)"
-              >
-                <a-button
+              <Space>
+                <action-button
+                  variant="link"
+                  color="green"
+                  v-access:code="['tool:gen:preview']"
+                  @click.stop="handlePreview(row)"
+                >
+                  {{ $t('pages.common.preview') }}
+                </action-button>
+                <action-button
                   size="small"
                   type="link"
                   v-access:code="['tool:gen:edit']"
-                  @click.stop=""
+                  @click.stop="handleEdit(row)"
                 >
-                  {{ $t('pages.common.sync') }}
-                </a-button>
-              </Popconfirm>
-              <a-button
-                size="small"
-                type="link"
-                v-access:code="['tool:gen:code']"
-                @click.stop="handleDownload(row)"
-              >
-                生成代码
-              </a-button>
-              <Popconfirm
-                :title="`确认删除[${row.tableName}]?`"
-                placement="left"
-                @confirm="handleDelete(row)"
-              >
-                <a-button
-                  danger
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <Popconfirm
+                  :title="`确认同步[${row.tableName}]?`"
+                  placement="left"
+                  @confirm="handleSync(row)"
+                >
+                  <action-button
+                    size="small"
+                    type="link"
+                    v-access:code="['tool:gen:edit']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.sync') }}
+                  </action-button>
+                </Popconfirm>
+                <action-button
                   size="small"
                   type="link"
-                  v-access:code="['tool:gen:remove']"
-                  @click.stop=""
+                  v-access:code="['tool:gen:code']"
+                  @click.stop="handleDownload(row)"
                 >
-                  {{ $t('pages.common.delete') }}
-                </a-button>
-              </Popconfirm>
+                  生成
+                </action-button>
+                <Popconfirm
+                  :title="`确认删除[${row.tableName}]?`"
+                  placement="left"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    danger
+                    size="small"
+                    type="link"
+                    v-access:code="['tool:gen:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
+              </Space>
             </template>
             <template #loading>
               <Spin :spinning="true" size="large" />

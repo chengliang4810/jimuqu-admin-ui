@@ -40,35 +40,48 @@ const gridOptions = withDefaultVxeGridOptions<ImportTableRow>({
   columns: [
     {
       type: 'checkbox',
-      width: 60,
+      width: 45,
+      align: 'center',
+      resizable: false,
     },
     {
       title: '表名称',
       field: 'tableName',
       align: 'left',
+      minWidth: 180,
+      showOverflow: true,
     },
     {
       title: '表描述',
       field: 'tableComment',
       align: 'left',
+      minWidth: 210,
+      showOverflow: true,
     },
     {
-      title: '创建时间',
       field: 'createTime',
+      title: '创建时间',
+      width: 150,
+      align: 'center',
+      resizable: false,
     },
     {
       title: '更新时间',
       field: 'updateTime',
+      width: 150,
+      align: 'center',
+      resizable: false,
     },
   ],
   keepSource: true,
   size: 'small',
-  minHeight: 400,
+  minHeight: 600,
+  maxHeight: 'auto',
   pagerConfig: {},
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues = {}) => {
-        return await readyToGenList({
+        return readyToGenList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
           ...formValues,
@@ -125,7 +138,7 @@ async function handleSubmit() {
     const records = getCheckedRows();
     const tables = records.map((item) => item.tableName);
     if (tables.length === 0) {
-      modalApi.close();
+      await modalApi.close();
       return;
     }
     modalApi.modalLoading(true);
@@ -133,7 +146,7 @@ async function handleSubmit() {
     const dataName = formValues.dataName || 'master';
     await importTable(tables.join(','), dataName);
     emit('reload');
-    modalApi.close();
+    await modalApi.close();
   } catch (error) {
     console.warn(error);
   } finally {
@@ -158,7 +171,7 @@ function syncCheckedRows() {
 </script>
 
 <template>
-  <BasicModal :width="800" title="导入表">
+  <BasicModal :width="900" title="导入表">
     <div class="flex h-full flex-col gap-4">
       <TableImportSearchForm
         ref="searchFormRef"

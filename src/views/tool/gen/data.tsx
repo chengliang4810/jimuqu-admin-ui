@@ -1,33 +1,52 @@
 import type { VxeGridProps } from 'vxe-table';
 
 export const columns: VxeGridProps['columns'] = [
-  { type: 'checkbox', width: 60 },
+  {
+    type: 'checkbox',
+    width: 45,
+    align: 'center',
+    resizable: false,
+  },
   {
     field: 'tableName',
     title: '表名称',
-  },
-  {
-    field: 'tableComment',
-    title: '表描述',
+    minWidth: 180,
+    showOverflow: true,
   },
   {
     field: 'className',
     title: '实体类',
+    minWidth: 180,
+    showOverflow: true,
+  },
+  {
+    field: 'tableComment',
+    title: '表描述',
+    minWidth: 210,
+    showOverflow: true,
   },
   {
     field: 'createTime',
     title: '创建时间',
+    width: 150,
+    align: 'center',
+    resizable: false,
   },
   {
     field: 'updateTime',
     title: '更新时间',
+    width: 150,
+    align: 'center',
+    resizable: false,
   },
   {
     field: 'action',
     fixed: 'right',
     slots: { default: 'action' },
     title: '操作',
-    width: 300,
+    resizable: false,
+    align: 'center',
+    width: 'auto',
   },
 ];
 
