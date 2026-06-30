@@ -87,6 +87,12 @@ function customFormValueGetter() {
   return JSON.stringify(formData.value);
 }
 
+// 输入/粘贴 http(s):// 时自动去掉协议头
+function handleEndpointInput(event: Event) {
+  const value = (event.target as HTMLInputElement).value;
+  formData.value.endpoint = value.replace(/^https?:\/\//i, '');
+}
+
 const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   {
     initializedGetter: customFormValueGetter,
@@ -159,16 +165,22 @@ async function handleClosed() {
           <SpaceAddon>
             {{ formData.isHttps === 'Y' ? 'https://' : 'http://' }}
           </SpaceAddon>
-          <Input allow-clear class="w-full" v-model:value="formData.endpoint">
+          <Input
+            allow-clear
+            class="w-full"
+            :value="formData.endpoint"
+            @input="handleEndpointInput"
+          >
           </Input>
         </SpaceCompact>
       </FormItem>
-      <FormItem
-        label="自定义域名"
-        name="domainUrl"
-        extra="后端v6已经支持私有桶自定义域名"
-      >
-        <Input allow-clear class="w-full" v-model:value="formData.domainUrl" />
+      <FormItem label="自定义域名" name="domainUrl">
+        <Input
+          allow-clear
+          class="w-full"
+          v-model:value="formData.domainUrl"
+          placeholder="已经支持私有桶自定义域名"
+        />
       </FormItem>
 
       <Divider>认证信息</Divider>
