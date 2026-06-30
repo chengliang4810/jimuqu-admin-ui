@@ -8,7 +8,6 @@ export { UserInfoCell } from './user-info-cell';
 export {
   VbenAvatar,
   VbenButton,
-  VbenCheckbox,
   VbenContextMenu,
   VbenCountToAnimator,
   VbenFullScreen,
@@ -17,8 +16,6 @@ export {
   VbenLogo,
   VbenSpinner,
 } from '@/core/ui/adapter';
-
-export type { FlattenedItem } from '@/core/ui/adapter';
 
 export {
   alert,
