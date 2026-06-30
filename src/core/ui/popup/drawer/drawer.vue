@@ -11,8 +11,6 @@ import { cn } from '@/utils';
 import { CloseOutlined } from '@antdv-next/icons';
 import { Button, Drawer, Spin, Tooltip } from 'antdv-next';
 
-import { extractWidthFromClass } from '../extract-width';
-
 interface Props extends DrawerProps {
   drawerApi?: ExtendedDrawerApi;
 }
@@ -68,14 +66,11 @@ const {
   zIndex,
 } = usePriorityValues(props, state);
 
-const widthInfo = computed(() => extractWidthFromClass(drawerClass.value));
-const restClass = computed(() => widthInfo.value.rest);
 const drawerSize = computed(() => {
   if (propSize.value != null) {
     return propSize.value;
   }
-
-  return widthInfo.value.width ?? 520;
+  return 520;
 });
 
 const getContainer = computed(() => {
@@ -125,7 +120,7 @@ function onAfterOpenChange(open: boolean) {
     :get-container="getContainer"
     :destroy-on-close="destroyOnClose"
     :closable="false"
-    :class="restClass"
+    :class="drawerClass"
     :classes="drawerClasses"
     :style="drawerStyle"
     :styles="drawerStyles"
@@ -185,7 +180,7 @@ function onAfterOpenChange(open: boolean) {
 
     <Spin
       :spinning="!!(showLoading || submitting)"
-      :classes="{ root: 'h-full', container:'h-full' }"
+      :classes="{ root: 'h-full', container: 'h-full' }"
       size="large"
     >
       <div

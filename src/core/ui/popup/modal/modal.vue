@@ -11,8 +11,6 @@ import { ExpandOutlined, FullscreenExitOutlined } from '@antdv-next/icons';
 import { Button, Modal, Spin, Tooltip } from 'antdv-next';
 import { merge } from 'lodash-es';
 
-import { extractWidthFromClass } from '../extract-width';
-
 interface Props extends ModalProps {
   modalApi?: ExtendedModalApi;
 }
@@ -103,13 +101,11 @@ const getContainer = computed(() => {
     ) as HTMLElement) ?? document.body;
 });
 
-const widthInfo = computed(() => extractWidthFromClass(modalClass.value));
 const modalWidth = computed(() => {
   if (shouldFullscreen.value) return '100vw';
   if (propWidth.value != null) return propWidth.value;
-  return widthInfo.value.width ?? 520;
+  return 520;
 });
-const restClass = computed(() => widthInfo.value.rest);
 
 const DefaultButton = computed(() => components.DefaultButton || Button);
 const PrimaryButton = computed(() => components.PrimaryButton || Button);
@@ -170,7 +166,7 @@ function handleClosed() {
     :wrap-class-name="
       cn('vben-modal', wrapClass, { 'vben-modal-fullscreen': shouldFullscreen })
     "
-    :class="restClass"
+    :class="modalClass"
     :classes="modalClasses"
     :style="modalStyle"
     :styles="modalStylesComputed"
@@ -235,13 +231,13 @@ function handleClosed() {
                     'pointer-events-none': showLoading || submitting,
                   },
                 )
-               :cn(
-                'relative max-h-[80vh] min-h-40 overflow-y-auto p-3',
-                contentClass,
-                {
-                  'pointer-events-none': showLoading || submitting,
-                },
-              )
+              : cn(
+                  'relative max-h-[80vh] min-h-40 overflow-y-auto p-3',
+                  contentClass,
+                  {
+                    'pointer-events-none': showLoading || submitting,
+                  },
+                )
         "
       >
         <slot></slot>
@@ -285,7 +281,7 @@ function handleClosed() {
   padding: 0;
 }
 
-/**临时解决modal-fullscreen全屏body超出滚动**/
+/** 临时解决modal-fullscreen全屏body超出滚动 **/
 .vben-modal-fullscreen {
   overflow: hidden !important;
 }
