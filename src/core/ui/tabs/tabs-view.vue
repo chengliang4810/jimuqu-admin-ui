@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { TabsEmits, TabsProps } from './types';
 
-import { useForwardPropsEmits } from '@/core/composables';
 import { VbenScrollbar } from '@/core/ui/adapter';
 import { ChevronsLeft, ChevronsRight } from '@/icons';
 
@@ -23,8 +22,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<TabsEmits>();
-
-const forward = useForwardPropsEmits(props, emit);
 
 const {
   handleScrollAt,
@@ -84,10 +81,17 @@ useTabsDrag(props, emit);
       >
         <TabsChrome
           v-if="styleType === 'chrome'"
-          v-bind="{ ...forward, ...$attrs, ...$props }"
+          v-bind="{ ...$attrs, ...$props }"
+          @close="emit('close', $event)"
+          @unpin="emit('unpin', $event)"
         />
 
-        <Tabs v-else v-bind="{ ...forward, ...$attrs, ...$props }" />
+        <Tabs
+          v-else
+          v-bind="{ ...$attrs, ...$props }"
+          @close="emit('close', $event)"
+          @unpin="emit('unpin', $event)"
+        />
       </VbenScrollbar>
     </div>
 

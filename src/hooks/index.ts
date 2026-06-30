@@ -10,8 +10,6 @@ export {
   SCROLL_FIXED_CLASS,
   type Sortable,
   useForwardPriorityValues,
-  useForwardProps,
-  useForwardPropsEmits,
   useIsMobile,
   useLayoutContentStyle,
   useLayoutHeaderStyle,
