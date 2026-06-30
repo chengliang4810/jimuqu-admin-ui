@@ -12,7 +12,7 @@ import {
 
 import echarts from '@/components/echarts';
 import { usePreferences } from '@/core/preferences';
-import { useDebounceFn, useResizeObserver, useWindowSize } from '@vueuse/core';
+import { useDebounceFn, useWindowSize } from '@vueuse/core';
 
 interface Props {
   data?: string;
@@ -69,8 +69,6 @@ watch(
 watch([width, height], () => {
   resizeHandler();
 });
-
-useResizeObserver(chartRef, resizeHandler);
 
 watch(isDark, () => {
   if (!chartInstance) return;
