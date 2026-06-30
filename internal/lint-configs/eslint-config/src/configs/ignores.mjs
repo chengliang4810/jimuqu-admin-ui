@@ -7,7 +7,6 @@ export async function ignores() {
         '**/dist-*',
         '**/*-dist',
         '**/.husky',
-        '**/.nitro',
         '**/.output',
         '**/Dockerfile',
         '**/package-lock.json',

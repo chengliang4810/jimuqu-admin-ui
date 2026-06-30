@@ -39,8 +39,6 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       isBuild,
       license: true,
       mode,
-      nitroMock: !isBuild,
-      nitroMockOptions: {},
       print: !isBuild,
       printInfoMap: {
         'Vben Admin Docs': 'https://doc.vben.pro',
