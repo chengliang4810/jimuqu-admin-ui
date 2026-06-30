@@ -9,7 +9,6 @@ export { useWatermark } from './use-watermark';
 export {
   SCROLL_FIXED_CLASS,
   type Sortable,
-  useForwardExpose,
   useForwardPriorityValues,
   useForwardProps,
   useForwardPropsEmits,
