@@ -63,25 +63,24 @@ defineExpose({
       :label-col="{ style: { width: '80px' } }"
     >
       <div :class="tableSeachClass">
+        <FormItem label="公告类型" name="noticeType">
+          <FormSelect
+            allow-clear
+            v-model:value="model.noticeType"
+            :options="getDictOptions(DictEnum.SYS_NOTICE_TYPE)"
+          />
+        </FormItem>
         <template v-if="!searchCollapsed">
           <FormItem label="公告标题" name="noticeTitle">
             <FormInput v-model:value="model.noticeTitle" allow-clear />
           </FormItem>
-          <FormItem label="创建人" name="createByName">
+          <FormItem label="发布人" name="createByName">
             <FormInput v-model:value="model.createByName" allow-clear />
-          </FormItem>
-          <FormItem label="公告类型" name="noticeType">
-            <FormSelect
-              allow-clear
-              v-model:value="model.noticeType"
-              :options="getDictOptions(DictEnum.SYS_NOTICE_TYPE)"
-            />
           </FormItem>
         </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] flex items-baseline justify-end gap-4">
           <SearchButtonGroup
-            collapsible
             v-model:collapsed="searchCollapsed"
             @reset="handleReset"
             @submit="handleSubmit"

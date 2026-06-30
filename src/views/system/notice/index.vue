@@ -190,7 +190,7 @@ function syncCheckedRows() {
             <template #action="{ row }">
               <Space>
                 <action-button @click="handlePreview(row)">
-                  {{ $t('pages.common.preview') }}
+                  {{ $t('pages.common.info') }}
                 </action-button>
                 <action-button
                   v-access:code="['system:notice:edit']"
