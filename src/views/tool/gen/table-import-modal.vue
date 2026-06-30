@@ -76,7 +76,6 @@ const gridOptions = withDefaultVxeGridOptions<ImportTableRow>({
   keepSource: true,
   size: 'small',
   minHeight: 600,
-  maxHeight: 'auto',
   pagerConfig: {},
   proxyConfig: {
     ajax: {
@@ -179,7 +178,7 @@ function syncCheckedRows() {
         @submit="handleSearchSubmit"
         @reset="handleSearchReset"
       />
-      <div class="bg-card flex-1 overflow-hidden rounded-lg">
+      <div class="bg-card flex-1 rounded-lg">
         <VxeGrid
           ref="tableRef"
           class="p-2 pt-0"
