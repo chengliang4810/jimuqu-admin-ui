@@ -44,6 +44,7 @@ UPDATE sys_menu SET icon = 'fluent-mdl2:leave-user' WHERE menu_id = 176140000000
 UPDATE sys_menu SET icon = 'fluent:form-24-regular' WHERE menu_id = 1761400000000011628;
 UPDATE sys_menu SET icon = 'material-symbols:regular-expression-rounded' WHERE menu_id = 1761400000000011801;
 UPDATE sys_menu SET icon = 'arcticons:openai-chatgpt' WHERE menu_id = 1761400000000000008;
+UPDATE sys_menu SET icon = 'svg:snail-job' WHERE menu_id = 1761400000000000121;
 /* 从本地迁移菜单管理的跳转菜单 */
 UPDATE sys_menu SET icon = 'tabler:code' WHERE menu_id = 1761400000000000116;
 UPDATE sys_menu SET icon = 'eos-icons:role-binding-outlined' WHERE menu_id = 1761400000000000130;
