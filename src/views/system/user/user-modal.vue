@@ -14,7 +14,7 @@ import {
   userAdd,
   userUpdate,
 } from '@/api/system/user';
-import { useVbenDrawer } from '@/components';
+import { useVbenModal } from '@/components';
 import { CropperAvatar } from '@/components/cropper';
 import {
   FormInput as Input,
@@ -108,7 +108,7 @@ const formRules = computed<AntdFormRules<FormData>>(() => ({
   phoneNumber: [{ message: '请输入正确的手机号码', pattern: /^1[3-9]\d{9}$/ }],
   roleIds: [
     {
-      required: !!formData.value.userId,
+      required: true,
       message: $t('ui.formRules.selectRequired'),
       type: 'array',
     },
@@ -144,7 +144,7 @@ async function setupPostOptions(deptId: number | string) {
     value: item.postId,
   }));
   postPlaceholder.value =
-    postOptions.value.length > 0 ? '请选择' : '该部门下暂无岗位';
+    postOptions.value.length > 0 ? '请选择岗位' : '该部门下暂无岗位';
 }
 
 /**
@@ -192,7 +192,7 @@ const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   },
 );
 
-const [BasicDrawer, drawerApi] = useVbenDrawer({
+const [BasicModal, modalApi] = useVbenModal({
   onBeforeClose,
   onClosed: handleClosed,
   onConfirm: handleConfirm,
@@ -203,9 +203,9 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       postPlaceholder.value = '请先选择部门';
       return null;
     }
-    drawerApi.drawerLoading(true);
+    modalApi.modalLoading(true);
 
-    const { id } = drawerApi.getData() as { id?: number | string };
+    const { id } = modalApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
     // 更新 && 赋值
     const { postIds, posts, roleIds, roles, user } = await findUserInfo(id);
@@ -221,7 +221,10 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     }));
 
     // 部门选择、初始密码及用户相关操作并行处理
-    const promises = [setupDeptSelect(), loadDefaultPassword(isUpdate.value)];
+    const promises = [
+      await setupDeptSelect(),
+      await loadDefaultPassword(isUpdate.value),
+    ];
     if (user) {
       currentAvatarUrl.value = user.avatar ?? '';
       formData.value = {
@@ -233,29 +236,29 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
         roleIds: roleIds ?? [],
       };
       // 更新时不会触发onSelect 需要手动调用
-      promises.push(setupPostOptions(user.deptId));
+      promises.push(await setupPostOptions(user.deptId));
     }
     // 并行处理 重构后会带来10-50ms的优化
     await Promise.all(promises);
     await markInitialized();
 
-    drawerApi.drawerLoading(false);
+    modalApi.modalLoading(false);
   },
 });
 
 async function handleConfirm() {
   try {
-    drawerApi.lock(true);
+    modalApi.lock(true);
     await formInstance.value?.validate();
     const data = cloneDeep(formData.value);
     await (isUpdate.value ? userUpdate(data) : userAdd(data));
     resetInitialized();
     emit('reload');
-    await drawerApi.close();
+    await modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    drawerApi.lock(false);
+    modalApi.lock(false);
   }
 }
 
@@ -271,7 +274,7 @@ function handleClosed() {
 </script>
 
 <template>
-  <BasicDrawer :title="title" :size="600">
+  <BasicModal :title="title" width="800">
     <Form
       ref="formInstance"
       :model="formData"
@@ -288,61 +291,58 @@ function handleClosed() {
           width="80"
         />
       </FormItem>
-      <FormItem label="用户账号" name="userName" :rules="formRules.userName">
-        <Input
-          allow-clear
-          class="w-full"
-          :disabled="isUpdate"
-          v-model:value="formData.userName"
-        />
-      </FormItem>
-      <FormItem
-        v-if="!isUpdate"
-        label="用户密码"
-        name="password"
-        :rules="formRules.password"
-      >
-        <InputPassword
-          allow-clear
-          class="w-full"
-          v-model:value="formData.password"
-        />
-      </FormItem>
-      <FormItem label="用户昵称" name="nickName" :rules="formRules.nickName">
-        <Input allow-clear class="w-full" v-model:value="formData.nickName" />
-      </FormItem>
-      <div class="grid grid-cols-1 lg:grid-cols-2">
-        <FormItem label="用户性别" name="sex">
-          <RadioGroup
-            button-style="solid"
-            option-type="button"
-            :options="getDictOptions(DictEnum.SYS_USER_GENDER)"
-            v-model:value="formData.sex"
+      <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+        <FormItem label="用户账号" name="userName" :rules="formRules.userName">
+          <Input
+            allow-clear
+            class="w-full"
+            :disabled="isUpdate"
+            v-model:value="formData.userName"
           />
         </FormItem>
-        <FormItem label="用户状态" name="status">
-          <RadioGroup
-            button-style="solid"
-            option-type="button"
-            :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
-            v-model:value="formData.status"
+        <FormItem
+          v-if="!isUpdate"
+          label="用户密码"
+          name="password"
+          :rules="formRules.password"
+        >
+          <InputPassword
+            allow-clear
+            class="w-full"
+            v-model:value="formData.password"
           />
+        </FormItem>
+        <FormItem label="用户昵称" name="nickName" :rules="formRules.nickName">
+          <Input allow-clear class="w-full" v-model:value="formData.nickName" />
+        </FormItem>
+        <FormItem
+          label="手机号码"
+          name="phoneNumber"
+          :rules="formRules.phoneNumber"
+        >
+          <Input
+            allow-clear
+            class="w-full"
+            v-model:value="formData.phoneNumber"
+          />
+        </FormItem>
+        <FormItem label="所属角色" name="roleIds" :rules="formRules.roleIds">
+          <Select
+            allow-clear
+            class="w-full"
+            :get-popup-container="getPopupContainer"
+            mode="multiple"
+            option-filter-prop="title"
+            option-label-prop="title"
+            :options="roleOptions"
+            placeholder="请选择"
+            v-model:value="formData.roleIds"
+          />
+        </FormItem>
+        <FormItem label="电子邮箱" name="email" :rules="formRules.email">
+          <Input allow-clear class="w-full" v-model:value="formData.email" />
         </FormItem>
       </div>
-      <FormItem
-        label="手机号码"
-        name="phoneNumber"
-        :rules="formRules.phoneNumber"
-      >
-        <Input
-          allow-clear
-          class="w-full"
-          v-model:value="formData.phoneNumber"
-        />
-      </FormItem>
-      <FormItem label="电子邮箱" name="email" :rules="formRules.email">
-        <Input allow-clear class="w-full" v-model:value="formData.email" />
-      </FormItem>
       <FormItem label="所属部门" name="deptId" :rules="formRules.deptId">
         <TreeSelect
           allow-clear
@@ -373,22 +373,27 @@ function handleClosed() {
           v-model:value="formData.postIds"
         />
       </FormItem>
-      <FormItem label="所属角色" name="roleIds" :rules="formRules.roleIds">
-        <Select
-          allow-clear
-          class="w-full"
-          :get-popup-container="getPopupContainer"
-          mode="multiple"
-          option-filter-prop="title"
-          option-label-prop="title"
-          :options="roleOptions"
-          placeholder="请选择"
-          v-model:value="formData.roleIds"
-        />
-      </FormItem>
+      <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+        <FormItem label="用户性别" name="sex">
+          <RadioGroup
+            button-style="solid"
+            option-type="button"
+            :options="getDictOptions(DictEnum.SYS_USER_GENDER)"
+            v-model:value="formData.sex"
+          />
+        </FormItem>
+        <FormItem label="用户状态" name="status">
+          <RadioGroup
+            button-style="solid"
+            option-type="button"
+            :options="getDictOptions(DictEnum.SYS_NORMAL_DISABLE)"
+            v-model:value="formData.status"
+          />
+        </FormItem>
+      </div>
       <FormItem label="备注信息" name="remark">
         <TextArea allow-clear class="w-full" v-model:value="formData.remark" />
       </FormItem>
     </Form>
-  </BasicDrawer>
+  </BasicModal>
 </template>

@@ -11,7 +11,7 @@ import {
   userRemove,
   userStatusChange,
 } from '@/api/system/user';
-import { Page, useVbenDrawer, useVbenModal } from '@/components';
+import { Page, useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 import ApiSwitch from '@/components/global/api-switch.vue';
 import {
@@ -20,15 +20,16 @@ import {
 } from '@/components/vxe-table';
 import { EnableStatus, SUPERADMIN_USER_ID } from '@/constants';
 import { $t } from '@/locales';
+import { useUserStore } from '@/stores';
 import { useBlobExport } from '@/utils/file/export';
 import { Dropdown, Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import DeptTree from './dept-tree.vue';
-import userDrawer from './user-drawer.vue';
 import userImportModal from './user-import-modal.vue';
 import userInfoModal from './user-info-modal.vue';
+import userModal from './user-modal.vue';
 import userResetPwdModal from './user-reset-pwd-modal.vue';
 import UserSearchForm from './user-search.vue';
 
@@ -38,6 +39,8 @@ import UserSearchForm from './user-search.vue';
 const [UserImpotModal, userImportModalApi] = useVbenModal({
   connectedComponent: userImportModal,
 });
+
+const userStore = useUserStore();
 
 function handleImport() {
   userImportModalApi.open();
@@ -58,7 +61,9 @@ const gridOptions = withDefaultVxeGridOptions<User>({
     reserve: true,
     // 点击行选中
     trigger: 'default',
-    checkMethod: ({ row }) => row?.userId !== SUPERADMIN_USER_ID,
+    checkMethod: ({ row }) =>
+      row.userId !== SUPERADMIN_USER_ID &&
+      row.userId !== userStore.userInfo?.userId,
   },
   columns,
   height: 'auto',
@@ -120,18 +125,18 @@ const { query, reload } = useTableQuery(
 const checkedRows = ref<User[]>([]);
 const tableLoading = ref(false);
 
-const [UserDrawer, userDrawerApi] = useVbenDrawer({
-  connectedComponent: userDrawer,
+const [UserDrawer, userModalApi] = useVbenModal({
+  connectedComponent: userModal,
 });
 
 function handleAdd() {
-  userDrawerApi.setData({});
-  userDrawerApi.open();
+  userModalApi.setData({});
+  userModalApi.open();
 }
 
 function handleEdit(row: User) {
-  userDrawerApi.setData({ id: row.userId });
-  userDrawerApi.open();
+  userModalApi.setData({ id: row.userId });
+  userModalApi.open();
 }
 
 async function handleDelete(row: User) {
@@ -265,14 +270,14 @@ function syncCheckedRows() {
       size="large"
       :delay="300"
     >
-      <div class="flex h-full gap-[8px]">
+      <div class="flex h-full gap-2">
         <DeptTree
           v-model:select-dept-id="selectDeptId"
           class="w-[260px]"
           @reload="handleDeptReload"
           @select="handleDeptSelect"
         />
-        <div class="flex flex-1 flex-col gap-4 overflow-hidden">
+        <div class="flex flex-1 flex-col gap-2 overflow-hidden">
           <UserSearchForm
             ref="searchFormRef"
             @submit="handleSearchSubmit"
@@ -328,6 +333,7 @@ function syncCheckedRows() {
                   :value="row.status === EnableStatus.Enable"
                   :api="(checked) => handleChangeStatus(checked, row)"
                   :disabled="
+                    row.userId === userStore.userInfo?.userId ||
                     row.userId === SUPERADMIN_USER_ID ||
                     !hasAccessByCodes(['system:user:edit'])
                   "
@@ -335,7 +341,12 @@ function syncCheckedRows() {
                 />
               </template>
               <template #action="{ row }">
-                <template v-if="row.userId !== SUPERADMIN_USER_ID">
+                <template
+                  v-if="
+                    row.userId !== SUPERADMIN_USER_ID &&
+                    row.userId !== userStore.userInfo?.userId
+                  "
+                >
                   <Space>
                     <action-button
                       v-access:code="['system:user:edit']"

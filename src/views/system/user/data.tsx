@@ -13,13 +13,16 @@ export const columns: VxeGridProps['columns'] = [
   {
     field: 'userName',
     title: '用户账号',
-    minWidth: 80,
+    headerAlign: 'center',
+    align: 'left',
+    minWidth: 100,
   },
   {
     title: '用户信息',
     field: 'nickName',
+    headerAlign: 'center',
     align: 'left',
-    minWidth: 200,
+    minWidth: 150,
     slots: {
       default: ({ row }: { row: User }) => {
         return (
@@ -35,12 +38,14 @@ export const columns: VxeGridProps['columns'] = [
   {
     field: 'deptName',
     title: '所属部门',
-    minWidth: 120,
+    minWidth: 240,
+    headerAlign: 'center',
+    align: 'left',
   },
   {
     field: 'createTime',
     title: '创建时间',
-    width: 180,
+    width: 160,
     align: 'center',
     resizable: false,
   },
@@ -48,7 +53,7 @@ export const columns: VxeGridProps['columns'] = [
     field: 'status',
     title: '状态',
     slots: { default: 'status' },
-    width: 80,
+    width: 100,
     align: 'center',
     resizable: false,
   },

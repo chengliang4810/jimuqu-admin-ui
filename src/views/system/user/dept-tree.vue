@@ -106,7 +106,7 @@ function handleSelect(keys: Key[]) {
       class="p-[8px]"
     >
       <div
-        class="bg-background flex h-full flex-col overflow-y-auto rounded-lg"
+        class="bg-background flex h-full flex-col overflow-y-auto rounded-[var(--ant-border-radius-lg)]"
       >
         <!-- 固定在顶部 必须加上bg-background背景色 否则会产生'穿透'效果 -->
         <div
