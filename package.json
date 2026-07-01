@@ -120,7 +120,6 @@
     "playwright": "catalog:",
     "prettier": "catalog:",
     "prettier-plugin-tailwindcss": "catalog:",
-    "rimraf": "catalog:",
     "rollup-plugin-visualizer": "catalog:",
     "sass": "catalog:",
     "sass-embedded": "catalog:",
