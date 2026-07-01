@@ -26,6 +26,8 @@
     "reinstall": "pnpm run clean -- --del-lock && pnpm install",
     "test:unit": "vitest run --dom",
     "catalog": "pnpm dlx codemod pnpm/catalog",
+    "catalog:check": "node ./scripts/check-catalog-updates.mjs",
+    "catalog:check:all": "node ./scripts/check-catalog-updates.mjs --all",
     "generate-offline-icons": "node scripts/generate-offline-icons.js"
   },
   "dependencies": {
