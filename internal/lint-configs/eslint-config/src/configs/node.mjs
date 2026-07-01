@@ -70,6 +70,7 @@ export async function node() {
       files: [
         'scripts/**/*.?([cm])[jt]s?(x)',
         'internal/**/*.?([cm])[jt]s?(x)',
+        'build/**/*.?([cm])[jt]s?(x)',
       ],
       rules: {
         'n/prefer-global/process': 'off',
