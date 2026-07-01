@@ -22,6 +22,8 @@ const searchFormRef = ref<InstanceType<typeof DeptSearchForm>>();
 
 const tableLoading = ref(false);
 
+const expandedAll = ref(false);
+
 const gridOptions = withDefaultVxeGridOptions<Dept>({
   columns,
   height: 'auto',
@@ -130,7 +132,7 @@ async function handleDelete(row: Dept) {
  * @param expand 是否展开
  */
 function setExpandOrCollapse(expand: boolean) {
-  eachTree(tableRef.value?.getData() ?? [], (item) => (item.expand = expand));
+  expandedAll.value = !expand;
   tableRef.value?.setAllTreeExpand(expand);
 }
 
@@ -167,16 +169,17 @@ function handleSearchReset() {
             <template #toolbar-left>
               <div class="text-[16px] font-medium">部门列表</div>
               <div class="ml-2 text-[13px] text-[#999]">
-                双击展开/收起子菜单
+                双击展开/收起
               </div>
             </template>
             <template #toolbar-right>
               <Space>
-                <a-button @click="setExpandOrCollapse(false)">
-                  {{ $t('pages.common.collapse') }}
-                </a-button>
-                <a-button @click="setExpandOrCollapse(true)">
-                  {{ $t('pages.common.expand') }}
+                <a-button @click="setExpandOrCollapse(expandedAll)">
+                  全部{{
+                    expandedAll
+                      ? $t('pages.common.expand')
+                      : $t('pages.common.collapse')
+                  }}
                 </a-button>
                 <a-button
                   type="primary"

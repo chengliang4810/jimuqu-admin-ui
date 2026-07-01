@@ -164,7 +164,7 @@ async function handleConfirm() {
     await (isUpdate.value ? deptUpdate(data) : deptAdd(data));
     resetInitialized();
     emit('reload');
-    drawerApi.close();
+    await drawerApi.close();
   } catch (error) {
     console.error(error);
   } finally {
@@ -226,7 +226,7 @@ async function handleClosed() {
           v-model:value="formData.deptCategory"
         />
       </FormItem>
-      <FormItem label="负责人" name="leader">
+      <FormItem label="负责人员" name="leader">
         <Select
           class="w-full"
           :allow-clear="false"
@@ -237,13 +237,13 @@ async function handleClosed() {
           v-model:value="formData.leader"
         />
       </FormItem>
-      <FormItem label="联系电话" name="phone" :rules="formRules.phone">
+      <FormItem label="手机号码" name="phone" :rules="formRules.phone">
         <Input allow-clear class="w-full" v-model:value="formData.phone" />
       </FormItem>
-      <FormItem label="邮箱" name="email" :rules="formRules.email">
+      <FormItem label="电子邮箱" name="email" :rules="formRules.email">
         <Input allow-clear class="w-full" v-model:value="formData.email" />
       </FormItem>
-      <FormItem label="状态" name="status">
+      <FormItem label="部门状态" name="status">
         <RadioGroup
           button-style="solid"
           option-type="button"

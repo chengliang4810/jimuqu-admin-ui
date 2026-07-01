@@ -74,9 +74,8 @@ defineExpose({
           </FormItem>
         </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
-        <div class="[grid-column-end:-1] flex items-baseline justify-end gap-4">
+        <div class="[grid-column-end:-1] flex items-baseline justify-end">
           <SearchButtonGroup
-            collapsible
             v-model:collapsed="searchCollapsed"
             @reset="handleReset"
             @submit="handleSubmit"
