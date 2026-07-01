@@ -30,7 +30,6 @@ const matchAntdvNextThemeChunk = createChunkMatcher([
     '@ant-design/colors',
     '@ant-design/fast-color',
     '@antdv-next/cssinjs',
-    '@antdv-next/happy-work-theme',
   ),
   ...fromAntdvDist('config-provider', 'locale', 'style', 'theme'),
 ]);
