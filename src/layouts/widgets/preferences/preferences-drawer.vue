@@ -227,8 +227,10 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
   <div>
     <Drawer
       content-class="overflow-x-hidden px-1"
-      :description="$t('preferences.subtitle')"
       :title="$t('preferences.title')"
+      :styles="{
+        header: { '--ant-padding': '8px', '--ant-padding-lg': '16px' },
+      }"
       :size="390"
     >
       <template #extra>
