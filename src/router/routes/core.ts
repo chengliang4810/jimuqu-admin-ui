@@ -2,9 +2,11 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { LOGIN_PATH } from '@/constants';
 import { preferences } from '@/core/preferences';
+// BasicLayout 已被 router/access.ts 静态引用（经 @/layouts），此处同步用静态导入，
+// 避免 INEFFECTIVE_DYNAMIC_IMPORT 警告（根布局属首屏，本就不需 lazy）
+import { BasicLayout } from '@/layouts';
 import { $t } from '@/locales';
 
-const BasicLayout = () => import('@/layouts/basic.vue');
 const AuthPageLayout = () => import('@/layouts/auth.vue');
 /** 全局404页面 */
 const fallbackNotFoundRoute: RouteRecordRaw = {
