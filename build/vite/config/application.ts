@@ -41,7 +41,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       mode,
       print: !isBuild,
       printInfoMap: {
-        'Vben Admin Docs': 'https://doc.vben.pro',
+        'Gitee link': 'https://gitee.com/dapppp/bell-plus',
       },
       pwa: true,
       pwaOptions: getDefaultPwaOptions(appTitle),
