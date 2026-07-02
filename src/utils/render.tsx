@@ -166,11 +166,11 @@ export function renderIconSpan(
 }
 
 const osOptions = [
-  { icon: 'icon-[mdi--microsoft-windows]', value: 'windows' },
-  { icon: 'icon-[mdi--apple]', value: 'osx' },
-  { icon: 'icon-[skill-icons--linux-light]', value: 'linux' },
-  { icon: 'icon-[mdi--android]', value: 'android' },
-  { icon: 'icon-[mdi--apple-ios]', value: 'ios' },
+  { icon: 'icon-[devicon--windows8]', value: 'windows' },
+  { icon: 'icon-[wpf--macos]', value: 'osx' },
+  { icon: 'icon-[devicon--linux]', value: 'linux' },
+  { icon: 'icon-[flat-color-icons--android-os]', value: 'android' },
+  { icon: 'icon-[majesticons--iphone-x-apps-line]', value: 'ios' },
 ];
 
 const DefaultOsIcon = 'icon-[ic--outline-computer]';
