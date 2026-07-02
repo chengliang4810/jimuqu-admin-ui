@@ -82,7 +82,6 @@ async function loadAndConvertEnv(
     VITE_DEVTOOLS,
     VITE_INJECT_APP_LOADING,
     VITE_PORT,
-    VITE_PWA,
     VITE_VISUALIZER,
   } = envConfig;
 
@@ -99,7 +98,6 @@ async function loadAndConvertEnv(
     devtools: getBoolean(VITE_DEVTOOLS),
     injectAppLoading: getBoolean(VITE_INJECT_APP_LOADING),
     port: getNumber(VITE_PORT, 5173),
-    pwa: getBoolean(VITE_PWA),
     visualizer: getBoolean(VITE_VISUALIZER),
   };
 }

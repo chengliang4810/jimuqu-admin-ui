@@ -12,7 +12,6 @@ import viteVue from '@vitejs/plugin-vue';
 import viteVueJsx from '@vitejs/plugin-vue-jsx';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
 import viteCompressPlugin from 'vite-plugin-compression';
-import { VitePWA } from 'vite-plugin-pwa';
 import viteVueDevTools from 'vite-plugin-vue-devtools';
 
 import { viteArchiverPlugin } from './archiver';
@@ -110,8 +109,6 @@ async function loadApplicationPlugins(
     license,
     print,
     printInfoMap,
-    pwa,
-    pwaOptions,
     vxeTableLazyImport,
     ...commonOptions
   } = options;
@@ -151,23 +148,6 @@ async function loadApplicationPlugins(
     {
       condition: license,
       plugins: async () => [await viteLicensePlugin()],
-    },
-    {
-      condition: pwa,
-      plugins: () =>
-        VitePWA({
-          injectRegister: false,
-          workbox: {
-            globPatterns: [],
-          },
-          ...pwaOptions,
-          manifest: {
-            display: 'standalone',
-            start_url: '/',
-            theme_color: '#ffffff',
-            ...pwaOptions?.manifest,
-          },
-        }),
     },
     {
       condition: isBuild && !!compress,

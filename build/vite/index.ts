@@ -1,5 +1,4 @@
 export { defineApplicationConfig, defineConfig } from './config';
-export { getDefaultPwaOptions } from './options';
 export {
   loadApplicationPlugins,
   viteArchiverPlugin,

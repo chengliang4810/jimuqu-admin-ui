@@ -130,7 +130,6 @@
     "vite": "catalog:",
     "vite-plugin-compression": "catalog:",
     "vite-plugin-lazy-import": "catalog:",
-    "vite-plugin-pwa": "catalog:",
     "vite-plugin-vue-devtools": "catalog:",
     "vitest": "catalog:",
     "vue-tsc": "catalog:"

@@ -6,7 +6,6 @@ import type {
   UserConfig,
   UserConfigFnPromise,
 } from 'vite';
-import type { Options as PwaPluginOptions } from 'vite-plugin-pwa';
 
 /**
  * 打印插件配置选项
@@ -178,15 +177,6 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
    * 打印插件配置
    */
   printInfoMap?: PrintPluginOptions['infoMap'];
-  /**
-   * 是否开启 PWA
-   * @default false
-   */
-  pwa?: boolean;
-  /**
-   * PWA 插件配置
-   */
-  pwaOptions?: Partial<PwaPluginOptions>;
   /**
    * 是否开启 VXE Table 懒加载
    * @default false

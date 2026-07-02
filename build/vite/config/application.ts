@@ -7,7 +7,6 @@ import path, { relative } from 'node:path';
 import { NodePackageImporter } from 'sass-embedded';
 import { defineConfig, loadEnv, mergeConfig } from 'vite';
 
-import { getDefaultPwaOptions } from '../options';
 import { loadApplicationPlugins } from '../plugins';
 import { findMonorepoRoot } from '../utils';
 import { loadAndConvertEnv } from '../utils/env';
@@ -17,7 +16,7 @@ import { getCommonConfig } from './common';
 function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
   return defineConfig(async (config) => {
     const options = await userConfigPromise?.(config);
-    const { appTitle, base, port, ...envConfig } = await loadAndConvertEnv();
+    const { base, port, ...envConfig } = await loadAndConvertEnv();
     const { command, mode } = config;
     const { application = {}, vite = {} } = options || {};
     const root = process.cwd();
@@ -43,8 +42,6 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       printInfoMap: {
         'Gitee link': 'https://gitee.com/dapppp/bell-plus',
       },
-      pwa: true,
-      pwaOptions: getDefaultPwaOptions(appTitle),
       vxeTableLazyImport: true,
       ...envConfig,
       ...application,
