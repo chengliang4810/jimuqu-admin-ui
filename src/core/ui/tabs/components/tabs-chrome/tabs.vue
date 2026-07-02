@@ -141,7 +141,7 @@ function onMouseDown(e: MouseEvent, tab: TabConfig) {
               <!-- close-icon -->
               <X
                 v-show="!tab.affixTab && tabsView.length > 1 && tab.closable"
-                class="stroke-accent-foreground/80 text-accent-foreground/80 group-[.is-active]:text-accent-foreground hover:bg-accent hover:stroke-accent-foreground size-3 cursor-pointer rounded-full transition-all"
+                class="stroke-accent-foreground/80 text-accent-foreground/80 group-[.is-active]:text-accent-foreground hover:bg-accent hover:stroke-accent-foreground size-3 cursor-pointer rounded-full text-[7.75px] leading-none transition-all"
                 @click.stop="() => emit('close', tab.key)"
               />
               <Pin
