@@ -43,7 +43,6 @@ export const useAuthStore = defineStore('auth', () => {
 
       // 将 accessToken 存储到 accessStore 中
       accessStore.setAccessToken(access_token);
-      accessStore.setRefreshToken(access_token);
 
       // 获取用户信息并存储到 accessStore 中
       userInfo = await fetchUserInfo();
