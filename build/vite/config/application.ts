@@ -67,7 +67,9 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
               : false,
           },
         },
-        target: 'es2015',
+        // Tailwind v4 已将实际浏览器基线抬到 Chrome111/Safari16.4（依赖 color-mix/@property/@layer，
+        // 无法 polyfill 降级），故 JS target 对齐现代基线，同时消除 BigInt 字面量(0n)无法降级的警告
+        target: 'es2022',
       },
       css: createCssOptions(injectGlobalScss),
       plugins,
