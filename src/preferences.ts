@@ -82,6 +82,7 @@ export const overridesPreferences = defineOverridesPreferences({
    */
   logo: {
     enable: true,
-    source: '/plus-vben.png',
+    // iconify twemoji:cowboy-hat-face
+    source: '/cow-boy.svg',
   },
 });
