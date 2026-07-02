@@ -4,8 +4,12 @@ import { preferences } from '@/core/preferences';
 import { $t } from '@/locales';
 import { Button, Space } from 'antdv-next';
 import { createVersionPolling } from 'version-polling';
+import { useGlobalLoadingStore } from '@/stores/loading';
+import { storeToRefs } from 'pinia';
 
 export function useVersionUpdate() {
+  const { globalLoading } = storeToRefs(useGlobalLoadingStore());
+
   onMounted(() => {
     // 可能会有用dev打包的需求 所以这里不判断环境变量
     if (
@@ -44,6 +48,7 @@ export function useVersionUpdate() {
                 </Button>
                 <Button
                   onClick={() => {
+                    globalLoading.value = true;
                     self.onRefresh();
                   }}
                   size="small"
