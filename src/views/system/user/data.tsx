@@ -45,7 +45,7 @@ export const columns: VxeGridProps['columns'] = [
   {
     field: 'createTime',
     title: '创建时间',
-    width: 160,
+    width: 180,
     align: 'center',
     resizable: false,
   },
