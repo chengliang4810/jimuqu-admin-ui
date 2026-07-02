@@ -11,6 +11,7 @@ import {
 } from '@/api/system/role';
 import { useVbenDrawer } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -45,7 +46,8 @@ const gridOptions = withDefaultVxeGridOptions<User>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           if (roleId.value) {
@@ -53,7 +55,7 @@ const gridOptions = withDefaultVxeGridOptions<User>({
               pageNum: page.currentPage,
               pageSize: page.pageSize,
               roleId: roleId.value,
-              ...formValues,
+              ...values,
             });
           }
         } finally {

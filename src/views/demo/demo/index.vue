@@ -34,11 +34,14 @@ const gridOptions = withDefaultVxeGridOptions<DemoRow>({
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        // 刷新按钮会把 PointerEvent 透传进来，非普通对象时忽略
+        const values =
+          formValues && !(formValues instanceof Event) ? formValues : {};
         return await demoList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
-          ...formValues,
+          ...values,
         });
       },
     },

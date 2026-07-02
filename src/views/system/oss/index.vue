@@ -11,6 +11,7 @@ import { checkLoginBeforeDownload, ossList, ossRemove } from '@/api/system/oss';
 import { Page, useVbenModal } from '@/components';
 import {
   addSortParams,
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -49,13 +50,14 @@ const gridOptions = withDefaultVxeGridOptions<OssFile>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page, sorts }, formValues = {}) => {
+      query: async ({ page, sorts }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           const params: PageQuery = {
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           };
           // 添加排序参数
           addSortParams(params, sorts);

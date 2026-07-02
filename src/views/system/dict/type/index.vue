@@ -12,6 +12,7 @@ import {
 } from '@/api/system/dict/dict-type';
 import { useVbenModal } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -25,7 +26,6 @@ import dictTypeModal from './dict-type-modal.vue';
 import DictTypeSearchForm from './dict-type-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof DictTypeSearchForm>>();
-const searchParams = ref<Record<string, unknown>>({});
 
 const tableLoading = ref(false);
 
@@ -45,13 +45,14 @@ const gridOptions = withDefaultVxeGridOptions<DictType>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           return await dictTypeList({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...searchParams.value,
+            ...values,
           });
         } finally {
           tableLoading.value = false;

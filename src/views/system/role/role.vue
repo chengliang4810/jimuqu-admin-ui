@@ -10,6 +10,7 @@ import { useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 import { ApiSwitch } from '@/components/global';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -49,13 +50,14 @@ const gridOptions = withDefaultVxeGridOptions<Role>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           return await roleList({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           });
         } finally {
           tableLoading.value = false;

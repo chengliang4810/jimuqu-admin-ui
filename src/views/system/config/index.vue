@@ -11,6 +11,7 @@ import {
 } from '@/api/system/config';
 import { Page, useVbenModal } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -37,10 +38,10 @@ const gridOptions = withDefaultVxeGridOptions<SysConfig>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
-          const values = formValues instanceof PointerEvent ? {} : formValues;
           return await configList({
             pageNum: page.currentPage,
             pageSize: page.pageSize,

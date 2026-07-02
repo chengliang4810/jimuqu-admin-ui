@@ -13,6 +13,7 @@ import {
 } from '@/api/monitor/logininfo';
 import { Page, useVbenModal } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -45,13 +46,14 @@ const gridOptions = withDefaultVxeGridOptions<LoginLog>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           return await loginInfoList({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           });
         } finally {
           tableLoading.value = false;

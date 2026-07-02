@@ -15,6 +15,7 @@ import { Page, useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 import ApiSwitch from '@/components/global/api-switch.vue';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -72,20 +73,21 @@ const gridOptions = withDefaultVxeGridOptions<User>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           // 部门树选择处理
           if (selectDeptId.value.length === 1) {
-            formValues.deptId = selectDeptId.value[0];
+            values.deptId = selectDeptId.value[0];
           } else {
-            Reflect.deleteProperty(formValues, 'deptId');
+            Reflect.deleteProperty(values, 'deptId');
           }
 
           return await userList({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           });
         } finally {
           tableLoading.value = false;

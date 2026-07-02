@@ -28,7 +28,7 @@ export function withDefaultVxeGridOptions<T extends Record<string, any>>(
   ) as VxeGridProps<T>;
 }
 
-export { useTableQuery } from './use-table-query';
+export { resolveQueryFormValues, useTableQuery } from './use-table-query';
 export type { VxeTableSearchFormInstance } from './use-table-query';
 
 export const tableSeachClass = cn(

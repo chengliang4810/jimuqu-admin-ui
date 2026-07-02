@@ -7,6 +7,7 @@ import { nextTick, ref, useTemplateRef } from 'vue';
 import { deptList, deptRemove } from '@/api/system/dept';
 import { Page, useVbenDrawer } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -34,11 +35,12 @@ const gridOptions = withDefaultVxeGridOptions<Dept>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async (_, formValues = {}) => {
+      query: async (_, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           const resp = await deptList({
-            ...formValues,
+            ...values,
           });
           return { rows: resp };
         } finally {

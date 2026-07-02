@@ -12,6 +12,7 @@ import {
 } from '@/api/system/dict/dict-data';
 import { useVbenDrawer } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -46,13 +47,14 @@ const gridOptions = withDefaultVxeGridOptions<DictData>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           const params: PageQuery = {
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           };
           if (dictType.value) {
             params.dictType = dictType.value;

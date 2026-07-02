@@ -7,6 +7,7 @@ import { ref, useTemplateRef } from 'vue';
 import { spelDelete, spelList } from '@/api/workflow/spel';
 import { Page, useVbenModal } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -35,13 +36,14 @@ const gridOptions = withDefaultVxeGridOptions<Spel>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           return await spelList({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           });
         } finally {
           tableLoading.value = false;

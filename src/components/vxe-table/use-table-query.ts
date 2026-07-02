@@ -23,6 +23,34 @@ export interface VxeTableSearchFormInstance {
  * @param tableRef vxe-grid 实例 ref
  * @param onCompleted 每次 query / reload 完成后的回调（如同步选中行）
  */
+/**
+ * 解析 proxyConfig.ajax.query 的第二个参数为可靠的表单值。
+ *
+ * vxe 内部触发查询(刷新按钮 / 分页 / 排序 / autoLoad)不会带入表单值，
+ * 刷新按钮还会把 PointerEvent 当作该参数透传进来；统一以「搜索表单 ref」
+ * 为真相源。主动 query/reload 传入的普通对象作为覆盖直接采用。
+ *
+ * 返回浅拷贝，页面可安全增删字段(如 deptId)。
+ *
+ * @param searchFormRef 搜索表单组件 ref
+ * @param rawFormValues ajax.query 的第二个参数
+ */
+export async function resolveQueryFormValues(
+  searchFormRef: Ref<undefined | VxeTableSearchFormInstance>,
+  rawFormValues?: unknown,
+): Promise<Record<string, any>> {
+  // 主动 query/reload：第二参数是已合并的普通对象，直接采用
+  if (
+    rawFormValues &&
+    typeof rawFormValues === 'object' &&
+    !(rawFormValues instanceof Event)
+  ) {
+    return { ...(rawFormValues as Record<string, any>) };
+  }
+  // vxe 内部触发：回退到搜索表单当前值
+  return { ...((await searchFormRef.value?.getValues?.()) ?? {}) };
+}
+
 export function useTableQuery(
   searchFormRef: Ref<undefined | VxeTableSearchFormInstance>,
   tableRef: Ref<null | undefined | VxeGridInstance>,

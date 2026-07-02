@@ -12,6 +12,7 @@ import {
 } from '@/api/workflow/instance';
 import { Page, useVbenModal } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -74,20 +75,21 @@ const gridOptions = withDefaultVxeGridOptions<Recordable<any>>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           // 部门树选择处理
           if (selectedCode.value.length === 1) {
-            formValues.category = selectedCode.value[0];
+            values.category = selectedCode.value[0];
           } else {
-            Reflect.deleteProperty(formValues, 'category');
+            Reflect.deleteProperty(values, 'category');
           }
 
           return await currentTypeApi({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           });
         } finally {
           tableLoading.value = false;

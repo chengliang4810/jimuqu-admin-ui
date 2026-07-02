@@ -8,6 +8,7 @@ import { menuCascadeRemove, menuList, menuRemove } from '@/api/system/menu';
 import { Fallback, Page, useVbenDrawer } from '@/components';
 import { useAccess } from '@/components/access';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -33,11 +34,12 @@ const gridOptions = withDefaultVxeGridOptions<Menu>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async (_, formValues = {}) => {
+      query: async (_, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           const resp = await menuList({
-            ...formValues,
+            ...values,
           });
           // 手动转为树结构
           const treeData = listToTree(resp, { id: 'menuId', pid: 'parentId' });

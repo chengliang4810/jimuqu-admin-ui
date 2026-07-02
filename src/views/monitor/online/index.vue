@@ -7,6 +7,7 @@ import { ref, useTemplateRef } from 'vue';
 import { forceLogout, onlineList } from '@/api/monitor/online';
 import { Page } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -30,11 +31,12 @@ const gridOptions = withDefaultVxeGridOptions<OnlineUser>({
     showLoading: false,
     ajax: {
       // 后端其实是一个假分页 返回的是全部数据
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           const resp = await onlineList({
-            ...formValues,
+            ...values,
           });
           // 设置在线数
           onlineCount.value = resp.total;

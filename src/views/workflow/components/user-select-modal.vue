@@ -99,12 +99,18 @@ const gridOptions = withDefaultVxeGridOptions<User>({
   },
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        // 分页等内部触发不会带入搜索值，回退到缓存的搜索条件；
+        // 浅拷贝避免写入 deptId 污染 currentSearchParams
+        const values =
+          formValues && !(formValues instanceof Event)
+            ? { ...formValues }
+            : { ...currentSearchParams.value };
         // 部门树选择处理
         if (selectDeptId.value.length === 1) {
-          formValues.deptId = selectDeptId.value[0];
+          values.deptId = selectDeptId.value[0];
         } else {
-          Reflect.deleteProperty(formValues, 'deptId');
+          Reflect.deleteProperty(values, 'deptId');
         }
 
         // 加载完毕需要设置选中的行
@@ -122,7 +128,7 @@ const gridOptions = withDefaultVxeGridOptions<User>({
         const params: any = {
           pageNum: page.currentPage,
           pageSize: page.pageSize,
-          ...formValues,
+          ...values,
         };
         // 添加参数
         if (props.allowUserIds) {

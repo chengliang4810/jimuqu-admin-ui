@@ -12,6 +12,7 @@ import {
 } from '@/api/system/post';
 import { Page, useVbenDrawer } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -48,20 +49,21 @@ const gridOptions = withDefaultVxeGridOptions<Post>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           // 部门树选择处理
           if (selectDeptId.value.length === 1) {
-            formValues.belongDeptId = selectDeptId.value[0];
+            values.belongDeptId = selectDeptId.value[0];
           } else {
-            Reflect.deleteProperty(formValues, 'belongDeptId');
+            Reflect.deleteProperty(values, 'belongDeptId');
           }
 
           return await postList({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues,
+            ...values,
           });
         } finally {
           tableLoading.value = false;

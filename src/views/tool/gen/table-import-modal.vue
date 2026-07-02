@@ -10,6 +10,7 @@ import {
 } from '@/api/tool/gen';
 import { useVbenModal } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -81,11 +82,12 @@ const gridOptions = withDefaultVxeGridOptions<ImportTableRow>({
   pagerConfig: {},
   proxyConfig: {
     ajax: {
-      query: async ({ page }, formValues = {}) => {
+      query: async ({ page }, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         return readyToGenList({
           pageNum: page.currentPage,
           pageSize: page.pageSize,
-          ...formValues,
+          ...values,
         });
       },
     },

@@ -7,6 +7,7 @@ import { nextTick, ref, useTemplateRef } from 'vue';
 import { categoryList, categoryRemove } from '@/api/workflow/category';
 import { Page, useVbenModal } from '@/components';
 import {
+  resolveQueryFormValues,
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
@@ -31,11 +32,12 @@ const gridOptions = withDefaultVxeGridOptions<Recordable<any>>({
   proxyConfig: {
     showLoading: false,
     ajax: {
-      query: async (_, formValues = {}) => {
+      query: async (_, formValues) => {
+        const values = await resolveQueryFormValues(searchFormRef, formValues);
         tableLoading.value = true;
         try {
           const resp = await categoryList({
-            ...formValues,
+            ...values,
           });
           return { rows: resp };
         } finally {

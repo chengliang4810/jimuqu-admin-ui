@@ -23,9 +23,12 @@ const gridOptions = withDefaultVxeGridOptions({
   },
   proxyConfig: {
     ajax: {
-      query: async (_, formValues = {}) => {
+      query: async (_, formValues) => {
+        // 刷新按钮会把 PointerEvent 透传进来，非普通对象时忽略
+        const values =
+          formValues && !(formValues instanceof Event) ? formValues : {};
         const resp = await treeList({
-          ...formValues,
+          ...values,
         });
         const treeData = listToTree(resp, {
           id: 'id',
