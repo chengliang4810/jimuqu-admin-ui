@@ -10,7 +10,6 @@ import {
   perfectionist,
   pnpm,
   typescript,
-  unicorn,
   vue,
   yaml,
 } from './configs/index.mjs';
@@ -25,7 +24,6 @@ async function defineConfig(config = []) {
     jsonc(),
     node(),
     perfectionist(),
-    unicorn(),
     yaml(),
     pnpm(),
     custom(),

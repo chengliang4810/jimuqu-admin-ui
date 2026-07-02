@@ -7,6 +7,5 @@ export * from './node.mjs';
 export * from './perfectionist.mjs';
 export * from './pnpm.mjs';
 export * from './typescript.mjs';
-export * from './unicorn.mjs';
 export * from './vue.mjs';
 export * from './yaml.mjs';
