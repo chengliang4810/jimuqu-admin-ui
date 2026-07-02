@@ -116,11 +116,11 @@ function genSpel(
   _changedValues: Record<string, any>,
   values: Record<string, any>,
 ) {
+  // 组件/方法+参数
   if (!values.componentName || !values.methodName) {
-    if (values.methodParams) {
-      viewSpEL.value = '${'+values.methodParams+'}';
-    }
+    viewSpEL.value = values.methodParams ? '${' + values.methodParams + '}' : '';
   } else {
+    // 组件+方法+参数(多参，分割)
     const params = values.methodParams ? values.methodParams.split(',') : [];
     const methodParamsText = params.map((item: any) => `#${item}`).join(',');
     viewSpEL.value = `#{@${values.componentName}.${values.methodName}(${methodParamsText})}`;
