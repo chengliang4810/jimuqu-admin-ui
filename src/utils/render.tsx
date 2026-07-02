@@ -180,14 +180,14 @@ const DefaultOsIcon = 'icon-[ic--outline-computer]';
  * cn.hutool.http.useragent -> browers
  */
 const browserOptions = [
-  { icon: 'icon-[mdi--google-chrome]', value: 'chrome' },
-  { icon: 'icon-[mdi--microsoft-edge]', value: 'edge' },
+  { icon: 'icon-[logos--chrome]', value: 'chrome' },
+  { icon: 'icon-[logos--microsoft-edge]', value: 'edge' },
   { icon: 'icon-[openmoji--firefox]', value: 'firefox' },
-  { icon: 'icon-[mdi--opera]', value: 'opera' },
+  { icon: 'icon-[logos--opera]', value: 'opera' },
   { icon: 'icon-[devicon--safari]', value: 'safari' },
   { icon: 'icon-[mdi--wechat]', value: 'micromessenger' },
   { icon: 'icon-[mdi--wechat]', value: 'windowswechat' },
-  { icon: 'icon-[mdi--alpha-q-box]', value: 'quark' },
+  { icon: 'icon-[logos--quarkus-icon]', value: 'quark' },
   { icon: 'icon-[mdi--wechat]', value: 'wxwork' },
   { icon: 'svg:qq', value: 'qq', type: 'offline' },
   { icon: 'icon-[ri--dingding-line]', value: 'dingtalk' },
