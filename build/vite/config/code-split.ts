@@ -5,6 +5,8 @@ const createChunkMatcher = (patterns: string[]) => {
   };
 };
 
+const APP_VIEWS_MERGE_THRESHOLD = 12 * 1024;
+
 // 将包名/作用域展开为 pnpm 虚拟目录与提升后真实目录两种匹配前缀
 // 作用域: '@vue'           → '/node_modules/.pnpm/@vue+'  '/node_modules/@vue/'
 // 包名:   'vue' | '@a/b'   → '/node_modules/.pnpm/vue@'   '/node_modules/vue/'
@@ -131,16 +133,35 @@ const matchAntdvNextMarkdownChunk = createChunkMatcher(
   fromPnpm('@antdv-next/x-markdown'),
 );
 const matchAntdvNextChunk = createChunkMatcher(['antdv-next']);
+const matchAntdvNextVendorChunk = (id: string) =>
+  !matchAntdvNextMarkdownChunk(id) &&
+  (matchAntdvNextIconsChunk(id) ||
+    matchAntdvNextThemeChunk(id) ||
+    matchAntdvNextFormChunk(id) ||
+    matchAntdvNextOverlayChunk(id) ||
+    matchAntdvNextDataChunk(id) ||
+    matchAntdvNextLayoutChunk(id) ||
+    matchAntdvNextFormExtChunk(id) ||
+    matchAntdvNextSharedChunk(id) ||
+    matchAntdvNextChunk(id));
 const matchFrameworkChunk = createChunkMatcher(
-  fromPnpm('@vue', '@vueuse', 'pinia', 'vue-router', 'vue'),
+  fromPnpm(
+    '@vue',
+    '@vueuse',
+    'pinia',
+    'pinia-plugin-persistedstate',
+    'vue-router',
+    'vue',
+  ),
 );
 // 重型第三方库 vendor 分组。注意优先级分两档(见下方 groups):
 // - crypto/utils 等首屏依赖 → 高优先级,先 claim 独占 chunk;
 // - editor/chart/vxe/codemirror/jsoneditor/motion 仅懒加载路由用 → 低优先级,
 //   让首屏共享依赖先被高优先级组占走,避免其借递归把首屏依赖顺进重型 chunk。
-const matchVxeVendorChunk = createChunkMatcher(
-  fromPnpm('vxe-table', 'vxe-pc-ui', '@vxe-ui', 'xe-utils', 'dom-zindex'),
-);
+const matchVxeVendorChunk = createChunkMatcher([
+  ...fromPnpm('vxe-table', 'vxe-pc-ui', '@vxe-ui', 'xe-utils', 'dom-zindex'),
+  '/src/components/vxe-table/',
+]);
 const matchChartVendorChunk = createChunkMatcher(
   fromPnpm('echarts', 'zrender'),
 );
@@ -169,11 +190,12 @@ const matchVbenCoreChunk = createChunkMatcher([
   '/src/core/shared/',
   '/src/styles/design/',
   '/src/core/composables/',
+  '/src/core/ui/',
   '/src/constants/',
+  '/src/styles/',
   '/src/types/',
   '/src/utils/',
 ]);
-const matchVbenUiCoreChunk = createChunkMatcher(['/src/core/ui/']);
 const matchVbenCommonUiAuthChunk = createChunkMatcher([
   '/src/effects/common-ui/ui/authentication/',
   '/src/components/fallback/',
@@ -198,7 +220,6 @@ const matchVbenCommonUiWidgetsChunk = createChunkMatcher([
   '/src/components/page/',
 ]);
 const matchVbenIconsChunk = createChunkMatcher(['/src/icons/']);
-const matchVbenStylesChunk = createChunkMatcher(['/src/styles/']);
 const matchVbenLayoutChunk = createChunkMatcher([
   '/src/components/access/',
   '/src/hooks/',
@@ -247,10 +268,18 @@ const matchLazyUtilsVendorChunk = createChunkMatcher(
 const matchAppAuthChunk = createChunkMatcher([
   '/src/api/core/auth',
   '/src/api/core/captcha',
+  '/src/layouts/auth.vue',
+  '/src/layouts/authentication/',
   '/src/views/_core/authentication/',
+  '/src/views/_core/oauth-common',
   '/src/views/_core/social-callback/',
 ]);
 const matchAppLocaleChunk = createChunkMatcher(['/src/locales/']);
+const matchAppWorkflowComponentsChunk = createChunkMatcher([
+  '/src/views/workflow/components/approval-',
+  '/src/views/workflow/components/flow-preview.vue',
+  '/src/views/workflow/components/user-select-',
+]);
 const matchAppViewsChunk = createChunkMatcher(['/src/views/']);
 
 function createApplicationCodeSplitting() {
@@ -271,53 +300,9 @@ function createApplicationCodeSplitting() {
         test: matchDayjsVendorChunk,
       },
       {
-        name: 'antdv-icons',
+        name: 'antdv-vendor',
         priority: 47,
-        test: matchAntdvNextIconsChunk,
-      },
-      {
-        name: 'antdv-theme',
-        priority: 46,
-        test: matchAntdvNextThemeChunk,
-      },
-      {
-        name: 'antdv-form',
-        priority: 45,
-        test: matchAntdvNextFormChunk,
-      },
-      {
-        name: 'antdv-overlay',
-        priority: 44,
-        test: matchAntdvNextOverlayChunk,
-      },
-      {
-        name: 'antdv-data',
-        priority: 43,
-        test: matchAntdvNextDataChunk,
-      },
-      {
-        name: 'antdv-layout',
-        priority: 42,
-        test: matchAntdvNextLayoutChunk,
-      },
-      {
-        // form-ext 必须低于 overlay/data/layout:这样 @v-c/menu、@v-c/tree、
-        // 壳子组件(progress/spin/tree 等)被各自壳子组优先 claim,只有 ext 独占的
-        // @v-c(picker/cascader/tree-select/mentions/rate/upload)及 ext 组件留在此 chunk。
-        // 仍需高于 antdv-shared(40),让 @v-c/picker 等随 date-picker 留在 form-ext 而非被 shared 吸走。
-        name: 'antdv-form-ext',
-        priority: 41,
-        test: matchAntdvNextFormExtChunk,
-      },
-      {
-        name: 'antdv-shared',
-        priority: 40,
-        test: matchAntdvNextSharedChunk,
-      },
-      {
-        name: 'antdv-next',
-        priority: 39,
-        test: matchAntdvNextChunk,
+        test: matchAntdvNextVendorChunk,
       },
       {
         // crypto 登录即用,属首屏;高优先级确保其独占 chunk,
@@ -330,11 +315,6 @@ function createApplicationCodeSplitting() {
         name: 'vben-core',
         priority: 24,
         test: matchVbenCoreChunk,
-      },
-      {
-        name: 'vben-ui-core',
-        priority: 23,
-        test: matchVbenUiCoreChunk,
       },
       {
         name: 'vben-common-ui-auth',
@@ -365,11 +345,6 @@ function createApplicationCodeSplitting() {
         name: 'vben-icons',
         priority: 17,
         test: matchVbenIconsChunk,
-      },
-      {
-        name: 'vben-styles',
-        priority: 16,
-        test: matchVbenStylesChunk,
       },
       {
         name: 'vben-layout',
@@ -439,6 +414,11 @@ function createApplicationCodeSplitting() {
         test: matchMotionVendorChunk,
       },
       {
+        name: 'app-workflow-components',
+        priority: 4,
+        test: matchAppWorkflowComponentsChunk,
+      },
+      {
         name: 'app-auth',
         priority: 4,
         test: matchAppAuthChunk,
@@ -450,6 +430,7 @@ function createApplicationCodeSplitting() {
       },
       {
         entriesAware: true,
+        entriesAwareMergeThreshold: APP_VIEWS_MERGE_THRESHOLD,
         name: 'app-views',
         priority: 1,
         test: matchAppViewsChunk,
