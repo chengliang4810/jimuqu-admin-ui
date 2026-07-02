@@ -53,6 +53,15 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       base,
       build: {
         rolldownOptions: {
+          /**
+           * TODO: 等待vueuse的打包warning解决 这里可以去除
+           */
+          onLog(level, log, defaultHandler) {
+            if (log.code === 'INVALID_ANNOTATION') {
+              return;
+            }
+            defaultHandler(level, log);
+          },
           output: {
             assetFileNames: '[ext]/[name]-[hash].[ext]',
             chunkFileNames: 'js/[name]-[hash].js',
