@@ -189,6 +189,10 @@ function onMouseDown(e: MouseEvent, tab: TabConfig) {
   @apply opacity-0;
 }
 
+.tabs-chrome__item:not(.dragging):hover:not(.is-active) {
+  @apply z-[1];
+}
+
 .tabs-chrome__item:not(.dragging):hover:not(.is-active)
   .tabs-chrome__background {
   @apply pb-0.5;
