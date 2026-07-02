@@ -1,6 +1,7 @@
 {
-  "name": "ruoyi-plus-antdv",
+  "name": "bell-plus",
   "version": "1.0.0-alpha2",
+  "description": "基于vben5.7版本重构为单仓 优化代码/性能",
   "private": true,
   "homepage": "https://gitee.com/dapppp/bell-plus",
   "repository": "dapppp/bell-plus",
