@@ -5,7 +5,7 @@ import { ref } from 'vue';
 
 import { FormInput } from '@/components/global/form';
 import { SearchButtonGroup } from '@/components/table';
-import { tableSeachClass } from '@/components/vxe-table';
+import { cn } from '@/utils';
 import { Card, Form, FormItem } from 'antdv-next';
 
 const emit = defineEmits<{
@@ -14,17 +14,23 @@ const emit = defineEmits<{
 }>();
 
 interface SearchParams {
-  componentName?: string;
-  methodName?: string;
+  viewSpel?: string;
 }
 
 const model = ref<SearchParams>({
-  componentName: undefined,
-  methodName: undefined,
+  viewSpel: undefined,
 });
 
 const formInstance = ref<FormInstance>();
 const searchCollapsed = ref(false);
+
+// import { tableSeachClass } from '@/components/vxe-table';
+// 搜索表单元素比较少，可以自定义样式 grid-cols-1，区别全局样式
+const tableSeachClass = cn(
+  'table-search-grid',
+  'grid grid-cols-1 md:grid-cols-2',
+  'gap-x-4 gap-y-6',
+);
 
 function buildSearchParams(values: SearchParams) {
   return { ...values };
@@ -60,17 +66,13 @@ defineExpose({
     >
       <div :class="tableSeachClass">
         <template v-if="!searchCollapsed">
-          <FormItem label="组件名称" name="componentName">
-            <FormInput v-model:value="model.componentName" allow-clear />
-          </FormItem>
-          <FormItem label="方法名称" name="methodName">
-            <FormInput v-model:value="model.methodName" allow-clear />
+          <FormItem label="SpEL表达式" name="componentName">
+            <FormInput v-model:value="model.viewSpel" allow-clear />
           </FormItem>
         </template>
         <!-- [grid-column-end:-1] 始终定位到最后一列，justify-self-end 靠右对齐 -->
         <div class="[grid-column-end:-1] flex items-baseline justify-end gap-4">
           <SearchButtonGroup
-            collapsible
             v-model:collapsed="searchCollapsed"
             @reset="handleReset"
             @submit="handleSubmit"

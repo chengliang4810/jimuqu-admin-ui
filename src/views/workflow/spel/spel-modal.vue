@@ -5,7 +5,7 @@ import type { FormInstance } from 'antdv-next';
 import { computed, ref } from 'vue';
 
 import { spelAdd, spelInfo, spelUpdate } from '@/api/workflow/spel';
-import { useVbenDrawer } from '@/components';
+import { useVbenModal } from '@/components';
 import {
   FormInput as Input,
   FormTextArea as Textarea,
@@ -17,11 +17,7 @@ import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
 import { Form, FormItem, RadioGroup } from 'antdv-next';
 
-import { generateSpel } from './common';
-import SpelPreviewer from './spel-previewer.vue';
-
 const emit = defineEmits<{ reload: [] }>();
-
 const isUpdate = ref(false);
 const title = computed(() => {
   return isUpdate.value ? $t('pages.common.edit') : $t('pages.common.add');
@@ -53,9 +49,7 @@ const formData = ref<FormData>(getDefaultValues());
 const formInstance = ref<FormInstance>();
 
 const formRules = ref<AntdFormRules<FormData>>({
-  componentName: [{ required: true, message: $t('ui.formRules.required') }],
-  methodName: [{ required: true, message: $t('ui.formRules.required') }],
-  status: [{ required: true, message: $t('ui.formRules.required') }],
+  viewSpel: [{ required: true, message: $t('ui.formRules.required') }],
 });
 
 function formValueGetter() {
@@ -69,7 +63,7 @@ const { onBeforeClose, markInitialized, resetInitialized } = useBeforeCloseDiff(
   },
 );
 
-const [BasicDrawer, drawerApi] = useVbenDrawer({
+const [BasicModal, modalApi] = useVbenModal({
   onBeforeClose,
   onClosed: handleClosed,
   onConfirm: handleConfirm,
@@ -77,8 +71,8 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     if (!isOpen) {
       return null;
     }
-    drawerApi.drawerLoading(true);
-    const { id } = drawerApi.getData() as { id?: number | string };
+    modalApi.modalLoading(true);
+    const { id } = modalApi.getData() as { id?: number | string };
     isUpdate.value = !!id;
 
     // 更新 && 赋值
@@ -90,29 +84,23 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
       };
     }
     await markInitialized();
-    drawerApi.drawerLoading(false);
+    modalApi.modalLoading(false);
   },
 });
 
 async function handleConfirm() {
   try {
-    drawerApi.lock(true);
+    modalApi.lock(true);
     await formInstance.value?.validate();
     const data = cloneDeep(formData.value);
-    if (isUpdate.value) {
-      await spelUpdate(data);
-    } else {
-      // 新增需要生成
-      data.viewSpel = generateSpel(data);
-      await spelAdd(data);
-    }
+    await (isUpdate.value ? spelUpdate(data) : spelAdd(data));
     resetInitialized();
     emit('reload');
-    drawerApi.close();
+    await modalApi.close();
   } catch (error) {
     console.error(error);
   } finally {
-    drawerApi.lock(false);
+    modalApi.lock(false);
   }
 }
 
@@ -121,31 +109,43 @@ async function handleClosed() {
   formInstance.value?.resetFields();
   resetInitialized();
 }
+
+const viewSpEL = ref('');
+
+function genSpel(
+  _changedValues: Record<string, any>,
+  values: Record<string, any>,
+) {
+  if (!values.componentName || !values.methodName) {
+    if (values.methodParams) {
+      viewSpEL.value = '${'+values.methodParams+'}';
+    }
+  } else {
+    const params = values.methodParams ? values.methodParams.split(',') : [];
+    const methodParamsText = params.map((item: any) => `#${item}`).join(',');
+    viewSpEL.value = `#{@${values.componentName}.${values.methodName}(${methodParamsText})}`;
+  }
+  values.viewSpel = viewSpEL.value;
+  console.log('viewSpel', values);
+}
 </script>
 
 <template>
-  <BasicDrawer :title="title" :size="600">
+  <BasicModal :title="title" width="800">
     <Form
       ref="formInstance"
       :model="formData"
-      :label-col="{ style: { width: '80px' } }"
+      :label-col="{ style: { width: '100px' } }"
+      @values-change="genSpel"
     >
-      <FormItem
-        label="组件名称"
-        name="componentName"
-        :rules="formRules.componentName"
-      >
+      <FormItem label="组件名称" name="componentName">
         <Input
           allow-clear
           class="w-full"
           v-model:value="formData.componentName"
         />
       </FormItem>
-      <FormItem
-        label="方法名称"
-        name="methodName"
-        :rules="formRules.methodName"
-      >
+      <FormItem label="方法名称" name="methodName">
         <Input allow-clear class="w-full" v-model:value="formData.methodName" />
       </FormItem>
       <FormItem label="参数名称" name="methodParams">
@@ -155,14 +155,10 @@ async function handleClosed() {
           v-model:value="formData.methodParams"
         />
       </FormItem>
-      <FormItem label="Spel表达式" name="viewSpel">
-        <SpelPreviewer
-          :component-name="formData.componentName"
-          :method-name="formData.methodName"
-          :method-params="formData.methodParams"
-        />
+      <FormItem label="SpEL表达式" name="viewSpel" :rules="formRules.viewSpel">
+        <Input disabled class="w-full" v-model:value="formData.viewSpel" />
       </FormItem>
-      <FormItem label="状态" name="status" :rules="formRules.status">
+      <FormItem label="状态" name="status">
         <RadioGroup
           button-style="solid"
           option-type="button"
@@ -174,5 +170,5 @@ async function handleClosed() {
         <Textarea allow-clear class="w-full" v-model:value="formData.remark" />
       </FormItem>
     </Form>
-  </BasicDrawer>
+  </BasicModal>
 </template>

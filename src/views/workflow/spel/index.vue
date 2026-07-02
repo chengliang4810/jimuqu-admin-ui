@@ -5,7 +5,7 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import { spelDelete, spelList } from '@/api/workflow/spel';
-import { Page, useVbenDrawer } from '@/components';
+import { Page, useVbenModal } from '@/components';
 import {
   useTableQuery,
   withDefaultVxeGridOptions,
@@ -14,7 +14,7 @@ import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
-import spelDrawer from './spel-drawer.vue';
+import spelModal from './spel-modal.vue';
 import SpelSearchForm from './spel-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof SpelSearchForm>>();
@@ -75,18 +75,18 @@ const { query, reload } = useTableQuery(
 );
 const checkedRows = ref<Spel[]>([]);
 
-const [SpelDrawer, drawerApi] = useVbenDrawer({
-  connectedComponent: spelDrawer,
+const [SpelModal, modalApi] = useVbenModal({
+  connectedComponent: spelModal,
 });
 
 function handleAdd() {
-  drawerApi.setData({});
-  drawerApi.open();
+  modalApi.setData({});
+  modalApi.open();
 }
 
 async function handleEdit(record: Spel) {
-  drawerApi.setData({ id: record.id });
-  drawerApi.open();
+  modalApi.setData({ id: record.id });
+  modalApi.open();
 }
 
 async function handleDelete(row: Spel) {
@@ -159,7 +159,7 @@ function syncCheckedRows() {
             v-on="gridEvents"
           >
             <template #toolbar-left>
-              <div class="text-[16px] font-medium">流程表达式列表</div>
+              <div class="text-[16px] font-medium">流程SpEL表达式</div>
             </template>
             <template #toolbar-right>
               <Space>
@@ -209,7 +209,7 @@ function syncCheckedRows() {
             </template>
           </VxeGrid>
         </div>
-        <SpelDrawer @reload="() => query()" />
+        <SpelModal @reload="() => query()" />
       </div>
     </Spin>
   </Page>
