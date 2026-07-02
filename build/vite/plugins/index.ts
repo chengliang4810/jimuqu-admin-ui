@@ -15,6 +15,7 @@ import viteCompressPlugin from 'vite-plugin-compression';
 import viteVueDevTools from 'vite-plugin-vue-devtools';
 
 import { viteArchiverPlugin } from './archiver';
+import { viteBuildTimePlugin } from './build-time';
 import { viteCheckTransitionPlugin } from './check-transition';
 import { viteDayjsPlugin } from './dayjs';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
@@ -68,6 +69,10 @@ async function loadCommonPlugins(
     {
       condition: !isBuild && devtools,
       plugins: () => [viteVueDevTools()],
+    },
+    {
+      condition: isBuild,
+      plugins: () => [viteBuildTimePlugin()],
     },
     {
       condition: injectMetadata,
