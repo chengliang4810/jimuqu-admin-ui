@@ -2,25 +2,13 @@
 import { $t } from '@/locales';
 import { Col, Row, Tooltip } from 'antdv-next';
 
-import { accountBindList, handleAuthBinding } from '../oauth-common';
-import { storeToRefs } from 'pinia';
-import { useGlobalLoadingStore } from '@/stores/loading';
+import { accountBindList, useOAuthBinding } from '../oauth-common';
 
 defineOptions({
   name: 'OAuthLogin',
 });
 
-const { globalLoading } = storeToRefs(useGlobalLoadingStore());
-async function handleClick(source: string) {
-  try {
-    globalLoading.value = true;
-    await handleAuthBinding(source);
-  } catch (e) {
-    console.error(e);
-  } finally {
-    globalLoading.value = false;
-  }
-}
+const { handleAuthBinding } = useOAuthBinding();
 </script>
 
 <template>
@@ -47,7 +35,7 @@ async function handleClick(source: string) {
               :is="item.avatar"
               :style="item?.style ?? {}"
               class="size-[24px]"
-              @click="handleClick(item.source)"
+              @click="handleAuthBinding(item.source)"
             />
           </span>
         </Tooltip>

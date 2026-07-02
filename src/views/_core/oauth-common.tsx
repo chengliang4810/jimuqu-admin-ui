@@ -3,6 +3,8 @@ import type { Component, CSSProperties } from 'vue';
 import { authBinding } from '@/api/core/auth';
 import { VbenIcon } from '@/icons';
 import { cn } from '@/utils';
+import { storeToRefs } from 'pinia';
+import { useGlobalLoadingStore } from '@/stores/loading';
 
 /**
  * @description: oauth登录
@@ -26,16 +28,6 @@ export interface ListItem {
 export interface BindItem extends ListItem {
   source: string;
   bound?: boolean;
-}
-
-/**
- * 绑定授权
- * @param source
- */
-export async function handleAuthBinding(source: string) {
-  // 这里返回打开授权页面的链接
-  const href = await authBinding(source);
-  window.location.href = href;
 }
 
 /**
@@ -81,3 +73,24 @@ export const accountBindList: BindItem[] = [
     title: 'Wechat',
   },
 ];
+
+export function useOAuthBinding() {
+  const { globalLoading } = storeToRefs(useGlobalLoadingStore());
+  async function handleAuthBinding(source: string) {
+    try {
+      globalLoading.value = true;
+      // 这里返回打开授权页面的链接
+      const href = await authBinding(source);
+      window.location.href = href;
+      // 不取消loading的原因在于href加载也会消耗时间  且跳出去会销毁
+    } catch (e) {
+      console.error(e);
+      // 接口失败才需要关闭loading
+      globalLoading.value = false;
+    }
+  }
+
+  return {
+    handleAuthBinding,
+  };
+}

@@ -9,7 +9,7 @@ import { authUnbinding } from '@/api';
 import { socialList } from '@/api/system/social';
 import { Alert, Avatar, Card, Empty, Tooltip } from 'antdv-next';
 
-import { accountBindList, handleAuthBinding } from '../../oauth-common';
+import { accountBindList, useOAuthBinding } from '../../oauth-common';
 
 interface BindItemWithInfo extends BindItem {
   info?: SocialInfo;
@@ -61,6 +61,8 @@ function handleUnbind(record: BindItemWithInfo) {
 }
 
 const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
+
+const { handleAuthBinding } = useOAuthBinding();
 </script>
 
 <template>
