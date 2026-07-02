@@ -242,14 +242,9 @@ const { refreshTab } = useTabs();
   </Page>
 </template>
 
-<style lang="scss" scoped>
-.thin-scrollbar {
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-}
-
-:deep(.ant-card-body) {
-  @apply thin-scrollbar;
+<style scoped>
+.thin-scrollbar::-webkit-scrollbar,
+:deep(.ant-card-body)::-webkit-scrollbar {
+  width: 5px;
 }
 </style>

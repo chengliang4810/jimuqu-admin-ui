@@ -158,7 +158,7 @@ function currentPreview(file: UploadFile) {
   </div>
 </template>
 
-<style lang="scss">
+<style>
 .ant-upload-select-picture-card {
   i {
     @apply text-[32px] text-[#999];
@@ -175,7 +175,7 @@ function currentPreview(file: UploadFile) {
   }
 }
 
-// 禁用的样式和antd保持一致
+/* 禁用的样式和antd保持一致 */
 .upload-text__disabled {
   color: rgb(50 54 57 / 25%);
   cursor: not-allowed;
@@ -185,7 +185,7 @@ function currentPreview(file: UploadFile) {
   }
 }
 
-// list-type: picture-card动画效果关闭样式
+/* list-type: picture-card动画效果关闭样式 */
 .upload-animation__disabled {
   .ant-upload-animate-inline {
     animation-duration: 0s !important;

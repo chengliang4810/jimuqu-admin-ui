@@ -269,11 +269,11 @@ function syncCheckedRows() {
   </Spin>
 </template>
 
-<style lang="scss">
+<style>
 div#dict-type {
   .vxe-body--row {
     &.row--current {
-      // 选中行bold
+      /* 选中行bold */
       @apply font-semibold;
     }
   }
