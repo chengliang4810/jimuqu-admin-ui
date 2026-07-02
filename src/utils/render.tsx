@@ -166,11 +166,11 @@ export function renderIconSpan(
 }
 
 const osOptions = [
-  { icon: 'icon-[devicon--windows8]', value: 'windows' },
-  { icon: 'icon-[wpf--macos]', value: 'osx' },
-  { icon: 'icon-[devicon--linux]', value: 'linux' },
-  { icon: 'icon-[flat-color-icons--android-os]', value: 'android' },
-  { icon: 'icon-[majesticons--iphone-x-apps-line]', value: 'ios' },
+  { icon: 'icon-[mdi--microsoft-windows]', value: 'windows' },
+  { icon: 'icon-[mdi--apple]', value: 'osx' },
+  { icon: 'icon-[skill-icons--linux-light]', value: 'linux' },
+  { icon: 'icon-[mdi--android]', value: 'android' },
+  { icon: 'icon-[mdi--apple-ios]', value: 'ios' },
 ];
 
 const DefaultOsIcon = 'icon-[ic--outline-computer]';
@@ -180,14 +180,14 @@ const DefaultOsIcon = 'icon-[ic--outline-computer]';
  * cn.hutool.http.useragent -> browers
  */
 const browserOptions = [
-  { icon: 'icon-[logos--chrome]', value: 'chrome' },
-  { icon: 'icon-[logos--microsoft-edge]', value: 'edge' },
-  { icon: 'icon-[logos--firefox]', value: 'firefox' },
-  { icon: 'icon-[logos--opera]', value: 'opera' },
-  { icon: 'icon-[logos--safari]', value: 'safari' },
+  { icon: 'icon-[mdi--google-chrome]', value: 'chrome' },
+  { icon: 'icon-[mdi--microsoft-edge]', value: 'edge' },
+  { icon: 'icon-[openmoji--firefox]', value: 'firefox' },
+  { icon: 'icon-[mdi--opera]', value: 'opera' },
+  { icon: 'icon-[devicon--safari]', value: 'safari' },
   { icon: 'icon-[mdi--wechat]', value: 'micromessenger' },
   { icon: 'icon-[mdi--wechat]', value: 'windowswechat' },
-  { icon: 'icon-[logos--quarkus-icon]', value: 'quark' },
+  { icon: 'icon-[mdi--alpha-q-box]', value: 'quark' },
   { icon: 'icon-[mdi--wechat]', value: 'wxwork' },
   { icon: 'svg:qq', value: 'qq', type: 'offline' },
   { icon: 'icon-[ri--dingding-line]', value: 'dingtalk' },
