@@ -136,12 +136,12 @@ function onMouseDown(e: MouseEvent, tab: TabConfig) {
 
             <!-- extra -->
             <div
-              class="tabs-chrome__extra absolute top-1/2 right-(--gap) z-3 size-4 translate-y-[-50%]"
+              class="tabs-chrome__extra absolute top-1/2 right-(--gap) z-3 flex size-4 translate-y-[-50%] items-center"
             >
               <!-- close-icon -->
               <X
                 v-show="!tab.affixTab && tabsView.length > 1 && tab.closable"
-                class="stroke-accent-foreground/80 text-accent-foreground/80 group-[.is-active]:text-accent-foreground hover:bg-accent hover:stroke-accent-foreground mt-0.5 size-3 cursor-pointer rounded-full transition-all"
+                class="stroke-accent-foreground/80 text-accent-foreground/80 group-[.is-active]:text-accent-foreground hover:bg-accent hover:stroke-accent-foreground size-3 cursor-pointer rounded-full transition-all"
                 @click.stop="() => emit('close', tab.key)"
               />
               <Pin
