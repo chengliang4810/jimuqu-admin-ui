@@ -3,10 +3,6 @@ export { createOfflineIconifyIcon } from './iconify-offline/create-offline-icon'
 export { default as EmptyIcon } from './icons/empty-icon.vue';
 export {
   SvgAntdvLogoIcon,
-  SvgAvatar1Icon,
-  SvgAvatar2Icon,
-  SvgAvatar3Icon,
-  SvgAvatar4Icon,
   SvgBellIcon,
   SvgCakeIcon,
   SvgCardIcon,
