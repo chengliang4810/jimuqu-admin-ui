@@ -180,8 +180,7 @@
   "js/ts.inlayHints.enumMemberValues.enabled": true,
   "js/ts.preferences.preferTypeOnlyAutoImports": true,
   "js/ts.preferences.includePackageJsonAutoImports": "on",
-  "javascript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "js/ts.preferences.importModuleSpecifierEnding": "minimal",
 
   "eslint.validate": [
     "javascript",
@@ -200,14 +199,6 @@
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
-
-  "github.copilot.enable": {
-    "*": false,
-    "plaintext": false,
-    "markdown": true,
-    "scminput": false,
-    "yaml": false
-  },
 
   "i18n-ally.localesPaths": ["src/locales/langs"],
   "i18n-ally.pathMatcher": "{locale}/{namespace}.{ext}",
@@ -228,7 +219,8 @@
     "*.env": "$(capture).env.*",
     "README.md": "README*,LICENSE,CNAME",
     "index.html": "loading.html",
-    "package.json": "pnpm-lock.yaml,.gitattributes,.gitignore,.gitpod.yml,.npmrc,.browserslistrc,.node-version,.git*,.tazerc.json",
+    "package.json": ".gitattributes,.gitignore,.gitpod.yml,.npmrc,.browserslistrc,.node-version,.git*,.tazerc.json",
+    "pnpm-workspace.yaml": "pnpm-lock.yaml",
     "eslint.config.mjs": ".eslintignore,.stylelintignore,.commitlintrc.*,stylelint.config.*,.lintstagedrc.mjs,cspell.json,lefthook.yml,.prettierrc.*,.prettierignore,.editorconfig"
   },
   "commentTranslate.hover.enabled": false,
