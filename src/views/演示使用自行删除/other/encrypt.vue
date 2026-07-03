@@ -9,10 +9,14 @@ import dayjs from 'dayjs';
 const requestData = ref<any>({});
 const requestData2 = ref<any>({});
 async function apiRequest(name: string) {
-  const resp = await alovaInstance.post('/test/api/encrypt/request', name, {
-    encrypt: true,
-    isReturnNativeResponse: true,
-  });
+  const resp = await alovaInstance.post<any>(
+    '/custom/api/encrypt/request',
+    name,
+    {
+      encrypt: true,
+      isReturnNativeResponse: true,
+    },
+  );
   console.log(resp);
   requestData.value = resp.config.data;
   requestData2.value = resp.data;
@@ -21,7 +25,7 @@ async function apiRequest(name: string) {
 const encryptData = ref<any>({});
 const response = ref<any>({});
 async function apiResponse() {
-  const resp = await alovaInstance.get('/test/api/encrypt/response', {
+  const resp = await alovaInstance.get('/custom/api/encrypt/response', {
     isTransformResponse: false,
     transformResponse: (data) => {
       encryptData.value = data;
@@ -43,7 +47,11 @@ async function apiResponse() {
         请求加密
       </a-button>
       <div class="flex flex-col gap-4">
-        <Alert class="mt-4" show-icon message="可在开发者工具查看原始响应" />
+        <Alert
+          :style="{ marginTop: '16px' }"
+          show-icon
+          message="可在开发者工具查看原始响应"
+        />
         <span class="font-semibold">加密后的请求数据</span>
         <JsonPreview :data="requestData" />
         <span class="font-semibold">后端解密</span>
@@ -54,7 +62,11 @@ async function apiResponse() {
     <Card title="响应解密">
       <a-button @click="apiResponse()">响应解密</a-button>
       <div class="flex flex-col gap-4">
-        <Alert class="mt-4" show-icon message="可在开发者工具查看原始响应" />
+        <Alert
+          :style="{ marginTop: '16px' }"
+          show-icon
+          message="可在开发者工具查看原始响应"
+        />
         <span class="font-semibold">加密的响应(原始data)</span>
         <JsonPreview :data="encryptData" />
         <span class="font-semibold">解密后数据</span>
