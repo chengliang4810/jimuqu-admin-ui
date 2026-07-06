@@ -149,8 +149,6 @@ function syncCheckedRows() {
 
 onMounted(() => {
   emitter.on('rowClick', async (value) => {
-    console.log(value);
-
     roleId.value = value.roleId;
     title.value = value.roleName;
     await query();
