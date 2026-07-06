@@ -27,7 +27,7 @@ export const columns: VxeGridProps['columns'] = [
       default: ({ row }: { row: User }) => {
         return (
           <UserInfoCell
-            avatar={row.avatar}
+            avatar={row.avatarUrl}
             subtitle={row.phoneNumber}
             title={row.nickName}
           />
