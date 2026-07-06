@@ -13,7 +13,7 @@ import { $t } from '@/locales';
 import { useAccessStore } from '@/stores';
 import { cn, isWindowsOs } from '@/utils';
 import { useMagicKeys, whenever } from '@vueuse/core';
-import { Badge, Dropdown, Tag } from 'antdv-next';
+import { Dropdown, Tag } from 'antdv-next';
 
 import { LockScreenModal } from '../lock-screen';
 import { Preferences } from '../preferences';

@@ -6,6 +6,7 @@ interface BasicUserInfo {
    * 头像
    */
   avatar: string;
+  avatarUrl: string;
   /**
    * 邮箱
    */

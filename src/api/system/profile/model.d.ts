@@ -37,6 +37,7 @@ export interface User {
   phoneNumber: string;
   sex: string;
   avatar: string;
+  avatarUrl: string;
   status: string;
   loginIp: string;
   loginDate: string;

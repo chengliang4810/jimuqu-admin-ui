@@ -4,8 +4,8 @@ import type { DescriptionsProps } from 'antdv-next';
 
 import { computed } from 'vue';
 
-import { userProfileUpdate } from '@/api/system/profile';
 import { uploadApi } from '@/api/core/upload';
+import { userProfileUpdate } from '@/api/system/profile';
 import { CropperAvatar } from '@/components/cropper';
 import { preferences, usePreferences } from '@/core/preferences';
 import { buildUUID } from '@/utils';
@@ -19,7 +19,7 @@ const emit = defineEmits<{
 }>();
 
 const avatar = computed(
-  () => props.profile?.user.avatar || preferences.app.defaultAvatar,
+  () => props.profile?.user.avatarUrl || preferences.app.defaultAvatar,
 );
 
 /**

@@ -13,6 +13,7 @@ export interface Role {
 
 export interface User {
   avatar: string;
+  avatarUrl: string;
   createTime: string;
   deptId: number;
   deptName: string;
