@@ -79,11 +79,13 @@ const computedCheckedKeys = computed<any>({
     return checkedKeys.value;
   },
   set(v) {
-    if (!checkStrictly.value) {
-      checkedKeys.value = [...v.checked, ...v.halfChecked];
+    // antdv-next 的 update:checkedKeys 恒为数组(对象形态会被拍平),
+    // 这里兼容对象/数组两种回传
+    if (Array.isArray(v)) {
+      checkedKeys.value = v;
       return;
     }
-    checkedKeys.value = v;
+    checkedKeys.value = [...(v.checked ?? []), ...(v.halfChecked ?? [])];
   },
 });
 
