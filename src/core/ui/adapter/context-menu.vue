@@ -35,8 +35,13 @@ function handleClick(menu: IContextMenuItem) {
     <template #popupRender>
       <Menu>
         <template v-for="menu in menusView" :key="menu.key">
-          <MenuDivider v-if="menu.separator" />
-          <MenuItem v-else :disabled="menu.disabled" @click="handleClick(menu)">
+          <MenuDivider v-if="menu.separator" :key="`divider-${menu.key}`" />
+          <MenuItem
+            v-else
+            :key="menu.key"
+            :disabled="menu.disabled"
+            @click="handleClick(menu)"
+          >
             <span class="flex items-center">
               <component
                 :is="menu.icon"
