@@ -164,31 +164,7 @@ onMounted(async () => {
         :selectable="false"
         :tree-data="treeData"
       >
-        <template
-          v-for="slotName in Object.keys($slots)"
-          :key="slotName"
-          #[slotName]="data"
-        >
-          <slot :name="slotName" v-bind="data ?? {}"></slot>
-        </template>
       </Tree>
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-:deep(.ant-tree) {
-  // 勾选框居中
-  & .ant-tree-checkbox {
-    margin: 0;
-    margin-right: 6px;
-  }
-
-  // 展开图标居中
-  & .ant-tree-switcher {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-</style>
