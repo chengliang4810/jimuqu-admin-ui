@@ -2,10 +2,10 @@
 import type { Menu } from '@/api/system/menu/model';
 import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
-import { computed, ref, useTemplateRef } from 'vue';
+import { computed, h, ref, useTemplateRef } from 'vue';
 
 import { menuCascadeRemove, menuList, menuRemove } from '@/api/system/menu';
-import { Fallback, Page, useVbenDrawer } from '@/components';
+import { Fallback, Page, useVbenDrawer, useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 import {
   resolveQueryFormValues,
@@ -14,12 +14,14 @@ import {
 } from '@/components/vxe-table';
 import { $t } from '@/locales';
 import { eachTree, listToTree, treeToList } from '@/utils';
+import { SettingOutlined } from '@antdv-next/icons';
 import { Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import CopyIconSql from './copy-icon-sql.vue';
 import { columns } from './data';
 import menuDrawer from './menu-drawer.vue';
+import menuImportModal from './menu-import-modal.vue';
 import MenuSearchForm from './menu-search.vue';
 
 const searchFormRef = ref<InstanceType<typeof MenuSearchForm>>();
@@ -118,8 +120,21 @@ const [MenuDrawer, drawerApi] = useVbenDrawer({
   connectedComponent: menuDrawer,
 });
 
+const [MenuImportModal, importModalApi] = useVbenModal({
+  connectedComponent: menuImportModal,
+});
+
 function handleAdd() {
   drawerApi.setData({});
+  drawerApi.open();
+}
+
+function handleImport() {
+  importModalApi.open();
+}
+
+function handleImported(record: Partial<Menu>) {
+  drawerApi.setData({ record, update: false });
   drawerApi.open();
 }
 
@@ -248,6 +263,17 @@ function handleSearchReset() {
                 </a-button>
 
                 <a-button
+                  color="green"
+                  variant="solid"
+                  :icon="h(SettingOutlined)"
+                  v-access:code="['system:menu:add']"
+                  v-access:role="['superadmin']"
+                  @click="handleImport"
+                >
+                  导入配置
+                </a-button>
+
+                <a-button
                   type="primary"
                   v-access:code="['system:menu:add']"
                   v-access:role="['superadmin']"
@@ -301,6 +327,7 @@ function handleSearchReset() {
       </div>
     </Spin>
     <MenuDrawer @reload="afterEditOrAdd" />
+    <MenuImportModal @import="handleImported" />
   </Page>
   <Fallback v-else description="您没有菜单管理的访问权限" status="403" />
 </template>

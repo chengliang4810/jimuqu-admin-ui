@@ -18,6 +18,7 @@ import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
 import { getDictOptions } from '@/utils/dict';
 import { useBeforeCloseDiff } from '@/utils/popup';
+import { useClipboard } from '@vueuse/core';
 import { Form, FormItem, RadioGroup, Skeleton } from 'antdv-next';
 import JsonEditorVue from 'json-editor-vue';
 
@@ -25,7 +26,8 @@ import { menuTypeOptions } from './data';
 
 interface ModalProps {
   id?: number | string;
-  update: boolean;
+  record?: FormData;
+  update?: boolean;
 }
 
 const emit = defineEmits<{ reload: [] }>();
@@ -177,10 +179,25 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     drawerApi.drawerLoading(true);
     loading.value = true;
 
-    const { id, update } = drawerApi.getData() as ModalProps;
-    isUpdate.value = update;
+    const { id, record: importRecord, update } = drawerApi.getData() as ModalProps;
+    isUpdate.value = !!update;
 
-    if (id) {
+    if (importRecord) {
+      // 导入配置: 仅取表单已知字段(白名单)预填, 清空主键, 走新增流程
+      await setupMenuSelect();
+      const defaults = getDefaultValues();
+      const picked: FormData = {};
+      for (const key of Object.keys(defaults) as (keyof FormData)[]) {
+        if (importRecord[key] !== undefined) {
+          (picked[key] as unknown) = importRecord[key];
+        }
+      }
+      formData.value = {
+        ...defaults,
+        ...picked,
+        menuId: undefined,
+      };
+    } else if (id) {
       formData.value.parentId = id;
       // 创建元组(不是数组 元素位置固定)
       const promise = [
@@ -248,6 +265,14 @@ type JsonEditorVueRef = { jsonEditor: { validate: () => object | undefined } };
 const queryParamJsonRef = ref<JsonEditorVueRef>();
 const extJsonRef = ref<JsonEditorVueRef>();
 const jsonEditorMode: any = 'text';
+
+const { copy } = useClipboard({ legacy: true });
+async function handleCopyConfig() {
+  await formInstance.value?.validate();
+  const data = cloneDeep(formData.value);
+  await copy(JSON.stringify(data));
+  window.message.success('已复制当前配置json');
+}
 </script>
 
 <template>
@@ -459,6 +484,18 @@ const jsonEditorMode: any = 'text';
         </div>
       </FormItem>
     </Form>
+
+    <template #prepend-footer>
+      <a-button
+        v-if="isUpdate"
+        class="mr-auto"
+        color="green"
+        variant="solid"
+        @click="handleCopyConfig"
+      >
+        复制配置
+      </a-button>
+    </template>
   </BasicDrawer>
 </template>
 
