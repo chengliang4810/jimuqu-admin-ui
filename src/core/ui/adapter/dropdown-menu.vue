@@ -22,7 +22,12 @@ function handleClick(menu: VbenDropdownMenuItem) {
       <Menu>
         <template v-for="menu in menus" :key="menu.value">
           <MenuDivider v-if="menu.separator" />
-          <MenuItem v-else :disabled="menu.disabled" @click="handleClick(menu)">
+          <MenuItem
+            v-else
+            :key="menu.value"
+            :disabled="menu.disabled"
+            @click="handleClick(menu)"
+          >
             <span class="flex items-center">
               <component
                 :is="menu.icon"
