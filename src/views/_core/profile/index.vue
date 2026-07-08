@@ -28,7 +28,7 @@ async function handleUploadFinish() {
   // 重新加载用户信息
   await loadProfile();
   // 更新store
-  const userInfo = await authStore.fetchUserInfo();
+  const userInfo = await authStore.fetchUserInfo({ resetDictCache: false });
   userStore.setUserInfo(userInfo);
 }
 

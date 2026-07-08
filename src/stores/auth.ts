@@ -112,7 +112,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function fetchUserInfo() {
+  async function fetchUserInfo(options?: { resetDictCache?: boolean }) {
     const backUserInfo = await getUserInfoApi();
     /**
      * 登录超时的情况
@@ -135,12 +135,16 @@ export const useAuthStore = defineStore('auth', () => {
       email: user.email ?? '',
     };
     userStore.setUserInfo(userInfo);
+    const { resetDictCache = true } = options ?? {};
     /**
      * 需要重新加载字典
      * 比如退出登录切换到其他租户
      */
     const dictStore = useDictStore();
-    dictStore.resetCache();
+    if (resetDictCache) {
+      dictStore.resetCache();
+    }
+
     return userInfo;
   }
 

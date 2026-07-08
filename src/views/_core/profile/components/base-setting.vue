@@ -61,7 +61,7 @@ async function handleSubmit() {
     await formInstance.value?.validate();
     await userProfileUpdate(formData.value);
     // 更新store
-    const userInfo = await authStore.fetchUserInfo();
+    const userInfo = await authStore.fetchUserInfo({ resetDictCache: false });
     userStore.setUserInfo(userInfo);
     // 左边reload
     emitter.emit('updateProfile');
