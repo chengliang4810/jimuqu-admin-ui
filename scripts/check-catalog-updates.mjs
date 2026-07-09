@@ -104,24 +104,58 @@ function compareVersion(a, b) {
 }
 
 /**
- * 拉取单个包在 registry 上的最新稳定版本
+ * 取版本的大版本号(major)
+ * @param {string} v
+ * @returns {number}
+ */
+function majorOf(v) {
+  return Number.parseInt(v.split('.')[0], 10) || 0;
+}
+
+/**
+ * 是否为稳定版(不含 prerelease 标记)
+ * @param {string} v
+ */
+function isStable(v) {
+  return !v.includes('-');
+}
+
+/**
+ * 从版本列表里取最大的一个
+ * @param {string[]} list
+ * @returns {string|null}
+ */
+function maxVersion(list) {
+  let best = null;
+  for (const v of list) {
+    if (best === null || compareVersion(v, best) > 0) best = v;
+  }
+  return best;
+}
+
+/**
+ * 拉取单个包在 registry 上的全部已发布版本
+ * 使用 npm 精简版 packument(体积远小于完整 metadata)。
  * @param {string} registry
  * @param {string} name
- * @returns {Promise<{name:string, latest:string|null, error?:string}>}
+ * @returns {Promise<{name:string, versions:string[], error?:string}>}
  */
-async function fetchLatest(registry, name) {
-  const url = `${registry}/${name.replace('/', '%2F')}/latest`;
+async function fetchVersions(registry, name) {
+  const url = `${registry}/${name.replace('/', '%2F')}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT);
   try {
-    const res = await fetch(url, { signal: controller.signal });
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: { Accept: 'application/vnd.npm.install-v1+json' },
+    });
     if (!res.ok) {
-      return { name, latest: null, error: `HTTP ${res.status}` };
+      return { name, versions: [], error: `HTTP ${res.status}` };
     }
     const data = await res.json();
-    return { name, latest: data.version ?? null };
+    return { name, versions: Object.keys(data.versions || {}) };
   } catch (error) {
-    return { name, latest: null, error: error.message || String(error) };
+    return { name, versions: [], error: error.message || String(error) };
   } finally {
     clearTimeout(timer);
   }
@@ -160,31 +194,73 @@ async function main() {
   if (!WANT_JSON) {
     console.log(
       chalk.cyan(
-        `🔍 从 ${registry} 检测 ${names.length} 个 catalog 依赖的最新版本...\n`,
+        `🔍 从 ${registry} 检测 ${names.length} 个 catalog 依赖的可升级版本...\n`,
       ),
     );
   }
 
   const results = await runPool(
     names,
-    (name) => fetchLatest(registry, name),
+    (name) => fetchVersions(registry, name),
     CONCURRENCY,
   );
 
   const rows = [];
-  for (const { name, latest, error } of results) {
+  for (const { name, versions, error } of results) {
     const range = catalog[name];
     const current = baseVersion(range);
-    let status = 'ok';
-    if (error || !latest) {
-      status = 'error';
-    } else if (current) {
-      const cmp = compareVersion(current, latest);
-      status = cmp < 0 ? 'outdated' : 'ok';
-    } else {
-      status = 'unknown';
+
+    if (error || versions.length === 0) {
+      rows.push({
+        name,
+        range,
+        current,
+        minor: null,
+        major: null,
+        status: 'error',
+        error,
+      });
+      continue;
     }
-    rows.push({ name, range, current, latest, status, error });
+
+    // 只考虑稳定版;当前若已是 prerelease 才把 prerelease 纳入候选
+    const stable = versions.filter((v) => isStable(v));
+    const pool = stable.length > 0 ? stable : versions;
+
+    if (!current) {
+      rows.push({
+        name,
+        range,
+        current,
+        minor: maxVersion(pool),
+        major: null,
+        status: 'unknown',
+        error,
+      });
+      continue;
+    }
+
+    const curMajor = majorOf(current);
+    // 同大版本内的最新次/修订版本(安全升级)
+    const minorLatest = maxVersion(pool.filter((v) => majorOf(v) === curMajor));
+    // 存在的更高大版本里最新的那个
+    const majorLatest = maxVersion(pool.filter((v) => majorOf(v) > curMajor));
+
+    const minor =
+      minorLatest && compareVersion(current, minorLatest) < 0
+        ? minorLatest
+        : null;
+    const major = majorLatest || null;
+
+    rows.push({
+      name,
+      range,
+      current,
+      minor,
+      major,
+      status: minor || major ? 'outdated' : 'ok',
+      error,
+    });
   }
 
   const outdated = rows.filter((r) => r.status === 'outdated');
@@ -202,23 +278,29 @@ async function main() {
     const nameW = Math.max(...shown.map((r) => r.name.length), 4);
     const curW = Math.max(...shown.map((r) => (r.range || '').length), 7);
     console.log(
-      `  ${'包名'.padEnd(nameW)}  ${'当前范围'.padEnd(curW)}  →  最新版本`,
+      `  ${'包名'.padEnd(nameW)}  ${'当前范围'.padEnd(curW)}  →  可升级`,
     );
     console.log(
       `  ${'-'.repeat(nameW)}  ${'-'.repeat(curW)}     ${'-'.repeat(10)}`,
     );
     for (const r of shown) {
+      const namePad = r.name.padEnd(nameW);
+      const rangePad = (r.range || '').padEnd(curW);
       if (r.status === 'error') {
         console.log(
-          `  ${chalk.gray(r.name.padEnd(nameW))}  ${chalk.gray((r.range || '').padEnd(curW))}  →  ${chalk.red(`获取失败(${r.error})`)}`,
+          `  ${chalk.gray(namePad)}  ${chalk.gray(rangePad)}  →  ${chalk.red(`获取失败(${r.error})`)}`,
         );
       } else if (r.status === 'outdated') {
+        // 优先展示同大版本内的次/修订升级,有大版本则追加提示
+        const parts = [];
+        if (r.minor) parts.push(chalk.green(r.minor));
+        if (r.major) parts.push(chalk.magenta(`大版本 ${r.major}`));
         console.log(
-          `  ${chalk.yellow(r.name.padEnd(nameW))}  ${(r.range || '').padEnd(curW)}  →  ${chalk.green(r.latest)}`,
+          `  ${chalk.yellow(namePad)}  ${rangePad}  →  ${parts.join('  ')}`,
         );
       } else {
         console.log(
-          `  ${r.name.padEnd(nameW)}  ${(r.range || '').padEnd(curW)}  →  ${chalk.gray(r.latest + ' (已最新)')}`,
+          `  ${namePad}  ${rangePad}  →  ${chalk.gray('已最新')}`,
         );
       }
     }
