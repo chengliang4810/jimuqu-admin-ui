@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { CropperOptions, CropperSelection } from 'cropperjs';
 
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, ImgHTMLAttributes } from 'vue';
 
 import { computed, onMounted, onUnmounted, ref, unref, useAttrs } from 'vue';
 
@@ -10,29 +10,28 @@ import Cropper from 'cropperjs';
 
 defineOptions({ name: 'CropperImage' });
 
-const props = withDefaults(
-  defineProps<{
-    alt?: string;
-    circled?: boolean;
-    crossorigin?: '' | 'anonymous' | 'use-credentials';
-    height?: number | string;
-    imageStyle?: CSSProperties;
-    options?: CropperOptions;
-    realTimePreview?: boolean;
-    src: string;
-  }>(),
-  {
-    alt: '',
-    circled: false,
-    crossorigin: undefined,
-    height: '360px',
-    imageStyle: () => ({}),
-    options: () => ({}),
-    realTimePreview: true,
-  },
-);
+const props = withDefaults(defineProps<Props>(), {
+  alt: '',
+  circled: false,
+  crossorigin: undefined,
+  height: '360px',
+  imageStyle: () => ({}),
+  options: () => ({}),
+  realTimePreview: true,
+});
 
 const emit = defineEmits(['cropend', 'ready', 'cropendError', 'readyError']);
+
+interface Props {
+  alt?: ImgHTMLAttributes['alt'];
+  circled?: boolean;
+  crossorigin?: ImgHTMLAttributes['crossorigin'];
+  height?: number | string;
+  imageStyle?: CSSProperties;
+  options?: CropperOptions;
+  realTimePreview?: boolean;
+  src: string;
+}
 
 const attrs = useAttrs();
 
@@ -45,25 +44,31 @@ const debounceRealTimeCroppered = useDebounceFn(realTimeCroppered, 80);
 
 // v2 模板:图片可旋转/缩放/翻转/平移,选区固定 1:1 比例、可移动可缩放。
 // circled 时去掉 outline(矩形描边),改由 grid 的圆角虚线呈现选区边界。
+// --ant-color-primary会影响背景色 原因未知 这里必须指定为灰色 防止被primary影响
 const buildTemplate = (circled: boolean) => `
-<cropper-canvas background>
+<cropper-canvas background style="--ant-color-primary: rgba(0,0,0,0.6);">
   <cropper-image rotatable scalable translatable></cropper-image>
-  <cropper-shade hidden></cropper-shade>
-  <cropper-handle action="select" plain></cropper-handle>
+  <cropper-shade hidden theme-color="transparent"></cropper-shade>
+  <cropper-handle action="select" plain theme-color="transparent"></cropper-handle>
   <cropper-selection aspect-ratio="1" initial-coverage="0.5" movable resizable${
     circled ? '' : ' outlined'
-  }>
-    <cropper-grid role="grid" bordered covered></cropper-grid>
+  } theme-color="rgba(255, 255, 255, 0.5)">
+    <cropper-grid
+      role="grid"
+      bordered
+      covered
+      theme-color="rgba(255, 255, 255, 0.5)"
+    ></cropper-grid>
     <cropper-crosshair centered></cropper-crosshair>
     <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
-    <cropper-handle action="n-resize"></cropper-handle>
-    <cropper-handle action="e-resize"></cropper-handle>
-    <cropper-handle action="s-resize"></cropper-handle>
-    <cropper-handle action="w-resize"></cropper-handle>
-    <cropper-handle action="ne-resize"></cropper-handle>
-    <cropper-handle action="nw-resize"></cropper-handle>
-    <cropper-handle action="se-resize"></cropper-handle>
-    <cropper-handle action="sw-resize"></cropper-handle>
+    <cropper-handle action="n-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
+    <cropper-handle action="e-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
+    <cropper-handle action="s-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
+    <cropper-handle action="w-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
+    <cropper-handle action="ne-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
+    <cropper-handle action="nw-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
+    <cropper-handle action="se-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
+    <cropper-handle action="sw-resize" theme-color="rgba(255, 255, 255, 0.5)"></cropper-handle>
   </cropper-selection>
 </cropper-canvas>`;
 
@@ -205,6 +210,12 @@ async function getRoundedCanvas(selection: CropperSelection) {
   cropper-canvas {
     width: 100%;
     height: 100%;
+  }
+
+  // cropperjs 的 selection outline 默认色不走 theme-color 属性(实测会回落到一个偏蓝的
+  // 系统/默认值,接近主题色),会与白色 grid 不协调。这里显式钉成白色半透明,与 grid 一致。
+  cropper-selection[outlined] {
+    outline-color: rgb(255 255 255 / 50%) !important;
   }
 
   &--circled {
