@@ -217,6 +217,7 @@ async function main() {
         current,
         minor: null,
         major: null,
+        latest: null,
         status: 'error',
         error,
       });
@@ -226,6 +227,8 @@ async function main() {
     // 只考虑稳定版;当前若已是 prerelease 才把 prerelease 纳入候选
     const stable = versions.filter((v) => isStable(v));
     const pool = stable.length > 0 ? stable : versions;
+    // 绝对最新版(含 prerelease),供其他脚本消费
+    const latest = maxVersion(versions);
 
     if (!current) {
       rows.push({
@@ -234,6 +237,7 @@ async function main() {
         current,
         minor: maxVersion(pool),
         major: null,
+        latest,
         status: 'unknown',
         error,
       });
@@ -258,6 +262,7 @@ async function main() {
       current,
       minor,
       major,
+      latest,
       status: minor || major ? 'outdated' : 'ok',
       error,
     });
