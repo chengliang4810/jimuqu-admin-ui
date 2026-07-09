@@ -1,12 +1,4 @@
-<script setup lang="ts">
-import { Page } from '@/components';
-import { Card, Result } from 'antdv-next';
-</script>
-
+<!-- 建议通过菜单配置成外链/内嵌 达到相同的效果且灵活性更高 -->
 <template>
-  <Page :auto-content-height="true">
-    <Card size="small">
-      <Result title="占位使用" sub-title="这个功能后期会被iframe替代" />
-    </Card>
-  </Page>
+  <iframe class="size-full" src="http://localhost:8900/snail-ai"></iframe>
 </template>
