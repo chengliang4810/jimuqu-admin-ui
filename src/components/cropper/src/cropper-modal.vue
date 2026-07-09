@@ -33,8 +33,6 @@ let filename = '';
 const src = ref(props.src || '');
 const previewSource = ref('');
 const cropper = ref<Cropper>();
-let scaleX = 1;
-let scaleY = 1;
 
 const prefixCls = 'cropper-am';
 const [BasicModal, modalApi] = useVbenModal({
@@ -87,13 +85,39 @@ function handleReadyError() {
 }
 
 function handlerToolbar(event: string, arg?: number) {
-  if (event === 'scaleX') {
-    scaleX = arg = scaleX === -1 ? 1 : -1;
+  const instance = cropper.value;
+  const image = instance?.getCropperImage();
+  const selection = instance?.getCropperSelection();
+  if (!image) {
+    return;
   }
-  if (event === 'scaleY') {
-    scaleY = arg = scaleY === -1 ? 1 : -1;
+  // v2: 图片变换作用于 cropper-image,选区重置作用于 cropper-selection
+  switch (event) {
+    case 'reset': {
+      image.$resetTransform();
+      selection?.$reset();
+      break;
+    }
+    case 'rotate': {
+      // arg 为角度(-45 / 45),v2 接受 '45deg' 形式
+      image.$rotate(`${arg}deg`);
+      break;
+    }
+    case 'scaleX': {
+      // 水平翻转
+      image.$scale(-1, 1);
+      break;
+    }
+    case 'scaleY': {
+      // 垂直翻转
+      image.$scale(1, -1);
+      break;
+    }
+    case 'zoom': {
+      image.$zoom(Number(arg));
+      break;
+    }
   }
-  (cropper?.value as any)?.[event]?.(arg);
 }
 
 async function handleOk() {
