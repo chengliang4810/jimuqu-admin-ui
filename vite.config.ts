@@ -29,9 +29,10 @@ export default defineConfig(async () => {
       },
       server: {
         proxy: {
-          '/api': {
+          // 不要用/api 会跟snail-ai的路径冲突
+          '/dev-api': {
             changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, ''),
+            rewrite: (path) => path.replace(/^\/dev-api/, ''),
             // mock代理目标地址
             target: 'http://127.0.0.1:8080',
             ws: true,
