@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { ButtonProps } from 'antdv-next';
 
-import type { CSSProperties, PropType } from 'vue';
+import type { CSSProperties } from 'vue';
 
 import { computed, ref, unref, watch, watchEffect } from 'vue';
 
@@ -12,29 +12,29 @@ import cropperModal from './cropper-modal.vue';
 
 defineOptions({ name: 'CropperAvatar' });
 
-const props = defineProps({
-  btnProps: { default: () => ({}), type: Object as PropType<ButtonProps> },
-  btnText: { default: '', type: String },
-  showBtn: { default: true, type: Boolean },
-  size: { default: 5, type: Number },
-  uploadApi: {
-    required: true,
-    type: Function as PropType<
-      ({
-        file,
-        filename,
-        name,
-      }: {
-        file: Blob;
-        filename: string;
-        name: string;
-      }) => Promise<any>
-    >,
+const props = withDefaults(
+  defineProps<{
+    btnProps?: ButtonProps;
+    btnText?: string;
+    showBtn?: boolean;
+    size?: number;
+    uploadApi: (params: {
+      file: Blob;
+      filename: string;
+      name: string;
+    }) => Promise<any>;
+    value?: string;
+    width?: number | string;
+  }>(),
+  {
+    btnProps: () => ({}),
+    btnText: '',
+    showBtn: true,
+    size: 5,
+    value: '',
+    width: '200px',
   },
-  value: { default: '', type: String },
-
-  width: { default: '200px', type: [String, Number] },
-});
+);
 
 const emit = defineEmits(['update:value', 'change']);
 

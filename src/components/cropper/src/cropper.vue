@@ -1,27 +1,36 @@
 <script lang="ts" setup>
-import type { CSSProperties, PropType } from 'vue';
+import type { CropperOptions, CropperSelection } from 'cropperjs';
+
+import type { CSSProperties } from 'vue';
 
 import { computed, onMounted, onUnmounted, ref, unref, useAttrs } from 'vue';
 
 import { useDebounceFn } from '@vueuse/core';
 import Cropper from 'cropperjs';
-import type { CropperOptions, CropperSelection } from 'cropperjs';
 
 defineOptions({ name: 'CropperImage' });
 
-const props = defineProps({
-  alt: { default: '', type: String },
-  circled: { default: false, type: Boolean },
-  crossorigin: {
-    default: undefined,
-    type: String as PropType<'' | 'anonymous' | 'use-credentials' | undefined>,
+const props = withDefaults(
+  defineProps<{
+    alt?: string;
+    circled?: boolean;
+    crossorigin?: '' | 'anonymous' | 'use-credentials';
+    height?: number | string;
+    imageStyle?: CSSProperties;
+    options?: CropperOptions;
+    realTimePreview?: boolean;
+    src: string;
+  }>(),
+  {
+    alt: '',
+    circled: false,
+    crossorigin: undefined,
+    height: '360px',
+    imageStyle: () => ({}),
+    options: () => ({}),
+    realTimePreview: true,
   },
-  height: { default: '360px', type: [String, Number] },
-  imageStyle: { default: () => ({}), type: Object as PropType<CSSProperties> },
-  options: { default: () => ({}), type: Object as PropType<CropperOptions> },
-  realTimePreview: { default: true, type: Boolean },
-  src: { required: true, type: String },
-});
+);
 
 const emit = defineEmits(['cropend', 'ready', 'cropendError', 'readyError']);
 

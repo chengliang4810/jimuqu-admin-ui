@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { PropType } from 'vue';
-
 import type { CropendResult, Cropper } from './typing';
 
 import { ref } from 'vue';
@@ -17,15 +15,19 @@ type apiFunParams = { file: Blob; filename: string; name: string };
 
 defineOptions({ name: 'CropperModal' });
 
-const props = defineProps({
-  circled: { default: true, type: Boolean },
-  size: { default: 0, type: Number },
-  src: { default: '', type: String },
-  uploadApi: {
-    required: true,
-    type: Function as PropType<(params: apiFunParams) => Promise<any>>,
+const props = withDefaults(
+  defineProps<{
+    circled?: boolean;
+    size?: number;
+    src?: string;
+    uploadApi: (params: apiFunParams) => Promise<any>;
+  }>(),
+  {
+    circled: true,
+    size: 0,
+    src: '',
   },
-});
+);
 
 const emit = defineEmits(['uploadSuccess', 'uploadError', 'register']);
 
