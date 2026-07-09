@@ -46,7 +46,7 @@ const debounceRealTimeCroppered = useDebounceFn(realTimeCroppered, 80);
 // circled 时去掉 outline(矩形描边),改由 grid 的圆角虚线呈现选区边界。
 // --ant-color-primary会影响背景色 原因未知 这里必须指定为灰色 防止被primary影响
 const buildTemplate = (circled: boolean) => `
-<cropper-canvas background style="--ant-color-primary: rgba(0,0,0,0.6);">
+<cropper-canvas background style="--ant-color-primary: rgba(0,0,0,0.6);border-radius: 6px;">
   <cropper-image rotatable scalable translatable></cropper-image>
   <cropper-shade hidden theme-color="transparent"></cropper-shade>
   <cropper-handle action="select" plain theme-color="transparent"></cropper-handle>
@@ -222,6 +222,13 @@ async function getRoundedCanvas(selection: CropperSelection) {
     cropper-selection,
     cropper-grid {
       border-radius: 50%;
+    }
+
+    // grid 内部的 # 分割线是直线,撑满 bounding box 后端点落在正方形边上、圆之外,
+    // 会呈现"外方"观感。border-radius 不裁子元素,这里用 overflow:hidden 裁掉,
+    // 使其只剩圆边框。handle 不在 grid 内(挂在 selection 上),不受影响。
+    cropper-grid {
+      overflow: hidden;
     }
   }
 }
