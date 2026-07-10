@@ -93,19 +93,10 @@ onUnmounted(() => {
   cropper.value?.destroy();
 });
 
-async function init() {
+function init() {
   const imgEl = unref(imgElRef);
   if (!imgEl) {
     return;
-  }
-  // 判断是否为正常访问的图片
-  try {
-    const resp = await fetch(props.src);
-    if (resp.status !== 200) {
-      emit('readyError');
-    }
-  } catch {
-    emit('readyError');
   }
   cropper.value = new Cropper(imgEl, {
     template: buildTemplate(props.circled),
@@ -116,16 +107,26 @@ async function init() {
   // 选区移动/缩放 或 图片变换(旋转/缩放/翻转)时,实时刷新预览
   image?.addEventListener('transform', () => debounceRealTimeCroppered());
   selection?.addEventListener('change', () => debounceRealTimeCroppered());
-  image?.$ready(() => {
-    // v2 的初始自动居中($center)依赖 getBoundingClientRect 读取 canvas 的实时
-    // 像素尺寸。若此刻容器正处于弹窗进场动画(transform: scale)中,读到的是被
-    // 缩放的中间态,算出的居中平移量每次都不同 → 图片落点随机。这里等容器尺寸
-    // 连续两帧稳定(动画结束)后再主动重新居中并复位选区,消除竞态。
-    centerWhenStable(() => {
-      realTimeCroppered();
-      emit('ready', cropper.value);
+  // 不给 $ready 传 callback:cropperjs v2 内部对 callback 分支的 promise 未挂
+  // .catch(见 dist 中 `promise.then(callback)`),图片加载失败(跨域被 CORS
+  // 拦截、404 等)会抛 Uncaught (in promise) Failed to load the image source。
+  // 这里改用它返回的 promise 自行接管成败:既驱动居中,又能静默走 readyError。
+  image
+    ?.$ready()
+    .then(() => {
+      // v2 的初始自动居中($center)依赖 getBoundingClientRect 读取 canvas 的实时
+      // 像素尺寸。若此刻容器正处于弹窗进场动画(transform: scale)中,读到的是被
+      // 缩放的中间态,算出的居中平移量每次都不同 → 图片落点随机。这里等容器尺寸
+      // 连续两帧稳定(动画结束)后再主动重新居中并复位选区,消除竞态。
+      centerWhenStable(() => {
+        realTimeCroppered();
+        emit('ready', cropper.value);
+      });
+    })
+    .catch(() => {
+      // 图片加载失败,交给上层给出可见反馈(关 loading + 提示)。
+      emit('readyError');
     });
-  });
 }
 
 // 等 canvas 尺寸稳定后重新居中图片、复位选区,规避进场动画期间的居中竞态

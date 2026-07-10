@@ -91,6 +91,9 @@ function handleReady(cropperInstance: Cropper) {
 
 function handleReadyError() {
   modalLoading(false);
+  // 原图加载失败(常见于回显的跨域头像未授权 CORS,或图片已失效)。给出可见
+  // 提示,避免弹窗只剩空白棋盘格、用户无从判断。重新上传本地图片不受影响。
+  window.message.warning(t('component.cropper.imageLoadError'));
 }
 
 function handlerToolbar(event: string, arg?: number) {
