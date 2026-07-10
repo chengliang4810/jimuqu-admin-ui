@@ -35,6 +35,9 @@ let filename = '';
 const src = ref(props.src || '');
 const previewSource = ref('');
 const cropper = ref<Cropper>();
+// 图片是否真正加载就绪。src 有值只代表"有源",不代表加载成功(如跨域被拦)。
+// 变换类操作(旋转/缩放/翻转/重置)必须以此为准,避免对未加载出的图做操作。
+const ready = ref(false);
 
 const prefixCls = 'cropper-am';
 const [BasicModal, modalApi] = useVbenModal({
@@ -43,6 +46,7 @@ const [BasicModal, modalApi] = useVbenModal({
     if (isOpen) {
       // 每次打开从 props 同步回显图,保证下方关闭时清空 src 后仍能恢复
       src.value = props.src || '';
+      ready.value = false;
       // 有图才 loading,等 CropperImage 的 @ready 关掉;无图时 CropperImage 因 v-if=src
       // 不渲染,@ready 永不触发,会一直转圈,所以这里直接关 loading。
       modalLoading(!!src.value);
@@ -53,6 +57,7 @@ const [BasicModal, modalApi] = useVbenModal({
       // 只剩灰色棋盘格,无变形。同时清空右侧预览。
       src.value = '';
       previewSource.value = '';
+      ready.value = false;
       modalLoading(false);
     }
   },
@@ -72,6 +77,7 @@ function handleBeforeUpload(file: File) {
   reader.readAsDataURL(file);
   src.value = '';
   previewSource.value = '';
+  ready.value = false;
   reader.addEventListener('load', (e) => {
     src.value = (e.target?.result as string) ?? '';
     filename = file.name;
@@ -85,11 +91,13 @@ function handleCropend({ imgBase64 }: CropendResult) {
 
 function handleReady(cropperInstance: Cropper) {
   cropper.value = cropperInstance;
+  ready.value = true;
   // 画布加载完毕 关闭loading
   modalLoading(false);
 }
 
 function handleReadyError() {
+  ready.value = false;
   modalLoading(false);
   // 原图加载失败(常见于回显的跨域头像未授权 CORS,或图片已失效)。给出可见
   // 提示,避免弹窗只剩空白棋盘格、用户无从判断。重新上传本地图片不受影响。
@@ -199,7 +207,7 @@ async function handleOk() {
               placement="bottom"
             >
               <a-button
-                :disabled="!src"
+                :disabled="!ready"
                 size="small"
                 type="primary"
                 @click="handlerToolbar('reset')"
@@ -216,7 +224,7 @@ async function handleOk() {
               placement="bottom"
             >
               <a-button
-                :disabled="!src"
+                :disabled="!ready"
                 size="small"
                 type="primary"
                 @click="handlerToolbar('rotate', -45)"
@@ -235,7 +243,7 @@ async function handleOk() {
               placement="bottom"
             >
               <a-button
-                :disabled="!src"
+                :disabled="!ready"
                 pre-icon="ant-design:rotate-right-outlined"
                 size="small"
                 type="primary"
@@ -255,7 +263,7 @@ async function handleOk() {
               placement="bottom"
             >
               <a-button
-                :disabled="!src"
+                :disabled="!ready"
                 size="small"
                 type="primary"
                 @click="handlerToolbar('scaleX')"
@@ -272,7 +280,7 @@ async function handleOk() {
               placement="bottom"
             >
               <a-button
-                :disabled="!src"
+                :disabled="!ready"
                 size="small"
                 type="primary"
                 @click="handlerToolbar('scaleY')"
@@ -289,7 +297,7 @@ async function handleOk() {
               placement="bottom"
             >
               <a-button
-                :disabled="!src"
+                :disabled="!ready"
                 size="small"
                 type="primary"
                 @click="handlerToolbar('zoom', 0.1)"
@@ -306,7 +314,7 @@ async function handleOk() {
               placement="bottom"
             >
               <a-button
-                :disabled="!src"
+                :disabled="!ready"
                 size="small"
                 type="primary"
                 @click="handlerToolbar('zoom', -0.1)"
