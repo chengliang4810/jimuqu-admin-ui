@@ -23,20 +23,32 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
+  /** 选区移动/缩放或图片变换后触发,返回裁剪结果(base64 + 选区信息) */
   cropend: [result: CropendResult];
+  /** 裁剪过程出错(如 $toCanvas 抛错) */
   cropendError: [];
+  /** 图片加载就绪、选区居中复位完成,返回 cropperjs 实例 */
   ready: [instance: Cropper];
+  /** 原图加载失败(跨域被 CORS 拦截、404 等) */
   readyError: [];
 }>();
 
 interface Props {
+  /** 图片 alt 文本 */
   alt?: ImgHTMLAttributes['alt'];
+  /** 是否圆形裁剪(circled 时去矩形描边,改由 grid 圆角呈现选区) */
   circled?: boolean;
+  /** img crossorigin 属性;跨域读取 canvas 需设 'anonymous' */
   crossorigin?: ImgHTMLAttributes['crossorigin'];
+  /** 裁剪区高度(数值或带 px 字符串) */
   height?: number | string;
+  /** 作用于 wrapper(即裁剪区)的额外内联样式 */
   imageStyle?: CSSProperties;
+  /** 透传给 cropperjs 的 CropperOptions */
   options?: CropperOptions;
+  /** 是否实时预览(选区/图片变换时立即输出预览) */
   realTimePreview?: boolean;
+  /** 图片源(base64 或 url) */
   src: string;
 }
 

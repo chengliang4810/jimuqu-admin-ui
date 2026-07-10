@@ -17,9 +17,13 @@ defineOptions({ name: 'CropperModal' });
 
 const props = withDefaults(
   defineProps<{
+    /** 是否圆形裁剪 */
     circled?: boolean;
+    /** 上传体积上限(MB),0 表示不限制 */
     size?: number;
+    /** 回显图片源(base64 或 url) */
     src?: string;
+    /** 上传接口,返回值需包含 url 字段 */
     uploadApi: (params: apiFunParams) => Promise<any>;
   }>(),
   {
@@ -30,8 +34,11 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
+  /** 暴露给 useVbenModal 的注册事件(当前未实际 emit,保留以兼容约定) */
   register: [];
+  /** 上传前校验失败(超体积等),返回错误信息 */
   uploadError: [payload: { msg: string }];
+  /** 上传成功,返回服务端 url 与裁剪源(base64) */
   uploadSuccess: [payload: { data: any; source: string }];
 }>();
 

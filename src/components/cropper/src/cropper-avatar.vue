@@ -14,15 +14,26 @@ defineOptions({ name: 'CropperAvatar' });
 
 const props = withDefaults(
   defineProps<{
+    /** 触发按钮的 antd Button 属性透传 */
     btnProps?: ButtonProps;
+    /** 自定义按钮文案,留空走 i18n 默认 */
     btnText?: string;
+    /** 是否显示触发按钮 */
     showBtn?: boolean;
+    /** 上传体积上限(MB),透传给裁剪弹窗 */
     size?: number;
+    /**
+     * 上传接口,返回值需包含 url 字段
+     * @param params.file 裁剪后的 Blob
+     * @param params.filename 文件名
+     * @param params.name 字段名
+     */
     uploadApi: (params: {
       file: Blob;
       filename: string;
       name: string;
     }) => Promise<any>;
+    /** 头像容器宽高(数值或带 px 字符串) */
     width?: number | string;
   }>(),
   {
@@ -35,8 +46,10 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
+  /** 上传成功后触发,返回服务端 url 与裁剪源(base64) */
   change: [payload: { data: any; source: string }];
 }>();
+/** v-model:value 双向绑定的头像源(base64 或 url) */
 const sourceValue = defineModel<string>('value', { default: '' });
 const prefixCls = 'cropper-avatar';
 const [CropperModal, modalApi] = useVbenModal({
