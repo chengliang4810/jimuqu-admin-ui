@@ -41,11 +41,17 @@ const [BasicModal, modalApi] = useVbenModal({
   onConfirm: handleOk,
   onOpenChange(isOpen) {
     if (isOpen) {
+      // 每次打开从 props 同步回显图,保证下方关闭时清空 src 后仍能恢复
+      src.value = props.src || '';
       // 有图才 loading,等 CropperImage 的 @ready 关掉;无图时 CropperImage 因 v-if=src
       // 不渲染,@ready 永不触发,会一直转圈,所以这里直接关 loading。
       modalLoading(!!src.value);
     } else {
-      // 关闭时候清空右侧预览
+      // 关闭时清空 src,让 CropperImage(v-if=src)立即卸载。否则 antd Modal 的
+      // zoom-leave 关闭动画会对弹窗做 transform 缩放,而 live 的 cropper 图片用绝对
+      // 像素矩阵定位,两者叠加会让图片相对裁剪框突然变大/错位。卸载后关闭动画期间
+      // 只剩灰色棋盘格,无变形。同时清空右侧预览。
+      src.value = '';
       previewSource.value = '';
       modalLoading(false);
     }
