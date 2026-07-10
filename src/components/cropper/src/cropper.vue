@@ -3,6 +3,8 @@ import type { CropperOptions, CropperSelection } from 'cropperjs';
 
 import type { CSSProperties, ImgHTMLAttributes } from 'vue';
 
+import type { CropendResult } from './typing';
+
 import { computed, onMounted, onUnmounted, ref, unref, useAttrs } from 'vue';
 
 import { useDebounceFn } from '@vueuse/core';
@@ -20,7 +22,12 @@ const props = withDefaults(defineProps<Props>(), {
   realTimePreview: true,
 });
 
-const emit = defineEmits(['cropend', 'ready', 'cropendError', 'readyError']);
+const emit = defineEmits<{
+  cropend: [result: CropendResult];
+  cropendError: [];
+  ready: [instance: Cropper];
+  readyError: [];
+}>();
 
 interface Props {
   alt?: ImgHTMLAttributes['alt'];
@@ -120,7 +127,7 @@ function init() {
       // 连续两帧稳定(动画结束)后再主动重新居中并复位选区,消除竞态。
       centerWhenStable(() => {
         realTimeCroppered();
-        emit('ready', cropper.value);
+        emit('ready', cropper.value!);
       });
     })
     .catch(() => {

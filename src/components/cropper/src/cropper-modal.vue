@@ -4,7 +4,7 @@ import type { CropendResult, Cropper } from './typing';
 import { ref } from 'vue';
 
 import { useVbenModal } from '@/core/ui/popup';
-import { $t as t } from '@/locales';
+import { $t } from '@/locales';
 import { dataURLtoBlob } from '@/utils/file/base64Conver';
 import { Avatar, Space, Tooltip, Upload } from 'antdv-next';
 import { isFunction } from 'lodash-es';
@@ -29,7 +29,11 @@ const props = withDefaults(
   },
 );
 
-const emit = defineEmits(['uploadSuccess', 'uploadError', 'register']);
+const emit = defineEmits<{
+  register: [];
+  uploadError: [payload: { msg: string }];
+  uploadSuccess: [payload: { data: any; source: string }];
+}>();
 
 let filename = '';
 const src = ref(props.src || '');
@@ -72,7 +76,7 @@ function modalLoading(loading: boolean) {
 // Block upload
 function handleBeforeUpload(file: File) {
   if (props.size > 0 && file.size > 1024 * 1024 * props.size) {
-    emit('uploadError', { msg: t('component.cropper.imageTooBig') });
+    emit('uploadError', { msg: $t('component.cropper.imageTooBig') });
     return false;
   }
   const reader = new FileReader();
@@ -103,7 +107,7 @@ function handleReadyError() {
   modalLoading(false);
   // 原图加载失败(常见于回显的跨域头像未授权 CORS,或图片已失效)。给出可见
   // 提示,避免弹窗只剩空白棋盘格、用户无从判断。重新上传本地图片不受影响。
-  window.message.warning(t('component.cropper.imageLoadError'));
+  window.message.warning($t('component.cropper.imageLoadError'));
 }
 
 function handlerToolbar(event: string, arg?: number) {
@@ -166,9 +170,9 @@ async function handleOk() {
 <template>
   <BasicModal
     v-bind="$attrs"
-    :confirm-text="t('component.cropper.okText')"
+    :confirm-text="$t('component.cropper.okText')"
     :fullscreen-button="false"
-    :title="t('component.cropper.modalTitle')"
+    :title="$t('component.cropper.modalTitle')"
     :width="800"
   >
     <div :class="prefixCls">
@@ -194,7 +198,7 @@ async function handleOk() {
             accept="image/*"
           >
             <Tooltip
-              :title="t('component.cropper.selectImage')"
+              :title="$t('component.cropper.selectImage')"
               placement="bottom"
             >
               <a-button size="small" type="primary">
@@ -208,7 +212,7 @@ async function handleOk() {
           </Upload>
           <Space>
             <Tooltip
-              :title="t('component.cropper.btn_reset')"
+              :title="$t('component.cropper.btn_reset')"
               placement="bottom"
             >
               <a-button
@@ -225,7 +229,7 @@ async function handleOk() {
               </a-button>
             </Tooltip>
             <Tooltip
-              :title="t('component.cropper.btn_rotate_left')"
+              :title="$t('component.cropper.btn_rotate_left')"
               placement="bottom"
             >
               <a-button
@@ -244,7 +248,7 @@ async function handleOk() {
               </a-button>
             </Tooltip>
             <Tooltip
-              :title="t('component.cropper.btn_rotate_right')"
+              :title="$t('component.cropper.btn_rotate_right')"
               placement="bottom"
             >
               <a-button
@@ -264,7 +268,7 @@ async function handleOk() {
               </a-button>
             </Tooltip>
             <Tooltip
-              :title="t('component.cropper.btn_scale_x')"
+              :title="$t('component.cropper.btn_scale_x')"
               placement="bottom"
             >
               <a-button
@@ -281,7 +285,7 @@ async function handleOk() {
               </a-button>
             </Tooltip>
             <Tooltip
-              :title="t('component.cropper.btn_scale_y')"
+              :title="$t('component.cropper.btn_scale_y')"
               placement="bottom"
             >
               <a-button
@@ -298,7 +302,7 @@ async function handleOk() {
               </a-button>
             </Tooltip>
             <Tooltip
-              :title="t('component.cropper.btn_zoom_in')"
+              :title="$t('component.cropper.btn_zoom_in')"
               placement="bottom"
             >
               <a-button
@@ -315,7 +319,7 @@ async function handleOk() {
               </a-button>
             </Tooltip>
             <Tooltip
-              :title="t('component.cropper.btn_zoom_out')"
+              :title="$t('component.cropper.btn_zoom_out')"
               placement="bottom"
             >
               <a-button
@@ -338,7 +342,7 @@ async function handleOk() {
         <div :class="`${prefixCls}-preview`">
           <img
             v-if="previewSource"
-            :alt="t('component.cropper.preview')"
+            :alt="$t('component.cropper.preview')"
             :src="previewSource"
           />
         </div>

@@ -3,10 +3,10 @@ import type { ButtonProps } from 'antdv-next';
 
 import type { CSSProperties } from 'vue';
 
-import { computed, ref, unref, watch, watchEffect } from 'vue';
+import { computed, unref } from 'vue';
 
 import { useVbenModal } from '@/core/ui/popup';
-import { $t as t } from '@/locales';
+import { $t } from '@/locales';
 
 import cropperModal from './cropper-modal.vue';
 
@@ -23,7 +23,6 @@ const props = withDefaults(
       filename: string;
       name: string;
     }) => Promise<any>;
-    value?: string;
     width?: number | string;
   }>(),
   {
@@ -31,14 +30,14 @@ const props = withDefaults(
     btnText: '',
     showBtn: true,
     size: 5,
-    value: '',
     width: '200px',
   },
 );
 
-const emit = defineEmits(['update:value', 'change']);
-
-const sourceValue = ref(props.value || '');
+const emit = defineEmits<{
+  change: [payload: { data: any; source: string }];
+}>();
+const sourceValue = defineModel<string>('value', { default: '' });
 const prefixCls = 'cropper-avatar';
 const [CropperModal, modalApi] = useVbenModal({
   connectedComponent: cropperModal,
@@ -59,21 +58,10 @@ const getImageWrapperStyle = computed((): CSSProperties => ({
   width: unref(getWidth),
 }));
 
-watchEffect(() => {
-  sourceValue.value = props.value || '';
-});
-
-watch(
-  () => sourceValue.value,
-  (v: string) => {
-    emit('update:value', v);
-  },
-);
-
 function handleUploadSuccess({ data, source }: any) {
   sourceValue.value = source;
   emit('change', { data, source });
-  window.message.success(t('component.cropper.uploadSuccess'));
+  window.message.success($t('component.cropper.uploadSuccess'));
 }
 
 const closeModal = () => modalApi.close();
@@ -110,7 +98,7 @@ defineExpose({
       @click="openModal"
       v-bind="btnProps"
     >
-      {{ btnText ? btnText : t('component.cropper.selectImage') }}
+      {{ btnText ? btnText : $t('component.cropper.selectImage') }}
     </a-button>
 
     <CropperModal
