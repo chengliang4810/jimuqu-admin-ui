@@ -40,9 +40,10 @@ const prefixCls = 'cropper-am';
 const [BasicModal, modalApi] = useVbenModal({
   onConfirm: handleOk,
   onOpenChange(isOpen) {
-    // 打开的时候loading CropperImage组件加载完毕关闭loading
     if (isOpen) {
-      modalLoading(true);
+      // 有图才 loading,等 CropperImage 的 @ready 关掉;无图时 CropperImage 因 v-if=src
+      // 不渲染,@ready 永不触发,会一直转圈,所以这里直接关 loading。
+      modalLoading(!!src.value);
     } else {
       // 关闭时候清空右侧预览
       previewSource.value = '';
