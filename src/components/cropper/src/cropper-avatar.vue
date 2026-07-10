@@ -7,6 +7,7 @@ import { computed, unref } from 'vue';
 
 import { useVbenModal } from '@/core/ui/popup';
 import { $t } from '@/locales';
+import { cn } from '@/utils/cn';
 
 import cropperModal from './cropper-modal.vue';
 
@@ -51,12 +52,9 @@ const emit = defineEmits<{
 }>();
 /** v-model:value 双向绑定的头像源(base64 或 url) */
 const sourceValue = defineModel<string>('value', { default: '' });
-const prefixCls = 'cropper-avatar';
 const [CropperModal, modalApi] = useVbenModal({
   connectedComponent: cropperModal,
 });
-
-const getClass = computed(() => [prefixCls]);
 
 const getWidth = computed(() => `${`${props.width}`.replace(/px/, '')}px`);
 
@@ -86,13 +84,27 @@ defineExpose({
 });
 </script>
 <template>
-  <div :class="getClass" :style="getStyle">
+  <div class="inline-block text-center" :style="getStyle">
     <div
-      :class="`${prefixCls}-image-wrapper`"
+      :class="
+        cn(
+          'relative cursor-pointer overflow-hidden',
+          'rounded-full border border-[#eee] bg-white',
+        )
+      "
       :style="getImageWrapperStyle"
       @click="openModal"
     >
-      <div :class="`${prefixCls}-image-mask`" :style="getImageWrapperStyle">
+      <div
+        :class="
+          cn(
+            'absolute flex cursor-pointer items-center justify-center',
+            'rounded-full border border-[#eee] bg-black/40',
+            'opacity-0 transition-opacity duration-[400ms] hover:opacity-40',
+          )
+        "
+        :style="getImageWrapperStyle"
+      >
         <span
           :style="{
             ...getImageWrapperStyle,
@@ -103,11 +115,11 @@ defineExpose({
           class="icon-[ant-design--cloud-upload-outlined] text-[#d6d6d6]"
         ></span>
       </div>
-      <img v-if="sourceValue" :src="sourceValue" alt="avatar" />
+      <img v-if="sourceValue" class="w-full" :src="sourceValue" alt="avatar" />
     </div>
     <a-button
       v-if="showBtn"
-      :class="`${prefixCls}-upload-btn`"
+      class="mx-auto my-2.5"
       @click="openModal"
       v-bind="btnProps"
     >
@@ -122,49 +134,3 @@ defineExpose({
     />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.cropper-avatar {
-  display: inline-block;
-  text-align: center;
-
-  &-image-wrapper {
-    overflow: hidden;
-    cursor: pointer;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 50%;
-
-    img {
-      width: 100%;
-    }
-  }
-
-  &-image-mask {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: inherit;
-    height: inherit;
-    cursor: pointer;
-    background: rgb(0 0 0 / 40%);
-    border: inherit;
-    border-radius: inherit;
-    opacity: 0;
-    transition: opacity 0.4s;
-
-    ::v-deep(svg) {
-      margin: auto;
-    }
-  }
-
-  &-image-mask:hover {
-    opacity: 40;
-  }
-
-  &-upload-btn {
-    margin: 10px auto;
-  }
-}
-</style>

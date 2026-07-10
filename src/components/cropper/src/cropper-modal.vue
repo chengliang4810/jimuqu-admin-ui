@@ -5,6 +5,7 @@ import { ref } from 'vue';
 
 import { useVbenModal } from '@/core/ui/popup';
 import { $t } from '@/locales';
+import { cn } from '@/utils/cn';
 import { dataURLtoBlob } from '@/utils/file/base64Conver';
 import { Avatar, Space, Tooltip, Upload } from 'antdv-next';
 import { isFunction } from 'lodash-es';
@@ -24,7 +25,7 @@ const props = withDefaults(
     /** 回显图片源(base64 或 url) */
     src?: string;
     /** 上传接口,返回值需包含 url 字段 */
-    uploadApi: (params: apiFunParams) => Promise<any>;
+    uploadApi: (params: apiFunParams) => Promise<{ url: string }>;
   }>(),
   {
     circled: true,
@@ -39,7 +40,7 @@ const emit = defineEmits<{
   /** 上传前校验失败(超体积等),返回错误信息 */
   uploadError: [payload: { msg: string }];
   /** 上传成功,返回服务端 url 与裁剪源(base64) */
-  uploadSuccess: [payload: { data: any; source: string }];
+  uploadSuccess: [payload: { data: string; source: string }];
 }>();
 
 let filename = '';
@@ -52,7 +53,6 @@ const cropperRef = ref();
 // 变换类操作(旋转/缩放/翻转/重置)必须以此为准,避免对未加载出的图做操作。
 const ready = ref(false);
 
-const prefixCls = 'cropper-am';
 const [BasicModal, modalApi] = useVbenModal({
   onConfirm: handleOk,
   onOpenChange(isOpen) {
@@ -182,9 +182,17 @@ async function handleOk() {
     :title="$t('component.cropper.modalTitle')"
     :width="800"
   >
-    <div :class="prefixCls">
-      <div :class="`${prefixCls}-left`" class="w-full">
-        <div :class="`${prefixCls}-cropper`">
+    <div class="flex">
+      <div class="h-[340px] w-[55%]">
+        <div
+          :class="
+            cn(
+              'h-[300px] bg-[#eee]',
+              'bg-[image:linear-gradient(45deg,rgb(0_0_0/25%)_25%,transparent_0,transparent_75%,rgb(0_0_0/25%)_0),linear-gradient(45deg,rgb(0_0_0/25%)_25%,transparent_0,transparent_75%,rgb(0_0_0/25%)_0)]',
+              'bg-[size:24px_24px] bg-[position:0_0,12px_12px]',
+            )
+          "
+        >
           <CropperImage
             v-if="src"
             ref="cropperRef"
@@ -198,7 +206,7 @@ async function handleOk() {
           />
         </div>
 
-        <div :class="`${prefixCls}-toolbar`">
+        <div class="mt-2.5 flex items-center justify-between">
           <Upload
             :before-upload="handleBeforeUpload"
             :file-list="[]"
@@ -345,16 +353,21 @@ async function handleOk() {
           </Space>
         </div>
       </div>
-      <div :class="`${prefixCls}-right`">
-        <div :class="`${prefixCls}-preview`">
+      <div class="h-[340px] w-[45%]">
+        <div
+          class="mx-auto size-[220px] overflow-hidden rounded-full border border-[#eee]"
+        >
           <img
             v-if="previewSource"
+            class="h-full w-full"
             :alt="$t('component.cropper.preview')"
             :src="previewSource"
           />
         </div>
         <template v-if="previewSource">
-          <div :class="`${prefixCls}-group`">
+          <div
+            class="mt-2 flex items-center justify-around border-t border-[#eee] pt-2"
+          >
             <Avatar :src="previewSource" size="large" />
             <Avatar :size="48" :src="previewSource" />
             <Avatar :size="64" :src="previewSource" />
@@ -365,76 +378,3 @@ async function handleOk() {
     </div>
   </BasicModal>
 </template>
-
-<style lang="scss">
-.cropper-am {
-  display: flex;
-
-  &-left,
-  &-right {
-    height: 340px;
-  }
-
-  &-left {
-    width: 55%;
-  }
-
-  &-right {
-    width: 45%;
-  }
-
-  &-cropper {
-    height: 300px;
-    background: #eee;
-    background-image:
-      linear-gradient(
-        45deg,
-        rgb(0 0 0 / 25%) 25%,
-        transparent 0,
-        transparent 75%,
-        rgb(0 0 0 / 25%) 0
-      ),
-      linear-gradient(
-        45deg,
-        rgb(0 0 0 / 25%) 25%,
-        transparent 0,
-        transparent 75%,
-        rgb(0 0 0 / 25%) 0
-      );
-    background-position:
-      0 0,
-      12px 12px;
-    background-size: 24px 24px;
-  }
-
-  &-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-
-  &-preview {
-    width: 220px;
-    height: 220px;
-    margin: 0 auto;
-    overflow: hidden;
-    border: 1px solid #eee;
-    border-radius: 50%;
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  &-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding-top: 8px;
-    margin-top: 8px;
-    border-top: 1px solid #eee;
-  }
-}
-</style>
