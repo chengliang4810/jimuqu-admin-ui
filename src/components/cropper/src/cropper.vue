@@ -117,9 +117,46 @@ async function init() {
   image?.addEventListener('transform', () => debounceRealTimeCroppered());
   selection?.addEventListener('change', () => debounceRealTimeCroppered());
   image?.$ready(() => {
-    realTimeCroppered();
-    emit('ready', cropper.value);
+    // v2 的初始自动居中($center)依赖 getBoundingClientRect 读取 canvas 的实时
+    // 像素尺寸。若此刻容器正处于弹窗进场动画(transform: scale)中,读到的是被
+    // 缩放的中间态,算出的居中平移量每次都不同 → 图片落点随机。这里等容器尺寸
+    // 连续两帧稳定(动画结束)后再主动重新居中并复位选区,消除竞态。
+    centerWhenStable(() => {
+      realTimeCroppered();
+      emit('ready', cropper.value);
+    });
   });
+}
+
+// 等 canvas 尺寸稳定后重新居中图片、复位选区,规避进场动画期间的居中竞态
+function centerWhenStable(done: () => void) {
+  let prevKey = '';
+  let stableCount = 0;
+  const tick = () => {
+    const instance = cropper.value;
+    const image = instance?.getCropperImage();
+    const canvas = instance?.getCropperCanvas();
+    if (!instance || !image || !canvas) {
+      return;
+    }
+    const rect = canvas.getBoundingClientRect();
+    const key = `${rect.width}x${rect.height}x${rect.x}x${rect.y}`;
+    if (key === prevKey) {
+      stableCount += 1;
+    } else {
+      stableCount = 0;
+      prevKey = key;
+    }
+    // 连续两帧尺寸/位置不变即认为动画结束、布局稳定
+    if (stableCount >= 2) {
+      image.$center('contain');
+      instance.getCropperSelection()?.$reset();
+      done();
+      return;
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
 
 // Real-time display preview
