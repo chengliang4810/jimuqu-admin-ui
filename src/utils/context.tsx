@@ -26,12 +26,12 @@ export function initPopupContext() {
  */
 export const PopupContext = defineComponent({
   name: 'PopupContext',
-  render() {
+  setup() {
     const staticFunction = App.useApp();
     window.message = staticFunction.message;
     window.modal = staticFunction.modal;
     window.notification = staticFunction.notification;
 
-    return null;
+    return () => null;
   },
 });
