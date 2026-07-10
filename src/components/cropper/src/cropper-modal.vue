@@ -35,6 +35,8 @@ let filename = '';
 const src = ref(props.src || '');
 const previewSource = ref('');
 const cropper = ref<Cropper>();
+// CropperImage 组件实例,handleOk 时取原图分辨率裁剪结果(非预览小图)
+const cropperRef = ref();
 // 图片是否真正加载就绪。src 有值只代表"有源",不代表加载成功(如跨域被拦)。
 // 变换类操作(旋转/缩放/翻转/重置)必须以此为准,避免对未加载出的图做操作。
 const ready = ref(false);
@@ -143,15 +145,17 @@ function handlerToolbar(event: string, arg?: number) {
 async function handleOk() {
   const uploadApi = props.uploadApi;
   if (uploadApi && isFunction(uploadApi)) {
-    if (!previewSource.value) {
-      window.message.warning('未选择图片');
-      return;
-    }
-    const blob = dataURLtoBlob(previewSource.value);
     try {
       modalLoading(true);
+      // 上传取原图分辨率版本(非预览小图),保证存高清
+      const hd = await cropperRef.value?.getCroppedDataURL();
+      if (!hd) {
+        window.message.warning('未选择图片');
+        return;
+      }
+      const blob = dataURLtoBlob(hd);
       const result = await uploadApi({ file: blob, filename, name: 'file' });
-      emit('uploadSuccess', { data: result.url, source: previewSource.value });
+      emit('uploadSuccess', { data: result.url, source: hd });
       modalApi.close();
     } finally {
       modalLoading(false);
@@ -172,6 +176,7 @@ async function handleOk() {
         <div :class="`${prefixCls}-cropper`">
           <CropperImage
             v-if="src"
+            ref="cropperRef"
             :circled="circled"
             :src="src"
             crossorigin="anonymous"

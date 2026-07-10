@@ -160,56 +160,116 @@ function centerWhenStable(done: () => void) {
   requestAnimationFrame(tick);
 }
 
+// 实时预览输出上限:右侧预览容器 220px,256px 足够清晰且 png 编码快,避免每帧
+// 生成原图分辨率大 canvas 阻塞主线程导致拖动卡顿。上传时另取原图分辨率版本。
+const PREVIEW_MAX_SIZE = 256;
+
 // Real-time display preview
-function realTimeCroppered() {
-  if (props.realTimePreview) {
-    croppered();
+async function realTimeCroppered() {
+  if (!props.realTimePreview) {
+    return;
   }
+  const instance = cropper.value;
+  const selection = instance?.getCropperSelection();
+  const imgBase64 = await croppered(PREVIEW_MAX_SIZE);
+  if (!imgBase64 || !selection) {
+    return;
+  }
+  emit('cropend', {
+    imgBase64,
+    imgInfo: {
+      height: selection.height,
+      width: selection.width,
+      x: selection.x,
+      y: selection.y,
+    },
+  });
+}
+
+// 按原图分辨率计算选区输出 canvas 尺寸,对齐 v1 getCroppedCanvas 的默认行为。
+// maxSize 用来限制实时预览的输出尺寸,避免每帧生成大 canvas + png 编码阻塞主线程。
+function getCanvasSizeOptions(
+  instance: Cropper,
+  selection: CropperSelection,
+  maxSize?: number,
+): { height?: number; width?: number } {
+  const image = instance.getCropperImage();
+  const img = image?.$image;
+  const selWidth = selection.width;
+  if (!image || !img || !selWidth || !img.naturalWidth || !img.naturalHeight) {
+    return {};
+  }
+  const rect = image.getBoundingClientRect();
+  if (!rect.width || !rect.height) {
+    return {};
+  }
+  // 等比变换下两者相等;旋转时 image 包围盒会变大、scale 偏小,输出略小但仍清晰
+  const scale = Math.min(
+    img.naturalWidth / rect.width,
+    img.naturalHeight / rect.height,
+  );
+  const target = Math.round(selWidth * scale);
+  const maxSide = Math.min(img.naturalWidth, img.naturalHeight);
+  // 选区为 1:1 正方形,输出边长:不低于选区 CSS 尺寸,不高于原图短边
+  let size = Math.max(selWidth, Math.min(target, maxSide));
+  if (maxSize && size > maxSize) {
+    size = maxSize;
+  }
+  return { width: size, height: size };
 }
 
 // event: return base64 and width and height information after cropping
-async function croppered() {
+async function croppered(maxSize?: number): Promise<string> {
   const instance = cropper.value;
   const selection = instance?.getCropperSelection();
   if (!instance || !selection) {
-    return;
+    return '';
   }
-  const imgInfo = {
-    height: selection.height,
-    width: selection.width,
-    x: selection.x,
-    y: selection.y,
-  };
+  // v2 的 $toCanvas() 默认按选区 CSS 像素尺寸输出(裁剪区 300px 高,选区约 150px),
+  // 远小于原图分辨率;上传后存的就是这张小图,下次回显显示到 220px 预览即糊(v1 按
+  // 原图分辨率输出约 613px,无此问题)。这里按原图分辨率重采样:用 naturalWidth 与
+  // 图片当前显示尺寸算出"每 CSS 像素对应多少原图像素",乘选区 CSS 边长得目标输出,
+  // 并封顶在原图短边内(超出即上采样,反而更糊)。maxSize 用于实时预览限速。
+  const canvasOptions = getCanvasSizeOptions(instance, selection, maxSize);
   let canvas: HTMLCanvasElement;
   try {
     canvas = props.circled
-      ? await getRoundedCanvas(selection)
-      : await selection.$toCanvas();
+      ? await getRoundedCanvas(selection, canvasOptions)
+      : await selection.$toCanvas(canvasOptions);
   } catch {
     emit('cropendError');
-    return;
+    return '';
   }
-  canvas.toBlob((blob) => {
-    if (!blob) {
-      return;
-    }
-    const fileReader: FileReader = new FileReader();
-    fileReader.readAsDataURL(blob);
-    fileReader.onloadend = (e) => {
-      emit('cropend', {
-        imgBase64: e.target?.result ?? '',
-        imgInfo,
-      });
-    };
-    fileReader.onerror = () => {
-      emit('cropendError');
-    };
-  }, 'image/png');
+  return new Promise<string>((resolve) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        resolve('');
+        return;
+      }
+      const fileReader: FileReader = new FileReader();
+      fileReader.onloadend = (e) => {
+        resolve((e.target?.result as string) ?? '');
+      };
+      fileReader.onerror = () => {
+        emit('cropendError');
+        resolve('');
+      };
+      fileReader.readAsDataURL(blob);
+    }, 'image/png');
+  });
 }
 
+// 上传时调用:取原图分辨率(不限 maxSize)的裁剪结果,保证存高清
+defineExpose({
+  getCroppedDataURL: () => croppered(),
+});
+
 // Get a circular picture canvas
-async function getRoundedCanvas(selection: CropperSelection) {
-  const sourceCanvas = await selection.$toCanvas();
+async function getRoundedCanvas(
+  selection: CropperSelection,
+  options: { height?: number; width?: number } = {},
+) {
+  const sourceCanvas = await selection.$toCanvas(options);
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d')!;
   const width = sourceCanvas.width;
