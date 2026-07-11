@@ -2,29 +2,17 @@ import type { Editor } from '@tiptap/core';
 
 import type { Ref } from 'vue';
 
-import { computed, ref } from 'vue';
+import { computed, h, ref } from 'vue';
 
-import { prompt } from '@/core/ui/popup';
 import { cn } from '@/utils';
+import { Input } from 'antdv-next';
 
 export type ToolbarBlock =
-  | 'heading-1'
-  | 'heading-2'
-  | 'heading-3'
-  | 'paragraph';
+  'heading-1' | 'heading-2' | 'heading-3' | 'paragraph';
 export type ToolbarMark =
-  | 'bold'
-  | 'code'
-  | 'highlight'
-  | 'italic'
-  | 'link'
-  | 'strike'
-  | 'underline';
+  'bold' | 'code' | 'highlight' | 'italic' | 'link' | 'strike' | 'underline';
 export type ToolbarNode =
-  | 'blockquote'
-  | 'bulletList'
-  | 'codeBlock'
-  | 'orderedList';
+  'blockquote' | 'bulletList' | 'codeBlock' | 'orderedList';
 export type ToolbarTextAlign = '' | 'center' | 'left' | 'right';
 
 export interface ToolbarItem {
@@ -200,6 +188,61 @@ export function useTiptapToolbar(options: UseTiptapToolbarOptions) {
 
   function noop() {}
 
+  interface PromptStringOptions {
+    content?: string;
+    defaultValue?: string;
+    title: string;
+  }
+
+  /**
+   * 基于 window.modal.confirm 的输入型 prompt
+   * 取消返回 undefined，确认返回输入值
+   */
+  function promptString(
+    options: PromptStringOptions,
+  ): Promise<string | undefined> {
+    const value = ref(options.defaultValue ?? '');
+    const resolver = {
+      resolve: (_: string | undefined) => {},
+    };
+    let done = false;
+
+    const finish = (
+      result: string | undefined,
+      instance: { destroy: () => void },
+    ) => {
+      if (done) {
+        return;
+      }
+      done = true;
+      instance.destroy();
+      resolver.resolve(result);
+    };
+
+    const promise = new Promise<string | undefined>((r) => {
+      resolver.resolve = r;
+    });
+
+    const instance = window.modal.confirm({
+      autoFocusButton: null,
+      content: () =>
+        h(Input, {
+          autofocus: true,
+          placeholder: options.content,
+          value: value.value,
+          'onUpdate:value': (v: string) => {
+            value.value = v;
+          },
+          onPressEnter: () => finish(value.value, instance),
+        }),
+      onCancel: () => finish(undefined, instance),
+      onOk: () => finish(value.value, instance),
+      title: options.title,
+    });
+
+    return promise;
+  }
+
   function setBlock(value: ToolbarBlock) {
     runCommand((target) => {
       const chain = target.chain().focus();
@@ -230,21 +273,18 @@ export function useTiptapToolbar(options: UseTiptapToolbarOptions) {
     }
 
     const previousHref = target.getAttributes('link').href as
-      | string
-      | undefined;
-    let href: string | undefined;
+      string | undefined;
+    const href = await promptString({
+      content: '请输入链接地址',
+      defaultValue: previousHref ?? 'https://',
+      title: '链接地址',
+    });
 
-    try {
-      href = await prompt<string>({
-        content: '请输入链接地址',
-        defaultValue: previousHref ?? 'https://',
-        title: '链接地址',
-      });
-    } catch {
+    if (href === undefined) {
       return;
     }
 
-    const nextHref = href?.trim() ?? '';
+    const nextHref = href.trim();
     if (!nextHref) {
       runCommand((target) => {
         target.chain().focus().extendMarkRange('link').unsetLink().run();
@@ -301,19 +341,17 @@ export function useTiptapToolbar(options: UseTiptapToolbarOptions) {
   }
 
   async function insertImageByUrl() {
-    let src: string | undefined;
+    const src = await promptString({
+      content: '请输入图片地址',
+      defaultValue: 'https://',
+      title: '图片地址',
+    });
 
-    try {
-      src = await prompt<string>({
-        content: '请输入图片地址',
-        defaultValue: 'https://',
-        title: '图片地址',
-      });
-    } catch {
+    if (src === undefined) {
       return;
     }
 
-    const nextSrc = src?.trim() ?? '';
+    const nextSrc = src.trim();
     if (!nextSrc) {
       return;
     }

@@ -1,16 +1,4 @@
 export {
-  alert,
-  Alert,
-  type AlertProps,
-  type BeforeCloseScope,
-  clearAllAlerts,
-  confirm,
-  type IconType,
-  prompt,
-  type PromptProps,
-  useAlertContext,
-} from './alert';
-export {
   type CloseIconPlacement,
   type DrawerApiOptions,
   type DrawerPlacement,
