@@ -12,7 +12,8 @@
     "btn_scale_y": "垂直翻转",
     "btn_zoom_in": "放大",
     "btn_zoom_out": "缩小",
-    "preview": "预览"
+    "preview": "预览",
+    "imageLoadError": "图片加载失败,请重新选择图片"
   },
   "notice": {
     "title": "消息",
