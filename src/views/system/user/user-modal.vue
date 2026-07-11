@@ -226,7 +226,7 @@ const [BasicModal, modalApi] = useVbenModal({
       await loadDefaultPassword(isUpdate.value),
     ];
     if (user) {
-      currentAvatarUrl.value = user.avatar ?? '';
+      currentAvatarUrl.value = user.avatarUrl ?? '';
       formData.value = {
         ...getDefaultValues(),
         ...user,
