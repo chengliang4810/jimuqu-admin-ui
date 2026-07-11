@@ -341,6 +341,12 @@ async function getRoundedCanvas(
       border-radius: 50%;
     }
 
+    // v2暂时没有circle 只能通过css实现
+    // @see https://github.com/fengyuanchen/cropperjs/issues/1238#issuecomment-2943122939
+    cropper-shade {
+      border-radius: 50%;
+    }
+
     // grid 内部的 # 分割线是直线,撑满 bounding box 后端点落在正方形边上、圆之外,
     // 会呈现"外方"观感。border-radius 不裁子元素,这里用 overflow:hidden 裁掉,
     // 使其只剩圆边框。handle 不在 grid 内(挂在 selection 上),不受影响。
