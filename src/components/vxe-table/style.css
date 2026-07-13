@@ -84,12 +84,22 @@
   height: auto !important;
 }
 
+html[data-vxe-ui-theme='dark'] {
+  --vxe-ui-font-color: var(--ant-color-text);
+  --vxe-ui-font-disabled-color: var(--ant-color-text-disabled);
+  --vxe-ui-base-popup-border-color: var(--ant-color-border);
+  --vxe-ui-layout-background-color: var(--ant-color-bg-elevated);
+  --vxe-ui-input-border-color: var(--ant-color-border);
+}
+
 html[data-vxe-ui-theme='dark'] .vxe-grid {
+  --vxe-ui-layout-background-color: var(--ant-color-bg-container);
   --vxe-ui-table-header-background-color: color-mix(
     in srgb,
     var(--ant-color-fill-tertiary) 50%,
     transparent
   );
+  --vxe-ui-table-border-color: var(--ant-color-border-secondary);
 }
 
 .vxe-pager {
