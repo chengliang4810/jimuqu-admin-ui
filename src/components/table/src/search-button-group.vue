@@ -14,7 +14,7 @@ const collapsed = defineModel<boolean>('collapsed', { default: false });
 </script>
 
 <template>
-  <div class="flex items-baseline gap-3">
+  <div class="flex w-full flex-wrap items-baseline justify-end gap-3">
     <a-button v-if="collapsible" type="link" @click="collapsed = !collapsed">
       {{
         collapsed ? $t('pages.common.expand') : $t('pages.common.collapse')
