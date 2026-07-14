@@ -75,7 +75,7 @@ onMounted(() => {
     >
       <div class="flex-auto">
         <slot name="title">
-          <div v-if="title" class="mb-2 flex text-lg font-semibold">
+          <div v-if="title" class="text-foreground mb-2 flex text-lg font-semibold">
             {{ title }}
           </div>
         </slot>
