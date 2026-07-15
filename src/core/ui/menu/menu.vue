@@ -31,6 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
   theme: 'dark',
 });
 
+const HORIZONTAL_OVERFLOW_POPUP_CLASS = 'vben-horizontal-menu-overflow-popup';
+
 const emit = defineEmits<{
   close: [string, string[]];
   open: [string, string[]];
@@ -42,6 +44,10 @@ const selectedKeys = ref<string[]>([props.defaultActive]);
 
 // 展开的菜单项
 const openKeys = ref<string[]>(props.collapse ? [] : [...props.defaultOpeneds]);
+
+const controlledOpenKeys = computed(() =>
+  props.mode === 'horizontal' ? undefined : openKeys.value,
+);
 
 // 提供给子组件的激活路径
 provide(
@@ -89,6 +95,18 @@ const menuClass = computed(() => {
   }
   return classes;
 });
+
+const menuPopupContainer = computed(() => {
+  if (props.mode !== 'horizontal') {
+    return undefined;
+  }
+
+  return (node?: HTMLElement) => node?.ownerDocument?.body ?? document.body;
+});
+
+const overflowPopupClassName = computed(() =>
+  props.mode === 'horizontal' ? HORIZONTAL_OVERFLOW_POPUP_CLASS : undefined,
+);
 
 // 监听 collapse 变化，重置 openKeys
 watch(
@@ -142,6 +160,10 @@ function handleSelect(info: { key: string; keyPath: string[] }) {
 
 // 处理 submenu 展开/关闭，并在手风琴模式下收敛同级展开项
 function handleOpenChange(keys: string[]) {
+  if (props.mode === 'horizontal') {
+    return;
+  }
+
   const nextKeys = resolveOpenKeys(keys);
   const prevKeys = [...openKeys.value];
   const addedKeys = nextKeys.filter((k) => !prevKeys.includes(k));
@@ -169,7 +191,9 @@ function handleOpenChange(keys: string[]) {
     :class="menuClass"
     :inline-collapsed="collapse"
     :mode="antdvMode"
-    :open-keys="openKeys"
+    :open-keys="controlledOpenKeys"
+    :get-popup-container="menuPopupContainer"
+    :overflowed-indicator-popup-class-name="overflowPopupClassName"
     :theme="antdvTheme"
     :trigger-sub-menu-action="collapse ? 'hover' : 'click'"
     @open-change="handleOpenChange"
