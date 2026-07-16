@@ -65,7 +65,6 @@ catalog:
   axios: 1.18.1
   chalk: 5.6.2
   clsx: 2.1.1
-  consola: 3.4.2
   cropperjs: 2.1.1
   crypto-js: 4.2.0
   cspell: 10.0.1

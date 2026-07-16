@@ -107,7 +107,6 @@
     "@vue/test-utils": "catalog:",
     "archiver": "catalog:",
     "chalk": "catalog:",
-    "consola": "catalog:",
     "cspell": "catalog:",
     "dotenv": "catalog:",
     "eslint": "catalog:",
