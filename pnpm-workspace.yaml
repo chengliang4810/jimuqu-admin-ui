@@ -14,11 +14,9 @@ overrides:
   antdv-next: 'catalog:'
   clsx: 'catalog:'
   pinia: 'catalog:'
-  # 锁死 vue 到 3.5.38:3.5.39 存在弹层(popover/popconfirm/tooltip)首次点击
-  # 定位错乱的回归(仅生产构建复现,dev 正常)。详见 docs/troubleshooting/。
   vue: 'catalog:'
 catalog:
-  '@alova/adapter-axios': 2.0.18
+  '@alova/adapter-axios': 2.0.19
   '@antdv-next/auto-import-resolver': 1.1.0
   '@antdv-next/icons': 1.1.1
   '@antdv-next/x-markdown': 0.1.2
@@ -26,7 +24,7 @@ catalog:
   '@eslint/js': 10.0.1
   '@iconify/icons-ri': 1.2.10
   '@iconify/icons-simple-icons': 1.2.74
-  '@iconify/json': 2.2.498
+  '@iconify/json': 2.2.500
   '@iconify/tailwind4': 1.2.3
   '@iconify/vue': 5.0.1
   '@intlify/unplugin-vue-i18n': 11.2.4
@@ -36,15 +34,15 @@ catalog:
   '@tailwindcss/typography': 0.5.20
   '@tailwindcss/vite': 4.3.2
   '@tanstack/vue-store': 0.11.0
-  '@tiptap/core': 3.27.3
-  '@tiptap/extension-highlight': 3.27.3
-  '@tiptap/extension-image': 3.27.3
-  '@tiptap/extension-link': 3.27.3
-  '@tiptap/extension-placeholder': 3.27.3
-  '@tiptap/extension-text-align': 3.27.3
-  '@tiptap/extension-underline': 3.27.3
-  '@tiptap/starter-kit': 3.27.3
-  '@tiptap/vue-3': 3.27.3
+  '@tiptap/core': 3.28.0
+  '@tiptap/extension-highlight': 3.28.0
+  '@tiptap/extension-image': 3.28.0
+  '@tiptap/extension-link': 3.28.0
+  '@tiptap/extension-placeholder': 3.28.0
+  '@tiptap/extension-text-align': 3.28.0
+  '@tiptap/extension-underline': 3.28.0
+  '@tiptap/starter-kit': 3.28.0
+  '@tiptap/vue-3': 3.28.0
   '@types/archiver': 8.0.0
   '@types/crypto-js': 4.2.2
   '@types/html-minifier-terser': 7.0.2
@@ -54,15 +52,15 @@ catalog:
   '@types/qs': 6.15.1
   '@types/sm-crypto': 0.3.4
   '@types/sortablejs': 1.15.9
-  '@typescript-eslint/eslint-plugin': 8.63.0
-  '@typescript-eslint/parser': 8.63.0
-  '@vitejs/plugin-vue': 6.0.7
+  '@typescript-eslint/eslint-plugin': 8.64.0
+  '@typescript-eslint/parser': 8.64.0
+  '@vitejs/plugin-vue': 6.0.8
   '@vitejs/plugin-vue-jsx': 5.1.6
   '@vue/test-utils': 2.4.11
   '@vueuse/core': 14.3.0
   '@vxe-ui/plugin-render-antd': 4.4.0
-  alova: 3.5.1
-  antdv-next: 1.4.1
+  alova: 3.5.2
+  antdv-next: 1.4.3
   archiver: 8.0.0
   axios: 1.18.1
   chalk: 5.6.2
@@ -75,11 +73,11 @@ catalog:
   defu: 6.1.7
   dotenv: 17.4.2
   echarts: 6.1.0
-  eslint: 10.6.0
+  eslint: 10.7.0
   eslint-config-prettier: 10.1.8
   eslint-plugin-import: 2.32.0
   eslint-plugin-jsonc: 3.3.0
-  eslint-plugin-n: 18.2.1
+  eslint-plugin-n: 18.2.2
   eslint-plugin-perfectionist: 5.10.0
   eslint-plugin-pnpm: 1.6.1
   eslint-plugin-unused-imports: 4.4.1
@@ -97,11 +95,11 @@ catalog:
   pinia-plugin-persistedstate: 4.7.1
   pkg-types: 2.3.1
   playwright: 1.61.1
-  postcss: 8.5.16
+  postcss: 8.5.19
   postcss-html: 1.8.1
   postcss-scss: 4.0.9
-  prettier: 3.9.4
-  prettier-plugin-tailwindcss: 0.8.0
+  prettier: 3.9.5
+  prettier-plugin-tailwindcss: 0.8.1
   qs: 6.15.3
   rollup-plugin-visualizer: 7.0.1
   sass: 1.101.0
@@ -123,19 +121,19 @@ catalog:
   typescript: 6.0.3
   unplugin-vue-components: 32.1.0
   version-polling: 1.3.3
-  vite: 8.1.4
+  vite: 8.1.5
   vite-plugin-compression: 0.5.1
   vite-plugin-lazy-import: 1.0.7
   vite-plugin-vue-devtools: 8.1.5
   vitest: 4.1.10
-  vue: 3.5.39
+  vue: 3.5.40
   vue-eslint-parser: 10.4.1
   vue-i18n: 11.4.6
   vue-json-pretty: 2.6.0
-  vue-router: 5.1.0
+  vue-router: 5.2.0
   vue-tsc: 3.3.7
-  vxe-pc-ui: 4.16.2
-  vxe-table: 4.20.0
+  vxe-pc-ui: 4.16.13
+  vxe-table: 4.20.2
   yaml-eslint-parser: 2.1.0
 allowBuilds:
   '@parcel/watcher': true
@@ -145,24 +143,50 @@ allowBuilds:
   lefthook: false
   vue-demi: true
 minimumReleaseAgeExclude:
-  - '@antdv-next/icons@1.1.1'
-  - '@types/node@26.1.1'
-  - '@vue/language-core@3.3.7'
-  - vite@8.1.4
-  - vue-tsc@3.3.7
-  - vxe-pc-ui@4.16.2
-  - vxe-table@4.20.0
-  - '@v-c/dropdown@1.0.3'
-  - '@v-c/input@1.1.1'
-  - '@v-c/mentions@1.1.1'
-  - '@v-c/menu@1.2.2'
-  - '@v-c/notification@2.0.2'
-  - '@v-c/picker@1.2.1'
-  - '@v-c/resize-observer@1.1.3'
-  - '@v-c/select@1.1.4'
-  - '@v-c/tooltip@1.0.4'
-  - '@v-c/tour@1.1.1'
-  - '@v-c/trigger@1.0.18'
-  - '@v-c/util@1.0.20'
-  - antdv-next@1.4.1
-  - '@iconify/json@2.2.498'
+  - '@tiptap/core@3.28.0'
+  - '@tiptap/extension-blockquote@3.28.0'
+  - '@tiptap/extension-bold@3.28.0'
+  - '@tiptap/extension-bubble-menu@3.28.0'
+  - '@tiptap/extension-bullet-list@3.28.0'
+  - '@tiptap/extension-code-block@3.28.0'
+  - '@tiptap/extension-code@3.28.0'
+  - '@tiptap/extension-document@3.28.0'
+  - '@tiptap/extension-dropcursor@3.28.0'
+  - '@tiptap/extension-floating-menu@3.28.0'
+  - '@tiptap/extension-gapcursor@3.28.0'
+  - '@tiptap/extension-hard-break@3.28.0'
+  - '@tiptap/extension-heading@3.28.0'
+  - '@tiptap/extension-highlight@3.28.0'
+  - '@tiptap/extension-horizontal-rule@3.28.0'
+  - '@tiptap/extension-image@3.28.0'
+  - '@tiptap/extension-italic@3.28.0'
+  - '@tiptap/extension-link@3.28.0'
+  - '@tiptap/extension-list-item@3.28.0'
+  - '@tiptap/extension-list-keymap@3.28.0'
+  - '@tiptap/extension-list@3.28.0'
+  - '@tiptap/extension-ordered-list@3.28.0'
+  - '@tiptap/extension-paragraph@3.28.0'
+  - '@tiptap/extension-placeholder@3.28.0'
+  - '@tiptap/extension-strike@3.28.0'
+  - '@tiptap/extension-text-align@3.28.0'
+  - '@tiptap/extension-text@3.28.0'
+  - '@tiptap/extension-underline@3.28.0'
+  - '@tiptap/extensions@3.28.0'
+  - '@tiptap/pm@3.28.0'
+  - '@tiptap/starter-kit@3.28.0'
+  - '@tiptap/vue-3@3.28.0'
+  - '@vue/compiler-core@3.5.40'
+  - '@vue/compiler-dom@3.5.40'
+  - '@vue/compiler-sfc@3.5.40'
+  - '@vue/compiler-ssr@3.5.40'
+  - '@vue/reactivity@3.5.40'
+  - '@vue/runtime-core@3.5.40'
+  - '@vue/runtime-dom@3.5.40'
+  - '@vue/server-renderer@3.5.40'
+  - '@vue/shared@3.5.40'
+  - prettier-plugin-tailwindcss@0.8.1
+  - vite@8.1.5
+  - vue-router@5.2.0
+  - vue@3.5.40
+  - vxe-pc-ui@4.16.13
+  - vxe-table@4.20.2
