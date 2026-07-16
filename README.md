@@ -1,4 +1,26 @@
-# 基于vben5.7版本(被一万行改坏的提交记录前)开发
+## 置顶说明
+
+当前分支只适配**后端v6版本** v5版本前往[gitee地址](https://gitee.com/dapppp/ruoyi-plus-vben5)
+
+当前并没有release 底层可能大改 不要用于实际项目
+
+最低需要使用`node版本>22`
+
+## 简介
+
+基于 [vben5.7版本](https://github.com/vbenjs/vue-vben-admin)重构 使用[antdv-next](https://www.antdv-next.cn/index-cn)作为基础组件库
+
+对应后端项目:
+
+分布式 [RuoYi-Vue-Plus](https://gitee.com/dromara/RuoYi-Vue-Plus/tree/6.X/)
+
+微服务 [RuoYi-Cloud-Plus](https://gitee.com/dromara/RuoYi-Cloud-Plus/tree/6.X/)
+
+## 预览
+
+admin 账号: admin admin123
+
+[预览地址点这里](http://vben5.dapdap.top)
 
 ## 重构部分
 
@@ -17,21 +39,22 @@
 ## 提升
 
 - 安装依赖(pnpm i)速度提升 由于移除很多依赖 现在安装依赖部分只需要原来50%时间
-- 构建速度提升 移除了之前的turbo 改为纯vite构建 自测原24S 现8S内
-- 首屏加载速度提升 在gzip场景下 首屏只需要加载1.6M资源 目前8M带宽服务器 首屏1.5S
+- 构建速度提升 改为纯vite构建 自测原24S 现8S内
+- 首屏加载速度提升 在gzip场景下 首屏只需要加载1.1M资源 目前8M带宽服务器 首屏1.2S
 
 ## 待办
 
 - modal/drawer bugfix
-- [bug] useVbenModal 全屏模式高度未占满屏幕（宽度正常），
-  尝试过 100vh/absolute/height:100% 均不能完美适配所有场景
 - 夜间模式适配(颜色不正常)
 - menu除侧边模式 其他模式的支持
-- 深色侧边栏适配
-- [bug] 水平菜单折叠后，溢出弹窗内的子菜单 popup 定位飞到左上角 (0,0)，
-  getPopupContainer 挂载到溢出弹窗内部会导致失焦/关闭，需 antdv-next 上游修复
-  或使用 MutationObserver 手动修正 popup 位置
-- [bug] 侧边菜单折叠后再展开，vxe-table 的 fixed-right 操作列短暂消失约 1 秒后恢复，
-  根因：侧边栏 CSS transition(150ms) 期间内容区宽度逐帧变化，vxe-table 在中间态将操作列
-  判定隐藏且无法自行恢复。尝试过 transitionend/window.resize/setTimeout+double-rAF/
-  强制宽度抖动触发 ResizeObserver，均未解决。需排查 vxe-table 内部 fixed 列恢复机制
+
+## 浏览器支持(dist)
+
+由于使用了`tailwind v4` 只支持较新的浏览器
+
+| 浏览器          | 最低版本要求                           |
+| --------------- | -------------------------------------- |
+| Google Chrome   | 111 (2023年3月发布)                    |
+| Mozilla Firefox | 128 (2024年7月发布)                    |
+| Apple Safari    | 16.4 (2023年3月发布)                   |
+| Microsoft Edge  | 111 (基于Chromium，与Chrome版本号同步) |
