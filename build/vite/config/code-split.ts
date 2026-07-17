@@ -275,11 +275,6 @@ const matchAppAuthChunk = createChunkMatcher([
   '/src/views/_core/social-callback/',
 ]);
 const matchAppLocaleChunk = createChunkMatcher(['/src/locales/']);
-const matchAppWorkflowComponentsChunk = createChunkMatcher([
-  '/src/views/workflow/components/approval-',
-  '/src/views/workflow/components/flow-preview.vue',
-  '/src/views/workflow/components/user-select-',
-]);
 const matchAppViewsChunk = createChunkMatcher(['/src/views/']);
 
 function createApplicationCodeSplitting() {
@@ -412,11 +407,6 @@ function createApplicationCodeSplitting() {
         name: 'motion-vendor',
         priority: 7,
         test: matchMotionVendorChunk,
-      },
-      {
-        name: 'app-workflow-components',
-        priority: 4,
-        test: matchAppWorkflowComponentsChunk,
       },
       {
         name: 'app-auth',

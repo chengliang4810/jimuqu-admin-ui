@@ -10,6 +10,7 @@ dev-dist
 .codex
 node_modules
 coverage
+output
 CHANGELOG.md
 *-lock.yaml
 pnpm-lock.yaml

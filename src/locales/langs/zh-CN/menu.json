@@ -21,31 +21,6 @@
   "monitor": {
     "root": "系统监控",
     "online": "在线用户",
-    "cache": "缓存监控",
-    "admin": "Admin监控",
-    "job": "任务调度中心"
-  },
-  "tool": {
-    "root": "系统工具",
-    "gen": "代码生成"
-  },
-  "workflow": {
-    "root": "工作流",
-    "category": "流程分类",
-    "model": "模型管理",
-    "define": "流程定义",
-    "monitor": {
-      "root": "流程监控",
-      "instance": "流程实例",
-      "todo": "待办任务"
-    },
-    "form": "表单管理"
-  },
-  "task": {
-    "root": "我的任务",
-    "apply": "我发起的",
-    "todo": "我的待办",
-    "done": "我的已办",
-    "cc": "我的抄送"
+    "cache": "缓存监控"
   }
 }

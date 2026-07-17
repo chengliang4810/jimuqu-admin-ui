@@ -276,7 +276,7 @@ function handleMouseleave() {
         {
           'bg-sidebar-deep': isSidebarMixed,
           'bg-sidebar': !isSidebarMixed,
-          'border-r border-border': !isSidebarMixed || !extraVisible,
+          'border-border border-r': !isSidebarMixed || !extraVisible,
         },
       ]"
       class="relative h-full"
@@ -304,11 +304,11 @@ function handleMouseleave() {
       :class="[
         themeSub,
         {
-          'border-l border-r': extraVisible,
+          'border-r border-l': extraVisible,
         },
       ]"
       :style="extraStyle"
-      class="border-border bg-sidebar fixed top-0 h-full overflow-hidden sidebar-extra-panel transition-all duration-200"
+      class="border-border bg-sidebar sidebar-extra-panel fixed top-0 h-full overflow-hidden transition-all duration-200"
     >
       <SidebarCollapseButton
         v-if="isSidebarMixed && expandOnHover"

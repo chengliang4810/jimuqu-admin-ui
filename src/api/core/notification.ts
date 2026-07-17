@@ -43,21 +43,7 @@ export interface SystemList {
   type: string;
 }
 
-export interface WorkflowList {
-  category: 'workflow';
-  content?: any;
-  createTime: string;
-  data?: any;
-  message: string;
-  messageId: string;
-  path: string;
-  source: string;
-  title: string;
-  type: string;
-}
-
 export interface NotificationResp {
   noticeList: NoticeList[];
   systemList: SystemList[];
-  workflowList: WorkflowList[];
 }

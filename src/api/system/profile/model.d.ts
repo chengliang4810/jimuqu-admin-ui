@@ -69,6 +69,6 @@ export interface UpdatePasswordParam {
 }
 
 export interface UpdateProfileParam {
-  avatar?: string | number;
+  avatar?: number | string;
   [key: string]: any;
 }

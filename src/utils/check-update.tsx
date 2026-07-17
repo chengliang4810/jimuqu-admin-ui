@@ -2,10 +2,10 @@ import { onMounted } from 'vue';
 
 import { preferences } from '@/core/preferences';
 import { $t } from '@/locales';
-import { Button, Space } from 'antdv-next';
-import { createVersionPolling } from 'version-polling';
 import { useGlobalLoadingStore } from '@/stores/loading';
+import { Button, Space } from 'antdv-next';
 import { storeToRefs } from 'pinia';
+import { createVersionPolling } from 'version-polling';
 
 export function useVersionUpdate() {
   const { globalLoading } = storeToRefs(useGlobalLoadingStore());

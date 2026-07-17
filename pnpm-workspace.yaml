@@ -70,6 +70,7 @@ catalog:
   cspell: 10.0.1
   dayjs: 1.11.21
   defu: 6.1.7
+  dompurify: 3.4.12
   dotenv: 17.4.2
   echarts: 6.1.0
   eslint: 10.7.0

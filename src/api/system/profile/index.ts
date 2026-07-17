@@ -1,4 +1,8 @@
-import type { UpdatePasswordParam, UpdateProfileParam, UserProfile } from './model';
+import type {
+  UpdatePasswordParam,
+  UpdateProfileParam,
+  UserProfile,
+} from './model';
 
 import { alovaInstance } from '@/utils/http';
 

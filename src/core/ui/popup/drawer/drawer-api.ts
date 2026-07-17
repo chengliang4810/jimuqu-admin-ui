@@ -167,8 +167,7 @@ export class DrawerApi {
 
   setState(
     stateOrFn:
-      | ((prev: DrawerState) => Partial<DrawerState>)
-      | Partial<DrawerState>,
+      ((prev: DrawerState) => Partial<DrawerState>) | Partial<DrawerState>,
   ) {
     if (isFunction(stateOrFn)) {
       this.store.setState(stateOrFn);

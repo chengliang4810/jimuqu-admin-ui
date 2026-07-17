@@ -1,4 +1,4 @@
-import type { ID, IDS, PageQuery } from '@/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
 import type { DeptTree } from '../user/model';
 import type { Post } from './model';
@@ -16,10 +16,10 @@ enum Api {
 /**
  * 获取岗位列表
  * @param params 参数
- * @returns Post[]
+ * @returns 岗位分页结果
  */
 export function postList(params?: PageQuery) {
-  return alovaInstance.get<Post[]>(Api.postList, { params });
+  return alovaInstance.get<PageResult<Post>>(Api.postList, { params });
 }
 
 /**

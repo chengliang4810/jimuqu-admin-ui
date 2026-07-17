@@ -1,4 +1,4 @@
-import type { ID, IDS, PageQuery } from '@/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
 import type { DictData } from './dict-data-model';
 
@@ -26,7 +26,7 @@ export function dictDataInfo(dictType: string) {
  * @returns 字典数据列表
  */
 export function dictDataList(params?: PageQuery) {
-  return alovaInstance.get<DictData[]>(Api.dictDataList, { params });
+  return alovaInstance.get<PageResult<DictData>>(Api.dictDataList, { params });
 }
 
 /**

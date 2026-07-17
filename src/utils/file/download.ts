@@ -109,7 +109,6 @@ export function downloadByUrl({
 
     if (link.download !== undefined) {
       link.download =
-        // eslint-disable-next-line unicorn/prefer-string-slice
         fileName || url.substring(url.lastIndexOf('/') + 1, url.length);
     }
 

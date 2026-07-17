@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 interface TreeHelperConfig {
   children: string;
   id: string;
@@ -15,8 +14,10 @@ const DEFAULT_CONFIG: TreeHelperConfig = {
 };
 
 // 获取配置。  Object.assign 从一个或多个源对象复制到目标对象
-const getConfig = (config: Partial<TreeHelperConfig>) =>
-  Object.assign({}, DEFAULT_CONFIG, config);
+const getConfig = (config: Partial<TreeHelperConfig>): TreeHelperConfig => ({
+  ...DEFAULT_CONFIG,
+  ...config,
+});
 
 // tree from list
 // 列表中的树
@@ -44,12 +45,11 @@ export function treeToList<T = any>(
   tree: any,
   config: Partial<TreeHelperConfig> = {},
 ): T {
-  config = getConfig(config);
-  const { children } = config;
+  const { children } = getConfig(config);
   const result: any = [...tree];
   for (let i = 0; i < result.length; i++) {
-    if (!result[i][children!]) continue;
-    result.splice(i + 1, 0, ...result[i][children!]);
+    if (!result[i][children]) continue;
+    result.splice(i + 1, 0, ...result[i][children]);
   }
   return result;
 }
@@ -59,12 +59,11 @@ export function findNode<T = any>(
   func: Fn,
   config: Partial<TreeHelperConfig> = {},
 ): null | T {
-  config = getConfig(config);
-  const { children } = config;
+  const { children } = getConfig(config);
   const list = [...tree];
   for (const node of list) {
     if (func(node)) return node;
-    node[children!] && list.push(...node[children!]);
+    node[children] && list.push(...node[children]);
   }
   return null;
 }
@@ -74,13 +73,12 @@ export function findNodeAll<T = any>(
   func: Fn,
   config: Partial<TreeHelperConfig> = {},
 ): T[] {
-  config = getConfig(config);
-  const { children } = config;
+  const { children } = getConfig(config);
   const list = [...tree];
   const result: T[] = [];
   for (const node of list) {
     func(node) && result.push(node);
-    node[children!] && list.push(...node[children!]);
+    node[children] && list.push(...node[children]);
   }
   return result;
 }
@@ -90,11 +88,10 @@ export function findPath<T = any>(
   func: Fn,
   config: Partial<TreeHelperConfig> = {},
 ): null | T | T[] {
-  config = getConfig(config);
   const path: T[] = [];
   const list = [...tree];
   const visitedSet = new Set();
-  const { children } = config;
+  const { children } = getConfig(config);
   while (list.length > 0) {
     const node = list[0];
     if (visitedSet.has(node)) {
@@ -102,7 +99,7 @@ export function findPath<T = any>(
       list.shift();
     } else {
       visitedSet.add(node);
-      node[children!] && list.unshift(...node[children!]);
+      node[children] && list.unshift(...node[children]);
       path.push(node);
       if (func(node)) {
         return path;
@@ -117,11 +114,10 @@ export function findPathAll(
   func: Fn,
   config: Partial<TreeHelperConfig> = {},
 ) {
-  config = getConfig(config);
   const path: any[] = [];
   const list = [...tree];
   const result: any[] = [];
-  const { children } = config;
+  const { children } = getConfig(config);
   const visitedSet = new Set();
   while (list.length > 0) {
     const node = list[0];
@@ -130,7 +126,7 @@ export function findPathAll(
       list.shift();
     } else {
       visitedSet.add(node);
-      node[children!] && list.unshift(...node[children!]);
+      node[children] && list.unshift(...node[children]);
       path.push(node);
       func(node) && result.push([...path]);
     }
@@ -145,8 +141,7 @@ export function filter<T = any>(
   config: Partial<TreeHelperConfig> = {},
 ): T[] {
   // 获取配置
-  config = getConfig(config);
-  const children = config.children as string;
+  const { children } = getConfig(config);
 
   function listFilter(list: T[]) {
     return list
@@ -167,9 +162,8 @@ export function forEach<T = any>(
   func: (n: T) => any,
   config: Partial<TreeHelperConfig> = {},
 ): void {
-  config = getConfig(config);
   const list: any[] = [...tree];
-  const { children } = config;
+  const { children } = getConfig(config);
   for (let i = 0; i < list.length; i++) {
     // func 返回true就终止遍历，避免大量节点场景下无意义循环，引起浏览器卡顿
     if (func(list[i])) {
@@ -220,12 +214,12 @@ export function treeMapEach(
 
 /**
  * 递归遍历树结构
- * @param treeDatas 树
+ * @param treeData 树
  * @param callBack 回调
  * @param parentNode 父节点
  */
-export function eachTree(treeDatas: any[], callBack: Fn, parentNode = {}) {
-  treeDatas.forEach((element) => {
+export function eachTree(treeData: any[], callBack: Fn, parentNode = {}) {
+  treeData.forEach((element) => {
     const newNode = callBack(element, parentNode) || element;
     if (element.children) {
       eachTree(element.children, callBack, newNode);
@@ -247,7 +241,6 @@ export function removeEmptyChildren(data: any[], childrenField = 'children') {
   });
 }
 
-// eslint-disable-next-line jsdoc/require-returns-check
 /**
  *
  * 添加全名 如 祖先节点-父节点-子节点
@@ -359,7 +352,8 @@ export function findGroupParentIds(
   for (const nodeId of nodeIdSet) {
     let current = nodeId;
     while (parentMap.has(current)) {
-      const pid = parentMap.get(current)!;
+      const pid = parentMap.get(current);
+      if (pid === undefined) break;
       if (result.has(pid)) {
         break;
       }

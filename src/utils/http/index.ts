@@ -4,7 +4,6 @@ import type {
   BaseAsymmetricEncryption,
   BaseSymmetricEncryption,
 } from '../encryption';
-import type { HttpResponse } from './type';
 
 import { BUSINESS_SUCCESS_CODE, UNAUTHORIZED_CODE } from '@/constants';
 import { preferences } from '@/core/preferences';
@@ -29,6 +28,7 @@ import { checkStatus } from './checkStatus';
 import { BusinessException } from './exception';
 import { ContentTypeEnum, handleUnauthorizedLogout } from './helper';
 import { showAntdMessage } from './popup';
+import { isHttpResponse } from './response';
 
 const { apiURL, clientId, enableEncrypt, rsaPublicKey, rsaPrivateKey } =
   useAppConfig(import.meta.env, import.meta.env.PROD);
@@ -38,7 +38,7 @@ const { apiURL, clientId, enableEncrypt, rsaPublicKey, rsaPrivateKey } =
  *
  * 你可以使用Sm2Encryption来替换 后端也需要同步替换公私钥对
  *
- * 后端文件位置: ruoyi-common/ruoyi-common-encrypt/src/main/java/org/dromara/common/encrypt/filter/DecryptRequestBodyWrapper.java
+ * 后端需要使用对应的请求解密过滤器。
  *
  * 注意前端sm-crypto库只能支持04开头的公钥! 否则加密会有问题 你可以使用前端的import { logSm2KeyPair } from '@/utils';方法来生成
  * 如果你生成的公钥开头不是04 那么不能正常加密
@@ -99,11 +99,7 @@ const alovaInstance = createAlova({
     const language = preferences.app.locale.replace('-', '_');
     config.headers['Accept-Language'] = language;
     config.headers['Content-Language'] = language;
-    /**
-     * 添加全局clientId
-     * 关于header的clientId被错误绑定到实体类
-     * https://gitee.com/dapppp/ruoyi-plus-vben5/issues/IC0BDS
-     */
+    /** 添加全局 clientId */
     config.headers.ClientID = clientId;
     /**
      * 格式化get/delete参数
@@ -192,14 +188,9 @@ const alovaInstance = createAlova({
            * 需要判断是否登录超时/401
            * 执行登出操作
            */
-          const resp = response.data as unknown as HttpResponse;
+          const resp = response.data as unknown;
           // 抛出异常 不再执行
-          if (
-            resp &&
-            typeof resp === 'object' &&
-            Reflect.has(resp, 'code') &&
-            resp.code === UNAUTHORIZED_CODE
-          ) {
+          if (isHttpResponse(resp) && resp.code === UNAUTHORIZED_CODE) {
             handleUnauthorizedLogout();
           }
 
@@ -224,7 +215,7 @@ const alovaInstance = createAlova({
       }
 
       const axiosResponseData = response.data;
-      if (!axiosResponseData) {
+      if (!isHttpResponse(axiosResponseData)) {
         throw new Error($t('http.apiRequestFailed'));
       }
 
@@ -232,9 +223,7 @@ const alovaInstance = createAlova({
       const { code, data, msg } = axiosResponseData;
 
       // 业务状态码为200 则请求成功
-      const hasSuccess =
-        Reflect.has(axiosResponseData, 'code') &&
-        code === BUSINESS_SUCCESS_CODE;
+      const hasSuccess = code === BUSINESS_SUCCESS_CODE;
       if (hasSuccess) {
         let successMsg = msg;
 

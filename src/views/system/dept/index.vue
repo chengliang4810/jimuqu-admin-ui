@@ -170,9 +170,7 @@ function handleSearchReset() {
           >
             <template #toolbar-left>
               <div class="text-[16px] font-medium">部门列表</div>
-              <div class="ml-2 text-[13px] text-[#999]">
-                双击展开/收起
-              </div>
+              <div class="ml-2 text-[13px] text-[#999]">双击展开/收起</div>
             </template>
             <template #toolbar-right>
               <Space>

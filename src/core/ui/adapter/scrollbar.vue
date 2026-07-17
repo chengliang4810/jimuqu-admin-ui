@@ -194,14 +194,12 @@ function onThumbPointerDown(e: PointerEvent) {
   window.addEventListener('pointerup', onUp);
 }
 
-const thumbStyle = computed(
-  (): CSSProperties => ({
-    height: `${thumbSize.value}px`,
-    opacity: thumbActive.value ? '1' : '0',
-    pointerEvents: thumbActive.value ? 'auto' : 'none',
-    transform: `translateY(${thumbOffset.value}px)`,
-  }),
-);
+const thumbStyle = computed((): CSSProperties => ({
+  height: `${thumbSize.value}px`,
+  opacity: thumbActive.value ? '1' : '0',
+  pointerEvents: thumbActive.value ? 'auto' : 'none',
+  transform: `translateY(${thumbOffset.value}px)`,
+}));
 
 onMounted(() => {
   if (!props.overlay) {

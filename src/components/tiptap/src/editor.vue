@@ -75,9 +75,7 @@ const { editorContentClass, editorStyle, rootClass } = useTiptapStyles(props);
  * 2. 工具栏内的 antd 控件(段落格式 Select 等)需重置该 status 避免被误染红
  */
 const formItemInputContext = useFormItemInputContext();
-const hasError = computed(
-  () => formItemInputContext.value?.status === 'error',
-);
+const hasError = computed(() => formItemInputContext.value?.status === 'error');
 
 const mergedRootClass = computed(() =>
   cn(rootClass.value, hasError.value && 'border-destructive'),
@@ -213,40 +211,97 @@ defineExpose({
         role="toolbar"
         aria-label="Tiptap 编辑器工具栏"
       >
-      <Select
-        :value="currentBlock"
-        size="small"
-        :options="blockOptions"
-        :disabled="disabled || isUploading"
-        aria-label="段落格式"
-        :styles="{ root: { width: '112px' } }"
-        @change="setBlock"
-      />
+        <Select
+          :value="currentBlock"
+          size="small"
+          :options="blockOptions"
+          :disabled="disabled || isUploading"
+          aria-label="段落格式"
+          :styles="{ root: { width: '112px' } }"
+          @change="setBlock"
+        />
 
-      <template v-for="(group, groupIndex) in toolbarGroups" :key="groupIndex">
-        <span
-          v-if="groupIndex > 0"
-          class="bg-border mx-1 h-5 w-px"
-          aria-hidden="true"
-        ></span>
-        <template v-for="item in group" :key="item.key">
-          <Upload
-            v-if="item.key === 'imageUpload'"
-            accept="image/*"
-            :custom-request="handleImageUploadRequest"
-            :disabled="isToolbarItemDisabled(item)"
-            :show-upload-list="false"
-          >
-            <Tooltip :title="item.label">
+        <template
+          v-for="(group, groupIndex) in toolbarGroups"
+          :key="groupIndex"
+        >
+          <span
+            v-if="groupIndex > 0"
+            class="bg-border mx-1 h-5 w-px"
+            aria-hidden="true"
+          ></span>
+          <template v-for="item in group" :key="item.key">
+            <Upload
+              v-if="item.key === 'imageUpload'"
+              accept="image/*"
+              :custom-request="handleImageUploadRequest"
+              :disabled="isToolbarItemDisabled(item)"
+              :show-upload-list="false"
+            >
+              <Tooltip :title="item.label">
+                <Button
+                  html-type="button"
+                  :class="buttonClass(item.isActive())"
+                  :disabled="isToolbarItemDisabled(item)"
+                  :loading="isUploading"
+                  :aria-label="item.label"
+                  :aria-pressed="item.isActive()"
+                  size="small"
+                  :type="item.isActive() ? 'primary' : 'default'"
+                >
+                  <span
+                    :class="cn('size-4', item.icon)"
+                    aria-hidden="true"
+                  ></span>
+                </Button>
+              </Tooltip>
+            </Upload>
+            <ColorPicker
+              v-else-if="item.key === 'textColor'"
+              :value="currentTextColor || '#1677ff'"
+              allow-clear
+              disabled-alpha
+              disabled-format
+              :disabled="isToolbarItemDisabled(item)"
+              size="small"
+              @change="setTextColor"
+              @clear="unsetTextColor"
+            >
+              <Tooltip :title="item.label">
+                <Button
+                  html-type="button"
+                  :class="
+                    cn(buttonClass(item.isActive()), 'relative overflow-hidden')
+                  "
+                  :disabled="isToolbarItemDisabled(item)"
+                  :aria-label="item.label"
+                  :aria-pressed="item.isActive()"
+                  size="small"
+                  type="default"
+                >
+                  <span
+                    :class="cn('size-4', item.icon)"
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    v-if="currentTextColor"
+                    class="absolute inset-x-1 bottom-1 h-0.5 rounded-full"
+                    :style="{ backgroundColor: currentTextColor }"
+                    aria-hidden="true"
+                  ></span>
+                </Button>
+              </Tooltip>
+            </ColorPicker>
+            <Tooltip v-else :title="item.label">
               <Button
                 html-type="button"
                 :class="buttonClass(item.isActive())"
                 :disabled="isToolbarItemDisabled(item)"
-                :loading="isUploading"
                 :aria-label="item.label"
                 :aria-pressed="item.isActive()"
                 size="small"
                 :type="item.isActive() ? 'primary' : 'default'"
+                @click="item.action"
               >
                 <span
                   :class="cn('size-4', item.icon)"
@@ -254,60 +309,9 @@ defineExpose({
                 ></span>
               </Button>
             </Tooltip>
-          </Upload>
-          <ColorPicker
-            v-else-if="item.key === 'textColor'"
-            :value="currentTextColor || '#1677ff'"
-            allow-clear
-            disabled-alpha
-            disabled-format
-            :disabled="isToolbarItemDisabled(item)"
-            size="small"
-            @change="setTextColor"
-            @clear="unsetTextColor"
-          >
-            <Tooltip :title="item.label">
-              <Button
-                html-type="button"
-                :class="
-                  cn(buttonClass(item.isActive()), 'relative overflow-hidden')
-                "
-                :disabled="isToolbarItemDisabled(item)"
-                :aria-label="item.label"
-                :aria-pressed="item.isActive()"
-                size="small"
-                type="default"
-              >
-                <span
-                  :class="cn('size-4', item.icon)"
-                  aria-hidden="true"
-                ></span>
-                <span
-                  v-if="currentTextColor"
-                  class="absolute inset-x-1 bottom-1 h-0.5 rounded-full"
-                  :style="{ backgroundColor: currentTextColor }"
-                  aria-hidden="true"
-                ></span>
-              </Button>
-            </Tooltip>
-          </ColorPicker>
-          <Tooltip v-else :title="item.label">
-            <Button
-              html-type="button"
-              :class="buttonClass(item.isActive())"
-              :disabled="isToolbarItemDisabled(item)"
-              :aria-label="item.label"
-              :aria-pressed="item.isActive()"
-              size="small"
-              :type="item.isActive() ? 'primary' : 'default'"
-              @click="item.action"
-            >
-              <span :class="cn('size-4', item.icon)" aria-hidden="true"></span>
-            </Button>
-          </Tooltip>
+          </template>
         </template>
-      </template>
-    </div>
+      </div>
     </NoFormStyle>
 
     <Spin :spinning="isUploading" tip="图片上传中...">

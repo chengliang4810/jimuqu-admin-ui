@@ -11,6 +11,7 @@ dist.war
 *-dist.tar
 *-dist.war
 coverage
+/output/
 *.local
 **/.vitepress/cache
 .cache
@@ -20,7 +21,6 @@ dev-dist
 .stylelintcache
 yarn.lock
 package-lock.json
-pnpm-lock.yaml
 .VSCodeCounter
 **/backend-mock/data
 .omx

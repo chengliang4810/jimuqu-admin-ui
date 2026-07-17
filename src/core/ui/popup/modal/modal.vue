@@ -250,7 +250,9 @@ function handleClosed() {
             :disabled="submitting"
             @click="() => modalApi?.onCancel()"
           >
-            <slot name="cancelText">{{ cancelText || $t('common.cancel') }}</slot>
+            <slot name="cancelText">{{
+              cancelText || $t('common.cancel')
+            }}</slot>
           </Button>
           <slot name="center-footer"></slot>
           <Button
@@ -260,7 +262,9 @@ function handleClosed() {
             :loading="confirmLoading || submitting"
             @click="() => modalApi?.onConfirm()"
           >
-            <slot name="confirmText">{{ confirmText || $t('common.confirm') }}</slot>
+            <slot name="confirmText">{{
+              confirmText || $t('common.confirm')
+            }}</slot>
           </Button>
         </slot>
         <slot name="append-footer"></slot>

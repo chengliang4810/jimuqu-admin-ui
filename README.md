@@ -1,60 +1,53 @@
-## 置顶说明
+# Jimu Admin UI
 
-当前分支只适配**后端v6版本** v5版本前往[gitee地址](https://gitee.com/dapppp/ruoyi-plus-vben5)
+Jimu Admin 的管理端前端，基于 Bell-Plus 6.X 前端契约开发，配套 Solon 与 Xbatis 后端使用。
 
-当前并没有release 底层可能大改 不要用于实际项目
+## 环境要求
 
-最低需要使用`node版本>22`
+- Node.js `^22.18.0 || ^24.0.0`
+- pnpm `11.2.2`
+- Jimu Admin 后端默认地址 `http://127.0.0.1:5320`
 
-## 简介
+## 本地开发
 
-基于 [vben5.7版本](https://github.com/vbenjs/vue-vben-admin)重构 使用[antdv-next](https://www.antdv-next.cn/index-cn)作为基础组件库
+```bash
+pnpm install --frozen-lockfile
+pnpm dev
+```
 
-对应后端项目:
+开发服务器默认监听 `http://127.0.0.1:5666`，并将 `/dev-api` 代理到 Jimu Admin 后端。
 
-分布式 [RuoYi-Vue-Plus](https://gitee.com/dromara/RuoYi-Vue-Plus/tree/6.X/)
+## 构建与检查
 
-微服务 [RuoYi-Cloud-Plus](https://gitee.com/dromara/RuoYi-Cloud-Plus/tree/6.X/)
+```bash
+pnpm typecheck
+pnpm test:unit
+pnpm test:e2e
+pnpm lint
+pnpm build
+```
 
-## 预览
+## 接口响应
 
-admin 账号: admin admin123
+普通 JSON 响应统一为：
 
-[预览地址点这里](http://vben5.dapdap.top)
+```json
+{ "code": 200, "msg": "成功", "data": {} }
+```
 
-## 重构部分
+分页响应统一为：
 
-- 由`monorepo`改为单仓 注意安装依赖需要`-w`参数
-- 原`packages`已经拆分到src下
-- 移除`shadcn`等headless组件库 使用`antdv-next`/适配器重构
-- 重构原`designToken`生成逻辑 改为由`antdv-next`派生
-- 偏好设置功能做精简 主题只保留一个(light dark支持)
-- 原oxc部分改回来`eslint+prettier` oxc还不稳定
-- 移除`vaditor`(markdown编辑) 会加载到首屏资源占用
-- 移除`codemirror`(代码块着色) 只是代码生成预览会用到 同样占用资源
-- 移除`useVbenForm` 使用原生代替
-- 移除`useVbenVxeGrid` 使用原生vxe代替 表格搜索表单也改为原生
-- 移除二次封装的`echarts`
+```json
+{ "code": 200, "msg": "成功", "data": { "rows": [], "total": 0 } }
+```
 
-## 提升
+文件下载、SSE 和 WebSocket 按各自协议传输，不使用 JSON 响应外壳。
 
-- 安装依赖(pnpm i)速度提升 由于移除很多依赖 现在安装依赖部分只需要原来50%时间
-- 构建速度提升 改为纯vite构建 自测原24S 现8S内
-- 首屏加载速度提升 在gzip场景下 首屏只需要加载1.1M资源 目前8M带宽服务器 首屏1.2S
+## 许可证
 
-## 待办
+本项目使用 [MIT License](LICENSE)。第三方项目的版权和许可声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
-- modal/drawer bugfix
-- 夜间模式适配(颜色不正常)
-- menu除侧边模式 其他模式的支持
+## 上游项目声明
 
-## 浏览器支持(dist)
-
-由于使用了`tailwind v4` 只支持较新的浏览器
-
-| 浏览器          | 最低版本要求                           |
-| --------------- | -------------------------------------- |
-| Google Chrome   | 111 (2023年3月发布)                    |
-| Mozilla Firefox | 128 (2024年7月发布)                    |
-| Apple Safari    | 16.4 (2023年3月发布)                   |
-| Microsoft Edge  | 111 (基于Chromium，与Chrome版本号同步) |
+- [Bell-Plus](https://gitee.com/dapppp/bell-plus)，采用 `main` 分支，迁移基线 `c1a99e5d9f568936d8e3fbcf37d302d5ca3127de`，MIT License。其代码基于 Vue Vben Admin，原许可声明为 `Copyright (c) 2024-present, Vben`。
+- [RuoYi-Vue-Plus](https://gitee.com/dromara/RuoYi-Vue-Plus/tree/6.X/)，接口参考 `6.X` 分支，基线 `da5f30cae2deb174a1ba37a2ad41ff1ba42c9f38`，MIT License，`Copyright (c) 2019 RuoYi-Vue-Plus`。

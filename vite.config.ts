@@ -1,5 +1,7 @@
 import { resolve } from 'node:path';
+import process from 'node:process';
 
+import { createApiProxy } from './build/vite/config/api-proxy';
 import { defineConfig } from './build/vite/index';
 
 // 自行取消注释来启用按需导入功能
@@ -7,6 +9,8 @@ import { defineConfig } from './build/vite/index';
 // import Components from 'unplugin-vue-components/vite';
 
 export default defineConfig(async () => {
+  const playwrightApiUrl = process.env.PLAYWRIGHT_API_URL;
+
   return {
     application: {},
     vite: {
@@ -27,17 +31,13 @@ export default defineConfig(async () => {
           '@': resolve(import.meta.dirname, 'src'),
         },
       },
+      preview: playwrightApiUrl
+        ? {
+            proxy: createApiProxy('/prod-api', playwrightApiUrl),
+          }
+        : undefined,
       server: {
-        proxy: {
-          // 不要用/api 会跟snail-ai的路径冲突
-          '/dev-api': {
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/dev-api/, ''),
-            // mock代理目标地址
-            target: 'http://127.0.0.1:8080',
-            ws: true,
-          },
-        },
+        proxy: createApiProxy('/dev-api', 'http://127.0.0.1:5320'),
       },
     },
   };

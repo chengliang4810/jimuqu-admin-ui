@@ -37,7 +37,7 @@ async function loadEnv<T = Record<string, string>>(
   match = 'VITE_GLOB_',
   confFiles = getConfFiles(),
 ) {
-  let envConfig = {};
+  let envConfig: Record<string, string> = {};
 
   for (const confFile of confFiles) {
     try {
@@ -59,6 +59,13 @@ async function loadEnv<T = Record<string, string>>(
       Reflect.deleteProperty(envConfig, key);
     }
   });
+
+  // 与 Vite 的 loadEnv 保持一致：调用进程显式注入的变量优先于 .env 文件。
+  for (const [key, value] of Object.entries(process.env)) {
+    if (reg.test(key) && value !== undefined) {
+      envConfig[key] = value;
+    }
+  }
   return envConfig as T;
 }
 

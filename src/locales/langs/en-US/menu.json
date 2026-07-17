@@ -21,31 +21,6 @@
   "monitor": {
     "root": "System Monitoring",
     "online": "Online Users",
-    "cache": "Cache Monitoring",
-    "admin": "Admin Monitoring",
-    "job": "Task Scheduling Center"
-  },
-  "tool": {
-    "root": "System Tools",
-    "gen": "Code Generation"
-  },
-  "workflow": {
-    "root": "Workflow",
-    "category": "Process Category",
-    "model": "Model",
-    "define": "Process Definition",
-    "monitor": {
-      "root": "Process Monitoring",
-      "instance": "Process Instance",
-      "todo": "Pending Tasks"
-    },
-    "form": "Form"
-  },
-  "task": {
-    "root": "My Tasks",
-    "apply": "My Initiated Tasks",
-    "todo": "My Pending Tasks",
-    "done": "My Completed Tasks",
-    "cc": "My CC"
+    "cache": "Cache Monitoring"
   }
 }

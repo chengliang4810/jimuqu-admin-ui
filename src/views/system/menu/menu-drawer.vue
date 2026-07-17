@@ -179,7 +179,11 @@ const [BasicDrawer, drawerApi] = useVbenDrawer({
     drawerApi.drawerLoading(true);
     loading.value = true;
 
-    const { id, record: importRecord, update } = drawerApi.getData() as ModalProps;
+    const {
+      id,
+      record: importRecord,
+      update,
+    } = drawerApi.getData() as ModalProps;
     isUpdate.value = !!update;
 
     if (importRecord) {

@@ -16,9 +16,7 @@ const collapsed = defineModel<boolean>('collapsed', { default: false });
 <template>
   <div class="flex w-full flex-wrap items-baseline justify-end gap-3">
     <a-button v-if="collapsible" type="link" @click="collapsed = !collapsed">
-      {{
-        collapsed ? $t('pages.common.expand') : $t('pages.common.collapse')
-      }}
+      {{ collapsed ? $t('pages.common.expand') : $t('pages.common.collapse') }}
       <ChevronDown
         class="size-4 transition-transform"
         :class="{ 'rotate-180': !collapsed }"

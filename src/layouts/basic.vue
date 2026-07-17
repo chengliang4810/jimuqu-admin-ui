@@ -45,13 +45,13 @@ const menus = computed(() => {
     },
     {
       handler: () => {
-        openWindow('https://gitee.com/dapppp/bell-plus', {
+        openWindow('https://github.com/chengliang4810/jimuqu-admin-ui', {
           target: '_blank',
         });
       },
       icon: GiteeIcon,
       iconClass: 'text-red-800',
-      text: 'Gitee项目地址',
+      text: '项目地址',
     },
   ];
   return defaultMenus;

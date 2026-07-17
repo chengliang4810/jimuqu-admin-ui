@@ -1,14 +1,14 @@
 {
-  "name": "bell-plus",
-  "version": "1.0.0-alpha2",
-  "description": "基于vben5.7版本重构为单仓 优化代码/性能",
+  "name": "jimuqu-admin-ui",
+  "version": "1.0.0",
+  "description": "Jimu Admin 管理系统前端",
   "private": true,
-  "homepage": "https://gitee.com/dapppp/bell-plus",
-  "repository": "dapppp/bell-plus",
+  "homepage": "https://github.com/chengliang4810/jimuqu-admin-ui",
+  "repository": "chengliang4810/jimuqu-admin-ui",
   "license": "MIT",
   "author": {
-    "name": "dap",
-    "url": "https://gitee.com/dapppp"
+    "name": "chengliang4810",
+    "url": "https://github.com/chengliang4810"
   },
   "type": "module",
   "scripts": {
@@ -26,6 +26,7 @@
     "preinstall": "npx only-allow pnpm",
     "reinstall": "pnpm run clean -- --del-lock && pnpm install",
     "test:unit": "vitest run --dom",
+    "test:e2e": "playwright test",
     "catalog": "pnpm dlx codemod pnpm/catalog",
     "catalog:check": "node ./scripts/check-catalog-updates.mjs",
     "catalog:check:all": "node ./scripts/check-catalog-updates.mjs --all",
@@ -59,6 +60,7 @@
     "crypto-js": "catalog:",
     "dayjs": "catalog:",
     "defu": "catalog:",
+    "dompurify": "catalog:",
     "echarts": "catalog:",
     "jsencrypt": "catalog:",
     "json-editor-vue": "catalog:",

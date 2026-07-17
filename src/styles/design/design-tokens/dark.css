@@ -113,7 +113,7 @@ html.dark .dark {
   --ant-color-bg-container: hsl(var(--sidebar));
   --ant-color-bg-layout: hsl(var(--sidebar-deep));
 
-/* 暗色菜单: 一级/二级背景统一用侧边栏色，hover/选中微提亮，不加深 */
+  /* 暗色菜单: 一级/二级背景统一用侧边栏色，hover/选中微提亮，不加深 */
   --ant-menu-dark-item-bg: hsl(var(--sidebar)) !important;
   --ant-menu-dark-sub-menu-item-bg: hsl(var(--sidebar)) !important;
   --ant-menu-dark-item-hover-bg: hsl(var(--heavy)) !important;
@@ -153,6 +153,7 @@ html:not(.dark) .dark {
   /* 菜单根背景桥接 */
   --sidebar: 209 100% 8% !important;
   --sidebar-deep: 209 100% 4.5% !important;
+
   /* --menu 继承 var(--sidebar)，自动对齐 */
 
   /* === 双列第二列(extra panel) 强制暗色 ===
@@ -160,26 +161,32 @@ html:not(.dark) .dark {
   .sidebar-extra-panel .ant-menu {
     background: #001529 !important;
   }
+
   .sidebar-extra-panel .ant-menu-item {
-    background: #001529 !important;
     color: rgb(255 255 255 / 85%) !important;
+    background: #001529 !important;
   }
+
   .sidebar-extra-panel .ant-menu-item:hover {
-    background: rgb(255 255 255 / 8%) !important;
     color: #fff !important;
+    background: rgb(255 255 255 / 8%) !important;
   }
+
   .sidebar-extra-panel .ant-menu-item-selected {
+    color: #fff !important;
     background: var(--ant-color-primary) !important;
-    color: #fff !important;
   }
+
   .sidebar-extra-panel .ant-menu-submenu-title {
-    background: #001529 !important;
     color: rgb(255 255 255 / 85%) !important;
+    background: #001529 !important;
   }
+
   .sidebar-extra-panel .ant-menu-submenu-title:hover {
-    background: rgb(255 255 255 / 8%) !important;
     color: #fff !important;
+    background: rgb(255 255 255 / 8%) !important;
   }
+
   .sidebar-extra-panel .ant-menu-sub {
     background: #001529 !important;
   }

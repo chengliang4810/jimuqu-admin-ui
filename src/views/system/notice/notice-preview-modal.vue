@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Notice } from '@/api/system/notice/model';
 
-import { shallowRef } from 'vue';
+import { computed, shallowRef } from 'vue';
 
 import { useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
@@ -10,7 +10,12 @@ import { contentWithOssIdTransform } from '@/components/tiptap/src/helper';
 import { DictEnum } from '@/constants';
 import { renderDict } from '@/utils/render';
 import { Divider, Empty } from 'antdv-next';
+import DOMPurify from 'dompurify';
+
 const currentNotice = shallowRef<Notice | null>(null);
+const sanitizedNoticeContent = computed(() =>
+  DOMPurify.sanitize(currentNotice.value?.noticeContent ?? ''),
+);
 const { hasAccessByCodes } = useAccess();
 
 const [BasicModal, modalApi] = useVbenModal({
@@ -50,12 +55,21 @@ const [BasicModal, modalApi] = useVbenModal({
             {{ currentNotice?.noticeTitle }}
           </div>
           <div class="flex gap-4">
-            <component :is="renderDict(currentNotice?.noticeType, DictEnum.SYS_NOTICE_TYPE)" />
+            <component
+              :is="
+                renderDict(currentNotice?.noticeType, DictEnum.SYS_NOTICE_TYPE)
+              "
+            />
             <span>{{ currentNotice?.createByName }} </span>
             <span>{{ currentNotice?.createTime }}</span>
           </div>
           <Divider />
-          <div v-html="currentNotice?.noticeContent" class="pb-16"></div>
+          <!-- eslint-disable vue/no-v-html -- content is sanitized above -->
+          <div
+            v-html="sanitizedNoticeContent"
+            class="notice-content pb-16"
+          ></div>
+          <!-- eslint-enable vue/no-v-html -->
         </div>
       </div>
     </div>

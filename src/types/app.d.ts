@@ -17,10 +17,7 @@ type ThemeModeType = 'auto' | 'dark' | 'light';
  * auto 自动
  */
 type PreferencesButtonPositionType =
-  | 'auto'
-  | 'fixed'
-  | 'header'
-  | 'user-dropdown';
+  'auto' | 'fixed' | 'header' | 'user-dropdown';
 
 type ContentCompactType = 'compact' | 'wide';
 

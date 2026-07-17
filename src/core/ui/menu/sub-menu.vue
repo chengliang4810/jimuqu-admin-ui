@@ -43,11 +43,7 @@ const computedIcon = computed(() =>
 
 <template>
   <!-- 叶子节点：渲染 MenuItem -->
-  <MenuItem
-    v-if="!hasChildren"
-    :key="menu.path"
-    @click="$emit('itemClick', menu)"
-  >
+  <MenuItem v-if="!hasChildren" :key="menu.path">
     <template v-if="computedIcon" #icon>
       <VbenIcon :icon="computedIcon" fallback />
     </template>
@@ -62,11 +58,7 @@ const computedIcon = computed(() =>
   </MenuItem>
 
   <!-- 分支节点：渲染 SubMenu -->
-  <SubMenu
-    v-else
-    :key="`${menu.path}_sub`"
-    @click="$emit('subMenuClick', menu)"
-  >
+  <SubMenu v-else :key="`${menu.path}_sub`">
     <template v-if="computedIcon" #icon>
       <VbenIcon :icon="computedIcon" fallback />
     </template>

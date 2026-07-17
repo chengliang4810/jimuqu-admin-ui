@@ -137,7 +137,7 @@ const { exportBlob, exportLoading, buildExportFileName } =
   useBlobExport(dictDataExport);
 async function handleExport() {
   // 构建表单请求参数
-  const formValues = searchFormRef.value?.getValues() ?? {};
+  const formValues: PageQuery = (await searchFormRef.value?.getValues()) ?? {};
   formValues.dictType = dictType.value;
   // 文件名
   const fileName = buildExportFileName('字典数据');

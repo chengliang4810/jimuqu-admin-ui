@@ -17,7 +17,6 @@ export {
   type NoticeList,
   type NotificationResp,
   type SystemList,
-  type WorkflowList,
 } from './notification';
 export {
   type AxiosProgressEvent,

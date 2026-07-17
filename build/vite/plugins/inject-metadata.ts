@@ -13,7 +13,8 @@ function resolveVersions(
 ): Record<string, string> {
   const resolved: Record<string, string> = {};
   for (const [name, version] of Object.entries(deps)) {
-    resolved[name] = version === 'catalog:' ? (catalog[name] ?? version) : version;
+    resolved[name] =
+      version === 'catalog:' ? (catalog[name] ?? version) : version;
   }
   return resolved;
 }

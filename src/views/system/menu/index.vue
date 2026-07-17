@@ -18,7 +18,6 @@ import { SettingOutlined } from '@antdv-next/icons';
 import { Popconfirm, Space, Spin, Switch, Tooltip } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
-import CopyIconSql from './copy-icon-sql.vue';
 import { columns } from './data';
 import menuDrawer from './menu-drawer.vue';
 import menuImportModal from './menu-import-modal.vue';
@@ -246,7 +245,6 @@ function handleSearchReset() {
             </template>
             <template #toolbar-right>
               <Space>
-                <CopyIconSql />
                 <Tooltip title="删除菜单以及子菜单">
                   <div
                     v-access:role="['superadmin']"

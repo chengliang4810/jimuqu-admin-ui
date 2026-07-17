@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { EChartsOption } from 'echarts';
 
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 
 import { Page } from '@/components';
 import { Card, Segmented } from 'antdv-next';
@@ -59,7 +59,7 @@ const statCards = ref([
 const trendRange = ref<'month' | 'week'>('week');
 const trendWeekX = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 
-const trendOption = ref<EChartsOption>({});
+const trendOption = shallowRef<EChartsOption>({});
 
 function buildTrendOption(range: 'month' | 'week'): EChartsOption {
   const xData =
@@ -164,7 +164,7 @@ function onTrendRangeChange(val: number | string) {
 trendOption.value = buildTrendOption('week');
 
 /* ==================== 流量来源 (mock 数据) ==================== */
-const sourceOption = ref<EChartsOption>({
+const sourceOption = shallowRef<EChartsOption>({
   color: ['#1677ff', '#52c41a', '#faad14', '#ff4d4f', '#722ed1'],
   legend: {
     orient: 'vertical',
@@ -206,7 +206,7 @@ const sourceOption = ref<EChartsOption>({
 });
 
 /* ==================== 周活跃度 (mock 数据) ==================== */
-const activityOption = ref<EChartsOption>({
+const activityOption = shallowRef<EChartsOption>({
   color: ['#1677ff'],
   grid: { top: 30, left: 10, right: 10, bottom: 10, containLabel: true },
   series: [

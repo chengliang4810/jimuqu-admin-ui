@@ -1,6 +1,6 @@
-import type { VxeGridProps } from 'vxe-table';
 import type { ID } from '@/api/common';
 import type { MenuOption } from '@/api/system/menu/model';
+import type { VxeGridProps } from 'vxe-table';
 
 import { h } from 'vue';
 

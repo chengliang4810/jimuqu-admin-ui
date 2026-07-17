@@ -52,8 +52,7 @@ export function mitt<Events extends Record<EventType, unknown>>(
   all?: EventHandlerMap<Events>,
 ): Emitter<Events> {
   type GenericEventHandler =
-    | Handler<Events[keyof Events]>
-    | WildcardHandler<Events>;
+    Handler<Events[keyof Events]> | WildcardHandler<Events>;
   all = all || new Map();
 
   return {

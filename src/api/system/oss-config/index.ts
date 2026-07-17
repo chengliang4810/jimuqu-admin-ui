@@ -1,4 +1,4 @@
-import type { ID, IDS, PageQuery } from '@/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
 import type { OssConfig } from './model';
 
@@ -12,7 +12,9 @@ enum Api {
 
 // 获取OSS配置列表
 export function ossConfigList(params?: PageQuery) {
-  return alovaInstance.get<OssConfig[]>(Api.ossConfigList, { params });
+  return alovaInstance.get<PageResult<OssConfig>>(Api.ossConfigList, {
+    params,
+  });
 }
 
 // 获取OSS配置的信息

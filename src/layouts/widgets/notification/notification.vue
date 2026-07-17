@@ -71,7 +71,7 @@ const computedNotificationList = computed(() => {
     :styles="{
       root: {
         '--ant-popover-inner-padding': '0',
-        '--ant-popover-z-index-popup': '1999'
+        '--ant-popover-z-index-popup': '1999',
       },
     }"
     @open-change="handleOpenUpdate"

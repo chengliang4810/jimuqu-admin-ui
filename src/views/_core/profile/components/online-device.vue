@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
+import type {
+  VxeGridInstance,
+  VxeGridListeners,
+  VxeGridProps,
+} from 'vxe-table';
 
 import { useTemplateRef } from 'vue';
 
@@ -9,7 +13,7 @@ import { columns } from '@/views/monitor/online/data';
 import { Popconfirm, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
-const onlineDeviceColumns = [
+const onlineDeviceColumns: VxeGridProps['columns'] = [
   {
     type: 'seq',
     title: '序号',

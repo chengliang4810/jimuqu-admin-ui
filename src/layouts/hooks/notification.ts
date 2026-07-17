@@ -16,7 +16,6 @@ export function useNotification() {
   const tabConfig = [
     { label: '消息', value: 'system' },
     { label: '通知', value: 'notice' },
-    { label: '工作', value: 'workflow' },
   ];
 
   const notificationTabList = computed(() => {

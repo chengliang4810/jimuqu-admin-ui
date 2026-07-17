@@ -304,9 +304,7 @@ async function main() {
           `  ${chalk.yellow(namePad)}  ${rangePad}  →  ${parts.join('  ')}`,
         );
       } else {
-        console.log(
-          `  ${namePad}  ${rangePad}  →  ${chalk.gray('已最新')}`,
-        );
+        console.log(`  ${namePad}  ${rangePad}  →  ${chalk.gray('已最新')}`);
       }
     }
   }

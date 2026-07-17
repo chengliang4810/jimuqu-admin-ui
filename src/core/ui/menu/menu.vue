@@ -12,7 +12,7 @@ import SubMenu from './sub-menu.vue';
 import { buildMenuPathMap } from './utils/menu-path';
 
 interface Props extends MenuProps {
-  menus: MenuRecordRaw[];
+  menus?: MenuRecordRaw[];
 }
 
 defineOptions({
@@ -31,13 +31,13 @@ const props = withDefaults(defineProps<Props>(), {
   theme: 'dark',
 });
 
-const HORIZONTAL_OVERFLOW_POPUP_CLASS = 'vben-horizontal-menu-overflow-popup';
-
 const emit = defineEmits<{
   close: [string, string[]];
   open: [string, string[]];
   select: [string, string[]];
 }>();
+
+const HORIZONTAL_OVERFLOW_POPUP_CLASS = 'vben-horizontal-menu-overflow-popup';
 
 // 激活的菜单项
 const selectedKeys = ref<string[]>([props.defaultActive]);

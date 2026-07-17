@@ -50,7 +50,7 @@ export interface SSEMessage<T = any> {
   messageId: string;
   /** 跳转路径 */
   path?: string;
-  source: 'backend' | 'notice' | 'workflow';
+  source: 'backend' | 'notice';
   timestamp: number;
   /**
    * - message 普通消息

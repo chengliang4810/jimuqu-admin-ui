@@ -26,9 +26,8 @@ declare global {
 
 type AboutDescriptionItem = DescriptionsProps['items'];
 
-const description =
-  '基于vben5.7版本(被一万行提交改坏前的最后一个提交)重构 更新为单仓项目 组件库为antdv-next';
-const name = 'Vben Admin';
+const description = '基于 Solon 与 Bell-Plus 构建的轻量级管理系统。';
+const name = 'Jimu Admin';
 const title = '关于项目';
 
 const renderLink = (href: string, text: string) =>
@@ -71,12 +70,15 @@ const baseInfoItems = computed<AboutDescriptionItem>(() => [
     label: '最后构建时间',
   },
   {
-    content: renderLink('https://gitee.com/dapppp/bell-plus', '点击查看'),
+    content: renderLink('https://doc.jimuqu.com', '点击查看'),
     label: '文档地址',
   },
   {
-    content: renderLink('https://gitee.com/dapppp/bell-plus', '点击查看'),
-    label: 'Gitee',
+    content: renderLink(
+      'https://github.com/chengliang4810/jimuqu-admin-ui',
+      '点击查看',
+    ),
+    label: '代码仓库',
   },
   {
     content: h('div', [renderLink(authorUrl, `${authorName}  `)]),
@@ -103,7 +105,11 @@ const devDependenciesItems = computed<AboutDescriptionItem>(() =>
   <Page :title="title" content-class="flex flex-col gap-4">
     <template #description>
       <p class="text-foreground mt-3 text-sm/6">
-        <a href="https://www.baidu.com" class="vben-link" target="_blank">
+        <a
+          href="https://github.com/chengliang4810/jimuqu-admin-ui"
+          class="vben-link"
+          target="_blank"
+        >
           {{ name }}
         </a>
         {{ description }}

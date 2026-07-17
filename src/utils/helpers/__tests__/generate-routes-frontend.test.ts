@@ -36,17 +36,21 @@ const mockRoutes = [
   },
 ] as RouteRecordRaw[];
 
+const dashboardRoute = mockRoutes[0] as RouteRecordRaw;
+const settingsRoute = mockRoutes[1] as RouteRecordRaw;
+const profileRoute = mockRoutes[2] as RouteRecordRaw;
+
 describe('hasAuthority', () => {
   it('should return true if there is no authority defined', () => {
-    expect(hasAuthority(mockRoutes[2], ['admin'])).toBe(true);
+    expect(hasAuthority(profileRoute, ['admin'])).toBe(true);
   });
 
   it('should return true if the user has the required authority', () => {
-    expect(hasAuthority(mockRoutes[0], ['admin'])).toBe(true);
+    expect(hasAuthority(dashboardRoute, ['admin'])).toBe(true);
   });
 
   it('should return false if the user does not have the required authority', () => {
-    expect(hasAuthority(mockRoutes[1], ['user'])).toBe(false);
+    expect(hasAuthority(settingsRoute, ['user'])).toBe(false);
   });
 });
 

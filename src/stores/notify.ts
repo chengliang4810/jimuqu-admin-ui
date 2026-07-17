@@ -1,4 +1,4 @@
-import type { NoticeList, SystemList, WorkflowList } from '@/api';
+import type { NoticeList, SystemList } from '@/api';
 import type { SSEMessage } from '@/api/common';
 import type { NotificationItem } from '@/layouts';
 
@@ -13,7 +13,7 @@ import { flattenDeep } from 'lodash-es';
 import { defineStore } from 'pinia';
 
 function backNotificationToVbenNotification(
-  m: NoticeList | SystemList | WorkflowList,
+  m: NoticeList | SystemList,
   readIds: (number | string)[],
 ) {
   const item: NotificationItem = {
@@ -31,10 +31,6 @@ function backNotificationToVbenNotification(
 }
 
 function getSseNotificationCategory(m: SSEMessage) {
-  if (m.source === 'workflow') {
-    return 'workflow';
-  }
-
   if (m.type === 'notice' || m.source === 'notice') {
     return 'notice';
   }

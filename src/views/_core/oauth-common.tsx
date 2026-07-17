@@ -2,9 +2,9 @@ import type { Component, CSSProperties } from 'vue';
 
 import { authBinding } from '@/api/core/auth';
 import { VbenIcon } from '@/icons';
+import { useGlobalLoadingStore } from '@/stores/loading';
 import { cn } from '@/utils';
 import { storeToRefs } from 'pinia';
-import { useGlobalLoadingStore } from '@/stores/loading';
 
 /**
  * @description: oauth登录

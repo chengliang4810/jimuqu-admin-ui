@@ -40,7 +40,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       mode,
       print: !isBuild,
       printInfoMap: {
-        'Gitee link': 'https://gitee.com/dapppp/bell-plus',
+        'Repository link': 'https://github.com/chengliang4810/jimuqu-admin-ui',
       },
       vxeTableLazyImport: true,
       ...envConfig,

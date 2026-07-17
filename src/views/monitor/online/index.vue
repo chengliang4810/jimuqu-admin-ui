@@ -67,7 +67,6 @@ const gridOptions = withDefaultVxeGridOptions<OnlineUser>({
   toolbarConfig: {
     slots: {
       buttons: 'toolbar-left',
-      tools: 'toolbar-right',
     },
   },
   id: 'monitor-online-index',

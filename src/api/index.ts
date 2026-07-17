@@ -25,5 +25,4 @@ export {
   type UploadResult,
   type User,
   type UserInfoResp,
-  type WorkflowList,
 } from './core';

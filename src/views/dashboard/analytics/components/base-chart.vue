@@ -16,7 +16,7 @@ import { useDebounceFn, useResizeObserver, useWindowSize } from '@vueuse/core';
 
 interface Props {
   height?: string;
-  option: EChartsOption;
+  option?: EChartsOption;
 }
 
 const props = withDefaults(defineProps<Props>(), {

@@ -99,7 +99,6 @@ function attachOssIdToImagesBySrc(target: Editor, src: string, ossId: string) {
 function getClipboardImageFiles(event: ClipboardEvent): File[] {
   const items = [...(event.clipboardData?.items ?? [])];
 
-  // eslint-disable-next-line unicorn/no-array-reduce
   return items.reduce<File[]>((files, item) => {
     if (item.kind !== 'file' || !item.type.startsWith('image/')) {
       return files;

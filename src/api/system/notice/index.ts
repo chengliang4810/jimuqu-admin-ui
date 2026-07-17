@@ -1,4 +1,4 @@
-import type { ID, IDS, PageQuery } from '@/api/common';
+import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
 
 import type { Notice } from './model';
 
@@ -15,7 +15,7 @@ enum Api {
  * @returns 分页结果
  */
 export function noticeList(params?: PageQuery) {
-  return alovaInstance.get<Notice[]>(Api.noticeList, { params });
+  return alovaInstance.get<PageResult<Notice>>(Api.noticeList, { params });
 }
 
 /**

@@ -37,12 +37,7 @@ interface RouteMeta {
    * 徽标颜色
    */
   badgeVariants?:
-    | 'default'
-    | 'destructive'
-    | 'primary'
-    | 'success'
-    | 'warning'
-    | string;
+    'default' | 'destructive' | 'primary' | 'success' | 'warning' | string;
   /**
    * 路由对应dom是否缓存起来
    */
@@ -142,7 +137,10 @@ type RouteRecordStringComponent<T = string> = Omit<
   component: T;
 };
 
-type ComponentRecordType = Record<string, () => Promise<Component>>;
+type ComponentRecordType = Record<
+  string,
+  (() => Promise<Component>) | Component
+>;
 
 interface GenerateMenuAndRoutesOptions {
   fetchMenuListAsync?: () => Promise<RouteRecordStringComponent[]>;

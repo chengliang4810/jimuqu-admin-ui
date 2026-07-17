@@ -60,7 +60,7 @@ describe('loadScript', () => {
     if (!capturedScript) {
       throw new Error('Expected the captured script element to exist');
     }
-    capturedScript.dispatchEvent(new Event('error'));
+    (capturedScript as HTMLScriptElement).dispatchEvent(new Event('error'));
 
     await expect(promise).rejects.toThrow('Failed to load script: error.js');
   });

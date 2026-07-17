@@ -3,5 +3,4 @@
  * 可返回 字符串/Vnode
  */
 export type DictFallback =
-  | ((current: number | string) => string | VNode)
-  | string;
+  ((current: number | string) => string | VNode) | string;
