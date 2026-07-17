@@ -19,6 +19,8 @@ export interface Menu {
   status: string;
   perms: string;
   icon: string;
+  activeMenu?: string;
+  ext?: string;
   children: Menu[];
 }
 
