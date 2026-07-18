@@ -28,4 +28,13 @@ test('admin logs in through the real form and keeps the authenticated session', 
       .filter({ hasText: '系统管理' })
       .first(),
   ).toBeVisible();
+
+  const rootMenus = ['系统管理', '系统监控', '资源管理'];
+  for (const title of rootMenus) {
+    const menu = page
+      .locator('.ant-menu-submenu-title:visible')
+      .filter({ hasText: title })
+      .first();
+    await expect(menu.locator('.ant-menu-item-icon')).toBeVisible();
+  }
 });
