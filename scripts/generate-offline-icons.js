@@ -16,6 +16,7 @@ const offlineIconList = [
   'fluent-mdl2:dictionary',
   'ant-design:setting-outlined',
   'fe:notice-push',
+  'lucide:logs',
   'material-symbols:logo-dev-outline',
   'solar:folder-with-files-outline',
   'ant-design:setting-outlined',

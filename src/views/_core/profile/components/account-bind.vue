@@ -7,7 +7,7 @@ import { onMounted, ref } from 'vue';
 
 import { authUnbinding } from '@/api';
 import { socialList } from '@/api/system/social';
-import { Alert, Avatar, Card, Empty, Tooltip } from 'antdv-next';
+import { Avatar, Card, Empty, Tooltip } from 'antdv-next';
 
 import { accountBindList, useOAuthBinding } from '../../oauth-common';
 
@@ -126,19 +126,6 @@ const { handleAuthBinding } = useOAuthBinding();
       class="flex items-center justify-center rounded-lg border py-4"
     >
       <Empty :image="simpleImage" description="暂无可绑定的第三方账户" />
-    </div>
-    <div class="p-4 pt-0">
-      <Alert message="说明" type="info">
-        <template #description>
-          <p>
-            需要添加第三方账号在
-            <span class="font-bold">
-              apps\web-antd\src\views\_core\oauth-common.ts
-            </span>
-            中accountBindList按模板添加
-          </p>
-        </template>
-      </Alert>
     </div>
   </div>
 </template>

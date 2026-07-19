@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
 import { sendSmsCode } from '@/api/core/captcha';
 import { $t } from '@/locales';
 import { useAuthStore } from '@/stores';
-import { Alert, Button, Form, FormItem, Input, SpaceCompact } from 'antdv-next';
+import { Button, Form, FormItem, Input, SpaceCompact } from 'antdv-next';
 
 defineOptions({ name: 'CodeLogin' });
 
@@ -82,8 +82,7 @@ async function handleSendCode() {
     await sendSmsCode(formState.phoneNumber);
     window.message.success('验证码发送成功');
     startCountdown();
-  } catch (error) {
-    console.error(error);
+  } catch {
   } finally {
     sendLoading.value = false;
   }
@@ -97,9 +96,7 @@ async function handleLogin() {
       smsCode: formState.code,
       grantType: 'sms',
     } as any);
-  } catch (error) {
-    console.error(error);
-  }
+  } catch {}
 }
 
 function goToLogin() {
@@ -115,13 +112,6 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <Alert
-      class="mb-4"
-      show-icon
-      message="测试手机号: 15888888888 正确验证码: 1234 演示使用 不会真的发送"
-      type="info"
-    />
-
     <!-- 标题 -->
     <div class="mb-7 sm:mx-auto sm:w-full sm:max-w-md">
       <h2

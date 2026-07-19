@@ -92,7 +92,7 @@ function backMenuToVbenMenu(
       path: menu.path,
     };
 
-    // 处理meta映射 TODO: 等待后端添加参数
+    // 将后端 ext JSON 映射为扩展路由 meta
     if (menu.ext) {
       try {
         const extRouteMeta = JSON.parse(menu.ext);

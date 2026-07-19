@@ -113,6 +113,7 @@
     "dotenv": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
+    "fflate": "catalog:",
     "happy-dom": "catalog:",
     "html-minifier-terser": "catalog:",
     "pkg-types": "catalog:",

@@ -65,8 +65,7 @@ async function handleSubmit() {
     userStore.setUserInfo(userInfo);
     // 左边reload
     emitter.emit('updateProfile');
-  } catch (error) {
-    console.error(error);
+  } catch {
   } finally {
     submitLoading.value = false;
   }

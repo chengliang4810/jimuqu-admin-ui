@@ -1,4 +1,5 @@
 import type { ID, IDS, PageQuery, PageResult } from '@/api/common';
+import type { HttpResponse } from '@/utils/http/type';
 
 import type {
   DeptTree,
@@ -48,16 +49,12 @@ export function userExport(data: Partial<User>) {
  * @returns void
  */
 export function userImportData(data: UserImportParam) {
-  return alovaInstance.post<{ code: number; msg: string }>(
-    Api.userImport,
-    data,
-    {
-      headers: {
-        'Content-Type': ContentTypeEnum.FORM_DATA,
-      },
-      isTransformResponse: false,
+  return alovaInstance.post<HttpResponse<null>>(Api.userImport, data, {
+    headers: {
+      'Content-Type': ContentTypeEnum.FORM_DATA,
     },
-  );
+    isTransformResponse: false,
+  });
 }
 
 /**

@@ -51,8 +51,7 @@ onMounted(async () => {
       await authStore.authLogin(data as any);
       window.message.success(`${source}登录成功`);
     }
-  } catch (error) {
-    console.error(error);
+  } catch {
     // 500 你还没有绑定第三方账号，绑定后才可以登录！
     setTimeout(() => {
       router.push(LOGIN_PATH);

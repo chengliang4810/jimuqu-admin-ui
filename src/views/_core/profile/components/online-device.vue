@@ -46,7 +46,6 @@ const gridOptions = withDefaultVxeGridOptions({
   toolbarConfig: {
     slots: {
       buttons: 'toolbar-left',
-      tools: 'toolbar-right',
     },
   },
 });

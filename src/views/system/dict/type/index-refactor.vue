@@ -182,7 +182,7 @@ async function query(params: Record<string, any> = {}) {
       <Space>
         <Tooltip title="刷新缓存">
           <a-button
-            v-access:code="['system:dict:edit']"
+            v-access:code="['system:dict:remove']"
             :icon="h(SyncOutlined)"
             @click="handleRefreshCache"
           />

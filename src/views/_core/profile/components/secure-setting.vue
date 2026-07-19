@@ -73,8 +73,7 @@ async function handleSubmit() {
         ]) as UpdatePasswordParam;
         await userUpdatePassword(data);
         await authStore.logout(true);
-      } catch (error) {
-        console.error(error);
+      } catch {
       } finally {
         submitLoading.value = false;
       }

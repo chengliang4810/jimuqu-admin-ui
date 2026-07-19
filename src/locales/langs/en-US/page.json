@@ -12,5 +12,9 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
+  },
+  "project": {
+    "about": "About",
+    "document": "Documentation"
   }
 }

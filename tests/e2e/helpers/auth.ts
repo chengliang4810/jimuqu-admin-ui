@@ -46,6 +46,8 @@ export async function loginThroughUi(
 
   await expect(usernameInput).toBeVisible();
   await expect(passwordInput).toBeVisible();
+  await expect(page.getByText(/当前版本对应后端/)).toHaveCount(0);
+  await expect(page.getByText('忘记密码?', { exact: true })).toBeVisible();
   await expect(
     page.locator('#code'),
     'full-stack E2E requires captcha.enable=false',

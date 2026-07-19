@@ -22,9 +22,22 @@ pnpm dev
 ```bash
 pnpm typecheck
 pnpm test:unit
-pnpm test:e2e
 pnpm lint
 pnpm build
+```
+
+## 端到端测试
+
+端到端测试依赖由后端仓库统一准备的后端服务、测试数据和前端构建产物。唯一受支持的入口是后端仓库的 `script/test-fullstack.ps1`，不要在前端仓库直接运行 `pnpm test:e2e`。
+
+在 Windows PowerShell 中运行：
+
+```powershell
+$backendDir = 'C:\path\to\jimuqu-admin'
+$frontendDir = 'C:\path\to\jimuqu-admin-ui'
+$env:JIMU_TEST_MYSQL_PASSWORD = Read-Host '请输入本机 MySQL root 密码'
+Set-Location $backendDir
+.\script\test-fullstack.ps1 -FrontendDir $frontendDir
 ```
 
 ## 接口响应

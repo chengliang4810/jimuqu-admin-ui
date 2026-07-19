@@ -12,7 +12,7 @@ import {
   FormInputNumber as InputNumber,
   FormTreeSelect as TreeSelect,
 } from '@/components/global/form';
-import { DictEnum } from '@/constants';
+import { DictEnum, YesNo } from '@/constants';
 import { VbenIcon } from '@/icons';
 import { $t } from '@/locales';
 import { addFullName, cloneDeep, getPopupContainer, listToTree } from '@/utils';
@@ -73,7 +73,7 @@ const showNotButton = computed(() => formData.value.menuType !== 'F');
 const showMenu = computed(() => formData.value.menuType === 'C');
 const showMenuOrButton = computed(() => formData.value.menuType !== 'M');
 const pathPlaceholder = computed(() => {
-  return formData.value.isFrame === '0'
+  return formData.value.isFrame === YesNo.Yes
     ? '填写链接地址http(s)://  使用新页面打开'
     : '填写`路由地址`或者`链接地址`  链接默认使用内部iframe内嵌打开';
 });
@@ -114,7 +114,7 @@ const formRules = computed<AntdFormRules<FormData>>(() => ({
   orderNum: [{ required: true, message: $t('ui.formRules.required') }],
   parentId: [{ required: true, message: $t('ui.formRules.selectRequired') }],
   path:
-    formData.value.isFrame === '0'
+    formData.value.isFrame === YesNo.Yes
       ? [
           { message: '请输入链接地址', required: true },
           { message: '请输入正确的链接地址', pattern: /^https?:\/\// },
@@ -374,7 +374,7 @@ async function handleCopyConfig() {
         <Input
           allow-clear
           class="w-full"
-          :disabled="formData.isFrame === '0'"
+          :disabled="formData.isFrame === YesNo.Yes"
           v-model:value="formData.component"
         />
       </FormItem>
@@ -452,7 +452,7 @@ async function handleCopyConfig() {
             :mode="jsonEditorMode"
             :main-menu-bar="false"
             :status-bar="false"
-            :disabled="formData.isFrame === '0'"
+            :disabled="formData.isFrame === YesNo.Yes"
             placeholder="必须为json字符串格式"
           />
         </div>

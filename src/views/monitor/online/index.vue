@@ -127,7 +127,12 @@ function handleSearchReset() {
                 placement="left"
                 @confirm="handleForceOffline(row)"
               >
-                <action-button danger>强制下线</action-button>
+                <action-button
+                  v-access:code="['monitor:online:forceLogout']"
+                  danger
+                >
+                  强制下线
+                </action-button>
               </Popconfirm>
             </template>
             <template #loading>

@@ -15,7 +15,9 @@ import {
   openCreateOverlay,
   openEditOverlay,
   submitOverlay,
+  titledGrid,
 } from './helpers/crud';
+import { expectExcelExport } from './helpers/download';
 import { fillLabeledInput, formItem, selectDepartment } from './helpers/form';
 import { openDynamicModule } from './helpers/navigation';
 
@@ -124,6 +126,8 @@ test('role CRUD is completed entirely through the web UI', async ({
   );
   await searchTable(page, '角色名称', updatedName, '/system/role/list', 'page');
   await expect(dataRow(page, updatedName)).toBeVisible();
+
+  await expectExcelExport(page, '/system/role/export', 'export roles');
 
   await submitMutation(
     page,
@@ -243,6 +247,8 @@ test('post CRUD is completed entirely through the web UI', async ({
   await searchTable(page, '岗位名称', updatedName, '/system/post/list', 'page');
   await expect(dataRow(page, updatedName)).toBeVisible();
 
+  await expectExcelExport(page, '/system/post/export', 'export posts');
+
   await submitMutation(
     page,
     'DELETE',
@@ -316,6 +322,38 @@ test('configuration CRUD is completed entirely through the web UI', async ({
   );
   await expect(dataRow(page, updatedName)).toContainText('updated');
 
+  await expectExcelExport(
+    page,
+    '/system/config/export',
+    'export configurations',
+  );
+
+  const refreshPromise = waitForApiResponse(
+    page,
+    'DELETE',
+    '/system/config/refreshCache',
+  );
+  const refreshReloadPromise = expectReload(
+    page,
+    '/system/config/list',
+    'page',
+    'refresh configuration cache reload',
+  );
+  await page.getByRole('button', { name: '刷新缓存' }).click();
+  const refreshConfirm = page
+    .locator('.ant-popover:visible')
+    .filter({ hasText: '确认刷新参数缓存？' })
+    .last();
+  await expect(refreshConfirm).toBeVisible();
+  await refreshConfirm
+    .getByRole('button', { name: antButtonNames.confirmAction })
+    .click();
+  await expectSuccessEnvelope(
+    await refreshPromise,
+    'refresh configuration cache',
+  );
+  await refreshReloadPromise;
+
   await submitMutation(
     page,
     'DELETE',
@@ -386,6 +424,13 @@ test('dictionary type CRUD is completed entirely through the web UI', async ({
     'page',
   );
   await expect(dataRow(page, updatedName)).toBeVisible();
+
+  await expectExcelExport(
+    page,
+    '/system/dict/type/export',
+    'export dictionary types',
+    titledGrid(page, dictModule.heading),
+  );
 
   await submitMutation(
     page,

@@ -5,7 +5,12 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 
 import { computed, ref, useTemplateRef } from 'vue';
 
-import { roleChangeStatus, roleList, roleRemove } from '@/api/system/role';
+import {
+  roleChangeStatus,
+  roleExport,
+  roleList,
+  roleRemove,
+} from '@/api/system/role';
 import { useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 import { ApiSwitch } from '@/components/global';
@@ -20,6 +25,7 @@ import {
   SUPERADMIN_ROLE_ID,
   SUPERADMIN_ROLE_KEY,
 } from '@/constants';
+import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
@@ -142,6 +148,14 @@ function handleMultiDelete() {
   });
 }
 
+const { exportBlob, exportLoading, buildExportFileName } =
+  useBlobExport(roleExport);
+async function handleExport() {
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
+  const fileName = buildExportFileName('角色数据');
+  exportBlob({ data: formValues, fileName });
+}
+
 const { hasAccessByCodes, hasAccessByRoles } = useAccess();
 
 const isSuperAdmin = computed(() => hasAccessByRoles([SUPERADMIN_ROLE_KEY]));
@@ -212,6 +226,14 @@ function syncCheckedRows() {
           </template>
           <template #toolbar-right>
             <Space>
+              <a-button
+                v-access:code="['system:role:export']"
+                :loading="exportLoading"
+                :disabled="exportLoading"
+                @click="handleExport"
+              >
+                {{ $t('pages.common.export') }}
+              </a-button>
               <a-button
                 :disabled="checkedRows.length === 0"
                 danger

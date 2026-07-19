@@ -1,6 +1,10 @@
+import { watch } from 'vue';
+
 import { useAppConfig } from '@/hooks';
 import { useAccessStore } from '@/stores';
 import { useEventSource, useWebSocket } from '@vueuse/core';
+
+const REPLACED_CLOSE_CODE = 4001;
 
 const { apiURL, clientId, sseEnable, websocketEnable } = useAppConfig(
   import.meta.env,
@@ -20,7 +24,7 @@ export function useSseMessage() {
 
   const sseAddr = `${apiURL}/resource/message?clientid=${clientId}&Authorization=Bearer ${token}`;
 
-  const sseReturnData = useEventSource(sseAddr, [], {
+  const sseReturnData = useEventSource(sseAddr, ['kicked'], {
     autoReconnect: {
       delay: 1000,
       onFailed() {
@@ -28,6 +32,13 @@ export function useSseMessage() {
       },
       retries: 3,
     },
+  });
+
+  watch(sseReturnData.event, (event) => {
+    if (event === 'kicked') {
+      sseReturnData.data.value = null;
+      sseReturnData.close();
+    }
   });
 
   return sseReturnData;
@@ -63,10 +74,11 @@ export function useWebSocketMessage() {
     : websocketAddr.replace('http://', 'ws://');
   // console.log('websocketUrl: ' + websocketAddr);
 
+  let replaced = false;
   const websocketResponse = useWebSocket(websocketAddr, {
     autoReconnect: {
       // 重连最大次数
-      retries: 3,
+      retries: (retried) => !replaced && retried < 3,
       // 重连间隔
       delay: 1000,
       onFailed() {
@@ -75,15 +87,18 @@ export function useWebSocketMessage() {
     },
     heartbeat: {
       message: JSON.stringify({ type: 'ping' }),
+      responseMessage: JSON.stringify({ type: 'pong' }),
       // 发送心跳的间隔
       interval: 10_000,
       // 接收到心跳response的超时时间
       pongTimeout: 2000,
     },
     onConnected() {
+      replaced = false;
       console.info('websocket已经连接');
     },
-    onDisconnected() {
+    onDisconnected(_websocket, event) {
+      replaced = event.code === REPLACED_CLOSE_CODE;
       console.warn('websocket已经断开');
     },
   });

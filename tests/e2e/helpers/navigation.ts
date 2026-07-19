@@ -9,6 +9,7 @@ import {
 } from './api';
 
 export interface DynamicModule {
+  ancestor?: string;
   heading: string;
   item: string;
   parent: string;
@@ -18,6 +19,24 @@ export interface DynamicModule {
 }
 
 export async function openDynamicModule(page: Page, module: DynamicModule) {
+  if (module.ancestor) {
+    const ancestorMenu = page
+      .locator('.ant-menu-submenu-title:visible')
+      .filter({ hasText: module.ancestor })
+      .first();
+    const parentMenu = page
+      .locator('.ant-menu-submenu-title:visible')
+      .filter({ hasText: module.parent })
+      .first();
+    if (!(await parentMenu.isVisible())) {
+      await expect(
+        ancestorMenu,
+        `dynamic ${module.ancestor} menu`,
+      ).toBeVisible();
+      await ancestorMenu.click();
+    }
+  }
+
   const parentMenu = page
     .locator('.ant-menu-submenu-title:visible')
     .filter({ hasText: module.parent })

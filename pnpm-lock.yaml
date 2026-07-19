@@ -198,6 +198,9 @@ catalogs:
     eslint-plugin-yml:
       specifier: 3.6.0
       version: 3.6.0
+    fflate:
+      specifier: 0.8.3
+      version: 0.8.3
     globals:
       specifier: 17.7.0
       version: 17.7.0
@@ -595,6 +598,9 @@ importers:
       eslint-config-prettier:
         specifier: 'catalog:'
         version: 10.1.8(eslint@10.7.0(jiti@2.7.0))
+      fflate:
+        specifier: 'catalog:'
+        version: 0.8.3
       happy-dom:
         specifier: 'catalog:'
         version: 20.10.6

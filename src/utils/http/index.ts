@@ -219,7 +219,7 @@ const alovaInstance = createAlova({
         throw new Error($t('http.apiRequestFailed'));
       }
 
-      // 后端v6已经采用严格的{code, msg, data}模式
+      // 后端采用严格的 {code, msg, data} 响应契约
       const { code, data, msg } = axiosResponseData;
 
       // 业务状态码为200 则请求成功

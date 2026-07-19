@@ -12,11 +12,6 @@ export const menuTypeOptions = [
   { label: '按钮', value: 'F' },
 ];
 
-export const yesNoOptions = [
-  { label: '是', value: '0' },
-  { label: '否', value: '1' },
-];
-
 // （M目录 C菜单 F按钮）
 export const menuTypes = {
   C: {

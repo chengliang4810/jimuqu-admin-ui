@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
                 :disabled="checkedRows.length === 0"
                 danger
                 type="primary"
-                v-access:code="['system:role:remove']"
+                v-access:code="['system:role:edit']"
                 @click="handleMultipleAuthCancel"
               >
                 取消授权
@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
               <a-button
                 type="primary"
                 :disabled="roleId === ''"
-                v-access:code="['system:role:add']"
+                v-access:code="['system:role:edit']"
                 @click="handleAdd"
               >
                 授权用户
@@ -216,7 +216,7 @@ onBeforeUnmount(() => {
             >
               <action-button
                 danger
-                v-access:code="['system:role:remove']"
+                v-access:code="['system:role:edit']"
                 @click.stop=""
               >
                 取消

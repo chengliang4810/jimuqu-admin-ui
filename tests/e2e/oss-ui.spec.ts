@@ -20,10 +20,10 @@ test('a file is uploaded, found and deleted entirely through the web UI', async 
   await openDynamicModule(page, {
     heading: '文件列表',
     item: '文件管理',
-    parent: '资源管理',
+    parent: '系统管理',
     responseKind: 'page',
     responsePath: '/resource/oss/list',
-    url: /\/resource\/oss(?:[/?#]|$)/,
+    url: /\/system\/oss(?:[/?#]|$)/,
   });
 
   await page.getByRole('button', { exact: true, name: '文件上传' }).click();

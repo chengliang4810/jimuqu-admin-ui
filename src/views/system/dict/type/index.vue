@@ -205,7 +205,7 @@ function syncCheckedRows() {
                 title="确认刷新字典缓存？"
                 @confirm="handleRefreshCache"
               >
-                <a-button v-access:code="['system:dict:edit']">
+                <a-button v-access:code="['system:dict:remove']">
                   刷新缓存
                 </a-button>
               </Popconfirm>

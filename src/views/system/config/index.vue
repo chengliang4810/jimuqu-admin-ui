@@ -5,6 +5,7 @@ import type { VxeGridInstance, VxeGridListeners } from 'vxe-table';
 import { ref, useTemplateRef } from 'vue';
 
 import {
+  configExport,
   configList,
   configRefreshCache,
   configRemove,
@@ -16,6 +17,7 @@ import {
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
 import { YesNo } from '@/constants';
+import { useBlobExport } from '@/utils/file/export';
 import { Popconfirm, Space, Spin } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
@@ -118,6 +120,14 @@ function handleMultiDelete() {
   });
 }
 
+const { exportBlob, exportLoading, buildExportFileName } =
+  useBlobExport(configExport);
+async function handleExport() {
+  const formValues = (await searchFormRef.value?.getValues()) ?? {};
+  const fileName = buildExportFileName('参数数据');
+  exportBlob({ data: formValues, fileName });
+}
+
 async function handleRefreshCache() {
   await configRefreshCache();
   await query();
@@ -176,11 +186,21 @@ function syncCheckedRows() {
             </template>
             <template #toolbar-right>
               <Space>
+                <a-button
+                  v-access:code="['system:config:export']"
+                  :loading="exportLoading"
+                  :disabled="exportLoading"
+                  @click="handleExport"
+                >
+                  {{ $t('pages.common.export') }}
+                </a-button>
                 <Popconfirm
                   title="确认刷新参数缓存？"
                   @confirm="handleRefreshCache"
                 >
-                  <a-button> 刷新缓存 </a-button>
+                  <a-button v-access:code="['system:config:remove']">
+                    刷新缓存
+                  </a-button>
                 </Popconfirm>
                 <a-button
                   v-access:code="['system:config:remove']"

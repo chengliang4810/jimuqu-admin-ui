@@ -3,23 +3,36 @@ import type { Locator, Page } from 'playwright/test';
 import { expect } from 'playwright/test';
 
 export const antButtonNames = {
+  cancel: /^取\s*消$/,
+  clear: /^清\s*空$/,
   confirm: /^确\s*认$/,
   confirmAction: /^(?:确\s*定|确\s*认)$/,
   create: /^新\s*增$/,
+  delete: /^删\s*除$/,
   search: /^搜\s*索$/,
+  unlock: /^解\s*锁$/,
 } as const;
 
 export function dataRow(page: Page, text: string) {
   return page.locator('.vxe-body--row').filter({ hasText: text }).first();
 }
 
-async function actionRow(row: Locator) {
+export function titledGrid(page: Page, title: string) {
+  return page
+    .getByText(title, { exact: true })
+    .first()
+    .locator(
+      'xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " vxe-grid ")][1]',
+    );
+}
+
+export async function actionRow(row: Locator) {
   const rowId = await row.getAttribute('rowid');
   if (!rowId) {
     return row;
   }
 
-  expect(rowId, 'VXE rowid').toMatch(/^[\w-]+$/);
+  expect(rowId, 'VXE rowid').toMatch(/^[\w.-]+$/);
   const fixedRow = row
     .page()
     .locator(

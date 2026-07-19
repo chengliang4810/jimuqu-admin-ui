@@ -99,7 +99,7 @@ const gridOptions = withDefaultVxeGridOptions({
    * 如果遇到样式问题(空白、错位 滚动等)可以选择关闭虚拟滚动
    */
   scrollY: {
-    enabled: true,
+    enabled: false,
     gt: 0,
   },
   treeConfig: {

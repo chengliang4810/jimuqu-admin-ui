@@ -11,7 +11,7 @@ export interface Menu {
   orderNum: number;
   path: string;
   component?: string;
-  query: string;
+  queryParam: string;
   isFrame: string;
   isCache: string;
   menuType: string;

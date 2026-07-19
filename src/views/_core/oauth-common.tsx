@@ -83,8 +83,7 @@ export function useOAuthBinding() {
       const href = await authBinding(source);
       window.location.href = href;
       // 不取消loading的原因在于href加载也会消耗时间  且跳出去会销毁
-    } catch (e) {
-      console.error(e);
+    } catch {
       // 接口失败才需要关闭loading
       globalLoading.value = false;
     }

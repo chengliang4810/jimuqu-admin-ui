@@ -9,7 +9,6 @@ import { $t } from '@/locales';
 import { useAuthStore } from '@/stores';
 import { cn } from '@/utils';
 import {
-  Alert,
   Button,
   Checkbox,
   Form,
@@ -114,7 +113,6 @@ async function handleSubmit() {
     // 登录
     await authStore.authLogin(requestParam);
   } catch (error) {
-    console.error(error);
     // 处理验证码错误
     if (error instanceof Error) {
       // 刷新验证码
@@ -146,13 +144,6 @@ onMounted(async () => {
         {{ $t('authentication.loginSubtitle') }}
       </p>
     </div>
-
-    <Alert
-      :styles="{ root: { marginBottom: '16px' } }"
-      title="当前版本对应后端v6版本"
-      show-icon
-      type="warning"
-    />
 
     <Form
       :model="formState"

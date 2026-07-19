@@ -1,4 +1,4 @@
-import type { Page, Response } from 'playwright/test';
+import type { Page, Request, Response } from 'playwright/test';
 
 import type { ApiEnvelope } from './helpers/api';
 import type { LoginResult } from './helpers/auth';
@@ -10,8 +10,15 @@ import { loginThroughUi } from './helpers/auth';
 
 interface BrowserIssue {
   detail: string;
-  kind: 'console.error' | 'http.5xx' | 'pageerror';
+  kind:
+    | 'console.error'
+    | 'http.5xx'
+    | 'pageerror'
+    | 'request.failed'
+    | 'resource.http';
 }
+
+const resourceTypes = new Set(['font', 'image', 'script', 'stylesheet']);
 
 export interface AuthenticatedSession {
   accessToken: string;
@@ -38,17 +45,33 @@ export const test = base.extend<E2EFixtures>({
     const onPageError = (error: Error) => {
       issues.push({ detail: error.stack ?? error.message, kind: 'pageerror' });
     };
+    const onRequestFailed = (request: Request) => {
+      if (!resourceTypes.has(request.resourceType())) return;
+      issues.push({
+        detail: `${request.method()} ${request.url()} ${request.failure()?.errorText ?? 'failed'}`,
+        kind: 'request.failed',
+      });
+    };
     const onResponse = (response: Response) => {
       if (response.status() >= 500) {
         issues.push({
           detail: `${response.status()} ${response.request().method()} ${response.url()}`,
           kind: 'http.5xx',
         });
+      } else if (
+        response.status() >= 400 &&
+        resourceTypes.has(response.request().resourceType())
+      ) {
+        issues.push({
+          detail: `${response.status()} ${response.request().resourceType()} ${response.url()}`,
+          kind: 'resource.http',
+        });
       }
     };
 
     page.on('console', onConsole);
     page.on('pageerror', onPageError);
+    page.on('requestfailed', onRequestFailed);
     page.on('response', onResponse);
 
     try {
@@ -56,6 +79,7 @@ export const test = base.extend<E2EFixtures>({
     } finally {
       page.off('console', onConsole);
       page.off('pageerror', onPageError);
+      page.off('requestfailed', onRequestFailed);
       page.off('response', onResponse);
 
       if (issues.length > 0) {

@@ -97,7 +97,7 @@ async function loadAndConvertEnv(
     .filter((item) => item === 'brotli' || item === 'gzip');
 
   return {
-    appTitle: getString(VITE_APP_TITLE, 'Vben Admin'),
+    appTitle: getString(VITE_APP_TITLE, 'Jimu Admin'),
     archiver: getBoolean(VITE_ARCHIVER),
     base: getString(VITE_BASE, '/'),
     compress: compressTypes.length > 0,

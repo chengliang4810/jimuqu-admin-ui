@@ -10,9 +10,6 @@ export const DictEnum = {
   SYS_SHOW_HIDE: 'sys_show_hide', // 显示状态
   SYS_USER_GENDER: 'sys_user_gender', // 性别
   SYS_YES_NO: 'sys_yes_no', // 是否
-  WF_BUSINESS_STATUS: 'wf_business_status', // 业务状态
-  WF_FORM_TYPE: 'wf_form_type', // 表单类型
-  WF_TASK_STATUS: 'wf_task_status', // 任务状态
 } as const;
 
 export type DictEnumKey = keyof typeof DictEnum;

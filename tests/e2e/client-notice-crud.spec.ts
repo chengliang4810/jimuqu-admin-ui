@@ -5,6 +5,7 @@ import {
   waitForApiResponse,
 } from './helpers/api';
 import {
+  actionRow,
   antButtonNames,
   confirmRowDelete,
   dataRow,
@@ -12,6 +13,7 @@ import {
   openEditOverlay,
   submitOverlay,
 } from './helpers/crud';
+import { expectExcelExport } from './helpers/download';
 import { fillLabeledInput, selectOption } from './helpers/form';
 import { openDynamicModule } from './helpers/navigation';
 
@@ -77,6 +79,8 @@ test('client CRUD is completed entirely through the web UI', async ({
   await expectPageEnvelope(await updateReloadPromise, 'reload updated client');
   await expect(dataRow(page, clientKey)).toContainText('1900');
 
+  await expectExcelExport(page, '/system/client/export', 'export clients');
+
   const deleteResponsePromise = waitForApiResponse(
     page,
     'DELETE',
@@ -138,6 +142,17 @@ test('notice CRUD is completed entirely through the web UI', async ({
   await page.getByRole('button', { name: antButtonNames.search }).click();
   await expectPageEnvelope(await searchResponsePromise, 'search notice');
   await expect(dataRow(page, noticeTitle)).toBeVisible();
+
+  const noticeRow = await actionRow(dataRow(page, noticeTitle));
+  await noticeRow.getByRole('button', { name: '详情', exact: true }).click();
+  const previewDialog = page.getByRole('dialog').last();
+  await expect(
+    previewDialog.getByText('通知公告', { exact: true }).first(),
+  ).toBeVisible();
+  await expect(previewDialog).toContainText(noticeTitle);
+  await expect(previewDialog).toContainText(`公告内容 ${suffix}`);
+  await previewDialog.locator('.ant-modal-close').click();
+  await expect(previewDialog).toBeHidden();
 
   const editOverlay = await openEditOverlay(dataRow(page, noticeTitle));
   await fillLabeledInput(editOverlay, '公告标题', updatedTitle);

@@ -22,7 +22,7 @@ const scopes = [
     username: 'admin',
   },
   {
-    expected: ['admin', 'custom_user', 'dept_child_user', 'dept_user'],
+    expected: ['self_user'],
     label: 'custom department',
     username: 'custom_user',
   },

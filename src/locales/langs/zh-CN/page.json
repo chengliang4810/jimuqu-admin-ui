@@ -12,5 +12,9 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "project": {
+    "about": "关于",
+    "document": "文档"
   }
 }

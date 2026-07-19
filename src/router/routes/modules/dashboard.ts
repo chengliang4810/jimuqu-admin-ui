@@ -28,14 +28,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: 'VbenDocument',
-        path: '/vben-admin/document',
+        name: 'JimuDocument',
+        path: '/jimu/document',
         component: IFrameView,
         meta: {
           icon: 'lucide:book-open-text',
-          iframeSrc: 'https://dapdap.top',
+          iframeSrc: 'https://doc.jimuqu.com',
           keepAlive: true,
-          title: $t('demos.vben.document'),
+          title: $t('page.project.document'),
         },
       },
       {
@@ -57,10 +57,10 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'lucide:copyright',
       order: 9999,
-      title: $t('demos.vben.about'),
+      title: $t('page.project.about'),
     },
     name: 'About',
-    path: '/vben-admin/about',
+    path: '/jimu/about',
   },
 ];
 
