@@ -28,8 +28,20 @@ jobs:
       - name: Calculate release version
         run: echo "RELEASE_VERSION=v$(TZ=Asia/Shanghai git show -s --format=%cd --date=format-local:%Y.%m.%d $GITHUB_SHA)-${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
 
-      - name: Install and build
-        run: pnpm install --frozen-lockfile && pnpm build
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm test:unit
+
+      - name: Production build
+        run: pnpm build
 
       - name: Prepare release assets
         run: |
