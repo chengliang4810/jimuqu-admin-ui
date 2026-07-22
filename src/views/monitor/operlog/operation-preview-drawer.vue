@@ -77,7 +77,9 @@ const items = computed<DescriptionsProps['items']>(() => {
       ? {
           label: '异常信息',
           content: (
-            <span class="font-semibold text-red-600">{data.errorMsg}</span>
+            <div class="max-h-[300px] overflow-auto font-semibold text-red-600">
+              {data.errorMsg}
+            </div>
           ),
         }
       : undefined,
