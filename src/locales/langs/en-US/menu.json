@@ -10,17 +10,13 @@
     "dict": "Dictionary",
     "config": "Parameter Settings",
     "notice": "Notifications",
-    "log": {
-      "root": "Log",
-      "operation": "Operation Log",
-      "login": "Login Log"
-    },
     "oss": "File",
     "client": "Client"
   },
   "monitor": {
     "root": "System Monitoring",
     "online": "Online Users",
-    "cache": "Cache Monitoring"
+    "operationLog": "Operation Log",
+    "loginLog": "Login Log"
   }
 }

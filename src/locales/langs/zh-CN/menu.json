@@ -10,17 +10,13 @@
     "dict": "字典管理",
     "config": "参数设置",
     "notice": "通知公告",
-    "log": {
-      "root": "日志管理",
-      "operation": "操作日志",
-      "login": "登录日志"
-    },
     "oss": "文件管理",
     "client": "客户端管理"
   },
   "monitor": {
     "root": "系统监控",
     "online": "在线用户",
-    "cache": "缓存监控"
+    "operationLog": "操作日志",
+    "loginLog": "登录日志"
   }
 }
