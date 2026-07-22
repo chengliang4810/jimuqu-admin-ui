@@ -21,10 +21,7 @@ const style = computed((): CSSProperties => {
 </script>
 
 <template>
-  <section
-    :style="style"
-    class="border-border bg-header flex w-full border-b"
-  >
+  <section :style="style" class="border-border bg-header flex w-full border-b">
     <slot></slot>
   </section>
 </template>
