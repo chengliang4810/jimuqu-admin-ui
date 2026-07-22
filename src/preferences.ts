@@ -1,4 +1,5 @@
 import { defineOverridesPreferences } from '@/core/preferences';
+import jimuquLogo from '@/icons/svg/icons/jimuqu-logo.svg';
 
 /**
  * @description 项目配置文件
@@ -82,7 +83,6 @@ export const overridesPreferences = defineOverridesPreferences({
    */
   logo: {
     enable: true,
-    // iconify twemoji:cowboy-hat-face
-    source: '/cow-boy.svg',
+    source: jimuquLogo,
   },
 });

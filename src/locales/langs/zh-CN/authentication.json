@@ -1,7 +1,7 @@
 {
   "welcomeBack": "欢迎回来",
-  "pageTitle": "开箱即用的大型中后台管理系统",
-  "pageDesc": "工程化、高性能、跨组件库的前端模版",
+  "pageTitle": "Jimu Admin 企业管理平台",
+  "pageDesc": "统一身份、权限、资源与系统配置管理",
   "loginSuccess": "登录成功",
   "loginSuccessDesc": "欢迎回来",
   "loginSubtitle": "请输入您的账户信息以开始管理您的项目",
