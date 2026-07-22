@@ -102,6 +102,14 @@
   color-scheme: dark;
 }
 
+/* 夜间模式下 header / tab 统一使用自定义 header 色。
+ * theme.css 中 --color-header 映射为 --ant-color-bg-container（antd 中性深灰），
+ * 与自定义蓝灰色调(--header)不一致；tabbar 本身也不挂 .dark 类，无法走下方
+ * html.dark .dark 的变量桥接。这里直接钉死 bg-header，保证与 header 同色。 */
+.dark .bg-header {
+  background-color: hsl(var(--header));
+}
+
 /* ===== 真·暗色模式 (html.dark) 下的侧边栏对齐 =====
  * 问题：bg-sidebar / bg-header 在 theme.css 中映射为 --ant-color-bg-container，
  * 但 antd darkAlgorithm 生成的容器背景是中性深灰(#141414附近)，

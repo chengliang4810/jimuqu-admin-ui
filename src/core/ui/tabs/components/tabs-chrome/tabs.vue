@@ -134,21 +134,24 @@ function onMouseDown(e: MouseEvent, tab: TabConfig) {
               </svg>
             </div>
 
-            <!-- extra -->
+            <!-- extra：颜色挂在外层，anticon 的 color:inherit 才能生效 -->
             <div
-              class="tabs-chrome__extra absolute top-1/2 right-(--gap) z-3 flex size-4 translate-y-[-50%] items-center"
+              class="tabs-chrome__extra text-muted-foreground group-[.is-active]:text-primary hover:text-foreground group-[.is-active]:dark:text-muted-foreground absolute top-1/2 right-(--gap) z-3 flex size-4 translate-y-[-50%] items-center justify-center"
             >
-              <!-- close-icon -->
-              <X
+              <span
                 v-show="!tab.affixTab && tabsView.length > 1 && tab.closable"
-                class="stroke-accent-foreground/80 text-accent-foreground/80 group-[.is-active]:text-accent-foreground hover:bg-accent hover:stroke-accent-foreground size-3 cursor-pointer rounded-full text-[7.75px] leading-none transition-all"
+                class="flex size-3.5 cursor-pointer items-center justify-center"
                 @click.stop="() => emit('close', tab.key)"
-              />
-              <Pin
+              >
+                <X class="size-3" />
+              </span>
+              <span
                 v-show="tab.affixTab && tabsView.length > 1 && tab.closable"
-                class="text-accent-foreground/80 group-[.is-active]:text-accent-foreground hover:text-accent-foreground mt-px size-3.5 cursor-pointer rounded-full transition-all"
+                class="flex size-3.5 cursor-pointer items-center justify-center"
                 @click.stop="() => emit('unpin', tab)"
-              />
+              >
+                <Pin class="size-3.5" />
+              </span>
             </div>
 
             <!-- tab-item-main -->
