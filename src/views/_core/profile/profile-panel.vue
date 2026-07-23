@@ -7,7 +7,7 @@ import { computed } from 'vue';
 import { uploadApi } from '@/api/core/upload';
 import { userProfileUpdate } from '@/api/system/profile';
 import { CropperAvatar } from '@/components/cropper';
-import { preferences, usePreferences } from '@/core/preferences';
+import { preferences } from '@/core/preferences';
 import { buildUUID } from '@/utils';
 import { Card, Descriptions, Tag, Tooltip } from 'antdv-next';
 
@@ -46,12 +46,6 @@ async function handleAvatarUpload({
   // 3. 返回 url 供 cropper 预览
   return { url: result.url };
 }
-
-const { isDark } = usePreferences();
-const poetrySrc = computed(() => {
-  const color = isDark.value ? 'white' : 'gray';
-  return `https://v2.jinrishici.com/one.svg?font-size=12&color=${color}`;
-});
 
 const items = computed<DescriptionsProps['items']>(() => {
   if (!props.profile) {
@@ -107,8 +101,7 @@ const items = computed<DescriptionsProps['items']>(() => {
           <span class="text-foreground text-xl font-bold">
             {{ profile.user.nickName ?? '未知' }}
           </span>
-          <!-- https://www.jinrishici.com/doc/#image -->
-          <img :src="poetrySrc" />
+          <span class="text-muted-foreground text-xs">海纳百川，有容乃大</span>
         </div>
       </div>
       <div class="w-full px-6">
