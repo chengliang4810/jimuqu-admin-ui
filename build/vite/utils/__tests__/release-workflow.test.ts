@@ -31,9 +31,9 @@ describe('release workflow', () => {
     );
   });
 
-  it('publishes from dev only without container images', () => {
-    expect(workflow).toContain('push:\n    branches:\n      - dev\n');
-    expect(workflow).not.toContain('\n      - main\n');
+  it('publishes from main only without container images', () => {
+    expect(workflow).toContain('push:\n    branches:\n      - main\n');
+    expect(workflow).not.toContain('\n      - dev\n');
     expect(workflow).not.toMatch(/docker|ghcr/i);
   });
 });

@@ -258,7 +258,9 @@ test('excluded modules have no menu, page or matching API request', async ({
   ).not.toContainText('生成代码');
   await page.keyboard.press('Escape');
 
-  const excludedPaths = [
+  // `/job` is the removed persistent scheduler. Solon runtime jobs live at
+  // `/monitor/job` and must remain available.
+  const excludedLegacyPaths = [
     '/ai',
     '/job',
     '/workflow',
@@ -277,7 +279,7 @@ test('excluded modules have no menu, page or matching API request', async ({
     const pathname = new URL(request.url()).pathname.toLowerCase();
     const apiPath = pathname.replace(/^\/(?:dev|prod)-api(?=\/)/, '');
     if (
-      excludedPaths.some(
+      excludedLegacyPaths.some(
         (path) => apiPath === path || apiPath.startsWith(`${path}/`),
       )
     ) {
@@ -285,7 +287,7 @@ test('excluded modules have no menu, page or matching API request', async ({
     }
   });
 
-  for (const path of excludedPaths) {
+  for (const path of excludedLegacyPaths) {
     await page.goto(path, { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveURL(
       new RegExp(`${path.replace('/', '\\/')}(?:[/?#]|$)`),

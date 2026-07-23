@@ -35,7 +35,7 @@ describe('loadEnv', () => {
     expect(env.VITE_GLOB_ENABLE_ENCRYPT).toBe('false');
   });
 
-  it('keeps every build mode on the production authentication contract', async () => {
+  it('keeps production authentication except for development encryption', async () => {
     for (const key of testVariables) {
       Reflect.deleteProperty(process.env, key);
     }
@@ -46,11 +46,19 @@ describe('loadEnv', () => {
 
     expect(expected.VITE_GLOB_ENABLE_ENCRYPT).toBe('true');
     expect(expected.VITE_GLOB_APP_CLIENT_ID).toBeTruthy();
-    for (const mode of ['development', 'test', 'analyze']) {
+    for (const mode of ['test', 'analyze']) {
       const env = await loadEnv('VITE_GLOB_', [`.env.${mode}`]);
       expect(
         Object.fromEntries(authContractVariables.map((key) => [key, env[key]])),
       ).toEqual(expected);
+    }
+
+    const development = await loadEnv('VITE_GLOB_', ['.env.development']);
+    expect(development.VITE_GLOB_ENABLE_ENCRYPT).toBe('false');
+    for (const key of authContractVariables) {
+      if (key !== 'VITE_GLOB_ENABLE_ENCRYPT') {
+        expect(development[key]).toBe(expected[key]);
+      }
     }
   });
 });

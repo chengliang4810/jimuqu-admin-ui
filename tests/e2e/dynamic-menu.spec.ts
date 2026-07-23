@@ -9,6 +9,7 @@ test('backend dynamic menu opens the user management page', async ({
   const serializedMenu = JSON.stringify(menuEnvelope.data);
   expect(serializedMenu).toContain('系统管理');
   expect(serializedMenu).toContain('用户管理');
+  expect(serializedMenu).toContain('定时任务');
 
   for (const marker of [
     'workflow/',
@@ -19,7 +20,6 @@ test('backend dynamic menu opens the user management page', async ({
     'monitor/admin',
     '工作流',
     '代码生成',
-    '定时任务',
   ]) {
     expect(
       serializedMenu.toLowerCase(),

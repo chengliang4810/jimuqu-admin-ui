@@ -5,7 +5,7 @@ test('backend and login page are reachable', async ({ page, request }) => {
   const apiURL = process.env.PLAYWRIGHT_API_URL;
   expect(
     apiURL,
-    'PLAYWRIGHT_API_URL must be provided by test-fullstack.ps1',
+    'PLAYWRIGHT_API_URL must be provided by test-fullstack.mjs',
   ).toBeTruthy();
 
   const apiResponse = await request.get(`${apiURL}/auth/code`);

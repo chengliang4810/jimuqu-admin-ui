@@ -9,6 +9,7 @@ export const antButtonNames = {
   confirmAction: /^(?:确\s*定|确\s*认)$/,
   create: /^新\s*增$/,
   delete: /^删\s*除$/,
+  reset: /^重\s*置$/,
   search: /^搜\s*索$/,
   unlock: /^解\s*锁$/,
 } as const;

@@ -27,8 +27,13 @@ const offlineIconList = [
   'solar:monitor-camera-outline',
   'material-symbols:generating-tokens-outline',
   'devicon:redis-wordmark',
+  'skill-icons:redis-light',
+  'charm:refresh',
+  'flat-color-icons:command-line',
+  'la:memory',
   'arcticons:one-hand-operation',
   'streamline:interface-login-dial-pad-finger-password-dial-pad-dot-finger',
+  'solar:calendar-linear',
   // 其他需要离线的
   'ep:fold',
   'lucide:book-open-text',

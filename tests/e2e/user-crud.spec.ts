@@ -88,7 +88,7 @@ test('admin creates, searches, edits and deletes a user from the web UI', async 
 
   expect(
     apiURL,
-    'PLAYWRIGHT_API_URL must be provided by test-fullstack.ps1',
+    'PLAYWRIGHT_API_URL must be provided by test-fullstack.mjs',
   ).toBeTruthy();
 
   try {

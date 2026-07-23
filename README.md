@@ -28,7 +28,9 @@ pnpm build
 
 ## 端到端测试
 
-端到端测试依赖由后端仓库统一准备的后端服务、测试数据和前端构建产物。唯一受支持的入口是后端仓库的 `script/test-fullstack.ps1`，不要在前端仓库直接运行 `pnpm test:e2e`。
+端到端测试依赖由后端仓库统一准备的后端服务、测试数据和前端构建产物。唯一受支持的入口是后端仓库的 `node script/test-fullstack.mjs`，不要在前端仓库直接运行 `pnpm test:e2e`。
+
+运行该入口还需要 Java 17、Maven、MySQL 8、Redis，以及已加入 `PATH` 的 `mysql`、`redis-cli` 和 Corepack。
 
 在 Windows PowerShell 中运行：
 
@@ -36,8 +38,18 @@ pnpm build
 $backendDir = 'C:\path\to\jimuqu-admin'
 $frontendDir = 'C:\path\to\jimuqu-admin-ui'
 $env:JIMU_TEST_MYSQL_PASSWORD = Read-Host '请输入本机 MySQL root 密码'
+$env:JIMU_TEST_FRONTEND_DIR = $frontendDir
 Set-Location $backendDir
-.\script\test-fullstack.ps1 -FrontendDir $frontendDir
+node script/test-fullstack.mjs
+```
+
+在 macOS 或 Linux 中运行：
+
+```bash
+export JIMU_TEST_FRONTEND_DIR='/path/to/jimuqu-admin-ui'
+export JIMU_TEST_MYSQL_PASSWORD='本机 MySQL root 密码'
+cd '/path/to/jimuqu-admin'
+node script/test-fullstack.mjs
 ```
 
 ## 接口响应
