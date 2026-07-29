@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import type { CustomPreferencesRecord } from '@/core/preferences';
+import type {
+  CustomPreferencesRecord,
+  ThemePresetType,
+} from '@/core/preferences';
 import type { SegmentedItem } from '@/core/ui/adapter';
 import type { SupportedLanguagesType } from '@/locales';
 import type {
@@ -35,10 +38,12 @@ import {
   Header,
   Layout,
   Navigation,
+  NumberFieldItem,
   Sidebar,
   Tabbar,
   Theme,
   ThemeColor,
+  ThemePreset,
   Widget,
 } from './blocks';
 
@@ -69,7 +74,9 @@ const themeColorError = defineModel<string>('themeColorError');
 const themeColorPrimary = defineModel<string>('themeColorPrimary');
 const themeColorSuccess = defineModel<string>('themeColorSuccess');
 const themeColorWarning = defineModel<string>('themeColorWarning');
+const themeBorderRadius = defineModel<number>('themeBorderRadius');
 const themeMode = defineModel<ThemeModeType>('themeMode');
+const themePreset = defineModel<ThemePresetType>('themePreset');
 const themeSemiDarkSidebar = defineModel<boolean>('themeSemiDarkSidebar');
 const themeSemiDarkSidebarSub = defineModel<boolean>('themeSemiDarkSidebarSub');
 
@@ -306,22 +313,37 @@ function handleCustomPreferencesUpdate(updates: CustomPreferencesRecord) {
               />
             </Block>
             <Block :title="$t('preferences.theme.colorTitle')">
-              <ThemeColor
-                v-model="themeColorPrimary"
-                :label="$t('preferences.theme.colorPrimary')"
+              <ThemePreset
+                v-model="themePreset"
+                v-model:custom-color="themeColorPrimary"
               />
               <ThemeColor
                 v-model="themeColorSuccess"
                 :label="$t('preferences.theme.colorSuccess')"
+                data-testid="theme-color-success"
               />
               <ThemeColor
                 v-model="themeColorWarning"
                 :label="$t('preferences.theme.colorWarning')"
+                data-testid="theme-color-warning"
               />
               <ThemeColor
                 v-model="themeColorError"
                 :label="$t('preferences.theme.colorError')"
+                data-testid="theme-color-error"
               />
+            </Block>
+            <Block :title="$t('preferences.theme.radiusTitle')">
+              <NumberFieldItem
+                v-model="themeBorderRadius"
+                :max="12"
+                :min="0"
+                :step="1"
+                :tip="$t('preferences.theme.borderRadiusTip')"
+                data-testid="theme-border-radius"
+              >
+                {{ $t('preferences.theme.borderRadius') }}
+              </NumberFieldItem>
             </Block>
             <Block :title="$t('preferences.other')">
               <ColorMode

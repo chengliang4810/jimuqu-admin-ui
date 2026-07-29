@@ -36,7 +36,12 @@ export function tagSelectOptions() {
     const label = tagTypes[key].label;
     const color = tagTypes[key].color;
     selectArray.push({
-      label: <Tag color={color}>{label}</Tag>,
+      // 标签样式选项使用实心预览，与字典标签的实际展示保持一致
+      label: (
+        <Tag color={color} variant="solid">
+          {label}
+        </Tag>
+      ),
       value: key,
     });
   });

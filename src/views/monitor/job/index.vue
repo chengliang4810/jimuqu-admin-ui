@@ -5,7 +5,13 @@ import type { VxeGridInstance } from 'vxe-table';
 
 import { ref, useTemplateRef } from 'vue';
 
-import { jobList, jobRun, jobStart, jobStop } from '@/api/monitor/job';
+import {
+  jobList,
+  jobRemove,
+  jobRun,
+  jobStart,
+  jobStop,
+} from '@/api/monitor/job';
 import { Page, useVbenDrawer, useVbenModal } from '@/components';
 import { useAccess } from '@/components/access';
 import { ApiSwitch } from '@/components/global';
@@ -14,11 +20,12 @@ import {
   useTableQuery,
   withDefaultVxeGridOptions,
 } from '@/components/vxe-table';
-import { Popconfirm, Space, Spin } from 'antdv-next';
+import { Popconfirm, Space, Spin, Tag, Tooltip } from 'antdv-next';
 import { VxeGrid } from 'vxe-table';
 
 import { columns } from './data';
 import JobLogDrawerComponent from './job-log-drawer.vue';
+import JobModalComponent from './job-modal.vue';
 import JobSearch from './job-search.vue';
 import RetryConfigModalComponent from './retry-config-modal.vue';
 
@@ -65,6 +72,7 @@ const gridOptions = withDefaultVxeGridOptions<ScheduledJob>({
   toolbarConfig: {
     slots: {
       buttons: 'toolbar-left',
+      tools: 'toolbar-right',
     },
   },
   id: 'monitor-job-index',
@@ -73,6 +81,10 @@ const gridOptions = withDefaultVxeGridOptions<ScheduledJob>({
 const tableRef = useTemplateRef<VxeGridInstance<ScheduledJob>>('tableRef');
 const { query, reload } = useTableQuery(searchFormRef, tableRef);
 const { hasAccessByCodes } = useAccess();
+/** 动态任务新增与编辑弹窗。 */
+const [JobModal, jobModalApi] = useVbenModal({
+  connectedComponent: JobModalComponent,
+});
 const [RetryConfigModal, retryConfigModalApi] = useVbenModal({
   connectedComponent: RetryConfigModalComponent,
 });
@@ -100,6 +112,24 @@ function handleRetryConfig(row: ScheduledJob) {
   retryConfigModalApi.open();
 }
 
+/** 打开动态任务新增弹窗。 */
+function handleAdd() {
+  jobModalApi.setData({});
+  jobModalApi.open();
+}
+
+/** 打开动态任务编辑弹窗。 */
+function handleEdit(row: ScheduledJob) {
+  jobModalApi.setData({ record: row });
+  jobModalApi.open();
+}
+
+/** 删除指定动态任务并刷新列表。 */
+async function handleDelete(row: ScheduledJob) {
+  await jobRemove(row.jobName);
+  await query();
+}
+
 function handleJobLog(row: ScheduledJob) {
   jobLogDrawerApi.setData(row);
   jobLogDrawerApi.open();
@@ -125,15 +155,45 @@ function handleJobLog(row: ScheduledJob) {
             <template #toolbar-left>
               <div class="text-[16px] font-medium">定时任务列表</div>
             </template>
+            <template #toolbar-right>
+              <a-button
+                v-access:code="['monitor:job:add']"
+                type="primary"
+                @click="handleAdd"
+              >
+                {{ $t('pages.common.add') }}
+              </a-button>
+            </template>
             <template #status="{ row }">
-              <ApiSwitch
-                :api="(checked) => handleChangeStatus(checked, row)"
-                checked-text="运行"
-                :disabled="!hasAccessByCodes(['monitor:job:changeStatus'])"
-                un-checked-text="停止"
-                :value="row.enabled"
-                @reload="() => query()"
-              />
+              <Space>
+                <ApiSwitch
+                  :api="(checked) => handleChangeStatus(checked, row)"
+                  checked-text="启用"
+                  :disabled="!hasAccessByCodes(['monitor:job:changeStatus'])"
+                  un-checked-text="停用"
+                  :value="row.enabled"
+                  @reload="() => query()"
+                />
+                <Tooltip :title="row.runtimeError">
+                  <Tag
+                    :color="
+                      row.runtimeStatus === 'RUNNING'
+                        ? 'success'
+                        : row.runtimeStatus === 'ERROR'
+                          ? 'error'
+                          : 'default'
+                    "
+                  >
+                    {{
+                      row.runtimeStatus === 'RUNNING'
+                        ? '运行中'
+                        : row.runtimeStatus === 'ERROR'
+                          ? '异常'
+                          : '已停止'
+                    }}
+                  </Tag>
+                </Tooltip>
+              </Space>
             </template>
             <template #action="{ row }">
               <Space>
@@ -150,6 +210,13 @@ function handleJobLog(row: ScheduledJob) {
                   </action-button>
                 </Popconfirm>
                 <action-button
+                  :disabled="row.jobSource !== 'DYNAMIC'"
+                  v-access:code="['monitor:job:edit']"
+                  @click.stop="handleEdit(row)"
+                >
+                  {{ $t('pages.common.edit') }}
+                </action-button>
+                <action-button
                   v-access:code="['monitor:job:edit']"
                   @click.stop="handleRetryConfig(row)"
                 >
@@ -161,6 +228,21 @@ function handleJobLog(row: ScheduledJob) {
                 >
                   执行记录
                 </action-button>
+                <Popconfirm
+                  :disabled="row.jobSource !== 'DYNAMIC'"
+                  placement="left"
+                  :title="`确认删除任务[${row.jobName}]？`"
+                  @confirm="handleDelete(row)"
+                >
+                  <action-button
+                    :disabled="row.jobSource !== 'DYNAMIC'"
+                    danger
+                    v-access:code="['monitor:job:remove']"
+                    @click.stop=""
+                  >
+                    {{ $t('pages.common.delete') }}
+                  </action-button>
+                </Popconfirm>
               </Space>
             </template>
             <template #loading>
@@ -170,6 +252,7 @@ function handleJobLog(row: ScheduledJob) {
         </div>
       </div>
     </Spin>
+    <JobModal @reload="() => query()" />
     <RetryConfigModal @reload="() => query()" />
     <JobLogDrawer />
   </Page>

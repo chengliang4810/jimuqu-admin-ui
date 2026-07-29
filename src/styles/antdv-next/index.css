@@ -26,6 +26,28 @@ body {
   }
 }
 
+/* 实心主色 Tag 使用随主色明暗变化的前景色，避免浅色主色仍显示白字。 */
+.ant-tag.ant-tag-processing.ant-tag-solid {
+  color: hsl(var(--primary-foreground));
+}
+
+/* 主色实心按钮使用与 Seed 明暗匹配的前景色。
+ * antdv-next 默认固定使用白字，默认主题的深色 Seed 经算法派生为浅灰后对比度不足。 */
+.ant-btn.ant-btn-color-primary.ant-btn-variant-solid {
+  color: hsl(var(--primary-foreground));
+}
+
+/* 开启状态的开关沿用主色前景色作为滑块和内部图标颜色。 */
+.ant-switch.ant-switch-checked {
+  .ant-switch-handle::before {
+    background-color: hsl(var(--primary-foreground));
+  }
+
+  .ant-switch-inner {
+    color: hsl(var(--primary-foreground));
+  }
+}
+
 /** note: 表格搜索表单底层已经使用antdv-next的Form 这里不需要做对边框颜色的兼容了  */
 
 /**
@@ -114,6 +136,17 @@ body {
     border-inline-end: 0;
   }
 
+  /* 浅色侧栏选中项使用实心主题色，文字和图标使用实心背景前景色；
+   * 仅作用于根级纵向菜单及其带作用域标记的弹层，不影响顶部和深色菜单。 */
+  &.ant-menu-light.ant-menu-root.ant-menu-inline,
+  &.ant-menu-light.ant-menu-root.ant-menu-vertical,
+  &.ant-menu-light.ant-menu-submenu-popup.vben-sidebar-menu-popup {
+    .ant-menu-item-selected {
+      color: hsl(var(--primary-foreground));
+      background: var(--ant-color-primary);
+    }
+  }
+
   /* 水平模式 */
   &.ant-menu-horizontal {
     height: var(--height-horizontal-height, 52px);
@@ -122,6 +155,19 @@ body {
     &.ant-menu-dark,
     &.ant-menu-light {
       background: transparent;
+    }
+  }
+}
+
+/* 真正的深色模式使用 accent 作为菜单选中背景，避免浅灰主色形成大面积亮色块。
+ * 半深色侧栏不命中该规则，继续保留其独立的深色侧栏方案。 */
+html.dark {
+  .ant-menu.ant-menu-dark.ant-menu-root.ant-menu-inline,
+  .ant-menu.ant-menu-dark.ant-menu-root.ant-menu-vertical,
+  .ant-menu.ant-menu-dark.ant-menu-submenu-popup.vben-sidebar-menu-popup {
+    .ant-menu-item-selected {
+      color: hsl(var(--accent-foreground));
+      background: hsl(var(--accent));
     }
   }
 }

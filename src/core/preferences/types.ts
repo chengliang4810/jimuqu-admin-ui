@@ -14,6 +14,24 @@ import type {
 type SupportedLanguagesType = 'en-US' | 'zh-CN';
 type CustomPreferencesValue = boolean | number | string;
 
+/**
+ * 主题色预设。
+ * default 为中性主题，custom 使用用户保存的自定义主色。
+ */
+type ThemePresetType =
+  | 'brand-blue'
+  | 'custom'
+  | 'cyan'
+  | 'default'
+  | 'geek-blue'
+  | 'gold'
+  | 'green'
+  | 'lime'
+  | 'magenta'
+  | 'orange'
+  | 'purple'
+  | 'red';
+
 interface CustomPreferencesOption<TValue extends string = string> {
   label: string;
   value: TValue;
@@ -257,6 +275,8 @@ interface TabbarPreferences {
 }
 
 interface ThemePreferences {
+  /** 圆角(px 数值，如 6) */
+  borderRadius: number;
   /** 错误色 */
   colorError: string;
   /** 主题色 */
@@ -267,8 +287,8 @@ interface ThemePreferences {
   colorWarning: string;
   /** 当前主题 */
   mode: ThemeModeType;
-  /** 圆角(px 数值，如 6) */
-  borderRadius: number;
+  /** 主题色预设 */
+  preset: ThemePresetType;
   /** 是否开启半深色菜单（只在theme='light'时生效） */
   semiDarkSidebar: boolean;
   /** 是否开启半深色子菜单（只在theme='light'时生效） */
@@ -361,6 +381,7 @@ export type {
   SupportedLanguagesType,
   TabbarPreferences,
   ThemePreferences,
+  ThemePresetType,
   TransitionPreferences,
   WidgetPreferences,
 };

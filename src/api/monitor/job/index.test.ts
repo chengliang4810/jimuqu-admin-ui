@@ -1,13 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  jobAdd,
+  jobHandlerList,
   jobList,
   jobLogClean,
   jobLogList,
   jobLogRemove,
+  jobRemove,
   jobRun,
   jobStart,
   jobStop,
+  jobUpdate,
   jobUpdateConfig,
 } from '.';
 
@@ -41,6 +45,35 @@ describe('scheduled job API', () => {
     expect(http.postWithMsg).toHaveBeenCalledWith(
       '/monitor/job/demo%20job/run',
     );
+  });
+
+  it('uses the dynamic job CRUD and handler whitelist endpoints', () => {
+    const job = {
+      concurrentPolicy: 'FORBID' as const,
+      description: '清理临时文件',
+      handlerKey: 'temporaryFileCleanup',
+      initialDelayMs: 0,
+      jobName: 'temporaryFileCleanupJob',
+      maxRetries: 2,
+      misfirePolicy: 'FIRE_ONCE' as const,
+      retryIntervalMs: 1000,
+      scheduleExpression: '0 0/5 * * * ? *',
+      scheduleType: 'CRON' as const,
+      zone: 'Asia/Shanghai',
+    };
+
+    jobHandlerList();
+    jobAdd(job);
+    jobUpdate('demo job', job);
+    jobRemove('demo job');
+
+    expect(http.get).toHaveBeenCalledWith('/monitor/job/handlers');
+    expect(http.postWithMsg).toHaveBeenCalledWith('/monitor/job', job);
+    expect(http.putWithMsg).toHaveBeenCalledWith(
+      '/monitor/job/demo%20job',
+      job,
+    );
+    expect(http.deleteWithMsg).toHaveBeenCalledWith('/monitor/job/demo%20job');
   });
 
   it('uses the retry configuration and execution log endpoints', () => {

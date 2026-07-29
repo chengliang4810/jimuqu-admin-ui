@@ -108,6 +108,11 @@ const overflowPopupClassName = computed(() =>
   props.mode === 'horizontal' ? HORIZONTAL_OVERFLOW_POPUP_CLASS : undefined,
 );
 
+// 为纵向侧栏的弹出子菜单提供独立作用域，避免影响顶部菜单。
+const menuPopupClassName = computed(() =>
+  props.mode === 'vertical' ? 'vben-sidebar-menu-popup' : undefined,
+);
+
 // 监听 collapse 变化，重置 openKeys
 watch(
   () => props.collapse,
@@ -200,7 +205,7 @@ function handleOpenChange(keys: string[]) {
     @select="handleSelect"
   >
     <template v-for="menu in menus" :key="menu.path">
-      <SubMenu :menu="menu" />
+      <SubMenu :menu="menu" :popup-class-name="menuPopupClassName" />
     </template>
   </Menu>
 </template>

@@ -13,6 +13,10 @@ interface Props {
    * 菜单项
    */
   menu: MenuRecordRaw;
+  /**
+   * 纵向侧栏弹出子菜单的作用域类名
+   */
+  popupClassName?: string;
 }
 
 defineOptions({
@@ -58,7 +62,7 @@ const computedIcon = computed(() =>
   </MenuItem>
 
   <!-- 分支节点：渲染 SubMenu -->
-  <SubMenu v-else :key="`${menu.path}_sub`">
+  <SubMenu v-else :key="`${menu.path}_sub`" :popup-class-name="popupClassName">
     <template v-if="computedIcon" #icon>
       <VbenIcon :icon="computedIcon" fallback />
     </template>
@@ -73,7 +77,7 @@ const computedIcon = computed(() =>
     </template>
     <!-- 递归子菜单 -->
     <template v-for="childItem in menu.children || []" :key="childItem.path">
-      <SubMenuUi :menu="childItem" />
+      <SubMenuUi :menu="childItem" :popup-class-name="popupClassName" />
     </template>
   </SubMenu>
 </template>

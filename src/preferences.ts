@@ -53,6 +53,8 @@ export const overridesPreferences = defineOverridesPreferences({
   theme: {
     /** 默认主题模式 */
     mode: 'light',
+    /** 默认使用浅色近黑、深色近白的中性主题 */
+    preset: 'default',
     /**
      * 浅色sidebar
      */

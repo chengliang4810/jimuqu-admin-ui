@@ -8,24 +8,59 @@ import {
   expectSuccessEnvelope,
   waitForApiResponse,
 } from './helpers/api';
-import { actionRow, antButtonNames, dataRow } from './helpers/crud';
-import { fillLabeledInput, selectOption } from './helpers/form';
+import {
+  actionRow,
+  antButtonNames,
+  confirmRowDelete,
+  dataRow,
+  openCreateOverlay,
+  openEditOverlay,
+  submitOverlay,
+} from './helpers/crud';
+import { fillLabeledInput, formItem, selectOption } from './helpers/form';
 import { openDynamicModule } from './helpers/navigation';
 
 interface ScheduledJob {
+  /** 并发执行策略。 */
+  concurrentPolicy: string;
   description: string;
   enabled: boolean;
+  /** 白名单处理器标识。 */
+  handlerKey: string;
+  /** 首次执行延迟毫秒数。 */
+  initialDelayMs: number;
   jobName: string;
+  /** 系统任务或动态任务。 */
+  jobSource: string;
   maxRetries: number;
+  /** 错过执行策略。 */
+  misfirePolicy: string;
   retryIntervalMs: number;
   scheduleExpression: string;
   scheduleType: string;
+  /** Cron 计算时区。 */
+  zone: string;
+}
+
+/** E2E 选择处理器时使用的白名单元数据。 */
+interface ScheduledJobHandler {
+  /** Solon Bean 名称。 */
+  beanName: string;
+  /** 处理器类名。 */
+  className: string;
+  /** 处理器说明。 */
+  description: string;
+  /** 提交给后端的稳定标识。 */
+  handlerKey: string;
+  /** 处理器方法名。 */
+  methodName: string;
 }
 
 interface JobExecutionLog {
   attempt: number;
   durationMs: number;
   errorSummary?: string;
+  executionId: string;
   instanceId: string;
   jobName: string;
   logId: number | string;
@@ -37,7 +72,8 @@ interface JobExecutionLog {
 const cleanupJobName = 'scheduledJobLogCleanup';
 const retrySuccessJobName = 'fullStackRetrySuccessJob';
 const alwaysFailJobName = 'fullStackAlwaysFailJob';
-const slowJobName = 'fullStackSlowJob';
+/** 完整验收中用于稳定制造并发竞争的慢任务处理器。 */
+const slowHandlerKey = 'test.fullStack.slow';
 
 async function selectToolbarOption(
   page: Page,
@@ -274,16 +310,301 @@ function requireOldLogIds(
   return ids;
 }
 
-test('failed, retry and skipped executions are visible and filterable through the UI', async ({
+/** 验证管理员从页面完成动态任务全生命周期并在刷新后保留配置。 */
+test('dynamic job can be created, run, edited, stopped and deleted through the UI', async ({
+  authenticatedSession,
+  request,
+}) => {
+  test.setTimeout(120_000);
+  const { accessToken, loginEnvelope, page } = authenticatedSession;
+  const apiURL = process.env.PLAYWRIGHT_API_URL;
+  expect(apiURL, 'PLAYWRIGHT_API_URL must be configured').toBeTruthy();
+  if (!apiURL) {
+    throw new Error('PLAYWRIGHT_API_URL is missing');
+  }
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    ClientID: loginEnvelope.data.client_id,
+  };
+  const jobName = `uiDynamicJob${Date.now()}`;
+  let created = false;
+  let logsRemoved = false;
+  let logIds: Array<number | string> = [];
+
+  await openDynamicModule(page, {
+    heading: '定时任务列表',
+    item: '定时任务',
+    parent: '系统监控',
+    responseKind: 'list',
+    responsePath: '/monitor/job/list',
+    url: /\/monitor\/job(?:[/?#]|$)/,
+  });
+
+  try {
+    const handlersPromise = waitForApiResponse(
+      page,
+      'GET',
+      '/monitor/job/handlers',
+    );
+    const createDialog = await openCreateOverlay(page);
+    const handlersEnvelope = await expectSuccessEnvelope<ScheduledJobHandler[]>(
+      await handlersPromise,
+      'load scheduled job handlers',
+    );
+    const slowHandler = handlersEnvelope.data.find(
+      (handler) => handler.handlerKey === slowHandlerKey,
+    );
+    expect(slowHandler, `${slowHandlerKey} handler`).toBeTruthy();
+    if (!slowHandler) {
+      throw new Error(`${slowHandlerKey} handler is missing`);
+    }
+    const handlerDisplay = `${slowHandler.description}（${slowHandler.className}#${slowHandler.methodName}）`;
+
+    await fillLabeledInput(createDialog, '任务标识', jobName);
+    await selectOption(page, createDialog, '执行目标', handlerDisplay);
+    await fillLabeledInput(createDialog, '任务说明', '端到端测试动态定时任务');
+    await selectOption(page, createDialog, '调度方式', '固定频率');
+    await fillLabeledInput(createDialog, '调度配置', '600000');
+    await fillLabeledInput(createDialog, '初始延迟', '3600000');
+    const createPromise = waitForApiResponse(page, 'POST', '/monitor/job');
+    const createReloadPromise = waitForApiResponse(
+      page,
+      'GET',
+      '/monitor/job/list',
+    );
+    await submitOverlay(createDialog);
+    const createResponse = await createPromise;
+    created = createResponse.ok();
+    await expectSuccessEnvelope(createResponse, 'create dynamic job');
+    const createdJobs = await expectSuccessEnvelope<ScheduledJob[]>(
+      await createReloadPromise,
+      'reload created dynamic job',
+    );
+    expect(
+      createdJobs.data.find((job) => job.jobName === jobName),
+    ).toMatchObject({
+      enabled: false,
+      concurrentPolicy: 'FORBID',
+      handlerKey: slowHandlerKey,
+      initialDelayMs: 3_600_000,
+      jobSource: 'DYNAMIC',
+      scheduleExpression: '600000',
+      scheduleType: 'FIXED_RATE',
+      zone: '',
+    });
+    await expect(dataRow(page, jobName)).toBeVisible();
+    await expect(dataRow(page, jobName).getByRole('switch')).toHaveAttribute(
+      'aria-checked',
+      'false',
+    );
+
+    const startPromise = waitForApiResponse(
+      page,
+      'PUT',
+      `/monitor/job/${jobName}/start`,
+    );
+    const startReloadPromise = waitForApiResponse(
+      page,
+      'GET',
+      '/monitor/job/list',
+    );
+    await dataRow(page, jobName).getByRole('switch').click();
+    await expectSuccessEnvelope(await startPromise, 'start dynamic job');
+    const startedJobs = await expectSuccessEnvelope<ScheduledJob[]>(
+      await startReloadPromise,
+      'reload started dynamic job',
+    );
+    expect(
+      startedJobs.data.find((job) => job.jobName === jobName)?.enabled,
+    ).toBe(true);
+
+    const oldLogIds = new Set<string>();
+    const runRequest = await startJobThroughUi(page, jobName);
+    const skippedRequest = await startJobThroughUi(page, jobName);
+    await expectSuccessEnvelope(
+      await requireResponse(
+        skippedRequest.response(),
+        'run contended dynamic job',
+      ),
+      'run contended dynamic job',
+    );
+    await expectSuccessEnvelope(
+      await requireResponse(runRequest.response(), 'run dynamic job'),
+      'run dynamic job',
+    );
+
+    await assertNewJobLogStatus(page, jobName, oldLogIds, '跳过', 'SKIPPED', 1);
+    await assertNewJobLogStatus(page, jobName, oldLogIds, '成功', 'SUCCESS', 1);
+    const { drawer, envelope: logEnvelope } = await openJobLogDrawer(
+      page,
+      jobName,
+    );
+    logIds = logEnvelope.data.rows.map((log) => log.logId);
+    await closeJobLogDrawer(drawer);
+
+    const editDialog = await openEditOverlay(dataRow(page, jobName));
+    await fillLabeledInput(
+      editDialog,
+      '任务说明',
+      '端到端测试动态定时任务（已编辑）',
+    );
+    await selectOption(page, editDialog, '调度方式', '固定延迟');
+    await fillLabeledInput(editDialog, '调度配置', '900000');
+    const concurrentItem = formItem(editDialog, '并发策略');
+    await concurrentItem
+      .locator('label')
+      .filter({ hasText: '允许并发' })
+      .click();
+    await expect(
+      concurrentItem.getByRole('radio', { name: '允许并发' }),
+    ).toBeChecked();
+    await fillLabeledInput(editDialog, '最大重试次数', '1');
+    await expect(
+      concurrentItem.getByRole('radio', { name: '禁止并发' }),
+    ).toBeChecked();
+    await expect(
+      concurrentItem.getByRole('radio', { name: '允许并发' }),
+    ).toBeDisabled();
+    const misfireItem = formItem(editDialog, '错过策略');
+    await misfireItem
+      .locator('label')
+      .filter({ hasText: '忽略错过执行' })
+      .click();
+    await expect(
+      misfireItem.getByRole('radio', { name: '忽略错过执行' }),
+    ).toBeChecked();
+    await fillLabeledInput(editDialog, '重试间隔', '250');
+    const updatePromise = waitForApiResponse(
+      page,
+      'PUT',
+      `/monitor/job/${jobName}`,
+    );
+    const updateReloadPromise = waitForApiResponse(
+      page,
+      'GET',
+      '/monitor/job/list',
+    );
+    await submitOverlay(editDialog);
+    await expectSuccessEnvelope(await updatePromise, 'update dynamic job');
+    const updatedJobs = await expectSuccessEnvelope<ScheduledJob[]>(
+      await updateReloadPromise,
+      'reload updated dynamic job',
+    );
+    expect(
+      updatedJobs.data.find((job) => job.jobName === jobName),
+    ).toMatchObject({
+      concurrentPolicy: 'FORBID',
+      description: '端到端测试动态定时任务（已编辑）',
+      maxRetries: 1,
+      misfirePolicy: 'IGNORE',
+      retryIntervalMs: 250,
+      scheduleExpression: '900000',
+      scheduleType: 'FIXED_DELAY',
+    });
+
+    const refreshPromise = waitForApiResponse(page, 'GET', '/monitor/job/list');
+    await page.reload();
+    const refreshedJobs = await expectSuccessEnvelope<ScheduledJob[]>(
+      await refreshPromise,
+      'reload persisted dynamic job after page refresh',
+    );
+    expect(
+      refreshedJobs.data.find((job) => job.jobName === jobName),
+    ).toMatchObject({
+      concurrentPolicy: 'FORBID',
+      description: '端到端测试动态定时任务（已编辑）',
+      misfirePolicy: 'IGNORE',
+      scheduleExpression: '900000',
+      scheduleType: 'FIXED_DELAY',
+    });
+    await expect(dataRow(page, jobName)).toBeVisible();
+
+    const stopPromise = waitForApiResponse(
+      page,
+      'PUT',
+      `/monitor/job/${jobName}/stop`,
+    );
+    const stopReloadPromise = waitForApiResponse(
+      page,
+      'GET',
+      '/monitor/job/list',
+    );
+    await dataRow(page, jobName).getByRole('switch').click();
+    await expectSuccessEnvelope(await stopPromise, 'stop dynamic job');
+    const stoppedJobs = await expectSuccessEnvelope<ScheduledJob[]>(
+      await stopReloadPromise,
+      'reload stopped dynamic job',
+    );
+    expect(
+      stoppedJobs.data.find((job) => job.jobName === jobName)?.enabled,
+    ).toBe(false);
+    await expect(dataRow(page, jobName).getByRole('switch')).toHaveAttribute(
+      'aria-checked',
+      'false',
+    );
+
+    if (logIds.length > 0) {
+      await expectSuccessEnvelope(
+        await request.delete(`${apiURL}/monitor/job/log/${logIds.join(',')}`, {
+          headers,
+        }),
+        'remove dynamic job execution logs',
+      );
+      logsRemoved = true;
+    }
+
+    const deletePromise = waitForApiResponse(
+      page,
+      'DELETE',
+      `/monitor/job/${jobName}`,
+    );
+    const deleteReloadPromise = waitForApiResponse(
+      page,
+      'GET',
+      '/monitor/job/list',
+    );
+    await confirmRowDelete(
+      dataRow(page, jobName),
+      `确认删除任务[${jobName}]？`,
+    );
+    await expectSuccessEnvelope(await deletePromise, 'delete dynamic job');
+    await expectSuccessEnvelope<ScheduledJob[]>(
+      await deleteReloadPromise,
+      'reload deleted dynamic job',
+    );
+    created = false;
+    await expect(dataRow(page, jobName)).toHaveCount(0);
+  } finally {
+    if (!logsRemoved) {
+      const logResponse = await request.get(`${apiURL}/monitor/job/log/list`, {
+        headers,
+        params: { jobName, pageNum: 1, pageSize: 100 },
+      });
+      if (logResponse.ok()) {
+        const logBody = (await logResponse.json()) as ApiEnvelope<{
+          rows: JobExecutionLog[];
+          total: number;
+        }>;
+        logIds = logBody.data?.rows?.map((log) => log.logId) ?? logIds;
+      }
+      if (logIds.length > 0) {
+        await request.delete(`${apiURL}/monitor/job/log/${logIds.join(',')}`, {
+          headers,
+        });
+      }
+    }
+    if (created) {
+      await request.delete(`${apiURL}/monitor/job/${jobName}`, { headers });
+    }
+  }
+});
+
+test('failed and retry executions are visible and filterable through the UI', async ({
   authenticatedSession,
 }) => {
   test.setTimeout(180_000);
   const { page } = authenticatedSession;
-  const jobNames = [
-    retrySuccessJobName,
-    alwaysFailJobName,
-    slowJobName,
-  ] as const;
+  const jobNames = [retrySuccessJobName, alwaysFailJobName] as const;
   const listEnvelope = (await openDynamicModule(page, {
     heading: '定时任务列表',
     item: '定时任务',
@@ -316,12 +637,7 @@ test('failed, retry and skipped executions are visible and filterable through th
   const configuredJobs = new Set<string>();
   try {
     for (const jobName of jobNames) {
-      await updateRetryConfigThroughUi(
-        page,
-        jobName,
-        jobName === slowJobName ? 0 : 1,
-        25,
-      );
+      await updateRetryConfigThroughUi(page, jobName, 1, 25);
       configuredJobs.add(jobName);
     }
 
@@ -335,20 +651,6 @@ test('failed, retry and skipped executions are visible and filterable through th
     await expectSuccessEnvelope(
       await requireResponse(failedRequest.response(), 'submit failing probe'),
       'run failing probe',
-    );
-
-    const slowRequest = await startJobThroughUi(page, slowJobName);
-    const skippedRequest = await startJobThroughUi(page, slowJobName);
-    await expectSuccessEnvelope(
-      await requireResponse(
-        skippedRequest.response(),
-        'run contended slow probe',
-      ),
-      'run contended slow probe',
-    );
-    await expectSuccessEnvelope(
-      await requireResponse(slowRequest.response(), 'run slow probe'),
-      'run slow probe',
     );
 
     await assertNewJobLogStatus(
@@ -382,22 +684,6 @@ test('failed, retry and skipped executions are visible and filterable through th
       '失败',
       'FAILED',
       2,
-    );
-    await assertNewJobLogStatus(
-      page,
-      slowJobName,
-      requireOldLogIds(oldLogIds, slowJobName),
-      '跳过',
-      'SKIPPED',
-      1,
-    );
-    await assertNewJobLogStatus(
-      page,
-      slowJobName,
-      requireOldLogIds(oldLogIds, slowJobName),
-      '成功',
-      'SUCCESS',
-      1,
     );
   } finally {
     await closeVisibleJobLogDrawer(page);
@@ -469,8 +755,8 @@ test('Solon runtime job config, manual run and execution log work through the UI
   await selectOption(
     page,
     searchForm,
-    '任务状态',
-    job.enabled ? '已停止' : '运行中',
+    '启用状态',
+    job.enabled ? '已停用' : '已启用',
   );
   searchPromise = waitForApiResponse(page, 'GET', '/monitor/job/list');
   await searchButton.click();
@@ -703,6 +989,7 @@ test('Solon runtime job config, manual run and execution log work through the UI
     await expect(logRow).toContainText('成功');
     await expect(logRow).toContainText('手动执行');
     await expect(logRow).toContainText(String(manualLog.attempt));
+    await expect(logRow).toContainText(manualLog.executionId);
     await expect(logRow).toContainText(manualLog.instanceId);
     await logRow.locator('.vxe-cell--checkbox').click();
 

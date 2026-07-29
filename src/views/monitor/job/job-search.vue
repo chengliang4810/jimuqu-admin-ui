@@ -51,13 +51,13 @@ defineExpose({
         <FormItem label="任务名称" name="jobName">
           <FormInput v-model:value="model.jobName" allow-clear />
         </FormItem>
-        <FormItem label="任务状态" name="enabled">
+        <FormItem label="启用状态" name="enabled">
           <FormSelect
             v-model:value="model.enabled"
             allow-clear
             :options="[
-              { label: '运行中', value: '0' },
-              { label: '已停止', value: '1' },
+              { label: '已启用', value: '0' },
+              { label: '已停用', value: '1' },
             ]"
           />
         </FormItem>

@@ -8,7 +8,10 @@ defineOptions({
   name: 'PreferenceThemeColor',
 });
 
-defineProps<{ label: string }>();
+defineProps<{
+  /** 颜色设置项名称，同时作为取色器的无障碍标签。 */
+  label: string;
+}>();
 
 const modelValue = defineModel<string>({ default: '' });
 
@@ -33,6 +36,7 @@ function handleChange(_value: unknown, css: string) {
         {{ colorValue }}
       </span>
       <ColorPicker
+        :aria-label="label"
         :value="colorValue"
         disabled-alpha
         disabled-format

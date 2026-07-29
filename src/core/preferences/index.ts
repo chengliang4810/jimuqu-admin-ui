@@ -42,6 +42,12 @@ export const preferences: Preferences = getPreferences();
 
 export { preferencesManager };
 
+export {
+  migrateCachedThemePreset,
+  resolveThemePrimary,
+  THEME_PRESETS,
+} from './theme-presets';
+export type { ThemePresetDefinition } from './theme-presets';
 export type {
   AnyCustomPreferencesField,
   AppPreferences,
@@ -66,6 +72,7 @@ export type {
   SupportedLanguagesType,
   TabbarPreferences,
   ThemePreferences,
+  ThemePresetType,
   TransitionPreferences,
   WidgetPreferences,
 } from './types';

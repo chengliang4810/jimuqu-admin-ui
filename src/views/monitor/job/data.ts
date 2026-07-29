@@ -6,6 +6,12 @@ const scheduleTypeLabels: Record<string, string> = {
   FIXED_RATE: '固定频率',
 };
 
+/** 将后端任务来源转换为管理员可读文本。 */
+const sourceLabels: Record<string, string> = {
+  DYNAMIC: '动态任务',
+  SYSTEM: '系统任务',
+};
+
 export const columns: VxeGridProps['columns'] = [
   {
     field: 'jobName',
@@ -16,6 +22,18 @@ export const columns: VxeGridProps['columns'] = [
     field: 'description',
     minWidth: 180,
     title: '任务说明',
+  },
+  {
+    field: 'jobSource',
+    formatter: ({ cellValue }) => sourceLabels[cellValue] ?? cellValue ?? '-',
+    title: '任务来源',
+    width: 110,
+  },
+  {
+    field: 'handlerKey',
+    minWidth: 180,
+    showOverflow: true,
+    title: '执行目标',
   },
   {
     field: 'scheduleType',
@@ -38,7 +56,7 @@ export const columns: VxeGridProps['columns'] = [
     resizable: false,
     slots: { default: 'status' },
     title: '状态',
-    width: 110,
+    width: 190,
   },
   {
     field: 'action',
@@ -46,6 +64,6 @@ export const columns: VxeGridProps['columns'] = [
     resizable: false,
     slots: { default: 'action' },
     title: '操作',
-    width: 280,
+    width: 430,
   },
 ];

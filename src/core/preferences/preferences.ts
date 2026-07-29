@@ -19,6 +19,7 @@ import {
 } from '@vueuse/core';
 
 import { defaultPreferences } from './config';
+import { migrateCachedThemePreset } from './theme-presets';
 import { updateCSSVariables } from './update-css-variables';
 
 const STORAGE_KEYS = {
@@ -131,7 +132,9 @@ class PreferenceManager {
     );
 
     // 加载缓存的偏好设置，并仅用缓存补齐初始化配置中未显式设置的字段
-    const cachedPreferences = (await this.loadFromCache()) || {};
+    const cachedPreferences = migrateCachedThemePreset(
+      (await this.loadFromCache()) || {},
+    );
     const mergedPreference = merge(
       {},
       cachedPreferences, // 用户缓存的设置优先
@@ -324,8 +327,8 @@ class PreferenceManager {
    * 从缓存加载偏好设置
    * @returns 缓存的偏好设置，如果不存在则返回 null
    */
-  private async loadFromCache(): Promise<null | Preferences> {
-    return this.cache.getItem<Preferences>(STORAGE_KEYS.MAIN);
+  private async loadFromCache(): Promise<DeepPartial<Preferences> | null> {
+    return this.cache.getItem<DeepPartial<Preferences>>(STORAGE_KEYS.MAIN);
   }
 
   private replaceCustomPreferences(preferences: CustomPreferencesRecord) {

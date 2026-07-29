@@ -120,12 +120,12 @@ export default defineComponent({
     }
 
     /**
-     * 有color 属性 渲染Tag
+     * 有 color 属性时使用实心 Tag，保证主题切换后的文字对比度
      */
     if (color) {
       return (
         <div>
-          <Tag class={cssClass} color={color}>
+          <Tag class={cssClass} color={color} variant="solid">
             {label}
           </Tag>
         </div>

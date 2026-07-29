@@ -34,6 +34,7 @@ const statusLabels: Record<string, string> = {
 };
 const triggerTypeLabels: Record<string, string> = {
   MANUAL: '手动执行',
+  RECOVERY: '错过补偿',
   SCHEDULED: '定时调度',
 };
 
@@ -49,6 +50,12 @@ const columns: VxeGridProps<JobExecutionLog>['columns'] = [
     width: 110,
   },
   { field: 'attempt', title: '执行次数', width: 90 },
+  {
+    field: 'executionId',
+    minWidth: 220,
+    showOverflow: true,
+    title: '执行标识',
+  },
   { field: 'instanceId', minWidth: 160, title: '实例' },
   { field: 'startTime', title: '开始时间', width: 170 },
   {
@@ -195,7 +202,7 @@ function handleClean() {
 </script>
 
 <template>
-  <BasicDrawer :footer="false" :size="1100" :title="title">
+  <BasicDrawer :footer="false" :size="1250" :title="title">
     <Spin :delay="300" :spinning="tableLoading">
       <VxeGrid ref="tableRef" v-bind="gridOptions" v-on="gridEvents">
         <template #toolbar-left>
@@ -221,6 +228,7 @@ function handleClean() {
               :options="[
                 { label: '定时调度', value: 'SCHEDULED' },
                 { label: '手动执行', value: 'MANUAL' },
+                { label: '错过补偿', value: 'RECOVERY' },
               ]"
               @change="handleFilterChange"
             />
